@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    let DOMfiles = elt('ul', { class: 'FileList' });
+    let DOMFileList = elt('ul', { class: 'FileList' });
     files.map(x => {
         let inline_style = object2css({
             'color': randomHexColor(),
@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         inputTitle.addEventListener("keydown", event => {           
             if (event.key == 'Enter' && inputTitle.value != "") {
-                alert("确定修改?")
+                alert("确定修改?");
             }
             edit_state.style.display = 'none';
             initial_state.style.display = 'block';  
@@ -92,10 +92,55 @@ window.addEventListener('DOMContentLoaded', () => {
             initial_state.style.display = 'block';           
         });
 
-        DOMfiles.appendChild(list_item);
+        DOMFileList.appendChild(list_item);
     });
-    document.querySelector(".FileList-container").appendChild(DOMfiles);
+    document.querySelector(".FileList-container").appendChild(DOMFileList);
 
+
+    let DOMTabList = elt('ul', { class: 'TabList' });
+    let tabTitles = []; // 单击一个高亮显示，同时只能有一个
+    for (let i = 0; i != files.length; ++i) {
+        let inline_style = object2css({
+            'user-select': 'none',
+        });
+        let attrs = {
+            'data-id': files[i].id,
+            'style': inline_style,
+        };
+
+        let title = elt('span', {}, files[i].title);
+        tabTitles.push(title);
+        let btnClose = elt('button', {}, '关闭');
+        btnClose.style.visibility = 'hidden';
+        let list_item = elt('li', attrs, title, btnClose);
+        
+        list_item.addEventListener("mouseover", () => {
+            btnClose.style.visibility = 'visible';
+        });
+
+        list_item.addEventListener("mouseout", () => {
+            btnClose.style.visibility = 'hidden';
+        });
+
+        title.addEventListener("click", () => {
+            title.style.color = 'red';
+        });
+
+        DOMTabList.appendChild(list_item);
+    }
+
+    for (let i = 0; i != tabTitles.length; ++i) {
+        tabTitles[i].addEventListener("click", () => {
+            tabTitles[i].style.color = 'red';
+            for (let j = 0; j != tabTitles.length; ++j) {
+                if (j != i) {
+                    tabTitles[j].style.color = 'black';
+                }
+            }
+        });        
+    }
+
+    document.querySelector(".TabList-container").appendChild(DOMTabList);
 })
 
 
