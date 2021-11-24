@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
     let fileSearch = document.querySelector(".FileSearch");
 
+    
     fileSearch.addEventListener("search", () => {
         if (fileSearch.value != "") {
             console.log("fileSearch " + fileSearch.value);
@@ -96,51 +97,64 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     document.querySelector(".FileList-container").appendChild(DOMFileList);
 
-
-    let DOMTabList = elt('ul', { class: 'TabList' });
-    let tabTitles = []; // 单击一个高亮显示，同时只能有一个
-    for (let i = 0; i != files.length; ++i) {
-        let inline_style = object2css({
-            'user-select': 'none',
-        });
-        let attrs = {
-            'data-id': files[i].id,
-            'style': inline_style,
+    let tabList = files.map(file => {
+        let tab = {
+            title: file.title,
+            content: file,
+            unsaved: false,
         };
+        return tab;
+    });
+    tabList.selected = -1;
 
-        let title = elt('span', {}, files[i].title);
-        tabTitles.push(title);
-        let btnClose = elt('button', {}, '关闭');
-        btnClose.style.visibility = 'hidden';
-        let list_item = elt('li', attrs, title, btnClose);
+    let ul_tablist = elt('ul', { class: 'TabList' });
+    
+    let tabListManager = {
+        generateDOM: function() {           
+            let inline_style = object2css({
+                'user-select': 'none',
+            });      
+            tabList.map((tab, index) => {
+                let attrs = {
+                    'data-id': tab.content.id,
+                    'style': inline_style,
+                };            
+    
+                let span_title = elt('span', { class: 'title' }, tab.title);
+                let btn_close = elt('button', {}, '关闭');           
+                let li_tab = elt('li', attrs, span_title, btn_close);    
+                if (tab.selected) span_title.style.color = 'red';
+                btn_close.style.visibility = 'hidden';
+       
+                span_title.addEventListener("click", () => {
+                    tabList.selected = index;
+                    tabListManager.refreshSpanTitle();
+                });
+
+                li_tab.addEventListener("mouseover", () => {
+                    btn_close.style.visibility = 'visible';
+                });
         
-        list_item.addEventListener("mouseover", () => {
-            btnClose.style.visibility = 'visible';
-        });
+                li_tab.addEventListener("mouseout", () => {
+                    btn_close.style.visibility = 'hidden';
+                });
 
-        list_item.addEventListener("mouseout", () => {
-            btnClose.style.visibility = 'hidden';
-        });
+                ul_tablist.appendChild(li_tab);
+            });
 
-        title.addEventListener("click", () => {
-            title.style.color = 'red';
-        });
+            document.querySelector("div.TabList-container").appendChild(ul_tablist);
+        },
 
-        DOMTabList.appendChild(list_item);
-    }
+        refreshSpanTitle: function() {
+            let span_titles = ul_tablist.querySelectorAll('span.title');
+            for (let i = 0; i != tabList.length; ++i) {
+                if (i == tabList.selected) span_titles[i].style.color = 'red';
+                else span_titles[i].style.color = 'black';
+            }            
+        }
+    };
 
-    for (let i = 0; i != tabTitles.length; ++i) {
-        tabTitles[i].addEventListener("click", () => {
-            tabTitles[i].style.color = 'red';
-            for (let j = 0; j != tabTitles.length; ++j) {
-                if (j != i) {
-                    tabTitles[j].style.color = 'black';
-                }
-            }
-        });        
-    }
-
-    document.querySelector(".TabList-container").appendChild(DOMTabList);
+    tabListManager.generateDOM();
 })
 
 
