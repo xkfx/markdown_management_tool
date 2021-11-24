@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" href="node_modules/simplemde/dist/simplemde.min.css">
+    <script src="node_modules/simplemde/dist/simplemde.min.js"></script>
 </head>
 
 <body>
@@ -15,7 +17,9 @@
     <div><button id="btnCreate">新建</button><button id="btnImport">导入</button></div>
 
     <div class="TabList-container"></div>
-    <!-- <script src="./renderer.js"></script> -->
+
+    <textarea class="SimpleMDE-container"></textarea>
+    <script src="./renderer.js"></script>
 </body>
 
 </html>
