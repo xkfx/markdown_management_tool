@@ -1,6 +1,6 @@
+
 let fileSearch = document.querySelector(".FileSearch");
 
-    
 fileSearch.addEventListener("search", () => {
     if (fileSearch.value != "") {
         console.log("fileSearch " + fileSearch.value);
