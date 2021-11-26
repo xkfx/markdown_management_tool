@@ -1,11 +1,8 @@
 const { contextBridge } = require('electron')
-const fs = require("fs");
+const { ipcRenderer } = require('electron')
 
 window.addEventListener('DOMContentLoaded', () => {
-    contextBridge.exposeInMainWorld('myAPI', {
-        desktop: true
-    });
-
+    contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer);
 })
 
 

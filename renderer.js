@@ -1,4 +1,3 @@
-
 let fileSearch = document.querySelector(".FileSearch");
 
 fileSearch.addEventListener("search", () => {
@@ -95,6 +94,26 @@ files.map(x => {
     DOMFileList.appendChild(list_item);
 });
 document.querySelector(".FileList-container").appendChild(DOMFileList);
+
+let btnImport = document.querySelector("#btnImport");
+
+function importFile() {
+    // 1 打开对话框
+    ipcRenderer.invoke('importFile').then((result) => {
+        console.log(result);
+    })
+    // 2 拿到 path数组
+
+    // 3 通过 path读文件 逐个封装成一个 md file对象 并插入到 files数组
+
+
+}
+
+btnImport.addEventListener("click", () => {
+    console.log("click btnImport")
+    importFile();
+})
+
 
 let tabList = files.map(file => {
     let tab = {
