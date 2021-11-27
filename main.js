@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const fs = require("fs").promises
 const path = require('path')
 
 function createWindow() {
@@ -27,7 +28,7 @@ app.whenReady().then(() => {
         }
     })
 
-    function importFile() {
+    async function importFile() {
         // 1 打开对话框
         let dialogOptions = {
             title: '选择要导入的Markdown文件',
@@ -35,18 +36,36 @@ app.whenReady().then(() => {
                 { name: 'Markdown Files', extensions: ['md'] }
             ],
             properties: ['openFile', 'multiSelections'],
-        }         
-        // 2 拿到 path数组
-        let paths = dialog.showOpenDialogSync(mainWindow, dialogOptions);
-        console.log(paths);
-        // 3 通过 path读文件 逐个封装成一个 md file对象 并插入到 files数组
+        }        
+        let dialogResult = await dialog.showOpenDialog(mainWindow, dialogOptions)
 
+        // 2 拿到 path数组
+        let filePaths = dialogResult.filePaths
+        let titles = filePaths.map(p => path.basename(p, ".md"))
+
+        // 3 通过 path读文件 逐个封装成一个 md file对象 并插入到 files数组
+        return Promise.allSettled(filePaths.map(p => readFile(p))).then(results => {
+            return results.map((result, num) => {
+                if (result.status == "fulfilled") {
+                    let mdFile = {
+                        title: titles[num],
+                        body: result.value,
+                    };                   
+                    return `${num}: ${titles[num]}.md 读取成功`
+                } 
+                
+                if (result.status == "rejected") {
+                    return `${num}: ${titles[num]}.md 读取失败` + result.reason
+                }
+            })
+        })
     }
 
     ipcMain.handle('importFile', async (event, someArgument) => {
         const result = await importFile()
         return result
-    })    
+    })
+
 })
 
 app.on('window-all-closed', () => {
@@ -54,4 +73,13 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 })
+
+function readFile(path) {
+    let opions = {
+        encoding: 'utf-8',
+    }
+    return fs.readFile(path, opions)
+}
+
+
 

@@ -1,6 +1,8 @@
 # markdown_management_tool
 
-一个用于管理markdown文件的桌面应用程序
+云笔记本
+桌面应用程序
+markdown
 
 ## 创建项目
 npm init

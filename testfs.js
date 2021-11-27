@@ -17,9 +17,8 @@ let testPath2 = path.join(__dirname, 'READYOU.md');
 
 // readFile(testPath2).catch(err => console.log(err));
 
-readFile(testPath2).then(x => {
-    console.log(x)
+Promise.all([readFile(testPath1), readFile(testPath1)]).then(result => {
+    console.log(result)
 }).catch(err => {
     console.log(err)
 })
-
