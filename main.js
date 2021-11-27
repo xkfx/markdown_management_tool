@@ -28,6 +28,9 @@ app.whenReady().then(() => {
         }
     })
 
+
+    let files = [];
+
     async function importFile() {
         // 1 打开对话框
         let dialogOptions = {
@@ -50,7 +53,8 @@ app.whenReady().then(() => {
                     let mdFile = {
                         title: titles[num],
                         body: result.value,
-                    };                   
+                    };                 
+                    files.push(mdFile);  
                     return `${num}: ${titles[num]}.md 读取成功`
                 } 
                 
@@ -65,6 +69,8 @@ app.whenReady().then(() => {
         const result = await importFile()
         return result
     })
+
+    ipcMain.handle("getFiles", () => files);
 
 })
 
