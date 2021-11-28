@@ -1,12 +1,24 @@
 let files = [];
+files.push({
+    id: 1,
+    title: '测试1',
+    body: "# 测试测试",
+})
+
+files.push({
+    id: 1,
+    title: '测试2',
+    body: "# 测试测试",
+})
+
+let openedFiles = [];
+
 let simplemde = new SimpleMDE();
 let ipg = {
     updateFileList: (files) => {
-        ipg.currentFiles = files
         let fileListContainer = document.querySelector("div.FileList-container")
         if (fileListContainer.firstChild) {
-            let x = fileListContainer.firstChild.remove();
-            console.log("233" + x);
+            fileListContainer.firstChild.remove();
         }      
         let DOMFileList = elt('ul', { class: 'FileList' });
         files.forEach(x => {
@@ -36,6 +48,8 @@ let ipg = {
         
             title.addEventListener("click", () => {
                 simplemde.value(x.body);
+                openedFiles.push(x);
+                ipg.updateTabList()
             });
         
             btnEdit.addEventListener("click", () => {
@@ -76,6 +90,68 @@ let ipg = {
         });
         fileListContainer.appendChild(DOMFileList);
     },
+
+    updateTabList: () => {
+        let TabListContainer = document.querySelector("div.TabList-container")
+        if (TabListContainer.firstChild) {
+            TabListContainer.firstChild.remove();
+        }      
+        let tabList = openedFiles.map(file => {
+            let tab = {
+                title: file.title,
+                content: file,
+                unsaved: false,
+            };
+            return tab;
+        });
+        tabList.selected = -1;
+        
+        let ul_tablist = elt('ul', { class: 'TabList' });
+        let inline_style = object2css({
+            'user-select': 'none',
+        });
+        tabList.map((tab, index) => {
+            let attrs = {
+                'data-id': tab.content.id,
+                'style': inline_style,
+            };
+        
+            let span_title = elt('span', { class: 'title' }, tab.title);
+            let btn_close = elt('button', {}, '关闭');
+            let li_tab = elt('li', attrs, span_title, btn_close);
+            if (tab.selected) span_title.style.color = 'red';
+            btn_close.style.visibility = 'hidden';
+        
+            span_title.addEventListener("click", () => {
+                tabList.selected = index;
+                console.log("tabList.selected: " + tabList.selected);
+            });
+
+            btn_close.addEventListener("click", () => {
+                openedFiles.splice(index, 1);
+                ipg.updateTabList();
+            })
+        
+            li_tab.addEventListener("mouseover", () => {
+                btn_close.style.visibility = 'visible';
+            });
+        
+            li_tab.addEventListener("mouseout", () => {
+                btn_close.style.visibility = 'hidden';
+            });
+        
+            ul_tablist.appendChild(li_tab);
+        });
+        
+        
+        let span_titles = ul_tablist.querySelectorAll('span.title');
+        for (let i = 0; i != tabList.length; ++i) {
+            if (i == tabList.selected) span_titles[i].style.color = 'red';
+            else span_titles[i].style.color = 'black';
+        }
+        
+        TabListContainer.appendChild(ul_tablist);
+    },
 };
 
 let fileSearch = document.querySelector(".FileSearch");
@@ -87,64 +163,15 @@ fileSearch.addEventListener("search", () => {
 
 let btnImport = document.querySelector("#btnImport");
 btnImport.addEventListener("click", () => {
-    myAPI.importFile().then(result => {
+    fileController.importFile().then(result => {
         console.log(result);
-        myAPI.getFiles().then(files => {
+        fileController.getFiles().then(files => {
             ipg.updateFileList(files);
         })
     })
 })
 
-let tabList = files.map(file => {
-    let tab = {
-        title: file.title,
-        content: file,
-        unsaved: false,
-    };
-    return tab;
-});
-tabList.selected = -1;
 
-let ul_tablist = elt('ul', { class: 'TabList' });
-let inline_style = object2css({
-    'user-select': 'none',
-});
-tabList.map((tab, index) => {
-    let attrs = {
-        'data-id': tab.content.id,
-        'style': inline_style,
-    };
-
-    let span_title = elt('span', { class: 'title' }, tab.title);
-    let btn_close = elt('button', {}, '关闭');
-    let li_tab = elt('li', attrs, span_title, btn_close);
-    if (tab.selected) span_title.style.color = 'red';
-    btn_close.style.visibility = 'hidden';
-
-    span_title.addEventListener("click", () => {
-        tabList.selected = index;
-        console.log("tabList.selected: " + tabList.selected);
-    });
-
-    li_tab.addEventListener("mouseover", () => {
-        btn_close.style.visibility = 'visible';
-    });
-
-    li_tab.addEventListener("mouseout", () => {
-        btn_close.style.visibility = 'hidden';
-    });
-
-    ul_tablist.appendChild(li_tab);
-});
-
-
-let span_titles = ul_tablist.querySelectorAll('span.title');
-for (let i = 0; i != tabList.length; ++i) {
-    if (i == tabList.selected) span_titles[i].style.color = 'red';
-    else span_titles[i].style.color = 'black';
-}
-
-document.querySelector("div.TabList-container").appendChild(ul_tablist);
 
 
 // 方便创建DOM节点的方法

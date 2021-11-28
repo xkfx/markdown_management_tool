@@ -1,7 +1,7 @@
 const { contextBridge } = require('electron')
 const { ipcRenderer } = require('electron')
 
-contextBridge.exposeInMainWorld('myAPI', {
+contextBridge.exposeInMainWorld('fileController', {
     importFile: () => ipcRenderer.invoke('importFile'),
     getFiles: () => ipcRenderer.invoke('getFiles'),
 })
