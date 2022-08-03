@@ -1,0 +1,124 @@
+<p>饮水思源：Stylin' with CSS - third edition</p>
+<h2>摘自书</h2>
+<p>我们知道， CSS 可以把一个 HTML 元素的 display 属性设定为 table、 table-row 和 table-cell。通过这种方法可以模拟相应 HTML 元素的行为。而通过 CSS 把布局中 的栏设定为 table-cell 有三个好处：</p>
+<ul>
+<li>单元格（table-cell）不需要浮动就可以并排显示，而且直接为它们应用内边距也不会破坏布局。</li>
+<li>默认情况下，一行中的所有单元格高度相同，因而也不需要人造的等高栏效果了。</li>
+<li>任何没有明确设定宽度的栏都是流动的。</li>
+</ul>
+<p>这三个好处解决了本章前面学习布局时遇到的问题。然而，（这里一定有蹊跷，对 吧？） CSS3 表格行为在 IE7 及更低版本中并没有得到支持，而且也没有稳妥的补救 措施。如果你（或者你的客户）愿意摒弃 IE7，那么它就是一个既简单又可靠，而且 还很彻底的解决方案。如果真是这样，我绝对推荐你采用这个方案，前面所讲的各种方案就当我没说。</p>
+<p>关键是，你甚至都不需要用 div 外包装来扮演 table 和 tr 元素，仅仅是把三栏的 display 属性设定为 table-cell 就可以了。浏览器的排版引擎在碰到没有表行（tr） 的一组单元格时，会自动为它们添加表行，而在表行没有被 table 元素包围时，会 自动为表行添加 table。因此，你不需要多写任何标记，只要把每一栏的 display 属 性设定为 table-cell，剩下的事儿就可全部交给浏览器负责了。</p>
+<h2>试一下</h2>
+<p>该布局的一个注意点，min-width和max-width的设定，顾名思义，在浏览器中用鼠标滚轮调整显示大小时，min-width防止过小，max-width防止过大。</p>
+<p>然后就是设定table-cell，自适应的那一栏不设置width</p>
+<p>代码（改自书本源码）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="utf-8"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Stylin' with CSS - Figures 5.12 A Three-Column, Fluid Center Layout with CSS3 Table Properties<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Open+Sans:400,700|Open+Sans+Condensed:300,700'
+        </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">='stylesheet' </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">='text/css'</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="helpers/modernizr_dev.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        * </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        body </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-family</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> helvetica, arial, sans-serif</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        #wrapper </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 最小宽度设置为760px，当浏览器宽度小于该值时，
+            该元素不再自适应，而是部分元素被遮挡住。</span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            min-width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 760px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 在你放大显示的时候可以体现，如果不设置，
+            当你放大的时候，浏览器会自适应，导致中栏挤在一起 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            max-width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1100px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 也是防止自适应，如果不设置的话，中栏直接平铺整个浏览器 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0 auto</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1px solid</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            overflow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> hidden</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        nav </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> table-cell</span><span style="background-color: #f5f5f5; color: #000000;">;</span><strong><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 150px</span><span style="background-color: #f5f5f5; color: #000000;">;</span></strong><span style="background-color: #f5f5f5; color: #ff0000;">
+            background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #dcd9c0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        article </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> table-cell</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #ffed53</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px 20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        aside </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> table-cell</span><span style="background-color: #f5f5f5; color: #000000;">;</span><strong><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 210px</span><span style="background-color: #f5f5f5; color: #000000;">;</span></strong><span style="background-color: #f5f5f5; color: #ff0000;">
+            background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #3f7ccf</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        footer </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            clear</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> both</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #000</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            text-align</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> center</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">header</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>A Three-Column, Fluid Center Layout<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">header</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col_wrap"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">nav</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>Text for First Link<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>Text for Second Link<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>Text for Third Link<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">nav</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">article</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Three-Column Layout<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend libero et risus aliquam a
+                    cursus felis gravida. Etiam ultricies tristique tellus, vulputate euismod neque elementum ac.
+                    Integer at neque in magna lacinia bibendum sit amet sit amet dolor. Nam consequat ullamcorper eros,
+                    sed bibendum metus faucibus sit amet. Sed convallis accumsan dui, eu sodales odio mollis nec.
+                    Curabitur in nunc sed leo tempor luctus in a dolor. Sed sit amet facilisis sem. Donec scelerisque
+                    consectetur velit, vitae bibendum mauris rutrum quis.</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>This is a Second-Level Heading<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Phasellus pretium gravida interdum. Nam interdum posuere tempus. Ut commodo laoreet dolor, non
+                    hendrerit mi dictum vitae. Nam nec egestas libero. Quisque sodales tortor ut tortor egestas eu
+                    adipiscing enim pellentesque. Cras condimentum tellus in nisl tincidunt et ornare augue dignissim.
+                    Nam laoreet elit vitae lorem tincidunt adipiscing. Maecenas pharetra mattis urna, eu adipi scing
+                    diam pharetra ac. Vivamus vulputate odio at velit sagittis a rhoncus lacus lobortis. Morbi porttitor
+                    scelerisque est in egestas.</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">article</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aside</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>This is the Sidebar<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Integer at neque in magna lacinia bibendum sit amet sit amet dolor. Nam consequat ullamcorper eros,
+                    sed bibendum metus faucibus sit amet. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aside</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">footer</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">This is the footer. Phasellus pretium gravida interdum. Nam interdum posuere tempus. Ut commodo laoreet
+                dolor, non hendrerit mi dictum vitae. Nam nec egestas libero.</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">footer</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>效果：</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202207/1042431-20220729111323680-1657703200.png" alt="" width="624" height="323" loading="lazy" /></p>
+<p>&nbsp;</p>

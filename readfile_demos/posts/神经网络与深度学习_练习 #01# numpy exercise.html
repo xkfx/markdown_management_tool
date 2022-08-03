@@ -1,0 +1,195 @@
+<p>numpy的一些热身练习。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 1.导入numpy库</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 2.建立一个一维数组 a 初始化为[4,5,6], </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)输出a 的类型（type）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2)输出a的各维度的大小（shape）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (3)输出 a的第一个元素（值为4）</span>
+a = np.array([4, 5, 6<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(type(a))
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(a.shape)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(a[0])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 3.建立一个二维数组 b,初始化为 [[4, 5, 6],[1, 2, 3]] </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)输出各维度的大小（shape）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2)输出 b(0,0)，b(0,1),b(1,1) 这三个元素（对应值分别为4,5,2）</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第三题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+b </span>= np.array([[4, 5, 6], [1, 2, 3<span style="color: #000000;">]])
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(type(b))
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(b.shape)
+</span><span style="color: #0000ff;">print</span>(b[0, 0], b[0, 1], b[1, 1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 4. </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)建立一个全0矩阵 a, 大小为 3x3; 类型为整型（提示: dtype = int）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2)建立一个全1矩阵b,大小为4x5; </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (3)建立一个单位矩阵c ,大小为4x4; </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (4)生成一个随机数矩阵d,大小为 3x2.</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第四题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+c1 </span>= np.zeros((3, 3), dtype =<span style="color: #000000;"> int) 
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(c1)
+c2 </span>= np.ones((4, 5), dtype =<span style="color: #000000;"> int) 
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(c2)
+c3 </span>= np.eye(3, dtype =<span style="color: #000000;"> int)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(c3)
+c4 </span>= np.random.rand(3, 2<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(c4)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 5. 建立一个数组 a,(值为[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]] ) ,</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)打印a; </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2)输出 下标为(2,3),(0,0) 这两个数组元素的值</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第五题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+d </span>= np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12<span style="color: #000000;">]])
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(d)
+</span><span style="color: #0000ff;">print</span>(d[2, 3<span style="color: #000000;">], d[0, 0])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 6.把上一题的 a数组的 0到1行 2到3列，放到b里面去，（此处不需要从新建立a,直接调用即可）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1),输出b;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2) 输出b 的（0,0）这个元素的值</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第六题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+e </span>= d[0:2, 2:4<span style="color: #000000;">]
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(e)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(e[0, 0])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 7. 把第5题中数组a的最后两行所有元素放到 c中，（提示： a[1:2, :]）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)输出 c ; </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2) 输出 c 中第一行的最后一个元素（提示，使用 -1 表示最后一个元素）</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第七题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+f </span>= d[1:3, :] <span style="color: #008000;">#</span><span style="color: #008000;"> 直接d[1:3]也成</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(f)
+</span><span style="color: #0000ff;">print</span>(f[0, -1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 8.建立数组a,初始化a为[[1, 2], [3, 4], [5, 6]]，</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 输出 （0,0）（1,1）（2,0）这三个元素</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> （提示： 使用 print(a[[0, 1, 2], [0, 1, 0]]) ）</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第八题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+g </span>= np.array([[1, 2], [3, 4], [5, 6<span style="color: #000000;">]])
+</span><span style="color: #0000ff;">print</span>(g[0, 0], g[1, 1], g[2, 0]) <span style="color: #008000;">#</span><span style="color: #008000;"> =&gt; 1 4 5</span>
+<span style="color: #0000ff;">print</span>(g[[0, 1, 2], [0, 1, 0]]) <span style="color: #008000;">#</span><span style="color: #008000;"> =&gt; [1 4 5]</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 这边有点东西 [0, 1, 2]表示第 0 1 2行 而[0, 1, 0]表示每行的第几个元素</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 最后返回一个列表</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 9.建立矩阵a ,初始化为[[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]，</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 输出(0,0),(1,2),(2,0),(3,1) </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (提示使用 b = np.array([0, 2, 0, 1]) print(a[np.arange(4), b]))</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第九题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+h </span>= np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12<span style="color: #000000;">]])
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 先用上一题的办法</span>
+<span style="color: #0000ff;">print</span>(h[[0, 1, 2, 3], [0, 2, 0, 1<span style="color: #000000;">]])
+</span><span style="color: #0000ff;">print</span>(np.arange(4<span style="color: #000000;">))
+</span><span style="color: #0000ff;">print</span>(h[np.arange(4), [0, 2, 0, 1<span style="color: #000000;">]])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 10.对9 中输出的那四个元素，每个都加上10，</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 然后重新输出矩阵a.(提示： a[np.arange(4), b] += 10 )</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第十题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(h[np.arange(4), [0, 2, 0, 1]] + 10<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;">11. 执行 x = np.array([1, 2])，然后输出 x 的数据类型</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第11题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+x </span>= np.array([1, 2<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(x.dtype)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 12. 执行 x = np.array([1.0, 2.0]) ，然后输出 x 的数据类类型</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第12题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+x </span>= np.array([1.0, 2.0<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(x.dtype)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 13.执行 x = np.array([[1, 2], [3, 4]], dtype=np.float64) ，</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> y = np.array([[5, 6], [7, 8]], dtype=np.float64)，</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 然后输出 x+y ,和 np.add(x,y)</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第13题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+x </span>= np.array([[1, 2], [3, 4]], dtype =<span style="color: #000000;"> np.float64)
+y </span>= np.array([[5, 6], [7, 8]], dtype =<span style="color: #000000;"> np.float64)
+</span><span style="color: #0000ff;">print</span>(x +<span style="color: #000000;"> y)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.add(x, y))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 14. 利用 13题目中的x,y 输出 x-y 和 np.subtract(x,y)</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第14题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(x -<span style="color: #000000;"> y)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.subtract(x, y))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 15. 利用13题目中的x，y 输出 x*y ,</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 和 np.multiply(x, y) 还有 np.dot(x,y),比较差异。</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 然后自己换一个不是方阵的试试。</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第15题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(x)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(y)
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> print(x * y) # 对应位置相乘</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(np.multiply(x, y)) # 对应位置相乘</span>
+<span style="color: #0000ff;">print</span>(np.dot(x, y)) <span style="color: #008000;">#</span><span style="color: #008000;"> 真实的矩阵乘法?</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 16. 利用13题目中的x,y,输出 x / y .(提示 ： 使用函数 np.divide())</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第16题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+np.divide(x, y)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.divide(x, y))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 17. 利用13题目中的x,输出 x的 开方。(提示： 使用函数 np.sqrt() )</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第17题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.sqrt(x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 18.利用13题目中的x,y ,执行 print(x.dot(y)) 和 print(np.dot(x,y))</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第18题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(x.dot(y))
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(y.dot(x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 19.利用13题目中的 x,进行求和。提示：输出三种求和 </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)print(np.sum(x)): </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2)print(np.sum(x，axis =0 )); </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (3)print(np.sum(x,axis = 1))</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第19题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(x)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.sum(x))
+</span><span style="color: #0000ff;">print</span>(np.sum(x, axis = 0)) <span style="color: #008000;">#</span><span style="color: #008000;"> 累加每行</span>
+<span style="color: #0000ff;">print</span>(np.sum(x, axis = 1)) <span style="color: #008000;">#</span><span style="color: #008000;"> 累加每列</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 20.利用13题目中的 x,进行求平均数,提示：输出三种平均数</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)print(np.mean(x)) </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2)print(np.mean(x,axis = 0))</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (3)print(np.mean(x,axis =1))</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第20题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.mean(x))
+</span><span style="color: #0000ff;">print</span>(np.mean(x, axis =<span style="color: #000000;"> 0))
+</span><span style="color: #0000ff;">print</span>(np.mean(x, axis = 1<span style="color: #000000;">))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 21.利用13题目中的x，对x 进行矩阵转置，然后输出转置后的结果</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第21题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(x.T)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 22.利用13题目中的x,求e的指数</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第22题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.exp(x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 23.利用13题目中的 x,求值最大的下标,提示</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (1)print(np.argmax(x)) ,</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (2) print(np.argmax(x, axis =0))</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (3)print(np.argmax(x),axis =1)</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第23题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(np.argmax(x))
+</span><span style="color: #0000ff;">print</span>(np.argmax(x, axis = 0)) <span style="color: #008000;">#</span><span style="color: #008000;"> axis 不大太懂</span>
+<span style="color: #0000ff;">print</span>(np.argmin(x, axis =<span style="color: #000000;"> 0))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 24,画图，y=x*x 其中 x = np.arange(0, 100, 0.1) </span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第24题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+x </span>= np.arange(0, 100, 0.1<span style="color: #000000;">)
+y </span>= x *<span style="color: #000000;"> x
+</span><span style="color: #0000ff;">print</span>(x[0:10<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(x[-1<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(y[0:10<span style="color: #000000;">])
+plt.plot(x, y)
+plt.show()
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 25.画图。</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 画正弦函数和余弦函数， </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> x = np.arange(0, 3 * np.pi, 0.1)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> (提示：这里用到 np.sin() np.cos() 函数和 matplotlib.pyplot 库)</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">=====第25题====</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+x </span>= np.arange(0, 3 * np.pi, 0.1<span style="color: #000000;">)
+y </span>=<span style="color: #000000;"> np.sin(x)
+z </span>=<span style="color: #000000;"> np.cos(x)
+plt.plot(x, y)
+plt.plot(x, z)
+plt.show()</span></pre>
+</div>
+<p>&nbsp;</p>
