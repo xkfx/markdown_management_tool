@@ -1,0 +1,71 @@
+<p>《c++ primer, 5E》</p>
+<p>第86页到第91页，笔记:</p>
+<p>标准库类型vector：</p>
+<p>1、定义和初始化vector对象（最常见的方式就是先定义一个空vector）</p>
+<p>列表初始化：vector&lt;string&gt; v1{"a", "an", "the"};</p>
+<p>2、创建指定数量的元素：vector&lt;int&gt; ivec(10 , -1);</p>
+<p>3、列表初始值还是元素数量？</p>
+<p>总之，应用的时候想表示元素数量就用圆括号，想表示列表初始值就用花括号，</p>
+<p>阅读代码的时候根据具体类型推断含义。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>课后练习:</p>
+<p>练习3.12</p>
+<p>（1）正确。但是个别编译器可能不支持</p>
+<p>（2）错误。类型不兼容</p>
+<p>（3）正确。</p>
+<p><br />练习3.13</p>
+<p>（1）0个</p>
+<p>（2）10个0</p>
+<p>（3）10个42</p>
+<p>（4）1个10</p>
+<p>（5）2个分别是20、42</p>
+<p>（6）10个null</p>
+<p>（7）10个"hi"</p>
+<p>&nbsp;</p>
+<p>练习3.14</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ivec;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> val)
+        ivec.push_back(val);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> for(int val: ivec)
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> cout &lt;&lt; val &lt;&lt; endl;</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>练习3.15</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> word;
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> svec;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> word)
+        svec.push_back(word);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>遇到的问题：</p>
+<p>1、以c++11标准编译：g++ -std=c++11 prog1.cpp</p>

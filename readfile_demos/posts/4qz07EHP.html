@@ -1,0 +1,53 @@
+<p><span style="background-color: #ffff99;">p140~p144：</span><br /><span style="background-color: #ffff99;">逗号运算符</span><br />1、特点：1）规定运算顺序，即由左向右。2）逗号运算符的真正结果是右侧表达式的值！</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.31</span></p>
+<p>使用后置的运算符会有额外的内存开销，</p>
+<p>在这道题中使用前置和后置结果貌似是一样的，不需要改。。。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec(<span style="color: #800080;">10</span>);    <span style="color: #008000;">//</span><span style="color: #008000;"> 包含10个初始化的元素</span>
+    vector&lt;<span style="color: #0000ff;">int</span>&gt;::size_type cnt =<span style="color: #000000;"> ivec.size();
+    </span><span style="color: #0000ff;">for</span> (vector&lt;<span style="color: #0000ff;">int</span>&gt;::size_type ix = <span style="color: #800080;">0</span>; ix != ivec.size(); ix++, <span style="color: #000000;">cnt--) {
+        ivec[ix] </span>=<span style="color: #000000;"> cnt;
+    }
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">x : ivec) {
+        cout </span>&lt;&lt; x &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> output：
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.32</span><br />遍历ia中的元素。ix代表元素下标，ptr逐个存放对应元素的地址。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.33</span><br />someValue ? ++x, ++y : --x, --y;<br />先判断someValue的值，若是true，则执行:左侧的表达式，x、y的值依次加1，最后返回y，若是false，<br />则执行:右侧的表达式，x、y的值依次减1，最后返回y（左值）。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">p141</span><br /><span style="background-color: #ffff99;">类型转换</span><br />1、如果两种类型可以相互转换，那么它们就是关联的。</p>
+<p>&nbsp;</p>
+<p>2、隐式转换。</p>
+<p>&nbsp;</p>
+<p>3、运算对象被统一成最宽的类型。</p>
+<p>&nbsp;</p>
+<p>4、整型提升：负责把小整数类型转换成较大的整型类型（int或者unsigned int）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.34</span><br />a 非布尔值转换成布尔类型。<br />b ival转化为float类型，然后相加，转化为double型；或者，fval和ival都转化为double型后相加。<br />c cval提升成int，相乘后的int值转换成double型。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.35</span><br />a 'a'提升成int，相加后得到的int转换为char。<br />b 都转化为unsigned类型，右侧结果也会转化为unsigned，最后转化为float类型。<br />c 整数型转化为浮点型，相乘后转换成左侧运算对象double类型。<br />d 统一成double型后转换为char类型。</p>
+<p>&nbsp;</p>

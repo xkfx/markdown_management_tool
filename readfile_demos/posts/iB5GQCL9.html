@@ -1,0 +1,365 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">Spring容器的最小可用依赖</a></li>
+<li><a href="#anchor1">用XML定义元数据</a></li>
+<li><a href="#anchor2">实例化容器&amp;使用容器</a></li>
+</ul>
+</div>
+<p>例子中仅包含两种类：英雄类Hero和武器类Weapon。</p>
+<ol>
+<li>演示DI：给Hero初始化Weapon</li>
+<li>演示AOP：法师是一个英雄，当他发动攻击的时候需要念咒语，只有咒语正确才能施展魔法。通过定义一个切面来检验咒语的正确性（假设咒语必须要符合某种公共的标准。。。。。）</li>
+</ol>
+<p>代码结构：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190126181153456-1477560214.png" alt="" /></p>
+<h2><a name="anchor0"></a>Spring容器的最小可用依赖</h2>
+<ol>
+<li><span style="color: #ff0000;"><strong>Spring的核心是一个IOC容器，包含两个基础模块：context以及bean（必要）</strong></span></li>
+<li>添加AspectJ相关依赖用于支持AOP（<strong>必要</strong>）</li>
+<li>添加Log4j依赖方便输出（可选）</li>
+</ol>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>sample<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.0-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project.build.sourceEncoding</span><span style="color: #0000ff;">&gt;</span>UTF-8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project.build.sourceEncoding</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> -source 1.5 中不支持 try-with-resources</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">maven.compiler.source</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">maven.compiler.source</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">maven.compiler.target</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">maven.compiler.target</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Use the latest version whenever possible. </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">spring.version</span><span style="color: #0000ff;">&gt;</span>5.1.3.RELEASE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">spring.version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">log4j.version</span><span style="color: #0000ff;">&gt;</span>2.11.1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">log4j.version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aspectj.version</span><span style="color: #0000ff;">&gt;</span>1.9.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aspectj.version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+<strong>        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.springframework/spring-context </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-context<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>${spring.version}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.springframework/spring-beans </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-beans<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>${spring.version}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></strong>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.logging.log4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>log4j-core<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>${log4j.version}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.logging.log4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>log4j-api<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>${log4j.version}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+<strong>        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.aspectj/aspectjrt </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.aspectj<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>aspectjrt<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>${aspectj.version}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.aspectj/aspectjweaver </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.aspectj<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>aspectjweaver<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>${aspectj.version}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></strong>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h2><a name="anchor1"></a>用XML定义元数据</h2>
+<p>★主配置文件：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">import </span><span style="color: #ff0000;">resource</span><span style="color: #0000ff;">="bean/weapons.xml"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">import </span><span style="color: #ff0000;">resource</span><span style="color: #0000ff;">="bean/heroes.xml"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>★子配置文件1：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;"> xmlns:aop</span><span style="color: #0000ff;">="http://www.springframework.org/schema/aop"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="mySword"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="sample.spring.iocbasis.weapon.Sword"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="myMagicBook"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="sample.spring.iocbasis.weapon.MagicBook"</span><span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspect </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="myMagicBook"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:pointcut </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="mageAttack"</span><span style="color: #ff0000;">
+                          expression</span><span style="color: #0000ff;">="execution(* sample.spring.iocbasis.hero.Mage.attack(String))"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:around </span><span style="color: #ff0000;">pointcut-ref</span><span style="color: #0000ff;">="mageAttack"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="magicLimit"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:aspect</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>★子配置文件2，IDEA可能会报错说找不到引用，但其实是Ok的。注意不要重复import一个配置文件，这会导致重复定义bean或者切面：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="iocWarrior"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="sample.spring.iocbasis.hero.Warrior"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="mySword"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="iocMage"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="sample.spring.iocbasis.hero.Mage"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="myMagicBook"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h2><a name="anchor2"></a>实例化容器&amp;使用容器</h2>
+<p>★程序入口：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.ApplicationContext;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.support.ClassPathXmlApplicationContext;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.hero.Hero;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.hero.Mage;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.hero.Warrior;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.weapon.MagicBook;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.weapon.Sword;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"><strong> main</strong>(String[] args) {
+        System.out.println(</span>"===========手动调用setter方法注入================="<span style="color: #000000;">);
+        Warrior warrior </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Warrior();
+        warrior.attack(</span><span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        warrior.setWeapon(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Sword());
+        warrior.attack(</span><span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+        System.out.println(</span>"===========手动调用构造器方法注入================="<span style="color: #000000;">);
+        Warrior warrior2 </span>= <span style="color: #0000ff;">new</span> Warrior(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Sword());
+        warrior2.attack(</span><span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+        System.out.println(</span>"===========直接从IOC容器中获得事先组装好的对象================="<span style="color: #000000;">);
+        ApplicationContext context </span>= <span style="color: #0000ff;">new</span> ClassPathXmlApplicationContext("\\spring\\config.xml"<span style="color: #000000;">);
+        Warrior iocWarrior </span>= context.getBean("iocWarrior", Warrior.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        iocWarrior.attack(</span><span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+        System.out.println(</span>"===========通过动态代理增强方法================="<span style="color: #000000;">);
+        Hero iocMage </span>= context.getBean("iocMage", Hero.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        iocMage.attack(</span>"hello world."<span style="color: #000000;">);
+        iocMage.attack(</span>"hlo worl."<span style="color: #000000;">);
+
+        System.out.println(</span>"===========绕过动态代理================="<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">new</span> Mage(<span style="color: #0000ff;">new</span> MagicBook()).attack("hlo worl."<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+===========手动调用setter方法注入=================
+Warrior{no=1}用WoodenStick{}发起了一次攻击。
+Warrior{no=1}用Sword{no=1}发起了一次攻击。
+===========手动调用构造器方法注入=================
+Warrior{no=2}用Sword{no=2}发起了一次攻击。
+===========直接从IOC容器中获得事先组装好的对象=================
+Warrior{no=3}用Sword{no=3}发起了一次攻击。
+===========通过动态代理增强方法=================
+Mage{no=1}试图发动一次魔法攻击，准备校验咒语【hello world.】正确性 ...
+Mage{no=1}用MagicBook{no=1}发起了一次攻击
+Mage{no=1}试图发动一次魔法攻击，准备校验咒语【hlo worl.】正确性 ...
+Mage{no=1}的咒语念错了，魔法发动失败 ...
+===========绕过动态代理=================
+Mage{no=2}用MagicBook{no=2}发起了一次攻击
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>唯一能看出&ldquo;第三方依赖痕迹&rdquo;的类：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis.weapon;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.LogManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.Logger;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.aspectj.lang.ProceedingJoinPoint;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MagicBook <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Weapon {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER =<span style="color: #000000;"> LogManager.getLogger();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> no = ++<span style="color: #000000;">count;
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> attack() {
+
+    }
+
+    </span><strong><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> magicLimit(ProceedingJoinPoint jp) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Object obj </span>=<span style="color: #000000;"> jp.getThis();
+            String spell </span>= String.valueOf(jp.getArgs()[0<span style="color: #000000;">]);
+            LOGGER.info(</span>"{}试图发动一次魔法攻击，准备校验咒语【{}】正确性 ..."<span style="color: #000000;">, obj, spell);
+            </span><span style="color: #0000ff;">if</span> ("hello world."<span style="color: #000000;">.equals(spell)) {
+                jp.proceed();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                LOGGER.info(</span>"{}的咒语念错了，魔法发动失败 ..."<span style="color: #000000;">, obj);
+            }
+        } </span><span style="color: #0000ff;">catch</span></strong><span style="color: #000000;"><strong> (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }</strong>
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "MagicBook{" +
+                "no=" + no +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>其它类：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('7284c626-5182-403b-86a0-d96b46d2a887')"><img id="code_img_closed_7284c626-5182-403b-86a0-d96b46d2a887" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_7284c626-5182-403b-86a0-d96b46d2a887" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('7284c626-5182-403b-86a0-d96b46d2a887',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_7284c626-5182-403b-86a0-d96b46d2a887" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis.hero;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.LogManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.Logger;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.weapon.Weapon;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.weapon.WoodenStick;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Warrior <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Hero {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER =<span style="color: #000000;"> LogManager.getLogger();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> no = ++<span style="color: #000000;">count;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Weapon weapon;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Warrior() {
+        weapon </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> WoodenStick();
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Warrior(Weapon weapon) {
+        </span><span style="color: #0000ff;">this</span>.weapon =<span style="color: #000000;"> weapon;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setWeapon(Weapon weapon) {
+        </span><span style="color: #0000ff;">this</span>.weapon =<span style="color: #000000;"> weapon;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> attack(String sth) {
+        LOGGER.info(</span>"{}用{}发起了一次攻击。", <span style="color: #0000ff;">this</span><span style="color: #000000;">, weapon);
+        weapon.attack();
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "Warrior{" +
+                "no=" + no +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Warrior.java</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('8557a45f-b2c4-47c6-9af1-7f342cbafc9c')"><img id="code_img_closed_8557a45f-b2c4-47c6-9af1-7f342cbafc9c" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_8557a45f-b2c4-47c6-9af1-7f342cbafc9c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('8557a45f-b2c4-47c6-9af1-7f342cbafc9c',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_8557a45f-b2c4-47c6-9af1-7f342cbafc9c" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis.hero;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.LogManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.Logger;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> sample.spring.iocbasis.weapon.Weapon;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Mage <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Hero {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER =<span style="color: #000000;"> LogManager.getLogger();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> no = ++<span style="color: #000000;">count;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Weapon weapon;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Mage(Weapon weapon) {
+        </span><span style="color: #0000ff;">this</span>.weapon =<span style="color: #000000;"> weapon;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> attack(String spell) {
+        LOGGER.info(</span>"{}用{}发起了一次攻击", <span style="color: #0000ff;">this</span><span style="color: #000000;">, weapon);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "Mage{" +
+                "no=" + no +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Mage.java</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('de03fc4f-683c-4c61-8f2b-1e00b8e19479')"><img id="code_img_closed_de03fc4f-683c-4c61-8f2b-1e00b8e19479" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_de03fc4f-683c-4c61-8f2b-1e00b8e19479" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('de03fc4f-683c-4c61-8f2b-1e00b8e19479',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_de03fc4f-683c-4c61-8f2b-1e00b8e19479" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis.weapon;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Sword <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Weapon {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> no = ++<span style="color: #000000;">count;
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> attack() {
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "Sword{" +
+                "no=" + no +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Sword.java</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('9a2f0b9d-6312-4ba3-814c-a1646cc28517')"><img id="code_img_closed_9a2f0b9d-6312-4ba3-814c-a1646cc28517" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_9a2f0b9d-6312-4ba3-814c-a1646cc28517" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('9a2f0b9d-6312-4ba3-814c-a1646cc28517',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_9a2f0b9d-6312-4ba3-814c-a1646cc28517" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis.weapon;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> WoodenStick <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Weapon {
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> attack() {
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "WoodenStick{}"<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">WoodenStick.java</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('650b3ea8-5ab5-4998-a7fc-0985d5693ee0')"><img id="code_img_closed_650b3ea8-5ab5-4998-a7fc-0985d5693ee0" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_650b3ea8-5ab5-4998-a7fc-0985d5693ee0" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('650b3ea8-5ab5-4998-a7fc-0985d5693ee0',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_650b3ea8-5ab5-4998-a7fc-0985d5693ee0" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample.spring.iocbasis.hero;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> Hero {
+
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> attack(String sth);
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Hero.java</span></div>
+<p>&nbsp;</p>

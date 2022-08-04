@@ -1,0 +1,209 @@
+<p>【1】</p>
+<p>&nbsp;HTML 插入第三方。</p>
+<p><object width="300" height="225" data="http://cdn.abowman.com/widgets/hamster/hamster.swf?" type="application/x-shockwave-flash"><param name="AllowScriptAccess" value="always" /><param name="wmode" value="opaque" /><param name="src" value="http://cdn.abowman.com/widgets/hamster/hamster.swf?" /></object></p>
+<p><iframe src="https://www.youtube.com/embed/sEQf5lcnj_o" frameborder="0" width="560" height="315"></iframe> <iframe style="border: 0;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5886854.1488736225!2d-122.10806260897259!3d44.75571499023218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4b0d03d337cc6ad9%3A0x9968b72aa2438fa5!2sCanada!5e0!3m2!1sen!2sjp!4v1501736562546" frameborder="0" width="600" height="450"></iframe></p>
+<p>&nbsp;</p>
+<p>【2】</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201708/1042431-20170805134947272-951317767.png" alt="" width="987" height="56" /></p>
+<p>&nbsp;</p>
+<p>【3】</p>
+<p>JavaScript 回调函数 &amp; 模块化 --&gt; 用变量封装数据、方法 --&gt; 类比 Java 中的 package</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">var</span> fetchLive = <span style="color: #0000ff;">function</span><span style="color: #000000;">(callback) {
+    $.ajax({
+        url: </span>"live/list.do"<span style="color: #000000;">,
+        method: </span>'GET'<span style="color: #000000;">,
+        success: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (data) {
+            callback(data);
+        }
+    });        
+};
+
+</span><span style="color: #0000ff;">var</span> liveDisplay =<span style="color: #000000;"> {
+    homepage: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(data) {
+        console.log(data);
+        </span><span style="color: #0000ff;">var</span> liveName = $('.telecast-title'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> liveStatus = $('.live-status'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> liveTime = $('.telecast-time'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> liveHref = $('.live-href'<span style="color: #000000;">);
+        const DISPLAY_NUM </span>= (data.length &lt; 4 ? data.length : 4<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i != DISPLAY_NUM; ++<span style="color: #000000;">i) {
+            $(liveName[i]).text(data[i].name);
+            $(liveStatus[i]).text(data[i].status);
+            $(liveTime[i]).text(data[i].lastTime);
+            liveHref[i].href </span>=<span style="color: #000000;"> data[i].link;
+        }
+    }
+};
+
+$(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    fetchLive(liveDisplay.homepage);
+});</span></pre>
+</div>
+<p>示例 02：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 分类展示课程
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+const BASE_URL </span>= "course/listbyid.do?categoryID="<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">var</span> fetchCourseById = <span style="color: #0000ff;">function</span><span style="color: #000000;">(id, callback) {
+    $.ajax({
+        url: BASE_URL </span>+<span style="color: #000000;"> id,
+        method: </span>'GET'<span style="color: #000000;">,
+        success: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (data) {
+            callback(data);
+        }
+    });    
+};
+
+</span><span style="color: #0000ff;">var</span> displayCourse =<span style="color: #000000;"> {
+    frameA: </span><span style="color: #0000ff;">function</span>(courses) { <span style="color: #008000;">//</span><span style="color: #008000;"> 首页页面展示1</span>
+        <span style="color: #0000ff;">var</span> courseName = $('.recommended-course-name'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> courseNum = $('.recommended-course-number'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> coursePic = $('.recommended-course-picture'<span style="color: #000000;">);
+        
+        const DISPLAY_NUM </span>= (courses.length &lt; 6 ? courses.length : 6<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i != DISPLAY_NUM; ++<span style="color: #000000;">i) {
+            $(courseName[i]).text(courses[i].title);
+            $(courseNum[i]).text(courses[i].lessonNum);
+            coursePic[i].src </span>=<span style="color: #000000;"> courses[i].picture;
+        }
+    },
+    
+    frameB: </span><span style="color: #0000ff;">function</span>(courses) { <span style="color: #008000;">//</span><span style="color: #008000;"> 首页页面展示2</span>
+        <span style="color: #0000ff;">var</span> courseName = $('.free-course-name'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> courseNum = $('.free-course-lessionNum'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> coursePic = $('.free-course-logo'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> courseHref = $('.btn-study'<span style="color: #000000;">);
+        
+        const DISPLAY_NUM </span>= (courses.length &lt; 8 ? courses.length : 8<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i != DISPLAY_NUM; ++<span style="color: #000000;">i) {
+            $(courseName[i]).text(courses[i].title);
+            $(courseNum[i]).text(courses[i].lessonNum);
+            coursePic[i].src </span>=<span style="color: #000000;"> courses[i].picture;
+            courseHref[i].href </span>= 'toPcLivePlay.do?source=' +<span style="color: #000000;"> courses[i].rtmp;
+        }
+    }
+}
+
+$(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () { 
+    fetchCourseById(</span>2<span style="color: #000000;">, displayCourse.frameA);
+    fetchCourseById(</span>1<span style="color: #000000;">, displayCourse.frameB);
+});</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>【4】</p>
+<p>distpicker，不要遗漏</p>
+<pre><strong>trigger</strong></pre>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+ * per-set
+ * 展示、修改用户信息。
+ * </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">var</span> getSexVal = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #0000ff;">var</span> temp =$(".sex"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i != 3; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (temp[i].checked) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+};
+
+</span><span style="color: #0000ff;">var</span><span style="color: #000000;"> lastTotalVal;
+</span><span style="color: #0000ff;">var</span> getTotalVal = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #0000ff;">var</span> temp = $("#user-val1"<span style="color: #000000;">).val() 
+        </span>+ $("#user-val2"<span style="color: #000000;">).val() 
+        </span>+ $("#user-val3"<span style="color: #000000;">).val()
+        </span>+ $("#user-val4"<span style="color: #000000;">).val()
+        </span>+ $("#user-val5"<span style="color: #000000;">).val()
+        </span>+ $("#user-val6"<span style="color: #000000;">).val();
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> temp; 
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> verifyEmail(str) {  
+    </span><span style="color: #0000ff;">var</span> reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/<span style="color: #000000;">;  
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> reg.test(str);
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> verifyPhone(str) {  
+    </span><span style="color: #0000ff;">var</span> reg = /^(\+86)|(86)?1[3,5,8]{1}[0-9]{1}[0-9]{8}$/<span style="color: #000000;">;  
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> reg.test(str);
+}
+
+</span><span style="color: #0000ff;">var</span> checkFormat_message = ""<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> checkFormat = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 是否改变</span>
+    currentTotalVal =<span style="color: #000000;"> getTotalVal();
+    </span><span style="color: #0000ff;">if</span> (currentTotalVal ===<span style="color: #000000;"> lastTotalVal) {
+        checkFormat_message </span>= "您还没有修改信息！"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 非空</span>
+    <span style="color: #0000ff;">if</span> ($("#user-val1").val() === "" || $("#user-val1").val() === <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+        checkFormat_message </span>= "昵称不能为空"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 邮箱格式</span>
+    <span style="color: #0000ff;">if</span> (!verifyEmail($("#user-val5"<span style="color: #000000;">).val())) {
+        checkFormat_message </span>= "邮箱格式错误"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;        
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 手机号码格式</span>
+    <span style="color: #0000ff;">if</span> (!verifyPhone($("#user-val4"<span style="color: #000000;">).val())) {
+        checkFormat_message </span>= "手机号格式错误"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;        
+    }
+    lastTotalVal </span>=<span style="color: #000000;"> currentTotalVal;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+};
+
+</span><span style="color: #0000ff;">var</span> userProfile =<span style="color: #000000;"> {
+    display: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        $.ajax({
+            url: </span>'user/userProfile.do'<span style="color: #000000;">,
+            method: </span>'GET'<span style="color: #000000;">,
+            success: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (data) {
+                $($(</span>'.sex')[data.sex]).attr('checked', <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+<strong>                $(</strong></span><strong>"#user-val2"<span style="color: #000000;">).val(data.province);
+            <span style="color: #ff0000;">    $(</span></span><span style="color: #ff0000;">"#user-val2").trigger('change'</span><span style="color: #000000;"><span style="color: #ff0000;">);</span>
+                $(</span>"#user-val3"<span style="color: #000000;">).val(data.city);
+              <span style="color: #ff0000;">  $(</span></span><span style="color: #ff0000;">"#user-val3").trigger('change'</span><span style="color: #000000;"><span style="color: #ff0000;">);</span>
+                $(</span>"#user-val6"<span style="color: #000000;">).val(data.country);
+              <span style="color: #ff0000;">  $(</span></span><span style="color: #ff0000;">"#user-val6").trigger('change'</span></strong><span style="color: #000000;"><span style="color: #ff0000;"><strong>);</strong></span>
+            }
+        });            
+    },
+    saveProfile: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">checkFormat()) {
+            alert(checkFormat_message);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        };
+        $.ajax({
+            url: </span>'user/saveProfile.do'<span style="color: #000000;">,
+            method: </span>'GET'<span style="color: #000000;">,
+            data: {
+                username: $(</span>"#user-val1"<span style="color: #000000;">).val(),
+                sex: getSexVal(),
+                province: $(</span>"#user-val2"<span style="color: #000000;">).val(),
+                city: $(</span>"#user-val3"<span style="color: #000000;">).val(),
+                country: $(</span>"#user-val6"<span style="color: #000000;">).val(),
+                phone: $(</span>"#user-val4"<span style="color: #000000;">).val(),
+                email: $(</span>"#user-val5"<span style="color: #000000;">).val(),
+            },            
+            success: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (data) {
+                </span><span style="color: #0000ff;">if</span>(data.status == 200<span style="color: #000000;">)
+                    alert(</span>'保存成功'<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                    alert(</span>'保存失败'<span style="color: #000000;">);
+            }
+        });    
+    },
+};
+
+$(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () { 
+    userProfile.display();
+    $(</span>'#btnSaveProfile'<span style="color: #000000;">).click(userProfile.saveProfile);
+    lastTotalVal </span>=<span style="color: #000000;"> getTotalVal();
+});</span></pre>
+</div>

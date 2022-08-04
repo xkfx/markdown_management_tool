@@ -1,0 +1,92 @@
+<p>Person类</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Person {
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> IdPerson;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> Name;
+    </span><span style="color: #0000ff;">int</span> Sex; <span style="color: #008000;">//</span><span style="color: #008000;"> 1为男，0为女</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> Birth_day;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> HomeAddress;
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 构造器</span>
+    Person(<span style="color: #0000ff;">string</span> IdPerson, <span style="color: #0000ff;">string</span> Name, <span style="color: #0000ff;">int</span> Sex, <span style="color: #0000ff;">string</span> Birth_day, <span style="color: #0000ff;">string</span><span style="color: #000000;"> HomeAddress)
+    {
+        </span><span style="color: #0000ff;">this</span>-&gt;IdPerson =<span style="color: #000000;"> IdPerson;
+        </span><span style="color: #0000ff;">this</span>-&gt;Name =<span style="color: #000000;"> Name;
+        </span><span style="color: #0000ff;">this</span>-&gt;Sex =<span style="color: #000000;"> Sex;
+        </span><span style="color: #0000ff;">this</span>-&gt;Birth_day =<span style="color: #000000;"> Birth_day;
+        </span><span style="color: #0000ff;">this</span>-&gt;HomeAddress =<span style="color: #000000;"> HomeAddress;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 拷贝构造函数</span>
+    Person(Person &amp;<span style="color: #000000;">p)
+    {
+        </span><span style="color: #0000ff;">this</span>-&gt;IdPerson =<span style="color: #000000;"> p.IdPerson;
+        </span><span style="color: #0000ff;">this</span>-&gt;Name =<span style="color: #000000;"> p.Name;
+        </span><span style="color: #0000ff;">this</span>-&gt;Sex =<span style="color: #000000;"> p.Sex;
+        </span><span style="color: #0000ff;">this</span>-&gt;Birth_day =<span style="color: #000000;"> p.Birth_day;
+        </span><span style="color: #0000ff;">this</span>-&gt;HomeAddress =<span style="color: #000000;"> p.HomeAddress;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 成员录入</span>
+    <span style="color: #0000ff;">void</span> setPerson(<span style="color: #0000ff;">string</span> IdPerson, <span style="color: #0000ff;">string</span> Name, <span style="color: #0000ff;">int</span> Sex, <span style="color: #0000ff;">string</span> Birth_day, <span style="color: #0000ff;">string</span><span style="color: #000000;"> HomeAddress)
+    {
+        </span><span style="color: #0000ff;">this</span>-&gt;IdPerson =<span style="color: #000000;"> IdPerson;
+        </span><span style="color: #0000ff;">this</span>-&gt;Name =<span style="color: #000000;"> Name;
+        </span><span style="color: #0000ff;">this</span>-&gt;Sex =<span style="color: #000000;"> Sex;
+        </span><span style="color: #0000ff;">this</span>-&gt;Birth_day =<span style="color: #000000;"> Birth_day;
+        </span><span style="color: #0000ff;">this</span>-&gt;HomeAddress =<span style="color: #000000;"> HomeAddress;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 查找函数</span>
+    <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> search(<span style="color: #0000ff;">string</span> Name, Person *p, <span style="color: #0000ff;">int</span><span style="color: #000000;"> num)
+    {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">&gt;&gt;&gt;你要找的信息如下：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != num; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (Name ==<span style="color: #000000;"> p[i].Name) {
+                Person::display(p[i]);
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }
+        }
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">没找到！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 显示信息</span>
+    <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> display(Person p)
+    {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">身份证号：</span><span style="color: #800000;">"</span> &lt;&lt; p.IdPerson &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span>
+             &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">姓名：</span><span style="color: #800000;">"</span> &lt;&lt; p.Name &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span>
+             &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">性别:</span><span style="color: #800000;">"</span> &lt;&lt; ((p.Sex == <span style="color: #800080;">1</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">男</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">女</span><span style="color: #800000;">"</span>) &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span>
+             &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">生日：</span><span style="color: #800000;">"</span> &lt;&lt; p.Birth_day &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span>
+             &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">家庭住址：</span><span style="color: #800000;">"</span> &lt;&lt; p.HomeAddress &lt;&lt;<span style="color: #000000;"> endl;    
+        cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+    }
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试构造器和显示函数</span>
+    cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">构造p1：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    Person p1(</span><span style="color: #800000;">"</span><span style="color: #800000;">350824188710194977</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">林涛</span><span style="color: #800000;">"</span>, <span style="color: #800080;">1</span>, <span style="color: #800000;">"</span><span style="color: #800000;">19971019</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">福建福州</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Person::display(p1);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试录入函数</span>
+    cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">修改p1：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    p1.setPerson(</span><span style="color: #800000;">"</span><span style="color: #800000;">36430010194877</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">李红</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">"</span><span style="color: #800000;">19981010</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">福建厦门</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Person::display(p1);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试拷贝构造函数</span>
+    cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">拷贝生成的p2如下：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    Person p2(p1);
+    Person::display(p2);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试查找函数</span>
+    Person p3(<span style="color: #800000;">"</span><span style="color: #800000;">350824188710194977</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">张三</span><span style="color: #800000;">"</span>, <span style="color: #800080;">1</span>, <span style="color: #800000;">"</span><span style="color: #800000;">19971019</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">福建福州</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Person p4(</span><span style="color: #800000;">"</span><span style="color: #800000;">36430010194877</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">李四</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">"</span><span style="color: #800000;">19981010</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">福建厦门</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Person ps[</span><span style="color: #800080;">2</span>] =<span style="color: #000000;"> {p3, p4};
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入要找的人的名字：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> Name;
+    cin </span>&gt;&gt;<span style="color: #000000;"> Name;
+    Person::search(Name , ps, </span><span style="color: #800080;">2</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

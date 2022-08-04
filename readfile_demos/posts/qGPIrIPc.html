@@ -1,0 +1,229 @@
+<p>&nbsp;<a href="https://blog.csdn.net/xushouwei/article/details/52201360" target="_blank">mysql中游标的使用案例详解（学习笔记）</a>这篇讲得相当直白好懂了。</p>
+<p>索引：</p>
+<ol>
+<li><a href="#a1">cursor 基础讲解</a></li>
+<li><a href="#a2">mysql 循环</a></li>
+<li><a href="#a3">书上的整合代码</a></li>
+</ol>
+<h2><a name="a1"></a>cursor 基础讲解</h2>
+<p>&nbsp;cursor 有点类似于 JDBC 中的 ResultSet ，允许我们在执行 SELECT 之后，一行一行地 FETCH 数据。</p>
+<p>它只能被用在存储过程中！如果把存储过程比作函数，cursor 只能在这个函数体中（存储过程的内部）定义、打开、关闭，一旦存储过程执行完毕，它将不再存在（可以把 cursor 理解为一个局部变量）。</p>
+<p>定义一个 cursor ，这个时候并没有执行 SELECT 语句：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> processorders()
+</span><span style="color: #0000ff;">BEGIN</span>
+<strong>   <span style="color: #0000ff;">DECLARE</span> ordernumbers <span style="color: #0000ff;">CURSOR</span>
+   <span style="color: #0000ff;">FOR</span>
+   <span style="color: #0000ff;">SELECT</span> ordernum <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders;
+</span></strong><span style="color: #0000ff;">END</span>;</pre>
+</div>
+<p>打开 cursor，SELECT 语句就是在这个时候被执行的，数据被缓存到 cursor 中，在这之后可以 FETCH 数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">OPEN</span> ordernumbers;</pre>
+</div>
+<p>关闭 cursor ，释放 cursor 所占用的所有内存和资源， 当然，即便不手动关闭，在存储过程结束时（执行到 END） cursor 也会自动关闭：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CLOSE</span> ordernumbers;</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180423130629086-982218634.png" alt="" width="591" height="268" /></p>
+<p>接下来就是 FETCH 数据了，每次 FETCH 一次都是下一行！可以结合上面几个知识点做个小实验，上面是实验用的表：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> hello;
+
+DELIMITER </span><span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> hello()
+</span><span style="color: #0000ff;">BEGIN</span>
+   <span style="color: #008080;">--</span><span style="color: #008080;"> 声明局部变量，用于临时存储 FETCH 结果</span>
+   <span style="color: #0000ff;">DECLARE</span> o <span style="color: #0000ff;">INT</span><span style="color: #000000;">;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 声明游标</span>
+   <span style="color: #0000ff;">DECLARE</span> ordernumbers <span style="color: #0000ff;">CURSOR</span>
+   <span style="color: #0000ff;">FOR</span>
+   <span style="color: #0000ff;">SELECT</span> order_num <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 打开游标（执行SELECT，缓存数据）</span>
+   <span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> ordernumbers;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 取出第一个订单号放到 o 里，并打印</span>
+   <span style="color: #0000ff;">FETCH</span> ordernumbers <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> o;
+   </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> o;
+   
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 取出第二个订单号放到 o 里，并打印</span>
+   <span style="color: #0000ff;">FETCH</span> ordernumbers <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> o;
+   </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> o;
+   
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 关闭游标（释放内存、资源）</span>
+   <span style="color: #0000ff;">CLOSE</span><span style="color: #000000;"> ordernumbers;
+   
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 重新打开游标（重新执行SELECT，缓存数据）</span>
+   <span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> ordernumbers;
+   
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> 取出第 ? 个订单号放到 o 里，并打印</span>
+   <span style="color: #0000ff;">FETCH</span> ordernumbers <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> o;
+   </span><span style="color: #0000ff;">SELECT</span> o; <span style="color: #008080;">--</span><span style="color: #008080;"> 可以猜到，依然是第一个订单号</span>
+
+<span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+
+DELIMITER ;
+
+CALL hello();</span></pre>
+</div>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180423131954105-383876460.png" alt="" width="418" height="536" /></p>
+<h2><a name="a2"></a>mysql 循环</h2>
+<p>&nbsp;mySQL 本身的循环其实挺简单的，但是书上写的循环有点特殊。</p>
+<p>基本循环示例：</p>
+<p>while &darr;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> hello;
+
+DELIMITER </span><span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> hello()
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">DECLARE</span> v1 <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">5</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">WHILE</span> v1 <span style="color: #808080;">&gt;</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;"> DO
+    </span><span style="color: #0000ff;">SET</span> v1 <span style="color: #808080;">=</span> v1 <span style="color: #808080;">-</span> <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> v1;
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">WHILE</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+
+DELIMITER ;
+
+CALL hello();</span></pre>
+</div>
+<p>repeat &darr;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> hello;
+
+DELIMITER </span><span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> hello()
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">DECLARE</span> v1 <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">5</span><span style="color: #000000;">;
+
+    REPEAT
+    </span><span style="color: #0000ff;">SET</span> v1 <span style="color: #808080;">=</span> v1 <span style="color: #808080;">-</span> <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> v1;
+    UNTIL v1 </span><span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #0000ff;">END</span><span style="color: #000000;"> REPEAT;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+
+DELIMITER ;
+
+CALL hello();</span></pre>
+</div>
+<p>loop &darr;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> hello;
+
+DELIMITER </span><span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> hello()
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">DECLARE</span> v1 <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">5</span><span style="color: #000000;">;
+
+    label1: LOOP
+    
+    </span><span style="color: #0000ff;">SET</span> v1 <span style="color: #808080;">=</span> v1 <span style="color: #808080;">-</span> <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> v1;
+    </span><span style="color: #0000ff;">IF</span> v1 <span style="color: #808080;">&gt;</span> <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #0000ff;">THEN</span><span style="color: #000000;">
+    ITERATE label1; </span><span style="color: #008080;">--</span><span style="color: #008080;"> 继续循环 相当于continue</span>
+    <span style="color: #0000ff;">END</span> <span style="color: #0000ff;">IF</span><span style="color: #000000;">;
+    LEAVE label1; </span><span style="color: #008080;">--</span><span style="color: #008080;"> 相当于 break</span>
+    
+    <span style="color: #0000ff;">END</span><span style="color: #000000;"> LOOP;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+
+DELIMITER ;
+
+CALL hello();</span></pre>
+</div>
+<p>PS. 为了确保可以直接 COPY 到命令行执行，上面的代码缩进有点问题。。。</p>
+<p>书上的循环示例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> processorders()
+</span><span style="color: #0000ff;">BEGIN</span>
+
+   <span style="color: #008080;">--</span><span style="color: #008080;"> Declare local variables</span>
+   <span style="color: #0000ff;">DECLARE</span> done BOOLEAN <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+   </span><span style="color: #0000ff;">DECLARE</span> o <span style="color: #0000ff;">INT</span><span style="color: #000000;">;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Declare the cursor</span>
+   <span style="color: #0000ff;">DECLARE</span> ordernumbers <span style="color: #0000ff;">CURSOR</span>
+   <span style="color: #0000ff;">FOR</span>
+   <span style="color: #0000ff;">SELECT</span> order_num <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Declare continue handler</span>
+   <span style="color: #0000ff;">DECLARE</span> <span style="color: #0000ff;">CONTINUE</span> HANDLER <span style="color: #0000ff;">FOR</span> SQLSTATE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">02000</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">SET</span> done<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Open the cursor</span>
+   <span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> ordernumbers;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Loop through all rows</span>
+<span style="color: #000000;">   REPEAT
+
+      </span><span style="color: #008080;">--</span><span style="color: #008080;"> Get order number</span>
+      <span style="color: #0000ff;">FETCH</span> ordernumbers <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> o;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> End of loop</span>
+   UNTIL done <span style="color: #0000ff;">END</span><span style="color: #000000;"> REPEAT;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Close the cursor</span>
+   <span style="color: #0000ff;">CLOSE</span><span style="color: #000000;"> ordernumbers;
+
+</span><span style="color: #0000ff;">END</span>;</pre>
+</div>
+<p>&nbsp;首先要看懂这句话</p>
+<pre>DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done=1;
+</pre>
+<p>意思就是出现 SQLSTATE '02000' 这句话时就执行 SET done=1</p>
+<p>而 SQLSTATE '02000' 等价于&nbsp;<span class="docEmphasis">not found ，它是在 FETCH 不到数据的时候出现的，因此拿不到数据的时候 done 变为真就结束循环了。。。</span></p>
+<h2><a name="a3"></a>&nbsp;书上的整合代码</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> processorders()
+</span><span style="color: #0000ff;">BEGIN</span>
+
+   <span style="color: #008080;">--</span><span style="color: #008080;"> Declare local variables</span>
+   <span style="color: #0000ff;">DECLARE</span> done BOOLEAN <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+   </span><span style="color: #0000ff;">DECLARE</span> o <span style="color: #0000ff;">INT</span><span style="color: #000000;">;
+   </span><span style="color: #0000ff;">DECLARE</span> t <span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">);
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Declare the cursor</span>
+   <span style="color: #0000ff;">DECLARE</span> ordernumbers <span style="color: #0000ff;">CURSOR</span>
+   <span style="color: #0000ff;">FOR</span>
+   <span style="color: #0000ff;">SELECT</span> order_num <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders;
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Declare continue handler</span>
+   <span style="color: #0000ff;">DECLARE</span> <span style="color: #0000ff;">CONTINUE</span> HANDLER <span style="color: #0000ff;">FOR</span> SQLSTATE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">02000</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">SET</span> done<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Create a table to store the results</span>
+   <span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">NOT</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> ordertotals
+      (order_num </span><span style="color: #0000ff;">INT</span>, total <span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">));
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Open the cursor</span>
+   <span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> ordernumbers;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Loop through all rows</span>
+<span style="color: #000000;">   REPEAT
+
+      </span><span style="color: #008080;">--</span><span style="color: #008080;"> Get order number</span>
+      <span style="color: #0000ff;">FETCH</span> ordernumbers <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> o;
+
+      </span><span style="color: #008080;">--</span><span style="color: #008080;"> Get the total for this order</span>
+      CALL ordertotal(o, <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">, t);
+
+      </span><span style="color: #008080;">--</span><span style="color: #008080;"> Insert order and total into ordertotals</span>
+      <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> ordertotals(order_num, total)
+      </span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">(o, t);
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> End of loop</span>
+   UNTIL done <span style="color: #0000ff;">END</span><span style="color: #000000;"> REPEAT;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Close the cursor</span>
+   <span style="color: #0000ff;">CLOSE</span><span style="color: #000000;"> ordernumbers;
+
+</span><span style="color: #0000ff;">END</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>这些活到底谁来做好呢 ？ 是上层应用程序 还是 数据库 ？ 。 。。 待更新。。</p>
+<p class="docText">&nbsp;</p>

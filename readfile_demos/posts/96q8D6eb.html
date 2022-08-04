@@ -1,0 +1,63 @@
+<h2>题</h2>
+<p>例题6-2&nbsp;铁轨（Rails，UVa 514），题目见参考。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;stack&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, x;
+    
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; pop_order; <span style="color: #008000;">//</span><span style="color: #008000;"> 保存所要求的出栈序列 </span>
+    stack&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> s;
+    
+    </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;n); <span style="color: #008000;">//</span><span style="color: #008000;"> 指定几个元素 </span>
+        <span style="color: #0000ff;">if</span> (n == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">x);
+            </span><span style="color: #0000ff;">if</span> (x == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;    
+            
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 用 vector 保存所要求的出栈序列 </span>
+<span style="color: #000000;">            pop_order.clear();
+            pop_order.push_back(x);            
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i != n; ++<span style="color: #000000;">i) {
+                scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">x);
+                pop_order.push_back(x);
+            }
+            
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 模拟进出栈过程 </span>
+                        
+            <span style="color: #0000ff;">int</span> cur = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 指向当前待出栈的元素</span>
+            x = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 保存当前待进栈的元素 </span>
+             
+            <span style="color: #0000ff;">bool</span> flag = <span style="color: #0000ff;">true</span><span style="color: #000000;">;            
+            </span><span style="color: #0000ff;">while</span> (!s.empty()) s.pop(); <span style="color: #008000;">//</span><span style="color: #008000;"> 清空stack </span>
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">2</span> * n; ++<span style="color: #000000;">i) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 每次循环要么进栈要么出栈 
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果两种操作都不能执行，说明出栈序列不可行 </span>
+                <span style="color: #0000ff;">if</span> (!s.empty() &amp;&amp; s.top() ==<span style="color: #000000;"> pop_order[cur]) {
+                    s.pop();
+                    cur</span>++<span style="color: #000000;">;
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (x &lt;=<span style="color: #000000;"> n) {
+                    s.push(</span>++<span style="color: #000000;">x);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    flag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }            
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, flag? <span style="color: #800000;">"</span><span style="color: #800000;">yes</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">no</span><span style="color: #800000;">"</span><span style="color: #000000;">);                    
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+} </span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://blog.csdn.net/hdd871532887/article/details/50369831" target="_blank">https://blog.csdn.net/hdd871532887/article/details/50369831</a></p>
+<p>[2] <a href="https://onlinejudge.org/index.php?option=com_onlinejudge&amp;Itemid=8&amp;category=7&amp;page=show_problem&amp;problem=455" target="_blank">oj</a></p>
+<p>&nbsp;</p>

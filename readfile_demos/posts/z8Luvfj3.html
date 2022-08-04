@@ -1,0 +1,253 @@
+需求：登陆界面
+
+一种思路，直接拿网上的开源代码，问题是后期可能难以修改。并且网上的不一定完全符合需求。
+
+另一种思路，从头开始写，按照控制复杂度的思想，从最简单的HTML页面开始，先添加必要的组件，一步一步拼成大的组件，然后调整布局。思路是好的，但是需要大量的时间。因此，按照从零开始配合借鉴他人设计的方式去学习HTML（&CSS）并完成需求。
+
+参考：战网的登陆界面和https://xplus.icu/login
+
+因为项目的大背景是``Vue.js``且直接用最原始的HTML组件，实在太原始了。因此以``Element UI``作为原子组件。
+
+①实现一个毫无布局（其实是浏览器默认的流式布局）但是具有必要元素的静态页面。包含这几个东西：
+
+- LOGO（战网是一个h1但是显示是一个图片，另一网站则是包含一个``img``然后一段文字和一段超链接拼）
+- 一个``用户名``输入框
+- 一个``密码``输入框。密码默认情况下不能是明文显示的，要显示成小黑点
+- 一个``登陆``按钮。无需注册按钮，新的用户应该是``root``用户进行创建
+
+先上``Element UI``去看看有无合适的现成组件。
+
+初步页面：
+
+```html
+<template>
+	<div>
+		<h1 class="logo">系统登陆</h1>
+		<el-input v-model="username" placeholder="用户名"></el-input>
+		<el-input placeholder="密码" v-model="password" show-password></el-input>
+		<el-button type="primary" id="submit">登陆</el-button>
+	</div>
+</template>
+
+<script>
+export default {
+  name: "UnclearLoginDemo",
+	data() {
+		return {
+			username: '',
+			password: '',
+		}
+	},
+};
+</script>
+
+<style>
+	.logo {
+		text-align: center;
+	}
+	#submit {
+		/* width是为了让按钮占据整行而不是一点点大小 */
+		width: 100%; 
+	}
+</style>
+```
+
+
+
+②接下来考虑把每个组件都设置为合适的间隔大小（参照``战网登陆``页面），因为目前是堆叠在一起的。复习一下盒子模型。
+
+初步修改的结果：
+
+```html
+<template>
+  <div class="box-wrapper">
+    <h1 class="logo">系统登陆</h1>
+    <el-form id="password-form">
+      <el-input id="username" v-model="username" placeholder="用户名"></el-input>
+      <el-input id="password" placeholder="密码" v-model="password" show-password></el-input>
+      <el-button type="primary" id="submit">登陆</el-button>
+    </el-form>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "UnclearLoginDemo",
+  data() {
+    return {
+      username: "",
+      password: "",
+    };
+  },
+};
+</script>
+
+<style>
+.logo {
+  text-align: center;
+}
+
+#username, #password {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#submit {
+  /* width是为了让按钮占据整行而不是一点点大小 */
+  width: 100%;
+  /* 与输入框保持一定距离 */
+  margin-top: 34px;
+}
+</style>
+```
+
+
+
+③接下来考虑把整个登陆面板装进一个适当大小的、最好可以自适应的盒子里，并居中。
+
+但是参看页面发现，``战网登陆``页面的中心面板自身似乎并没有设置什么属性，好像天然就在中间一样。
+
+进一步搜索，``某个网站``的横向居中策略是``justify-content: center;``和``-webkit-justify-content: center;``；垂直居中策略是`align-items: center;`和``-webkit-align-items: center;``
+
+但是``战网登陆``页面如何居中的横竖搞不懂。
+
+进一步寻找``某个网站``规定盒子大小的代码，发现横向大小受``max-width: 400px;``以及``width: 100%;``所控制。
+
+不管怎样，反正现在就是要居中。上网查资料：
+
+```css
+parentElement{
+    display:flex;/*Flex布局*/
+    display: -webkit-flex; /* Safari */
+    align-items:center;/*指定垂直居中*/
+}
+```
+
+直接拷贝上去发现没啥用（其实是忽略了将父div铺满屏幕），保留``display: flex``通过谷歌开发者工具调整。
+
+这个步骤只添加了CSS代码：
+
+```css
+.logo {
+  text-align: center;
+}
+
+#username, #password {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#submit {
+  /* width是为了让按钮占据整行而不是一点点大小 */
+  width: 100%;
+  /* 与输入框保持一定距离 */
+  margin-top: 34px;
+}
+
+.box-wrapper {
+	max-width: 400px;
+}
+
+#app {
+	background-color: aliceblue;
+	/* 让div占满屏幕。因为html和body已经设置为100%和100%了所以这里不用绝对定位直接设置 */
+	width: 100%;
+	height: 100%;
+	/* 添加flex这个属性可以借助谷歌开发者工具方便的调整子元素位置 */
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+}
+```
+
+
+
+③大概的布局已经弄好。截至目前代码还算是基本可控、不太脏的。最后就是进行美化了。所以，可以大致归纳为3个步骤：组件、布局、美化。
+
+
+
+④进一步进行页面设计，既要保持简单性又要增加视觉特效（艺术性）。一个是色调的调整；还有一个是中央区形状的调整（设计到盒子的调整和阴影透明等）；最后进行一些点缀（亮点）。
+
+最后代码如下，调整了颜色，中央的形状，但是点缀没做（原因有二：一，本身来说显得有点画蛇添足，属于待定的、变化性的、非必要的非功能需求；二，进行单纯的点缀事实上可能涉及一些细粒度的控制，这些在我目前的水平之外），所有代码如下：
+
+```html
+<template>
+	<div id="login_screen">
+		<div class="box-wrapper">
+			<h1 class="logo">系统登陆</h1>
+			<el-form id="password-form">
+				<el-input id="username" v-model="username" placeholder="用户名"></el-input>
+				<el-input id="password" placeholder="密码" v-model="password" show-password></el-input>
+				<el-button type="primary" id="submit" @click="onSubmit">登陆</el-button>
+			</el-form>
+		</div>
+	</div>
+</template>
+
+<script>
+export default {
+  name: "UnclearLoginDemo",
+  data() {
+    return {
+      username: "root",
+      password: "123456",
+    };
+  },
+  methods: {
+    onSubmit() {
+    	console.log('submit!')
+    }	  
+  },
+};
+</script>
+
+<style>
+.logo {
+  text-align: center;
+}
+
+#username, #password {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#submit {
+  /* width是为了让按钮占据整行而不是一点点大小 */
+  width: 100%;
+  /* 与输入框保持一定距离 */
+  margin-top: 34px;
+}
+
+.box-wrapper {
+	max-width: 440px;
+	
+	/* 上面是必要的——影响整体布局，以下为美化用的 */
+	background-color: #ffffff;
+	margin-bottom: 50px;
+	padding: 70px 30px;	
+	border-radius: 2%;
+	box-shadow: 5px -3px 20px 7px #9e9e9e4f;
+	z-index: 1;
+}
+
+#login_screen {
+	background-color: #f8f8f8;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	/* 添加flex这个属性可以借助谷歌开发者工具方便的调整子元素位置 */
+	display: flex;
+	justify-content: center;
+  align-items: center;
+}
+</style>
+
+```
+
+记录下中间遇到的一些问题：
+
+最开始没有login_screen直接用app发现当前页的style会影响其它页的。
+
+然后设置``style scoped``发现原来的样式也没了。
+
+于是还是用回单纯style但是，又套了一层login_screen来取代app

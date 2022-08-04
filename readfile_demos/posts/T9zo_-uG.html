@@ -1,0 +1,191 @@
+<p>实验存档，代码特别烂。。</p>
+<p>测试.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.test;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.entity.bank.Bank;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.entity.bank.EngineeringTeam;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestBank {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Bank bank </span>= <span style="color: #0000ff;">new</span> Bank(10<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 3; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> EngineeringTeam(5<span style="color: #000000;">, bank)).start();
+        }
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>银行.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.entity.bank;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Bank {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 工程队数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> NUM = 3<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 当前可用的资金数目
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> available;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 已分配矩阵
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span>[] allocation = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[NUM];
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 需求矩阵
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span>[] need = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[NUM];
+
+    </span><span style="color: #0000ff;">public</span> Bank(<span style="color: #0000ff;">int</span><span style="color: #000000;"> available) {
+        </span><span style="color: #0000ff;">this</span>.available =<span style="color: #000000;"> available;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 向银行借钱
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> id 工程队id
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> request 工程队需求资金
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 一个布尔值，如果借钱成功返回真，否则返回假
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">boolean</span> borrow(<span style="color: #0000ff;">int</span> id, <span style="color: #0000ff;">int</span><span style="color: #000000;"> request) {
+        System.out.println(</span>"银行还剩 " + available + " 万元。"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (request &lt;=<span style="color: #000000;"> need[id]) {
+            </span><span style="color: #0000ff;">if</span> (request &lt;=<span style="color: #000000;"> available) {
+                </span><span style="color: #0000ff;">int</span> temp1 =<span style="color: #000000;"> available;
+                </span><span style="color: #0000ff;">int</span> temp2 =<span style="color: #000000;"> allocation[id];
+                </span><span style="color: #0000ff;">int</span> temp3 =<span style="color: #000000;"> need[id];
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 试探借钱</span>
+                available = available -<span style="color: #000000;"> request;
+                allocation[id] </span>= allocation[id] +<span style="color: #000000;"> request;
+                need[id] </span>= need[id] -<span style="color: #000000;"> request;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 安全检查</span>
+                <span style="color: #0000ff;">if</span><span style="color: #000000;"> (check()) {
+                    System.out.println(</span>"工程队" + id + ": 借 " + request + " 万元成功。"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 不能借，撤销操作</span>
+                    available =<span style="color: #000000;"> temp1;
+                    allocation[id] </span>=<span style="color: #000000;"> temp2;
+                    need[id] </span>=<span style="color: #000000;"> temp3;
+                }
+            }
+        }
+        System.out.println(</span>"工程队" + id + ": 借 " + request + " 万元失败。"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 安全检查
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 当前状态为安全状态返回真，否则返回假。
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> check() {
+        </span><span style="color: #0000ff;">int</span> work =<span style="color: #000000;"> available;
+        </span><span style="color: #0000ff;">boolean</span>[] finish = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;">[NUM];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != finish.length; ++<span style="color: #000000;">i) {
+            finish[i] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != NUM; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 0; j != NUM; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (!finish[j] &amp;&amp; need[j] &lt;=<span style="color: #000000;"> work) {
+                    work </span>= work +<span style="color: #000000;"> allocation[j];
+                    finish[j] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                }
+            }
+        }
+
+        </span><span style="color: #0000ff;">boolean</span> flag = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != NUM; ++<span style="color: #000000;">i) {
+            flag </span>= flag &amp;&amp;<span style="color: #000000;"> finish[i];
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> flag;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 添加工程队
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> team
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> addTeam(EngineeringTeam team) {
+        </span><span style="color: #0000ff;">int</span> id =<span style="color: #000000;"> team.getId();
+        need[id] </span>=<span style="color: #000000;"> team.getNeed();
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 工程队还钱
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> money
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> payBack(<span style="color: #0000ff;">int</span><span style="color: #000000;"> money) {
+        available </span>= available +<span style="color: #000000;"> money;
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>借钱的工程队.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.entity.bank;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.omg.CORBA.INTERNAL;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> EngineeringTeam <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 工程队总数
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 工程队 id
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 完成工程还需要的资金数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> need;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 目标资金
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> max;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 目标银行
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Bank bank;
+
+    </span><span style="color: #0000ff;">public</span> EngineeringTeam(<span style="color: #0000ff;">int</span><span style="color: #000000;"> need, Bank bank) {
+        id </span>= total++<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.need = max =<span style="color: #000000;"> need;
+        </span><span style="color: #0000ff;">this</span>.bank =<span style="color: #000000;"> bank;
+        </span><span style="color: #0000ff;">this</span>.bank.addTeam(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getId() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> id;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getNeed() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> need;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 不停借钱直到完成
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (need &gt; 0<span style="color: #000000;">) {
+            System.out.println(</span>"工程队" + id + ": 还缺 " + need + " 万元。"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 随机借钱</span>
+            <span style="color: #0000ff;">int</span> request = (<span style="color: #0000ff;">int</span>)(Math.random()*need) + 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (bank.borrow(id, request)) need -=<span style="color: #000000;"> request;
+
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                Thread.sleep(</span>500<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        bank.payBack(max);
+        System.out.println(</span>"【----工程队" + id + ": 完成任务。----】"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

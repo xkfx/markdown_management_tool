@@ -1,0 +1,130 @@
+<p>简单的示例：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; sum(<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">int</span> (*pf)(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 未初始化</span>
+    pf =<span style="color: #000000;"> sum;
+    cout </span>&lt;&lt; pf(<span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+    3
+    7
+    </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>遇到重载的情况，编译器通过指针类型精确匹配函数。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">double</span><span style="color: #000000;"> y)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">sum2</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; sum(<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">int</span> (*pf)(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 未初始化</span>
+    pf =<span style="color: #000000;"> sum;
+    cout </span>&lt;&lt; pf(<span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+    3
+    7
+    </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>将函数作为参数：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+}
+typedef decltype(sum) func;
+</span><span style="color: #0000ff;">int</span> useInt2(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y, func f)
+{
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> f(x, y);
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; useInt2(<span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, sum) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output = 7 </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;返回类型不会自动地转换成指针，我们必须显示地将返回类型指定为指针，但是我想，除非是函数内部还可以构造函数（例如Python那样），否则返回函数也没什么用。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">6.54</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">using</span> pf = <span style="color: #0000ff;">int</span>(*)(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+    vector</span>&lt;pf&gt;<span style="color: #000000;"> pfvec;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p><span style="text-decoration: underline;">&nbsp;</span></p>
+<p><span style="text-decoration: underline;">6.55 &amp; 6.56</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span> subtract(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x -<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span> multiply(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x *<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span> divide(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">return</span> x /<span style="color: #000000;"> y;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">using</span> pf = <span style="color: #0000ff;">int</span>(*)(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+    vector</span>&lt;pf&gt;<span style="color: #000000;"> pfvec;
+    pfvec.push_back(add);
+    pfvec.push_back(subtract);
+    pfvec.push_back(multiply);
+    pfvec.push_back(divide);
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (pf f : pfvec) {
+        cout </span>&lt;&lt; f(<span style="color: #800080;">12</span> , <span style="color: #800080;">4</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>输出结果：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">16</span>
+<span style="color: #800080;">8</span>
+<span style="color: #800080;">48</span>
+<span style="color: #800080;">3</span></pre>
+</div>
+<p>&nbsp;</p>

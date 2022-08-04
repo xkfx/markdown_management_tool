@@ -1,0 +1,77 @@
+<p>不考虑日志、安全、监控、参数检查等</p>
+<h2>一、创建数据库、数据表</h2>
+<p>①用命令行登陆MySQL，在网上搜索<a href="https://www.runoob.com/mysql/mysql-tutorial.html" target="_blank">MySQL命令大全</a>，完成以下步骤</p>
+<p>②创建库、显示库、使用库</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">create database testSpring;
+show databases;
+use testSpring;</span></pre>
+</div>
+<p>③创建一个最简单的表</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">CREATE TABLE IF NOT EXISTS `test_tb1`(
+   `</span><span style="color: #0000ff;">id</span><span style="color: #000000;">` INT UNSIGNED AUTO_INCREMENT,
+ <span style="color: #ff0000;"><strong>  `name` CHAR(</strong></span></span><span style="color: #ff0000;"><strong>20</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>) NOT NULL,</strong></span>
+   PRIMARY KEY ( `</span><span style="color: #0000ff;">id</span><span style="color: #000000;">` )
+)ENGINE</span>=InnoDB DEFAULT CHARSET=utf8;</pre>
+</div>
+<p>查看所有表：</p>
+<div class="cnblogs_code">
+<pre>show tables;</pre>
+</div>
+<p>查看表结构、表信息等：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">DESC test_tb1;
+show full fields from test_tb1;
+SHOW CREATE TABLE test_tb1;</span></pre>
+</div>
+<p>有个问题可以探讨：</p>
+<p>Mysql的字符串存储用char还是varchar，各自的优缺点？</p>
+<p>④尝试插入和查询：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">INSERT INTO test_tb1
+(name)
+VALUES 
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+
+INSERT INTO test_tb1
+(name)
+VALUES 
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四五</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四五六</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四五六七</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四五六七八</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四五六七八九</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+(</span><span style="color: #800000;">'</span><span style="color: #800000;">一二三四五六七八九十一二三四五六七八九十</span><span style="color: #800000;">'</span>);</pre>
+</div>
+<p>插入数据超过20个中文会报<strong><span style="color: #ff0000;">ERROR 1406 (22001): Data too long for column 'name' at row&nbsp;</span></strong></p>
+<p>查询：</p>
+<div class="cnblogs_code">
+<pre>mysql&gt; <span style="color: #0000ff;">select</span> * from test_tb1 LIMIT <span style="color: #800080;">3</span><span style="color: #000000;">;
+</span>+----+--------------+
+| <span style="color: #0000ff;">id</span> | name         |
++----+--------------+
+|  <span style="color: #800080;">1</span> | 一二三四     |
+|  <span style="color: #800080;">2</span> | 一二三四五   |
+|  <span style="color: #800080;">3</span> | 一二三四五六 |
++----+--------------+
+<span style="color: #800080;">3</span> rows <span style="color: #0000ff;">in</span> set (<span style="color: #800080;">0.05</span> sec)</pre>
+</div>
+<h2>二、创建一个能提供HTTP接口的Spring Boot程序</h2>
+<p>通过https://start.spring.io/创建原始项目，Java版本1.8添加Spring WEB依赖</p>
+<p>&nbsp;</p>
+<h2>三、MySQL作为数据源，xx作为连接池，测试连接x</h2>
+<p>&nbsp;</p>
+<p>四、返回JSON数据并测试</p>
+<p>&nbsp;</p>
+<p>五、插入数据的实现</p>

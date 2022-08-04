@@ -1,0 +1,297 @@
+<p><span class="docEmphasis">限制用户的操作权限并不是怕有人恶意搞破坏，而是为了减少失误操作的可能性。</span></p>
+<p><span class="docEmphasis">详细文档：<a href="https://dev.mysql.com/doc/refman/8.0/en/user-account-management.html" target="_blank">https://dev.mysql.com/doc/refman/8.0/en/user-account-management.html</a></span></p>
+<p>关于用户的信息都存储在 mysql 数据库下的 user 表中，查看所有用户名：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <strong><span style="color: #0000ff;">USE</span></strong><span style="color: #000000;"><strong> mysql;</strong>
+
+mysql</span><span style="color: #808080;">&gt;</span> <strong><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">user</span> <span style="color: #0000ff;">FROM</span> <span style="color: #ff00ff;">user</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+</span>
+<span style="color: #808080;">|</span> <span style="color: #ff00ff;">user</span>             <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+</span>
+<span style="color: #808080;">|</span> root             <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> root             <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> root             <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> debian<span style="color: #808080;">-</span>sys<span style="color: #808080;">-</span>maint <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> root             <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+</span>
+<span style="color: #800000; font-weight: bold;">5</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.04</span> sec)</pre>
+</div>
+<p>创建新用户：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #0000ff;">CREATE</span> <span style="color: #ff00ff;">USER</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">new_guy</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span> IDENTIFIED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">123456</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span></strong><span style="color: #008080;">--</span><span style="color: #008080;"> 创建一个叫 new_guy 的账号，只允许在 localhost 登陆，密码为 123456</span></pre>
+</div>
+<p>明文密码会被加密为 HASH 码存储到 user 表中：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <strong><span style="color: #0000ff;">SELECT</span> host, <span style="color: #ff00ff;">user</span>, password <span style="color: #0000ff;">FROM</span> <span style="color: #ff00ff;">user</span> <span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">user</span><span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">new_guy</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+---------+-------------------------------------------+</span>
+<span style="color: #808080;">|</span> host      <span style="color: #808080;">|</span> <span style="color: #ff00ff;">user</span>    <span style="color: #808080;">|</span> password                                  <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+---------+-------------------------------------------+</span>
+<span style="color: #808080;">|</span> localhost <span style="color: #808080;">|</span> new_guy <span style="color: #808080;">|</span> <span style="color: #808080;">*</span>6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9 <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+---------+-------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;可以通过下面的语句查看用户的详细信息：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span> <span style="color: #ff00ff;">user</span> <span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">user</span><span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">new_guy</span><span style="color: #ff0000;">'</span>\G</pre>
+</div>
+<p>没有被赋予任何权限的新用户几乎是什么都做不了：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> 授权</span>
+<span style="color: #0000ff;">GRANT</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #0000ff;">ON</span> mysqlCrash.<span style="color: #808080;">*</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">new_guy</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 剥夺权限</span>
+<span style="color: #0000ff;">REVOKE</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #0000ff;">ON</span> mysqlCrash.<span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">new_guy</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 查看用户权限</span>
+SHOW GRANTS <span style="color: #0000ff;">FOR</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">new_guy</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p class="docText"><tt>GRANT</tt> and <tt>REVOKE</tt> can be used to control access at several levels:</p>
+<ul>
+<li>
+<p class="docList">Entire server, using <tt>GRANT ALL</tt> and <tt>REVOKE ALL</tt></p>
+</li>
+<li>
+<p class="docList">Entire database, using <tt>ON database.*</tt></p>
+</li>
+<li>
+<p class="docList">Specific tables, using <tt>ON database.table</tt></p>
+</li>
+<li>
+<p class="docList">Specific columns</p>
+</li>
+<li>
+<p class="docList">Specific stored procedures</p>
+</li>
+</ul>
+<p class="docText"><a class="docLink" href="mk:@MSITStore:C:\Users\mdzz\Desktop\github\bookshelf\%E6%95%B0%E6%8D%AE%E5%BA%93\epdf.tips_mysql-crash-course.chm::/0672327120/ch28lev1sec2.html#ch28table01">Table 28.1</a> lists each of the rights and privileges that may be granted or revoked.</p>
+<p>Table 28.1. Rights and Privileges</p>
+<table frame="hsides" rules="groups" cellspacing="0" cellpadding="5"><colgroup> <col width="225" /> <col width="325" /></colgroup>
+<thead>
+<tr><th class="bottomBorder thead" scope="col" align="left" valign="top">
+<p class="docText">Privilege</p>
+</th><th class="bottomBorder thead" scope="col" align="left" valign="top">
+<p class="docText">Description</p>
+</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>ALL</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">All privileges except <tt>GRANT OPTION</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>ALTER</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>ALTER TABLE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>ALTER ROUTINE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>ALTER PROCEDURE</tt> and <tt>DROP PROCEDURE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>CREATE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CREATE TABLE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>CREATE ROUTINE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CREATE PROCEDURE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>CREATE TEMPORARY TABLES</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CREATE TEMPORARY TABLE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>CREATE USER</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CREATE USER</tt>, <tt>DROP USER</tt>, <tt>RENAME USER</tt>, and <tt>REVOKE ALL PRIVILEGES</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>CREATE VIEW</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CREATE VIEW</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>DELETE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>DELETE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>DROP</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>DROP TABLE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>EXECUTE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CALL</tt> and stored procedures</p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>FILE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>SELECT INTO OUTFILE</tt> and <tt>LOAD DATA INFILE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>GRANT OPTION</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>GRANT</tt> and <tt>REVOKE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>INDEX</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CREATE INDEX</tt> and <tt>DROP INDEX</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>INSERT</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>INSERT</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>LOCK TABLES</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>LOCK TABLES</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>PROCESS</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>SHOW FULL PROCESSLIST</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>RELOAD</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>FLUSH</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>REPLICATION CLIENT</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Access to location of servers</p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>REPLICATION SLAVE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Used by replication slaves</p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>SELECT</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>SELECT</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>SHOW DATABASES</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>SHOW DATABASES</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>SHOW VIEW</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>SHOW CREATE VIEW</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>SHUTDOWN</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>mysqladmin shutdown</tt> (used to shut down MySQL)</p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>SUPER</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>CHANGE MASTER</tt>, <tt>KILL</tt>, <tt>LOGS</tt>, <tt>PURGE MASTER</tt>, and <tt>SET GLOBAL</tt>. Also allows <tt>mysqladmin debug</tt> login.</p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>UPDATE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">Use of <tt>UPDATE</tt></p>
+</td>
+</tr>
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText"><tt>USAGE</tt></p>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<p class="docText">No access</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>删除用户用 DROP USER xxx 就可以了。</p>
+<p>更多杂七杂八的操作，请参考&nbsp;<a href="https://dev.mysql.com/doc/refman/8.0/en/">MySQL 8.0 Reference Manual</a>&nbsp;&nbsp;/&nbsp;&nbsp;<span id="hidden-breadcrumbs" class="hidden"><a href="https://dev.mysql.com/doc/refman/8.0/en/security.html">Security</a>&nbsp;&nbsp;/&nbsp;&nbsp;<a href="https://dev.mysql.com/doc/refman/8.0/en/user-account-management.html">MySQL User Account Management</a>&nbsp;&nbsp;/&nbsp;&nbsp;Using Roles</span></p>
+<p>&nbsp;</p>

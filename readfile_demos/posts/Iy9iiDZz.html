@@ -1,0 +1,20 @@
+<p>通过Android Studio完成初始配置之后，就可以不再用Android Studio开发了，毕竟Android Studio非常占用内存。</p>
+<p>调试代码的环境仍是两种：虚拟机或者实体机（浏览器也可以）。只不过调试方式改为在项目根目录执行flutter run指令，该指令会自动检测、匹配相应的设备，详情参考：<a href="https://www.jianshu.com/p/764d255d132c" target="_blank">https://www.jianshu.com/p/764d255d132c</a></p>
+<h2>启动虚拟机</h2>
+<p>找到虚拟机所在目录，一般在安卓sdk目录下，例如，我的是D:\android_sdk\emulator</p>
+<p>然后附带参数运行emulator.exe即可。</p>
+<p>例如：emulator.exe -netdelay none -netspeed full -avd&nbsp;Nexus_5X_API_28（该指令参考https://www.bilibili.com/video/BV15t411U7yf?p=5）</p>
+<p>PS. Nexus_5X_API_28是通过AS下载的虚拟机。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211019123205066-1168122377.png" alt="" width="822" height="412" loading="lazy" /></p>
+<p>实体机的话，插上USB打开开发者模式就可以了。</p>
+<p>补充一种通过vscode打开虚拟机的简便方法：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211029132402621-1193602131.png" alt="" width="465" height="221" loading="lazy" /></p>
+<p>如上图所示，可以通过点击这个按钮创建或者打开虚拟机。</p>
+<h2>在vscode上开发</h2>
+<p>这个时候Android Studio或者vscode都只是充当一个编辑器的角色，用哪个完全看计算机性能或者个人喜好。</p>
+<p>第一步是安装插件：在extensions处搜索flutter并安装即可。</p>
+<p>之后通过open folder直接打开项目即可进行编码。</p>
+<h2>调试程序</h2>
+<p>flutter run</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211019123658509-227282743.png" alt="" width="778" height="363" loading="lazy" /></p>
+<p>r是热更新，p是网格</p>

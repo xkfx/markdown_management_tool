@@ -1,0 +1,154 @@
+<div>
+<div>Electron读取本地文件并显示，也就是暴露一个读取本地特定文件内容的接口给渲染进程调用。</div>
+</div>
+<p>主要参考：<a href="https://stackoverflow.com/questions/44391448/electron-require-is-not-defined" target="_blank">https://stackoverflow.com/questions/44391448/electron-require-is-not-defined</a></p>
+<p>基于官方的快速教程示例代码进行修改，原始代码如下：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('ac214ba8-e01b-4f45-b036-c6b33fd2cf52')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_ac214ba8-e01b-4f45-b036-c6b33fd2cf52" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_ac214ba8-e01b-4f45-b036-c6b33fd2cf52" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_ac214ba8-e01b-4f45-b036-c6b33fd2cf52" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> main.js</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> Modules to control application life and create native browser window</span>
+const { app, BrowserWindow } = require('electron'<span style="color: #000000;">)
+const path </span>= require('path'<span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> createWindow () {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create the browser window.</span>
+  const mainWindow = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BrowserWindow({
+    width: </span>800<span style="color: #000000;">,
+    height: </span>600<span style="color: #000000;">,
+    webPreferences: {
+      preload: path.join(__dirname, </span>'preload.js'<span style="color: #000000;">)
+    }
+  })
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> and load the index.html of the app.</span>
+  mainWindow.loadFile('index.html'<span style="color: #000000;">)
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open the DevTools.</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> mainWindow.webContents.openDevTools()</span>
+<span style="color: #000000;">}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> This method will be called when Electron has finished</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> initialization and is ready to create browser windows.</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> Some APIs can only be used after this event occurs.</span>
+app.whenReady().then(() =&gt;<span style="color: #000000;"> {
+  createWindow()
+
+  app.on(</span>'activate', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> On macOS it's common to re-create a window in the app when the</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> dock icon is clicked and there are no other windows open.</span>
+    <span style="color: #0000ff;">if</span> (BrowserWindow.getAllWindows().length === 0<span style="color: #000000;">) createWindow()
+  })
+})
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Quit when all windows are closed, except on macOS. There, it's common</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> for applications and their menu bar to stay active until the user quits</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> explicitly with Cmd + Q.</span>
+app.on('window-all-closed', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+  </span><span style="color: #0000ff;">if</span> (process.platform !== 'darwin'<span style="color: #000000;">) app.quit()
+})
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> In this file you can include the rest of your app's specific main process</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> code. You can also put them in separate files and require them here.</span></pre>
+</div>
+<span class="cnblogs_code_collapse">main.js</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('7d94448b-c608-4641-b1c0-9413a206a862')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_7d94448b-c608-4641-b1c0-9413a206a862" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_7d94448b-c608-4641-b1c0-9413a206a862" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_7d94448b-c608-4641-b1c0-9413a206a862" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> preload.js</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> All of the Node.js APIs are available in the preload process.</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> It has the same sandbox as a Chrome extension.</span>
+window.addEventListener('DOMContentLoaded', () =&gt;<span style="color: #000000;"> {
+  const replaceText </span>= (selector, text) =&gt;<span style="color: #000000;"> {
+    const element </span>=<span style="color: #000000;"> document.getElementById(selector)
+    </span><span style="color: #0000ff;">if</span> (element) element.innerText =<span style="color: #000000;"> text
+  }
+
+  </span><span style="color: #0000ff;">for</span> (const dependency of ['chrome', 'node', 'electron'<span style="color: #000000;">]) {
+    replaceText(`${dependency}</span>-<span style="color: #000000;">version`, process.versions[dependency])
+  }
+})</span></pre>
+</div>
+<span class="cnblogs_code_collapse">preload.js</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('04901fbf-1b98-459c-949b-a4cce1effa7d')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_04901fbf-1b98-459c-949b-a4cce1effa7d" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_04901fbf-1b98-459c-949b-a4cce1effa7d" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_04901fbf-1b98-459c-949b-a4cce1effa7d" class="cnblogs_code_hide">
+<pre>&lt;!--index.html--&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;!-- https:<span style="color: #008000;">//</span><span style="color: #008000;">developer.mozilla.org/en-US/docs/Web/HTTP/CSP --&gt;</span>
+    &lt;meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'"&gt;
+    &lt;meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"&gt;
+    &lt;title&gt;Hello World!&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello World!&lt;/h1&gt;
+    We are using Node.js &lt;span id="node-version"&gt;&lt;/span&gt;,
+    Chromium &lt;span id="chrome-version"&gt;&lt;/span&gt;,
+    and Electron &lt;span id="electron-version"&gt;&lt;/span&gt;.
+
+    &lt;!-- You can also require other files to run <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">this</span> process --&gt;
+    &lt;script src="./renderer.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<span class="cnblogs_code_collapse">index.html</span></div>
+<h2>一、似乎不安全的办法</h2>
+<p>把nodeIntegration设置为true，contextIsolation设置为false：</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #008000;">//</span><span style="color: #008000;"> Create the browser window.</span>
+  const mainWindow = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BrowserWindow({
+    width: </span>800<span style="color: #000000;">,
+    height: </span>600<span style="color: #000000;">,
+    webPreferences: {
+      preload: path.join(__dirname, </span>'preload.js'<span style="color: #000000;">),
+<strong>      nodeIntegration: </strong></span><strong><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+      contextIsolation: </span><span style="color: #0000ff;">false</span></strong><span style="color: #000000;"><strong>,</strong>
+    }
+  })</span></pre>
+</div>
+<p>这样子就可以直接在渲染器处运行Node.js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> renderer.js</span>
+<span style="color: #000000;">
+let fs </span>= require("fs"<span style="color: #000000;">);
+
+fs.readFile(</span>'local_file.txt', (err, data) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (err) <span style="color: #0000ff;">return</span><span style="color: #000000;"> console.error(err);
+    console.log(data.toString());
+});</span></pre>
+</div>
+<p>但是这样造成的结果是，别人有可能通过Node.js运行环境随便操控本地操作系统的文件，或者造成其它风险：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202111/1042431-20211108215548693-1497190802.png" alt="" width="350" height="268" loading="lazy" /></p>
+<h2>二、直接写在preload.js中</h2>
+<p>为啥一定要写在renderer.js里呢？直接写在preload.js里就好了。（新手的疑惑：之所以区分preload.js和renderer.js是一种类似于&ldquo;前后端分离&rdquo;的思想吗？有什么东西不能直接写在preload.js&nbsp;，非得写在renderer.js里的呢？有说法是&ldquo;通过预加载把用到的api暴露到全局，这样主进程和渲染进程都能用&rdquo;；有说法是&ldquo;preload.js是为了把一些原属于electron的代码&nbsp;通过windows["xxxxx"]&nbsp;提供给前台js调用的&rdquo;）</p>
+<p>在index.html中添加一个按钮，每按一次从本地读取一次文件：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="btn1"</span><span style="color: #0000ff;">&gt;</span>按钮1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>修改preload.js：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> preload.js</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> All of the Node.js APIs are available in the preload process.</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> It has the same sandbox as a Chrome extension.</span>
+window.addEventListener('DOMContentLoaded', () =&gt;<span style="color: #000000;"> {
+省略号
+  let readAndDisplay </span>= () =&gt;<span style="color: #000000;"> {
+    let fs </span>= require("fs"<span style="color: #000000;">);
+    fs.readFile(</span>'local_file.txt', (err, data) =&gt;<span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">if</span> (err) <span style="color: #0000ff;">return</span><span style="color: #000000;"> console.error(err);
+      console.log(data.toString());
+      let myNode </span>=<span style="color: #000000;"> document.createTextNode(data.toString());
+      document.body.insertBefore(myNode, document.body.firstChild);
+    });
+  }
+
+  document.querySelector(</span>'#btn1').addEventListener("click", event =&gt;<span style="color: #000000;"> {
+    readAndDisplay();
+  })
+省略号
+})</span></pre>
+</div>
+<p>&nbsp;</p>

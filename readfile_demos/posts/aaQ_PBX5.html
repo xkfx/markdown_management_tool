@@ -1,0 +1,41 @@
+<p>译自：<a href="https://grafana.com/grafana/" target="_blank">https://grafana.com/grafana/</a></p>
+<h2>用途</h2>
+<p>把任何东西都仪表化，监视一切。（Dashboard anything. Observe everything.）</p>
+<p>查询、可视化、提醒（alert on）和理解您的数据，无论它存储在哪里。</p>
+<p>使用Grafana，您可以创建，探索和共享所有的数据，通过美丽的，灵活的仪表板。</p>
+<h2>设计理念</h2>
+<ul>
+<li><strong>统一数据，而不是数据库。</strong>Grafana不要求您将数据摄取到后端存储或供应商数据库。相反，Grafana采取了一种独特的方法，通过统一现有数据（无论数据位于何处）来提供&ldquo;single-pane-of-glass&rdquo;。</li>
+<li><strong>每个人都能看到的数据。</strong>Grafana建立在这样的原则之上：数据应该对组织中的每个人都开放，而不仅仅是单个的Ops人员。通过民主化数据，Grafana帮助促进一种文化，数据可以很容易地被需要它的人使用和访问，帮助打破数据孤岛和授权团队。</li>
+<li><strong>任何人都可以使用的仪表盘。</strong>Grafana仪表板不仅为从众多来源收集的数据提供了深刻的含义，而且您还可以与其他团队成员共享您创建的仪表板，允许您一起探索数据。有了Grafana，任何人都可以创建和共享动态仪表板，以促进协作和透明度。</li>
+<li><strong>灵活性和多功能性。</strong>将任何数据转换成灵活多样的仪表盘。与其他工具不同，<span style="color: #ff0000;">Grafana允许您专门为您和您的团队构建仪表板。使用高级查询和转换功能，您可以自定义面板，以创建对您实际有帮助的可视化效果。</span></li>
+</ul>
+<h2>版本选择</h2>
+<ul>
+<li>开源版</li>
+<li>云（可以创建免费的账号）。作为一个完全托管的服务，Grafana Cloud是采用Grafana最快的方式，它包括一个可伸缩的、托管的后端，用于指标（Metrics）、日志和跟踪（traces）。由Grafana Labs管理，为个人、团队和大型企业提供免费和付费选择。包括一个强大的免费版本，可以让3个用户访问10k指标、50GB日志和50GB跟踪。</li>
+<li>企业版。Grafana强大的可视化和警报功能，通过访问企业数据源插件和内置协作功能得到增强。适用于有特定隐私或安全要求且需要自我管理环境的组织。</li>
+</ul>
+<h2>核心特性</h2>
+<ul>
+<li id="panels" class="text-md-left"><strong>面板（Panels）。</strong>从热图到直方图。Grafana具有快速和灵活的可视化功能，允许您以任何您想要的方式可视化数据。</li>
+<li class="text-md-left"><strong>插件（Plugins），例如数据源插件、面板插件、APP插件。</strong>用Grafana插件连接你的工具和团队。数据源插件通过APIs连接到现有数据源，并实时呈现数据，而不需要迁移或吸收数据。<span style="color: #ff0000;">查看所有插件：<a href="https://grafana.com/grafana/plugins/" target="_blank"><span style="color: #ff0000;">https://grafana.com/grafana/plugins/</span></a></span></li>
+<li class="text-md-left"><strong>警报（Alerts）。</strong>使用Grafana警报，您可以在一个简单的UI中创建、管理和静默所有警报&mdash;&mdash;允许您轻松地合并和集中所有警报。</li>
+<li class="text-md-left"><strong>转化（Transformation）。</strong>转换允许您在不同的查询和数据源之间重命名、汇总、合并和执行计算。在几秒钟内将非时间序列数据转换为表（例如，JSON文件或简单的查找表），而无需任何定制或额外的开销。</li>
+<li class="text-md-left"><strong>注释（Annotations）。</strong>用来自不同数据源的丰富事件注释图表。将鼠标悬停在事件上，将显示完整的事件元数据和标记。向注释添加tags将使其可从其他仪表盘中搜索。</li>
+<li class="text-md-left"><strong>面板编辑器（Panel editor）。</strong>面板编辑器使配置、自定义和探索所有面板变得容易，具有一致的UI，用于设置所有可视化数据选项。</li>
+</ul>
+<h2>关联数据（Correlate your data）</h2>
+<p>理解所有相关数据&mdash;&mdash;以及它们之间的关系&mdash;&mdash;对于识别意外系统行为的真正来源非常重要。Grafana允许团队仅在一个地方无缝地可视化和移动他们所有的数据。以下为Grafana Labs中支持关联数据的系列产品，也被叫做<span style="color: #ff0000;">the Grafana stack（Grafana技术栈）</span>：</p>
+<ul>
+<li><strong>Grafana。</strong>可视化数据，上文已描述。</li>
+<li><strong>Grafana Logs（由Loki提供支持）</strong>使用保留的标签过滤器和时间范围，体验从指标切换到日志的魔力。快速搜索所有日志或实时流媒体。（PS. 开源）</li>
+<li><strong>Metrics。</strong>通过临时查询（ad-hoc queries）和动态深入（dynamic drilldown）查看数据。拆分视图，并排比较不同的时间范围、查询和数据源。（PS. 不开源？）</li>
+<li><strong>Traces。</strong>Grafana附带了对Grafana Tempo的内置支持，Grafana Tempo是一种容量大、依赖性最小的<span style="color: #ff0000;">开源</span>跟踪解决方案。</li>
+</ul>
+<h2>协作（Collaborate）</h2>
+<p>有效的合作建立在人们能够访问相同信息的基础上。让您可以轻松地在公司、团队和世界各地分享Grafana仪表盘的见解。</p>
+<ul>
+<li>团队协作。可以查看Grafana实例的运行状况；生成关于仪表盘的PDF并向指定用户发送邮件；用户管理，最重要的用户管理任务之一是分配角色，角色控制用户拥有的权限。正确的权限确保用户只能访问他们需要的资源。</li>
+<li>与世界合作。与Grafana社区的任何人轻松共享和发现仪表盘。可以导入或者导出仪表盘；生产仪表盘的快照并分享等</li>
+</ul>

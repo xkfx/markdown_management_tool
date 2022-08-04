@@ -1,0 +1,187 @@
+<h2>判断闰年</h2>
+<p>地球绕太阳转一周的时间实际是365天5小时48分46秒。算下来，每四年会多出来一天，所以加到那一年的二月。但是这样算，又多算了一点点时间。于是，又规定，整百的年份计算闰年除以400。这样，我们的历法才能最大程度的和地球绕太阳转契合。</p>
+<p>总之：<span style="color: #ff0000; background-color: #ffff00;">非整百</span>年份除以4无余数；<span style="color: #ff0000; background-color: #ffff00;">整百</span>年份除以400无余数</p>
+<p>即：<span style="color: #ff0000; background-color: #ffff00;">x % 100 != 0 &amp;&amp; x % 4 == 0</span> ||<span style="color: #ff0000; background-color: #ffff00;"> x % 400 == 0</span></p>
+<h2>计算日期差</h2>
+<p>思路是，先算出每一天距离0000年1月1日的天数。然后作差计算。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+<span style="color: #0000ff;">#define</span> IS_LEAP_YEAR(x) x % 100 != 0 &amp;&amp; x % 4 == 0 || x % 400 == 0 ? 1 : 0  
+
+<span style="color: #0000ff;">int</span> dayOfMonth[<span style="color: #800080;">13</span>] = {<span style="color: #800080;">0</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">28</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span><span style="color: #000000;">};
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Date {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> m;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> d;
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> nextDay() {
+        d</span>++<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (d &gt;<span style="color: #000000;"> dayOfMonth[m]) {
+            d </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            m</span>++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (m &gt; <span style="color: #800080;">12</span><span style="color: #000000;">) {
+                m </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                y</span>++<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IS_LEAP_YEAR(y)) {
+                    dayOfMonth[</span><span style="color: #800080;">2</span>] = <span style="color: #800080;">29</span><span style="color: #000000;">;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    dayOfMonth[</span><span style="color: #800080;">2</span>] = <span style="color: #800080;">28</span><span style="color: #000000;">;
+                }
+            }
+        } 
+    }
+};
+
+</span><span style="color: #0000ff;">int</span> date2day[<span style="color: #800080;">5000</span>][<span style="color: #800080;">13</span>][<span style="color: #800080;">32</span>]; <span style="color: #008000;">//</span><span style="color: #008000;"> 该数组作用&mdash;&mdash;将特定日期转化距离 0000-01-01 的天数 </span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化 </span>
+    Date tmp = {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    date2day[tmp.y][tmp.m][tmp.d] </span>= cnt++<span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">while</span> (tmp.y &lt; <span style="color: #800080;">5000</span><span style="color: #000000;">) {
+        tmp.nextDay();
+        date2day[tmp.y][tmp.m][tmp.d] </span>= cnt++<span style="color: #000000;">;
+    }
+        
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算日期差 </span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> y1, m1, d1;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> y2, m2, d2;    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%4d%2d%2d</span><span style="color: #800000;">"</span>, &amp;y1, &amp;m1, &amp;<span style="color: #000000;">d1);
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%4d%2d%2d</span><span style="color: #800000;">"</span>, &amp;y2, &amp;m2, &amp;<span style="color: #000000;">d2);
+    
+    </span><span style="color: #0000ff;">int</span> result = date2day[y1][m1][d1] -<span style="color: #000000;"> date2day[y2][m2][d2];
+    </span><span style="color: #0000ff;">if</span> (result &lt; <span style="color: #800080;">0</span>) result = -<span style="color: #000000;">result;
+    result </span>++<span style="color: #000000;">;
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+} </span></pre>
+</div>
+<h2>给定日期求星期几</h2>
+<p>例如输入 5 February 2021</p>
+<p>输出 Friday</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span> daysOfMonth[<span style="color: #800080;">13</span>] = {<span style="color: #800080;">0</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">28</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span><span style="color: #000000;">};
+</span><span style="color: #0000ff;">bool</span> isLeapYear(<span style="color: #0000ff;">int</span><span style="color: #000000;"> year) {
+    </span><span style="color: #0000ff;">return</span> year % <span style="color: #800080;">100</span> != <span style="color: #800080;">0</span> &amp;&amp; year % <span style="color: #800080;">4</span> == <span style="color: #800080;">0</span> || year % <span style="color: #800080;">400</span> == <span style="color: #800080;">0</span><span style="color: #000000;">;    
+}
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Date {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> m;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> d;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> xingQi; 
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> nextDay() {
+        d</span>++<span style="color: #000000;">;
+        
+        xingQi</span>++<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (xingQi &gt; <span style="color: #800080;">7</span>) xingQi = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        
+        </span><span style="color: #0000ff;">if</span> (d &gt;<span style="color: #000000;"> daysOfMonth[m]) {
+            d </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            m</span>++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (m &gt; <span style="color: #800080;">12</span><span style="color: #000000;">) {
+                m </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                y</span>++<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isLeapYear(y)) {
+                    daysOfMonth[</span><span style="color: #800080;">2</span>] = <span style="color: #800080;">29</span><span style="color: #000000;">;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    daysOfMonth[</span><span style="color: #800080;">2</span>] = <span style="color: #800080;">28</span><span style="color: #000000;">;
+                }
+            }
+        } 
+    }
+    
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> preDay() {
+        d</span>--<span style="color: #000000;">;
+        
+        xingQi</span>--<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (xingQi &lt; <span style="color: #800080;">1</span>) xingQi = <span style="color: #800080;">7</span><span style="color: #000000;">;
+        
+        </span><span style="color: #0000ff;">if</span> (d &lt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            m</span>--<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (m &lt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+                m </span>= <span style="color: #800080;">12</span><span style="color: #000000;">;
+                y</span>--<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isLeapYear(y)) {
+                    daysOfMonth[</span><span style="color: #800080;">2</span>] = <span style="color: #800080;">29</span><span style="color: #000000;">;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    daysOfMonth[</span><span style="color: #800080;">2</span>] = <span style="color: #800080;">28</span><span style="color: #000000;">;
+                }                
+            }
+            d </span>=<span style="color: #000000;"> daysOfMonth[m];
+        }         
+    }
+};
+
+</span><span style="color: #0000ff;">char</span> int2xingQi[<span style="color: #800080;">8</span>][<span style="color: #800080;">20</span>] =<span style="color: #000000;"> {
+    </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Monday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Tuesday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Wednesday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Thursday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Friday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Saturday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">Sunday</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+};
+
+</span><span style="color: #0000ff;">char</span> charMs[<span style="color: #800080;">13</span>][<span style="color: #800080;">20</span>] =<span style="color: #000000;"> {
+    </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">January</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">February</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">March</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">April</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">May</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">June</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">July</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">August</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">September</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">October</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">November</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">December</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+};
+
+</span><span style="color: #0000ff;">int</span> charM2intM(<span style="color: #0000ff;">char</span>*<span style="color: #000000;"> charM) 
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i != <span style="color: #800080;">13</span>; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (strcmp(charM, charMs[i]) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span> dateCmp(<span style="color: #0000ff;">int</span> y1, <span style="color: #0000ff;">int</span> m1, <span style="color: #0000ff;">int</span> d1, <span style="color: #0000ff;">int</span> y2, <span style="color: #0000ff;">int</span> m2, <span style="color: #0000ff;">int</span><span style="color: #000000;"> d2)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 负数则 1 &lt; 2 ，零则 1 = 2 ，正数则 1 &gt; 2</span>
+    <span style="color: #0000ff;">return</span> y1 * <span style="color: #800080;">10000</span> + m1 * <span style="color: #800080;">100</span> + d1 - (y2 * <span style="color: #800080;">10000</span> + m2 * <span style="color: #800080;">100</span> +<span style="color: #000000;"> d2);
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 给定日期求星期几
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 已知2021年2月26日是星期五
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1.初始化 </span>
+    Date tmp = {<span style="color: #800080;">2021</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">26</span>, <span style="color: #800080;">5</span><span style="color: #000000;">};
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2.输入</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> y, intM, d;
+    </span><span style="color: #0000ff;">char</span> charM[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %s %d</span><span style="color: #800000;">"</span>, &amp;d, charM, &amp;<span style="color: #000000;">y);
+    intM </span>=<span style="color: #000000;"> charM2intM(charM);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3.计算 </span>
+    <span style="color: #0000ff;">while</span> (dateCmp(tmp.y, tmp.m, tmp.d, y, intM, d) &lt; <span style="color: #800080;">0</span><span style="color: #000000;">) tmp.nextDay();
+    </span><span style="color: #0000ff;">while</span> (dateCmp(tmp.y, tmp.m, tmp.d, y, intM, d) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) tmp.preDay();
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 4.输出</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, int2xingQi[tmp.xingQi]);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+} </span></pre>
+</div>
+<p>&nbsp;</p>

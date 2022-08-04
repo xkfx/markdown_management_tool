@@ -1,0 +1,180 @@
+<p><span style="background-color: #ffff99;">p115~p118:</span></p>
+<p>1、区分int *p[4];和int (*p)[4];。前者是整型指针的数组，后者是指向含有4个整数的数组。</p>
+<p>&nbsp;</p>
+<p>2、规避上述问题的方法就是：使用 auto和 decltype。</p>
+<p>&nbsp;</p>
+<p>3、对于a[3][4]，有p = &amp;a[0];（相当于p = a;）则 *p 为a[0]。（解引用后仍为地址）</p>
+<p>&nbsp;</p>
+<p>4、使用<strong>类型别名</strong>提高程序的可读性。</p>
+<p>&nbsp;</p>
+<p>5、优先使用标准库提供的类型而不是C++内置的底层替代品。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.43</span></p>
+<p>版本1：使用范围for语句</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 必须使用引用类型，否则编译无法通过。</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> (&amp;row)[<span style="color: #800080;">4</span><span style="color: #000000;">] : ia) {    
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt : row) {
+            cout </span>&lt;&lt; cnt &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;版本2：使用下标运算符</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;cstddef&gt;    <span style="color: #008000;">//</span><span style="color: #008000;"> 不加也可使用 size_t </span>
+<span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 使用size_t而非int可以写出扩展性更好的代码（参考网上资料）</span>
+    <span style="color: #0000ff;">for</span> (size_t i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (size_t j = <span style="color: #800080;">0</span>; j != <span style="color: #800080;">4</span>; ++<span style="color: #000000;">j) {
+            cout </span>&lt;&lt; ia[i][j] &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;版本3：使用指针</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::end;
+</span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> (*p)[<span style="color: #800080;">4</span>] = begin(ia); p != end(ia); ++<span style="color: #000000;">p) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> *q = begin(*p); q != end(*p); ++<span style="color: #000000;">q) {
+            cout </span>&lt;&lt; *q &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.44</span></p>
+<p>使用类型别名改写上一个练习中的程序。</p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">using</span> int_array = <span style="color: #0000ff;">int</span>[<span style="color: #800080;">4</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (int_array &amp;<span style="color: #000000;">row : ia) {    
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt : row) {
+            cout </span>&lt;&lt; cnt &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;cstddef&gt;    
+<span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">using</span> index =<span style="color: #000000;"> size_t;
+    </span><span style="color: #0000ff;">for</span> (index i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (index j = <span style="color: #800080;">0</span>; j != <span style="color: #800080;">4</span>; ++<span style="color: #000000;">j) {
+            cout </span>&lt;&lt; ia[i][j] &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>3</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::end;
+</span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">using</span> int_array = <span style="color: #0000ff;">int</span>[<span style="color: #800080;">4</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (int_array *p = begin(ia); p != end(ia); ++<span style="color: #000000;">p) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> *q = begin(*p); q != end(*p); ++<span style="color: #000000;">q) {
+            cout </span>&lt;&lt; *q &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.45</span></p>
+<p>使用auto改写程序。</p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">row : ia) {    
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto cnt : row) {
+            cout </span>&lt;&lt; cnt &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;cstddef&gt;    
+<span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">for</span> (auto i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (auto j = <span style="color: #800080;">0</span>; j != <span style="color: #800080;">4</span>; ++<span style="color: #000000;">j) {
+            cout </span>&lt;&lt; ia[i][j] &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>3</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::end;
+</span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">for</span> (auto p = begin(ia); p != end(ia); ++<span style="color: #000000;">p) {
+        </span><span style="color: #0000ff;">for</span> (auto q = begin(*p); q != end(*p); ++<span style="color: #000000;">q) {
+            cout </span>&lt;&lt; *q &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

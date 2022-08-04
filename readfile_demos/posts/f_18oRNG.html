@@ -1,0 +1,186 @@
+<p><strong>饮水思源：<a href="https://www.bilibili.com/video/av12198966" target="_blank">https://www.bilibili.com/video/av12198966</a></strong></p>
+<p>自定义log &amp;显示分数：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('96ac1c9b-90ef-46f6-a8a3-bea4a6ad286c')"><img id="code_img_closed_96ac1c9b-90ef-46f6-a8a3-bea4a6ad286c" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_96ac1c9b-90ef-46f6-a8a3-bea4a6ad286c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('96ac1c9b-90ef-46f6-a8a3-bea4a6ad286c',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_96ac1c9b-90ef-46f6-a8a3-bea4a6ad286c" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">let log = console.log.bind(console);</span>
+let e = sel =&gt;<span style="color: #000000;"> document.querySelector(sel);
+
+let log </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(s) {
+    e(</span>"#id-text-log").value += s + '\n'<span style="color: #000000;">;
+};
+
+let imgFromPath </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(path) {
+    let img </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image(path);
+    img.src </span>=<span style="color: #000000;"> path;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> img;
+};</span></pre>
+</div>
+<span class="cnblogs_code_collapse">utils.js</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('44ae5bad-753d-4bb5-9a0b-d0a211f86eb9')"><img id="code_img_closed_44ae5bad-753d-4bb5-9a0b-d0a211f86eb9" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_44ae5bad-753d-4bb5-9a0b-d0a211f86eb9" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('44ae5bad-753d-4bb5-9a0b-d0a211f86eb9',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_44ae5bad-753d-4bb5-9a0b-d0a211f86eb9" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+            canvas </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1px black solid</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/utils.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/guagame.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/paddle.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/ball.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/brick.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/levels.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="id-canvas"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="400"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="300"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>fps:<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="id-input-speed"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="range"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">    
+            let pause </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+            let enableDebugMode </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(game, enable) {
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (</span><span style="background-color: #f5f5f5; color: #000000;">!</span><span style="background-color: #f5f5f5; color: #000000;">enable) {
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;">;
+                }
+                window.addEventListener(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">keydown</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, event </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (event.key </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">) {
+                        pause </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">!</span><span style="background-color: #f5f5f5; color: #000000;">pause;
+                    }
+                });
+                document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#id-input-speed</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).addEventListener(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">input</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, event </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    let newFps </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> Number(event.target.value);
+                    game.fps </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> newFps </span><span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">; </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 防止为0</span>
+<span style="background-color: #f5f5f5; color: #000000;">                });
+            };
+            
+            let __main </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {                
+                let game </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> makeGuaGame();
+                enableDebugMode(game, </span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">);
+                
+                let paddle </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> makePaddle();                
+                let ball </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> makeBall();                
+                let bricks </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> loadLevel(</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">);
+                
+                game.registerAction(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">a</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {
+                    paddle.moveLeft();
+                });            
+                game.registerAction(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">d</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {
+                    paddle.moveRight();    
+                });
+                game.registerAction(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">f</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {
+                    ball.fire();    
+                });
+                        
+                game.update </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {    
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (pause) { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 暂停球的移动</span>
+                        <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    }    
+                    
+                    ball.move();
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (paddle.collide(ball)) {
+                        ball.反弹();
+                    }
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;"> (let i </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">; i </span><span style="background-color: #f5f5f5; color: #000000;">!=</span><span style="background-color: #f5f5f5; color: #000000;"> bricks.length; </span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;">i) {
+                        </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (bricks[i].collide(ball)) {
+                            bricks[i].hit();
+                            ball.反弹();
+                            game.score</span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;">;
+                        }
+                    }
+                };
+                
+                game.draw </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {
+                    game.drawImage(paddle);    
+                    game.drawImage(ball);    
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;"> (let i </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">; i </span><span style="background-color: #f5f5f5; color: #000000;">!=</span><span style="background-color: #f5f5f5; color: #000000;"> bricks.length; </span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;">i) {
+                        </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (bricks[i].alive) {
+                            game.drawImage(bricks[i]);    
+                        }    
+                    }
+                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 显示分数</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    game.context.font </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">48px serif</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    game.context.fillText(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">你的分数：</span><span style="background-color: #f5f5f5; color: #000000;">"</span> <span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> game.score, </span><span style="background-color: #f5f5f5; color: #000000;">30</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">100</span><span style="background-color: #f5f5f5; color: #000000;">);
+                };        
+                
+                game.begin();
+            };            
+            
+            __main();
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">index.html</span></div>
+<p>图片加载相关的问题，例如游戏里有3个砖块，那么brick.png就会被反复加载3次，这样很浪费时间，我想到的解决方法是用map保存加载过的图片，在拿图片的时候进行一次判断，加载过就直接返回，没加载过才加载，这样就可以确保每张图片只会被加载一次，并且实现上只需要重写imgFromPath方法而不用改其它地方：</p>
+<div class="cnblogs_code">
+<pre>let imgMap = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Map();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> let count = 0;</span>
+let imgFromPath = <span style="color: #0000ff;">function</span><span style="color: #000000;">(path) {
+    let img </span>=<span style="color: #000000;"> imgMap.get(path);
+    </span><span style="color: #0000ff;">if</span> (img !=<span style="color: #000000;"> undefined) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> img;
+    }
+    img </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+    img.src </span>=<span style="color: #000000;"> path;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    img.onload = function() {</span><span style="color: #008000;">
+//</span><span style="color: #008000;">        ++count;</span><span style="color: #008000;">
+//</span><span style="color: #008000;">        log(count, path);</span><span style="color: #008000;">
+//</span><span style="color: #008000;">    }; 用来调试的时候观察实际加载的次数</span>
+<span style="color: #000000;">    
+    imgMap.set(path, img);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> img;
+};</span></pre>
+</div>
+<p>在游戏开始前加载所有图片：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('a96d340e-df43-470e-9ecc-52bc57ff7009')"><img id="code_img_closed_a96d340e-df43-470e-9ecc-52bc57ff7009" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_a96d340e-df43-470e-9ecc-52bc57ff7009" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('a96d340e-df43-470e-9ecc-52bc57ff7009',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_a96d340e-df43-470e-9ecc-52bc57ff7009" class="cnblogs_code_hide">
+<pre>let log =<span style="color: #000000;"> console.log.bind(console);
+
+let imgPaths </span>=<span style="color: #000000;"> {
+    ball: </span>"img/ball.png"<span style="color: #000000;">,
+    brick: </span>"img/brick.png"<span style="color: #000000;">,
+    paddle: </span>"img/paddle.png"<span style="color: #000000;">,
+};
+
+let imgMap </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Map();
+let imgFromPath </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(path) {
+    let img </span>=<span style="color: #000000;"> imgMap.get(path);
+    </span><span style="color: #0000ff;">if</span> (img !=<span style="color: #000000;"> undefined) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> img;
+    }
+    img </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+    img.src </span>=<span style="color: #000000;"> path;
+    imgMap.set(path, img);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> img;
+};
+
+let loadImgs </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    let imgLoads </span>= 0; <span style="color: #008000;">//</span><span style="color: #008000;"> 已经加载完毕的图片数量</span>
+    let imgNames =<span style="color: #000000;"> Object.keys(imgPaths);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise(resolve =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let name of imgNames) {
+            let img </span>=<span style="color: #000000;"> imgFromPath(imgPaths[name]);
+            img.onload </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+                log(</span>'imgLoads=' +<span style="color: #000000;"> imgLoads);
+                </span><span style="color: #0000ff;">if</span> (++imgLoads &gt;=<span style="color: #000000;"> imgNames.length) {
+                    resolve();
+                }
+            };
+        }
+    });
+};</span></pre>
+</div>
+<span class="cnblogs_code_collapse">utils.js</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e8ed8ac5-561d-408c-92c1-af8ee976c70d')"><img id="code_img_closed_e8ed8ac5-561d-408c-92c1-af8ee976c70d" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_e8ed8ac5-561d-408c-92c1-af8ee976c70d" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('e8ed8ac5-561d-408c-92c1-af8ee976c70d',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_e8ed8ac5-561d-408c-92c1-af8ee976c70d" class="cnblogs_code_hide">
+<pre>    loadImgs().then(() =&gt;<span style="color: #000000;"> {
+        game.begin();        
+    });</span></pre>
+</div>
+<span class="cnblogs_code_collapse">main.js</span></div>
+<p>&nbsp;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201810/1042431-20181026220756102-478403492.gif" alt="" width="368" height="286" /></p>
+<p>&nbsp;</p>

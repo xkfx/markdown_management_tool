@@ -1,0 +1,114 @@
+<h2>例子</h2>
+<p><span style="text-decoration: underline;"><strong>1、scanf VS. getchar</strong></span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> s[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span>, s) == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">echo: %s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 但是 scanf 会把换行、TAB、空格等全部忽略
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 特定情况，可采用 getchar() 来解决这个问题 
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Ctrl + Z 进入下一个 while 循环 </span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> c;
+    </span><span style="color: #0000ff;">while</span> ((c = getchar()) !=<span style="color: #000000;"> EOF) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">echo: %d - %c\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, c, c);
+    } 
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 无论怎么输入，输出的最后一行总是 echo: 10 - 然后换两次行 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 是因为我们输入的最后一个字符总是换行符 \n 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 而 10 恰好对应着 \n </span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong>2、如何存储字符串字面量</strong></span></p>
+<p>本质而言，C语言把字符串字面量作为字符数组来处理。</p>
+<p>C语言编译器在程序中遇到长度为 n 的字面量时，会为其分配长度为 n + 1 的内存空间。</p>
+<p>既然是作为字符数组来处理，那么编译器会把字符串字面量看作是 char * 类型的指针。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{    
+    </span><span style="color: #0000ff;">char</span> *s1 = <span style="color: #800000;">"</span><span style="color: #800000;">Hello world\n</span><span style="color: #800000;">"</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> [Warning] deprecated conversion from string constant to 'char*'</span>
+    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *s2 = <span style="color: #800000;">"</span><span style="color: #800000;">Hello world\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;    
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> printf 函数的首个参数类型为 const char * </span>
+<span style="color: #000000;">    printf(s1);    
+    printf(s2);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Hello world\n</span><span style="color: #800000;">"</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 字符串字面量看作 char * 类型指针 </span>
+    
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong>3、初始化字符串变量</strong></span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{     
+    </span><span style="color: #0000ff;">char</span> s1[<span style="color: #800080;">5</span>] = <span style="color: #800000;">"</span><span style="color: #800000;">hi</span><span style="color: #800000;">"</span><span style="color: #000000;">; 
+    </span><span style="color: #0000ff;">char</span> s2[<span style="color: #800080;">5</span>] = {<span style="color: #800000;">'</span><span style="color: #800000;">h</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span><span style="color: #000000;">};
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 两种初始化方式，效果上是等价的
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 余下元素被初始化为 0 也就是 '\0'</span>
+<span style="color: #000000;">    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">s1 = %s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s1);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">s2 = %s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s2); 
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 但是，要注意！
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> char s3[5] = "hi123"; 是不可的，没有给空字符留位子，必须确保数组长度比初始化式的长度 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> [Error] initializer-string for array of chars is too long [-fpermissive]</span>
+    
+    <span style="color: #0000ff;">char</span> s4[] = <span style="color: #800000;">"</span><span style="color: #800000;">hi</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 自动分配 3 个空间，分别存储 'h', 'i', '\0' </span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">s4 = %s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s4);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong>4、字符数组 VS. 字符指针</strong></span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{     
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 字符数组可修改！ </span>
+    <span style="color: #0000ff;">char</span> s1[] = <span style="color: #800000;">"</span><span style="color: #800000;">i hate u !\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    s1[</span><span style="color: #800080;">2</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">l</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    s1[</span><span style="color: #800080;">3</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    s1[</span><span style="color: #800080;">4</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">v</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    s1[</span><span style="color: #800080;">5</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    printf(s1); </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; i love u !
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 字符指针不可以！</span>
+    <span style="color: #0000ff;">char</span> *s2 = <span style="color: #800000;">"</span><span style="color: #800000;">i hate u !\n</span><span style="color: #800000;">"</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 编译报Warning
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> deprecated conversion from string constant to 'char*'
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> s2[2] = 'x'; 可编译但是不可执行 </span>
+    printf(s2); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; i hate u !</span>
+    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *s3 = <span style="color: #800000;">"</span><span style="color: #800000;">i hate u !\n</span><span style="color: #800000;">"</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 正确的姿势 </span>
+    printf(s3); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; i hate u !
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 一个实验。这样是可行的！ </span>
+    <span style="color: #0000ff;">char</span> s4[] = <span style="color: #800000;">"</span><span style="color: #800000;">i hate u !\n</span><span style="color: #800000;">"</span>, *<span style="color: #000000;">s5;
+    s5 </span>=<span style="color: #000000;"> s4;
+    s5[</span><span style="color: #800080;">2</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    printf(s5); </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; i iate u !
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 以及之前声明的 const char *s3</span>
+    s3 =<span style="color: #000000;"> s4;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> s3[2] = 'b'; 但是不可更改！报Error 这是因为 s3 是一个 指向const char 的指针
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 它限制了对 字符数组的操作。</span>
+    printf(s3); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; i iate u !</span>
+    
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1] 紫书p45 TeX中的引号</p>
+<p>[2] 《C语言程序设计_现代方法 第2版》 第13章 字符串</p>
+<p>&nbsp;</p>

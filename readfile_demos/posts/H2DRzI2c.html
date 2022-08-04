@@ -1,0 +1,98 @@
+<p>实验存档。</p>
+<p>允许好几个人同时读，但是不允许在有人读的时候写，以及同一时间只能有一个人在写。</p>
+<p>读者.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.entity.readerwriter;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.method.Semaphore;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Reader <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Semaphore rmutex, wmutex;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> readCount = 0<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Reader(Semaphore rmutex, Semaphore wmutex) {
+        id </span>= ++<span style="color: #000000;">total;
+        </span><span style="color: #0000ff;">this</span>.rmutex =<span style="color: #000000;"> rmutex;
+        </span><span style="color: #0000ff;">this</span>.wmutex =<span style="color: #000000;"> wmutex;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            rmutex.p();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只有第一个读者进程需要执行 wmutex.p()</span>
+            <span style="color: #0000ff;">if</span> (readCount == 0<span style="color: #000000;">) wmutex.p();
+            readCount</span>++<span style="color: #000000;">;
+            rmutex.v();
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行读操作</span>
+            <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                Thread.sleep(</span>30<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            rmutex.p();
+            readCount</span>--<span style="color: #000000;">;
+            System.out.println(id </span>+ " 号读者结束阅读：当前还剩 " + readCount + " 位读者在读"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (readCount == 0<span style="color: #000000;">) wmutex.v();
+            rmutex.v();
+        }
+    }
+}</span></pre>
+</div>
+<p>写者.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.entity.readerwriter;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.method.Semaphore;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Writer <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Semaphore wmutex;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Writer(Semaphore wmutex) {
+        id </span>= ++<span style="color: #000000;">total;
+        </span><span style="color: #0000ff;">this</span>.wmutex =<span style="color: #000000;"> wmutex;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            wmutex.p();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行写操作</span>
+            System.out.println(id + " 号写者正在写"<span style="color: #000000;">);
+
+            wmutex.v();
+        }
+    }
+}</span></pre>
+</div>
+<p>主函数.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.test;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.entity.readerwriter.Reader;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.entity.readerwriter.Writer;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.method.Semaphore;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ReaderWriterTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 实现写者与写者间、读者与写者间互斥</span>
+        Semaphore wmutex = <span style="color: #0000ff;">new</span> Semaphore(1<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于改变 readCount 变量时实现互斥</span>
+        Semaphore rmutex = <span style="color: #0000ff;">new</span> Semaphore(1<span style="color: #000000;">);
+
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 5; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Writer(wmutex)).start();
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Reader(rmutex, wmutex)).start();
+        }
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p><a href="http://www.cnblogs.com/xkxf/p/7866956.html#x2" target="_blank">Semaphore.java</a></p>
+<p>&nbsp;</p>

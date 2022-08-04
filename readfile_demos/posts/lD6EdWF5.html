@@ -1,0 +1,50 @@
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/10min.html" target="_blank">10 Minutes to pandas</a></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+
+dates </span>= pd.date_range(<span style="color: #800000;">'</span><span style="color: #800000;">20180116</span><span style="color: #800000;">'</span>, periods=3) <span style="color: #008000;">#</span><span style="color: #008000;"> 创建 16 17 18 等六个日期</span>
+<span style="color: #000000;">
+df </span>= pd.DataFrame(np.random.randn(3,4), index=dates, columns=list(<span style="color: #800000;">'</span><span style="color: #800000;">ABCD</span><span style="color: #800000;">'</span>)) <span style="color: #008000;">#</span><span style="color: #008000;"> 这是二维的，类似于一个</span>
+<strong><span style="color: #000000;">
+df1 </span>= df.reindex(index=dates[0:3], columns=list(df.columns) + [<span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+df1.loc[dates[0]:dates[</span>1],<span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span>] = 1</strong>
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(df1)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D    E</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -0.183828  1.393147  1.816151  0.595298  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  1.118642 -0.106566 -0.213438  1.510072  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  0.705483  1.629647 -1.657045  0.428885  <strong><span style="color: #ff0000;">NaN</span></strong></span><span style="color: #008000;">
+#</span><span style="color: #008000;"> pandas 用 np.nan 来表示 missing data</span>
+
+<strong><span style="color: #008000;">#</span><span style="color: #008000;"> print(<span style="color: #ff0000;">df1.dropna(how='any')</span>) # 所以这个方法不改变内部哦 ~ 但是会返回一个删除所有含 NaN 的行的 dataframe</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df1)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D    E</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  0.866927  0.918359  0.908967 -0.888321  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.446272  0.534636 -0.160422 -0.157928  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D    E</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  0.866927  0.918359  0.908967 -0.888321  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.446272  0.534636 -0.160422 -0.157928  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  1.095823 -1.300827  0.746324 -0.277497  NaN</span>
+</strong>
+<span style="color: #008000;">#</span><span style="color: #008000;"> 填充 NaN</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(<span style="color: #ff0000;"><strong>df1.fillna(value=5)</strong></span>) # 这个也是不改变&ldquo;本尊&rdquo;的！</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df1)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D    E</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  0.286535 -0.847836 -0.949535 -1.889351  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.530458 -0.871814  1.169275  0.337444  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18 -0.457999 -0.325463  0.439679 -0.104462  5.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D    E</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  0.286535 -0.847836 -0.949535 -1.889351  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.530458 -0.871814  1.169275  0.337444  1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18 -0.457999 -0.325463  0.439679 -0.104462  NaN</span>
+
+<strong><span style="color: #008000;">#</span><span style="color: #008000;"> To get the boolean mask where values are nan</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(<span style="color: #ff0000;">pd.isna(df1)</span>)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                 A      B      C      D      E</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  False  False  False  False  False</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  False  False  False  False  False</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  False  False  False  False   True</span></strong></pre>
+</div>
+<p>&nbsp;</p>

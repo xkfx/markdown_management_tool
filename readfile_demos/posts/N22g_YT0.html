@@ -1,0 +1,92 @@
+<p><a href="#1">因特网</a></p>
+<p><a href="#2">网络核心</a></p>
+<p><a href="#3">分组交换网中的时延、丢包和吞吐量</a></p>
+<p><a href="#4">协议层次及其服务模型&nbsp;</a></p>
+<p><a href="#5">面对攻击的网络</a></p>
+<p><a href="#6">计算机网络和因特网的历史</a></p>
+<p><a href="#7">小结（自己写的。。。）</a></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong><a name="1"></a></strong>【什么是因特网？】</span></p>
+<p><span style="text-decoration: underline;">具体构成描述</span></p>
+<p>1、与因特网相连的设备被称作主机或者<span style="color: #ff0000;">端系统</span>。（host or end system）</p>
+<p>2、连接这些设备的是<span style="color: #ff0000;">通信链路</span>和<span style="color: #ff0000;">分组交换机</span>。（communication link and packet switch）</p>
+<p>3、典型的communication link包括同轴电缆、光纤等。</p>
+<p>4、不同的communication link能以不同速率传输数据，传输的速率以bit/s度量。（即<span style="color: #ff0000;"><strong>&ldquo;bps&rdquo;</strong></span>,bit per second）</p>
+<p>5、当端对端发送数据的时候，发送端系统将数据分段，并为每段加上首部字节，由此生成的信息包用计算机网络的术语来说称为<span style="color: #ff0000;">分组</span>（<span style="color: #ff0000;">packet</span>）。（下文提到的分组指&ldquo;信息包&rdquo;，而非动词）</p>
+<p>6、分组的传输：入通信链路 --&gt; 分组交换机 --&gt; 出通信链路。</p>
+<p>7、两种最著名的分组交换机：<span style="color: #ff0000;">路由器</span>（<span style="color: #ff0000;">router</span>）和链路层交换机。</p>
+<p>8、从发送端系统到接收端系统，一个分组所经历的一系列通信链路和分组交换机称为通过该网络的<span style="color: #ff0000;">路径</span>（<span style="color: #ff0000;">route</span>或<span style="color: #ff0000;">path</span>）</p>
+<p>9、<span style="color: #ff0000;"><strong>ISP</strong></span>=Internet Service Provider=因特网服务提供商=n条通信链路+n条分组交换机，以及为端系统提供不同类型的网络接入(无线、宽带等)、为内容提供者提供的因特网接入服务。<span style="background-color: #ffff99;">特点：底层ISP通过高层ISP互联起来、各个ISP独立管理并各自运行着IP协议。</span></p>
+<p><span style="background-color: #ffff99;">10、各个因特网部件都要运行一系列协议（protocal），这些协议控制着因特网中信息的接收与发送。</span></p>
+<p>11、TCP和IP是因特网中两个最重要的协议，统称为TCP/IP。(Transmission Control Protocal,传输控制协议; Internet Protocal,网络协议)</p>
+<p><span style="background-color: #ffff99;">12、<span style="color: #ff0000;"><strong>IP协议</strong></span>定义了在路由器和端系统之间发送和接收的分组格式。</span></p>
+<p>13、为了方便网络资源的共享，就需要在各个ISP中建立一个统一的标准，现在的Internet standard由IETF研发。</p>
+<p>14、IETF的标准文档称为&ldquo;<span style="color: #ff0000;">Request For Comment</span>&rdquo;（RFC），该文档技术性很强，并相当详细,定义了TCP、IP等协议、目前有将近六千多个RFC。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">服务描述</span></p>
+<p>描述因特网大致有两个角度，一个是从具体的硬件出发，另一个是从使用因特网的软件出发。这里的&ldquo;服务描述&rdquo;就是指后者，从应用程序的角度出发描述因特网，与因特网相连的端系统提供了<span style="color: #ff0000;">因特网API（应用程序编程接口）</span>，书里做了一个类比，把这种API类比为邮政的投信规则，只有遵循了这套API，数据（邮件）才能在因特网（快递网络）上传输。（是否可以想象成Java里的inteface，类似于要想被sorted就必须实现comparable接口，而在这里，要想数据被传输，就必须遵循特定的因特网规则？）。当然，这种因特网API也分为许多种，需要根据具体情况选择。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">什么是协议</span></p>
+<p>根据书上所描述，协议可以理解为一系列约定俗称的动作，就像人类活动中&ldquo;问时间&rdquo;这个行为需要遵循一定的规则一样，报文的接收和发送所采取的动作、报文的格式与次序同样需要由协议加以约束。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【网络边缘】</span></p>
+<p>网络边缘指的是<span style="color: #ff0000;"><strong>端系统</strong></span>，端系统也可以称作主机，主机可以进一步划分为客户和服务器（服务器通常是指更为强大的机器），许多服务器聚合在一起就成了数据中心。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">接入网</span><br />接入网是指将端系统连接到其边缘路由器（路径上的第一台路由器）的<span style="color: #ff0000;">物理链路</span>。<br />1、家庭接入：DSL（电话线，本地电话公司充当ISP）、电缆（有线电视）、FTTH（光纤到户，电缆的升级版，超高速率）...<br />2、企业、学校：通过是两种局域网（LAN）以太网（以太网交换机）和WiFi接入。（WiFi：基于IEEE 802.11技术的无线LAN接入）<br />3、广域无线接入：3G、4G。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">物理媒体</span>：</p>
+<p>双绞铜线、同轴电缆、光纤</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong><a name="2"></a></strong>【网络核心】</span></p>
+<p>网络核心=分组交换机+通信链路。</p>
+<p>&nbsp;</p>
+<p>Q:什么是分组交换？什么是电路交换？两者之间有什么区别？</p>
+<p>A:Packet switching and circuit switching&nbsp;are two networking methods for transferring data between two nodes or hosts. For a&nbsp;packet-switched network, data is transferred by dividing the data into individual packets and passing it through the circuits to the other host. In packet-switched networks, the route is not exclusively determined when the packets hit the wire. Using routing algorithms, each packet may actually take a different route through the network to arrive at the destination host.<strong> Unlike a&nbsp;circuit-switched network&nbsp;where a static route is setup and pre-established prior to initializing connections to the host.</strong>（<a href="http://searchnetworking.techtarget.com/answer/What-is-the-difference-between-circuit-switching-and-packet-switching" target="_blank">网络资源</a>）</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">分组交换</span></p>
+<p>1、存储转发机制。<br />p个分组经过n条链路序列的时延为(n+p-1)*L/R</p>
+<p>&nbsp;</p>
+<p>2、排队时延和分组丢失（丢包）。<br />之所以会出现丢包的情况是因为输出队列的缓存空间是有限的，照书上所述，丢失的分组可能是队列的第一个也可能是最后一个。</p>
+<p>&nbsp;</p>
+<p>3、转发表和路由选择协议。<br /><strong>转发表</strong><br />报文在网络中转发的故事。<br />端系统：将长报文分组，并在分组首部包含目的地的IP地址。<br />各个路由器：检查分组包含的IP地址，通过转发表映射成为输出链路。<br />整个过程可以类比为<span style="color: #ff0000;"><strong>&ldquo;不使用地图而喜欢问路的汽车驾驶员&rdquo;</strong></span>。</p>
+<p><strong>路由选择协议</strong><br />转发表是如何设置的？是人工设置的还是更为自动的智能设置呢？</p>
+<p>&nbsp;</p>
+<p>实践：查看到分组在因特网上的路线。通过：http://www.traceroute.org/</p>
+<div class="cnblogs_code">
+<pre>traceroute to XXXXXX, <span style="color: #800080;">20</span> hops max, <span style="color: #800080;">40</span> <span style="color: #0000ff;">byte</span><span style="color: #000000;"> packets
+ </span><span style="color: #800080;">1</span>  <span style="color: #800080;">208.64</span>.<span style="color: #800080;">252.229</span>.uscolo.com (<span style="color: #800080;">208.64</span>.<span style="color: #800080;">252.229</span>)  <span style="color: #800080;">0.432</span> ms  <span style="color: #800080;">0.705</span> ms  <span style="color: #800080;">0.823</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">2</span>  <span style="color: #800080;">199.197</span>.<span style="color: #800080;">10.6</span>.uscolo.com (<span style="color: #800080;">199.197</span>.<span style="color: #800080;">10.6</span>)  <span style="color: #800080;">0.852</span> ms  <span style="color: #800080;">0.884</span> ms  <span style="color: #800080;">0.916</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">3</span>  las-b3-link.telia.net (<span style="color: #800080;">80.239</span>.<span style="color: #800080;">192.93</span>)  <span style="color: #800080;">0.584</span> ms  <span style="color: #800080;">0.657</span> ms  <span style="color: #800080;">0.683</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">4</span>  <span style="color: #800080;">213.248</span>.<span style="color: #800080;">92.130</span> (<span style="color: #800080;">213.248</span>.<span style="color: #800080;">92.130</span>)  <span style="color: #800080;">101.923</span> ms  <span style="color: #800080;">99.831</span> ms  <span style="color: #800080;">101.803</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">5</span>  <span style="color: #800080;">202.97</span>.<span style="color: #800080;">90.113</span> (<span style="color: #800080;">202.97</span>.<span style="color: #800080;">90.113</span>)  <span style="color: #800080;">103.165</span> ms  <span style="color: #800080;">103.216</span> ms  <span style="color: #800080;">103.256</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">6</span>   (<span style="color: #800080;">202.97</span>.<span style="color: #800080;">51.249</span>)  <span style="color: #800080;">242.464</span> ms  <span style="color: #800080;">241.331</span> ms  <span style="color: #800080;">243.573</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">7</span>   (<span style="color: #800080;">202.97</span>.<span style="color: #800080;">35.105</span>)  <span style="color: #800080;">145.673</span> ms  <span style="color: #800080;">145.697</span> ms  <span style="color: #800080;">145.734</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">8</span>  *  (<span style="color: #800080;">202.97</span>.<span style="color: #800080;">33.85</span>)  <span style="color: #800080;">212.074</span> ms  <span style="color: #800080;">212.124</span><span style="color: #000000;"> ms
+ </span><span style="color: #800080;">9</span>  <span style="color: #800080;">202.97</span>.<span style="color: #800080;">82.62</span> (<span style="color: #800080;">202.97</span>.<span style="color: #800080;">82.62</span>)  <span style="color: #800080;">216.307</span> ms * <span style="color: #800080;">202.97</span>.<span style="color: #800080;">82.62</span> (<span style="color: #800080;">202.97</span>.<span style="color: #800080;">82.62</span>)  <span style="color: #800080;">266.873</span><span style="color: #000000;"> ms
+</span><span style="color: #800080;">10</span>  * * *
+<span style="color: #800080;">11</span>  <span style="color: #800080;">220.160</span>.<span style="color: #800080;">92.134</span> (<span style="color: #800080;">220.160</span>.<span style="color: #800080;">92.134</span>)  <span style="color: #800080;">267.069</span> ms  <span style="color: #800080;">238.422</span> ms  <span style="color: #800080;">238.512</span><span style="color: #000000;"> ms
+</span><span style="color: #800080;">12</span>  * * *
+<span style="color: #800080;">13</span>  * * *
+<span style="color: #800080;">14</span>  * * *
+<span style="color: #800080;">15</span>  * * *
+<span style="color: #800080;">16</span>  * * *
+<span style="color: #800080;">17</span>  * * *
+<span style="color: #800080;">18</span>  * * *
+<span style="color: #800080;">19</span>  * * *
+<span style="color: #800080;">20</span>  * * *</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><a name="3"></a></strong><span style="color: #ff00ff;">【分组交换网中的时延、丢包和吞吐量】</span></p>
+<p><span style="text-decoration: underline;">分组交换网中的时延概述</span></p>
+<p>1、处理时延：检查首部+分组导向+...</p>
+<p>2、排队时延：与流量大小有关</p>
+<p>3、传输时延：分组长度和传输速率的函数</p>
+<p>4、传播时延：路由器之间的距离的函数</p>
+<p>&nbsp;</p>
+<p><strong><a name="4"></a></strong>【协议层次及其服务模型】</p>
+<p><strong><a name="5"></a></strong>【面对攻击的网络】</p>
+<p><strong><a name="6"></a></strong>【计算机网络和因特网的历史】</p>
+<p><strong><a name="7"></a></strong>【小结】</p>
+<p>1、因特网的硬件基础：端系统 + 分组交换器 + 通信链路</p>
+<p>2、因特网为应用程序提供服务。</p>
+<p>3、通信实体间需要遵循一系列协议。协议的核心是&ldquo;一系列约定俗成的动作&rdquo;。</p>

@@ -1,0 +1,51 @@
+<p><span style="line-height: 1.5;">《c++ primer, 5E》</span><span style="line-height: 1.5;">第53页到第58页，笔记:</span></p>
+<p>1、非常量引用一定不能绑定const对象。例 const int ci = 1024; const int &amp;r1 = ci;</p>
+<p>2、常量引用不一定要绑定const对象。例 int i = 42; const int &amp;r1 = i;</p>
+<p>常量引用类似于对象的持有者，限制对所持对象的操作。</p>
+<p>3、区分 pointer to const 和 const pointer 声明方式的区别。（从右向左读）</p>
+<p>4、其实上面的内容用 【顶层const】 和 【底层const】就很容易理解，</p>
+<p>底层const针对指向常量的指针， 指针本身可以改变值，但必须指向常量。</p>
+<p>必须具有相同的底层const资格才可以执行拷贝操作。</p>
+<p>顶层const的值无法改变，但是可以作为字面值来使用。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">遇到的问题：</span>不理解【默认状态下, const对象仅在文件内有效】</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">课后练习:</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">练习 2.26</span></p>
+<p>a不合法，const对象必须初始化 b合法</p>
+<p>c合法，cnt的常量特征仅仅在执行改变ci的操作时才会发挥作用</p>
+<p>d不合法</p>
+<p><br /><span style="color: #ff0000;">练习 2.27 </span></p>
+<p>只有a和f非法</p>
+<p>(a)int i = -1, &amp;r = 0;</p>
+<p>非法， 非常量引用的初始值必须是一个对象</p>
+<p>(b)int *const p2 = &amp;i2;</p>
+<p>合法。const pointer</p>
+<p>(c)const int i = -1, &amp;r = 0;</p>
+<p>合法， 常量引用可以绑定字面值， 一般表达式</p>
+<p>(d) 合法</p>
+<p>(e) 合法</p>
+<p>(f) 非法</p>
+<p>(g) 合法</p>
+<p><span style="color: #ff0000;">练习 2.28</span></p>
+<p>从右向左读法</p>
+<p>a. 不合法。 cp首先是一个常量， 未初始化</p>
+<p>b. 不合法。 p2首先是一个常量， 必须初始化</p>
+<p>c. 不合法。 ic未初始化</p>
+<p>d. 不合法。 p3未初始化</p>
+<p>e. 合法。 p是一个指向常量的指针，而非常量</p>
+<p><span style="color: #ff0000;">练习 2.29</span></p>
+<p>a. 合法</p>
+<p>b. 不合法。p3 是一个指向常量的常量指针， p1是指向变量的指针, 如果合法，就会扩大常量的操作范围</p>
+<p>c. 不合法。变量指针无法持有常量</p>
+<p>d. 不合法。无法改变常量的值</p>
+<p>e. 不合法。无法改变常量的值</p>
+<p>f. 不合法。无法改变常量的值</p>
+<p><span style="color: #ff0000;">练习 2.30</span></p>
+<p>从左到右:</p>
+<p>v2 顶层常量， v1 无层变量，p1 无层变量, r1 对v1的引用</p>
+<p>p2 底层常量, p3 顶层常量， r2 既是顶层 const 也是底层 const  </p>
+<p><span style="color: #ff0000;">练习 2.31</span></p>
+<p>mdzz 这题不做了， 总之就是， 具有相同底层资格才能赋值， </p>
+<p>顶层const不能赋值，必须初始化。</p>

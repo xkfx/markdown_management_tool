@@ -1,0 +1,22 @@
+<p>文章：</p>
+<p class="title"><a href="https://yuerblog.cc/2016/12/01/the-meaning-of-service-layer-in-mvc-framework/" target="_blank">谈谈service层在mvc框架中的意义和职责</a></p>
+<p class="r"><a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller" target="_blank">Model&ndash;view&ndash;controller - Wikipedia</a></p>
+<p class="r"><a href="https://developer.chrome.com/apps/app_frameworks" target="_blank">MVC Architecture - Google Chrome - Chrome: developer</a></p>
+<p class="r">引用：</p>
+<blockquote>
+<p>问题的本质是：业务逻辑粘连了C层和M层，应该从C层&amp;M层解耦出来，成为独立的Service层。由此，在C层可以灵活的替换Service保持高度的简洁，而M层保持职责单一仅仅为Service提供数据，Service层则实现所有复杂的业务逻辑与通用的业务逻辑。</p>
+</blockquote>
+<blockquote>
+<p>Service层的职责 根据上面的分析，Service夹在C层和M层中间，从逻辑上大致划分为3大类： model侧的Service：也就是封装每个model与业务相关的通用数据接口，比如：查询订单。（我认为：访问远程服务获取数据也应该归属于这一类Service） 中间的Service：封装通用的业务逻辑，比如：计算订单折扣（会用到1中的Service）。 controller侧的Service：基于1、2中的Service进一步封装对外接口的用户业务逻辑，当然也不排斥直接访问DAO而不使用上述2个Service（不建议）。 在实践中，应该会很自然的用到这三类Service，在了解了这些概念之后再进行代码设计，就不会对Service的职责产生困惑了，自然也对MVC有了新的认识。</p>
+</blockquote>
+<p>零散笔记：</p>
+<ol>
+<li class="r">模式是一种可重复使用的解决方案。</li>
+<li><span id="Goals_of_MVC" class="mw-headline">MVC 解决的主要问题</span><span id="Goals_of_MVC">：</span>代码重用率低、项目难以并行开发。</li>
+<li>在写任何模块的时候，都应该理清处自己的职责（权限）范围，不做多余的事情、不调不该调的 API。小小的&ldquo;职权&rdquo;越界会一点点积累起来，结果就是造成代码很混乱。</li>
+</ol>
+<p>关于浏览原理：</p>
+<p><a href="https://coolshell.cn/articles/9666.html" target="_blank">https://coolshell.cn/articles/9666.html</a></p>
+<p><a href="https://www.jianshu.com/p/cfdf1747d30e" target="_blank">https://www.jianshu.com/p/cfdf1747d30e</a></p>
+<p><a href="https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/" target="_blank">https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/</a></p>
+<p>以及IM框架涵盖的东西也特别多，有空深入去学习一下。</p>

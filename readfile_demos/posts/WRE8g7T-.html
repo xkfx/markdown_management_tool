@@ -1,0 +1,60 @@
+<p>p32~p36:</p>
+<p><span style="background-color: #ffff99;">学习javadoc</span></p>
+<p>&nbsp;</p>
+<p>1、第一步，打开一个一定规模的java项目</p>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5;">2、</span><span style="line-height: 1.5;">第二步，搭建测试环境</span></p>
+<p>IntelliJ IDEA &mdash;&mdash;&gt; Tools &mdash;&mdash;&gt; Generate JavaDoc...</p>
+<p>&mdash;&mdash;&gt; -encoding UTF-8 -charset UTF-8</p>
+<p>&nbsp;</p>
+<p>3、第三步，参照corejava给所有类打一遍<strong>Javadoc注释</strong>。</p>
+<p>&nbsp;</p>
+<p>遇到的问题：</p>
+<p>1、ant的用法。</p>
+<p>2、代码正确性的验证：/*Output：。</p>
+<p>&nbsp;</p>
+<p>例1</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">: object/Documentation1.java</span><span style="color: #008000;">
+/**</span><span style="color: #008000;"> A class comment </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Documentation1 {
+  </span><span style="color: #008000;">/**</span><span style="color: #008000;"> A field comment </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> i1;
+  </span><span style="color: #008000;">/**</span><span style="color: #008000;"> A field comment </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> i2;
+  </span><span style="color: #008000;">/**</span><span style="color: #008000;"> A method comment </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> f1() {}
+  </span><span style="color: #008000;">/**</span><span style="color: #008000;"> A method comment </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> f2() {}
+} </span><span style="color: #008000;">//</span><span style="color: #008000;">/:~</span></pre>
+</div>
+<p>例2</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">: object/HelloDate.java</span>
+<span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;"> The first Thinking in Java example program.
+ * Displays a string and today's date.
+ * </span><span style="color: #808080;">@author</span><span style="color: #008000;"> Bruce Eckel
+ * </span><span style="color: #808080;">@author</span><span style="color: #008000;"> www.MindView.net
+ * </span><span style="color: #808080;">@version</span><span style="color: #008000;"> 4.0
+</span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloDate {
+  </span><span style="color: #008000;">/**</span><span style="color: #008000;"> Entry point to class &amp; application.
+   * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> args array of string arguments
+   * </span><span style="color: #808080;">@throws</span><span style="color: #008000;"> exceptions No exceptions thrown
+  </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+    System.out.println(</span>"Hello, it's: "<span style="color: #000000;">);
+    System.out.println(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Date());
+  }
+} </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Output: (55% match)
+Hello, it's:
+Wed Oct 05 14:39:36 MDT 2005
+</span><span style="color: #008000;">*///</span><span style="color: #008000;">:~</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="header">
+<h2 class="title" title="类 Documentation1">&nbsp;</h2>
+</div>
+<p>&nbsp;</p>

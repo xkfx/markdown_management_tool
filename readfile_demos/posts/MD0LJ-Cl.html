@@ -1,0 +1,401 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>Notes<ol>
+<li><a href="#a11">高阶函数</a></li>
+<li><a href="#a12">forEach</a></li>
+<li><a href="#a13">filter</a></li>
+<li><a href="#a14">map</a></li>
+<li><a href="#a15">reduce</a></li>
+<li><a href="#a16">some</a></li>
+<li><a href="#a17">findIndex</a></li>
+<li><a href="#a18">重写课本示例代码</a></li>
+</ol></li>
+<li>Excercises<ol>
+<li><a href="#a21">Flattening</a></li>
+<li><a href="#a22">Your own loop</a></li>
+<li><a href="#a23">Everything</a></li>
+<li><a href="#a24">Dominant writing direction</a></li>
+</ol></li>
+</ul>
+</div>
+<h2>Notes</h2>
+<p><a name="a11"></a>1、高阶函数的概念：Functions that<strong> operate on other functions</strong>, either<strong> by taking them as arguments</strong> or <strong>by returning them</strong>, are called&nbsp;<em>higher-order functions</em>.</p>
+<p>&nbsp;</p>
+<p>2、自己yy的高阶函数优势：</p>
+<ul>
+<li>更少的代码。有效减少键盘磨损</li>
+<li>传统编程是复用对象、方法，高阶函数则是复用一种更加抽象的模式</li>
+<li>对于理解、熟练运用高阶函数的人而言，采用高阶函数比传统代码有更好的可读性</li>
+</ul>
+<p>高阶函数是函数式编程的一种特性，当然js并不是函数编程语言，对于函数式编程可以参考&mdash;&mdash;<a href="https://www.zhihu.com/question/28292740/answer/40336090" target="_blank"> 什么是函数式编程思维？ - 用心阁的回答</a></p>
+<p>&nbsp;</p>
+<p>3、代码收集：</p>
+<p><span style="text-decoration: line-through;">① 高阶函数示例1</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> greaterThan(n) {
+  </span><span style="color: #0000ff;">return</span> m =&gt; m &gt;<span style="color: #000000;"> n;
+}
+let greaterThan10 </span>= greaterThan(10<span style="color: #000000;">);
+console.log(greaterThan10(</span>11<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p>②&nbsp;高阶函数示例2</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> noisy(f) {
+  </span><span style="color: #0000ff;">return</span> (...args) =&gt;<span style="color: #000000;"> {
+    console.log(</span>"calling with"<span style="color: #000000;">, args);
+    let result </span>=<span style="color: #000000;"> f(...args);
+    console.log(</span>"called with", args, ", returned"<span style="color: #000000;">, result);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+  };
+}
+noisy(Math.min)(</span>3, 2, 1<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; calling with [3, 2, 1]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; called with [3, 2, 1] , returned 1</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p>③&nbsp;高阶函数示例3</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> unless(test, then) {
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">test) then();
+}
+
+repeat(</span>3, n =&gt;<span style="color: #000000;"> {
+  unless(n </span>% 2 == 1, () =&gt;<span style="color: #000000;"> {
+    console.log(n, </span>"is even"<span style="color: #000000;">);
+  });
+});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 0 is even</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 2 is even</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a12"></a>④ 高阶函数forEach，功能类似于for/of循环。</p>
+<div class="cnblogs_code">
+<pre>["A", "B"].forEach(l =&gt;<span style="color: #000000;"> console.log(l));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; A</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; B</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a13"></a>⑤ 用于过滤数据的高阶函数</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> filter(array, test) {
+  let passed </span>=<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let element of array) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (test(element)) {
+      passed.push(element);
+    }
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> passed;
+}
+
+console.log(filter(SCRIPTS, script </span>=&gt;<span style="color: #000000;"> script.living));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; [{name: "Adlam", &hellip;}, &hellip;]</span></pre>
+</div>
+<p>标准数组方法：</p>
+<div class="cnblogs_code">
+<pre>console.log(SCRIPTS.filter(s =&gt; s.direction == "ttb"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; [{name: "Mongolian", &hellip;}, &hellip;]</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a14"></a>⑥&nbsp;filter会生成过滤掉一些数据的新数组，map则从原有的数组构造一个长度相同、但数据经过转化的新数组。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> map(array, transform) {
+  let mapped </span>=<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let element of array) {
+    mapped.push(transform(element));
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mapped;
+}
+
+let rtlScripts </span>= SCRIPTS.filter(s =&gt; s.direction == "rtl"<span style="color: #000000;">);
+console.log(map(rtlScripts, s </span>=&gt;<span style="color: #000000;"> s.name));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["Adlam", "Arabic", "Imperial Aramaic", &hellip;]</span></pre>
+</div>
+<p>&nbsp;map同样是一个标准的数组方法。</p>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a15"></a>⑦ 高阶函数reduce（或者说fold）：通过对数组中的元素逐个进行某种累加运算产出一个结果。例如说求和sum(array)，翻译成高阶函数就是reduce(array, (a, b) =&gt; a + b, 0)&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> reduce(array, combine, start) {
+  let current </span>=<span style="color: #000000;"> start;
+  </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let element of array) {
+    current </span>=<span style="color: #000000;"> combine(current, element);
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> current;
+}
+
+console.log(reduce([</span>1, 2, 3, 4], (a, b) =&gt; a + b, 0<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 10</span></pre>
+</div>
+<p>标准数组方法：</p>
+<div class="cnblogs_code">
+<pre>console.log([1, 2, 3, 4].reduce((a, b) =&gt; a +<span style="color: #000000;"> b));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 10</span></pre>
+</div>
+<p>reduce用于比较最后得出一个结果：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> characterCount(script) {
+  </span><span style="color: #0000ff;">return</span> script.ranges.reduce((count, [from, to]) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> count + (to -<span style="color: #000000;"> from);
+  }, </span>0<span style="color: #000000;">);
+}
+
+console.log(SCRIPTS.reduce((a, b) </span>=&gt;<span style="color: #000000;"> {
+  </span><span style="color: #0000ff;">return</span> characterCount(a) &lt; characterCount(b) ?<span style="color: #000000;"> b : a;
+}));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {name: "Han", &hellip;}</span></pre>
+</div>
+<p>更简单的例子：</p>
+<div class="cnblogs_code">
+<pre>[1, 23, 21, 12, 3, 5].reduce((a, b) =&gt; a &gt; b ?<span style="color: #000000;"> a : b);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 23</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>[1, 23, 21, 12, 3, 5].reduce((a, b) =&gt;<span style="color: #000000;"> {
+    console.log(`compare ${a} </span><span style="color: #0000ff;">with</span><span style="color: #000000;"> ${b}`);
+    </span><span style="color: #0000ff;">return</span> a &gt; b ?<span style="color: #000000;"> a : b;
+});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; compare 1 with 23</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; compare 23 with 21</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; compare 23 with 12</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; compare 23 with 3</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; compare 23 with 5</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 23</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a16"></a>⑧ 高阶函数some</p>
+<div class="cnblogs_code">
+<pre>[2, 3, 2, 1, 2, 5, 7].some(a =&gt; a &gt; 7<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+<span style="color: #000000;">
+[</span>2, 3, 2, 1, 2, 5, 7].some(a =&gt; a &gt;= 7<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+<span style="color: #000000;">
+[</span>2, 3, 2, 1, 2, 5, 7].some(a =&gt;<span style="color: #000000;"> {
+    console.log(`start testing ${a}`);
+    </span><span style="color: #0000ff;">return</span> a == 1<span style="color: #000000;">;
+});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; start testing 2</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; start testing 3</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; start testing 2</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; start testing 1</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>测试数组中的元素，只要其中任何一个满足就返回true</p>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a17"></a>⑨ 高阶函数findIndex</p>
+<div class="cnblogs_code">
+<pre>[2, 3, 2, 1, 2, 5, 7].findIndex(a =&gt; a &gt; 7<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; -1</span>
+<span style="color: #000000;">
+[</span>2, 3, 2, 1, 2, 5, 7].findIndex(a =&gt; a &gt;= 7<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr;  6</span>
+<span style="color: #000000;">
+[</span>2, 3, 2, 1, 2, 5, 7].findIndex(a =&gt;<span style="color: #000000;"> {
+    console.log(`start testing ${a}`);
+    </span><span style="color: #0000ff;">return</span> a == 1<span style="color: #000000;">;
+});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; start testing 2</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; start testing 3</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; start testing 2</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; start testing 1</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 3</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a18"></a>4、重写课本示例代码（统计文本中字符的脚本归属分布）</p>
+<p>数据：http://eloquentjavascript.net/code/scripts.js</p>
+<p>数据格式：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">  {
+    name: </span>"Adlam"<span style="color: #000000;">,
+    ranges: [[</span>125184, 125259], [125264, 125274], [125278, 125280<span style="color: #000000;">]],
+    direction: </span>"rtl"<span style="color: #000000;">,
+    year: </span>1987<span style="color: #000000;">,
+    living: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+    link: </span>"https://en.wikipedia.org/wiki/Fula_alphabets#Adlam_alphabet"<span style="color: #000000;">
+  }</span></pre>
+</div>
+<p>主代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 字符是由各种字符脚本处理的
+ * 通过每个字符的编码可以找到该字符的脚本归属
+ * 例如编码为1~100的字符由a脚本处理
+ * 编码为300~400、500~700的由b脚本处理
+ </span><span style="color: #008000;">*/</span>
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 课本上的函数一般直接用&ldquo;代表返回值的名词&rdquo;做函数名
+ * 而java中这种情况一般用&ldquo;get+代表返回值的名词&rdquo;做函数名
+ * 如果觉得某个函数意义模糊，可以自行在函数前面脑补动词
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+const textToCodes </span>= (text) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span> (let <span style="color: #0000ff;">char</span><span style="color: #000000;"> of text) {
+          result.push(</span><span style="color: #0000ff;">char</span>.codePointAt(0<span style="color: #000000;">));
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+const codeToScriptName </span>= (code) =&gt;<span style="color: #000000;"> {
+    let result </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let script of SCRIPTS) {
+        </span><span style="color: #0000ff;">if</span> (script.ranges.some(([from, to]) =&gt;<span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span> code &gt;= from &amp;&amp; code &lt;<span style="color: #000000;"> to;
+        })) {
+            result </span>=<span style="color: #000000;"> script.name;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+const elementCounts </span>= (arr) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let element of arr) {
+        let index </span>= result.findIndex(a =&gt; a.label ==<span style="color: #000000;"> element);
+        </span><span style="color: #0000ff;">if</span> (index == -1<span style="color: #000000;">) {
+            result.push({label: element, count: </span>1<span style="color: #000000;">});
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            result[index].count</span>++<span style="color: #000000;">;    
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+const scriptsRate </span>= (text) =&gt;<span style="color: #000000;"> {
+    let scriptNames </span>= textToCodes(text).map(code =&gt;<span style="color: #000000;"> codeToScriptName(code));
+    let total </span>=<span style="color: #000000;"> scriptNames.length;
+    let scriptCounts </span>=<span style="color: #000000;"> elementCounts(scriptNames);
+    </span><span style="color: #0000ff;">return</span> scriptCounts.map(({label, count}) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+            label: label </span>== <span style="color: #0000ff;">null</span> ? "none"<span style="color: #000000;"> : label, 
+            rate: (count </span>/ total).toFixed(2<span style="color: #000000;">)
+        };
+    });
+};
+
+const main </span>= () =&gt;<span style="color: #000000;"> {
+    let text </span>= '英国的狗说"woof", 俄罗斯的狗说"тяв"'<span style="color: #000000;">;
+    console.log(scriptsRate(text).map(item </span>=&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">return</span> `${item.rate * 100}%<span style="color: #000000;"> ${item.label}`;
+    }).join(</span>", "<span style="color: #000000;">));
+};
+
+main();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 46% Han, 25% none, 17% Latin, 13% Cyrillic</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="a21"></a>①&nbsp;Flattening</p>
+<div class="cnblogs_code">
+<pre>let arrays = [[1, 2, 3], [4, 5], [6<span style="color: #000000;">]];
+
+arrays.reduce((sum, x) </span>=&gt;<span style="color: #000000;"> {
+    console.log(`concat ${sum} and ${x}`);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum.concat(x);
+});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; concat 1,2,3 and 4,5</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; concat 1,2,3,4,5 and 6</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; [1, 2, 3, 4, 5, 6]</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a22"></a>②&nbsp;Your own loop</p>
+<div class="cnblogs_code">
+<pre>const loop = (initVal, test, update, body) =&gt;<span style="color: #000000;"> {
+    let count </span>= 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (let i = initVal; test(i); i =<span style="color: #000000;"> update(i)) {
+        body(i);
+    }
+};
+
+loop(</span>3, n =&gt; n &gt; 0, n =&gt; n - 1<span style="color: #000000;">, console.log);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 3</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 2</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 1</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a23"></a>③&nbsp;Everything</p>
+<p>版本1：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> every(array, test) {
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let x of array) {
+        </span><span style="color: #0000ff;">if</span> (!test(x)) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+console.log(every([</span>1, 3, 5], n =&gt; n &lt; 10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(every([2, 4, 16], n =&gt; n &lt; 10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(every([], n =&gt; n &lt; 10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;版本2：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> every(array, test) {
+    </span><span style="color: #0000ff;">return</span> !array.some(x =&gt; !<span style="color: #000000;">test(x));
+}
+
+console.log(every([</span>1, 3, 5], n =&gt; n &lt; 10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(every([2, 4, 16], n =&gt; n &lt; 10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(every([], n =&gt; n &lt; 10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;&nbsp;--- --&nbsp; ------------ - - - -- - -- - - - - - --- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;----&nbsp; &nbsp; &nbsp;-- --&nbsp;</p>
+<p><a name="a24"></a>④ Dominant writing direction</p>
+<p>PS. 要用到示例代码中的数据。</p>
+<div class="cnblogs_code">
+<pre>const textToCodes = (text) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span> (let <span style="color: #0000ff;">char</span><span style="color: #000000;"> of text) {
+          result.push(</span><span style="color: #0000ff;">char</span>.codePointAt(0<span style="color: #000000;">));
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+const codeToDirection </span>= (code) =&gt;<span style="color: #000000;"> {
+    let result </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let script of SCRIPTS) {
+        </span><span style="color: #0000ff;">if</span> (script.ranges.some(([from, to]) =&gt;<span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span> code &gt;= from &amp;&amp; code &lt;<span style="color: #000000;"> to;
+        })) {
+            result </span>=<span style="color: #000000;"> script.direction;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+const elementCounts </span>= (arr) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let element of arr) {
+        let index </span>= result.findIndex(a =&gt; a.label ==<span style="color: #000000;"> element);
+        </span><span style="color: #0000ff;">if</span> (index == -1<span style="color: #000000;">) {
+            result.push({label: element, count: </span>1<span style="color: #000000;">});
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            result[index].count</span>++<span style="color: #000000;">;    
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> dominantDirection(text) {
+    let derections </span>= textToCodes(text).map(code =&gt;<span style="color: #000000;"> codeToDirection(code));
+    let derectionCounts </span>= elementCounts(derections).filter(x =&gt; x.label != <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> derectionCounts.reduce((a, b) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">return</span> a.count &gt; b.count ?<span style="color: #000000;"> a : b;
+    }).label;
+}
+
+console.log(dominantDirection(</span>"Hello!"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ltr</span>
+console.log(dominantDirection("Hey, مساء الخير"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; rtl</span></pre>
+</div>
+<p>&nbsp;</p>

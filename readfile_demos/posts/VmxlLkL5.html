@@ -1,0 +1,39 @@
+<h2>例子</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdlib&gt;<span style="color: #000000;">
+#include </span>&lt;ctime&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;<span style="color: #000000;">
+#include </span>&lt;cassert&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">void</span> fill_random_int(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp; v, <span style="color: #0000ff;">int</span><span style="color: #000000;"> cnt)
+{
+    v.clear();
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != cnt; ++<span style="color: #000000;">i) {
+        v.push_back(rand());
+    }
+}
+
+</span><span style="color: #0000ff;">void</span> test_sort(vector&lt;<span style="color: #0000ff;">int</span>&gt;&amp;<span style="color: #000000;"> v) 
+{
+    sort(v.begin(), v.end());
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != v.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+        assert(v[i] </span>&lt;= v[i + <span style="color: #800080;">1</span><span style="color: #000000;">]);
+    }
+} 
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    srand(time(NULL));
+    
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    fill_random_int(v, </span><span style="color: #800080;">1000000</span><span style="color: #000000;">);
+    test_sort(v);    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;    
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; Process exited after 3.556 seconds with return value 0</span></pre>
+</div>
+<h2>参考</h2>
+<p>[1]&nbsp;<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/12644110.html">一个FLAG #09# STL初步</a></p>

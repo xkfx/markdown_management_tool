@@ -1,0 +1,37 @@
+<p><a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/" target="_blank">api：https://tomcat.apache.org/tomcat-5.5-doc/servletapi/</a></p>
+<p>1、GET和POST除去数据大小之外的区别。</p>
+<ul>
+<li>安全性问题。使用GET的话，参数数据会出现在浏览器的输入栏之中。</li>
+<li>书签问题。GET请求可以建立书签，而POST不能。典型的例子为http://docs.oracle.com/javase/8/docs/api/，对于用户访问的每一个子页面，都没有书签（URL相同）。</li>
+<li>GET不会对服务器产生任何改变，只是&ldquo;访问&rdquo;，而POST类似于UPDATE操作。</li>
+<li>非幂等（non-idempotent）请求。GET、PUT、HEAD是幂等的，执行很多次，不会有不好的副作用，POST是非幂等的，POST提交的数据可能造成不可逆转的后果。虽然GET在HTTP中是幂等的，但是可以人为的在servlet中实现一个非幂等的doGet方法。</li>
+</ul>
+<p>&nbsp;</p>
+<p>2、确定浏览器发送的是GET还是POST。</p>
+<ul>
+<li>简单的超链接意味着GET。</li>
+<li>明确地写出method="post"，那这就是一个POST，没有写出的话，默认为HTTP GET</li>
+</ul>
+<p>&nbsp;</p>
+<p>3、如果想让一个servlet同时支持GET和POST，如果POST不提交任何东西，可以把doPost()实现委托给doGet()。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        doGet(req, resp);
+}        </span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong>【HttpServletRequest req】</strong></span></p>
+<p>4、从客户端发送一个参数并在服务端获取：</p>
+<p>html表单 --&gt; HTTPPOST: color=dark --&gt; servlet: req.getParameter("color");</p>
+<p>从客户端发送两个个参数并在服务端获取：</p>
+<p>双选html表单 --&gt; HTTPPOST: color=dark&amp;body=heavy --&gt; servlet: req.getParameter("color");servlet: req.getParameter("body");</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515093608010-220453009.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>5、除此之外还能从Request获取什么？</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515093835869-572872746.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>6、</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515190657244-1115478462.png" alt="" width="394" height="45" /></p>
+<p>getRemotePort()是相对于服务端而言的，所以获取的是客户端的端口。</p>
+<p>getServerPort()获取的是接收请求的那个端口，getLocalPort则是指&ldquo;请求最后发到的那个端口&rdquo;（服务器会为每一个线程分配端口，这样才能应对多个用户）</p>
+<p>&nbsp;</p>

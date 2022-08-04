@@ -1,0 +1,16 @@
+<p>Swagger Editor是一款可以用yaml格式进行RESTful API设计、可视化、测试的工具，并且能够实时看到自动生成的文档。效果大概是这样的&darr;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181205142109002-810446872.png" alt="" width="724" height="251" /></p>
+<p>根据官方网站介绍，如果是团队的话，建议用在线的SwaggerHub（似乎是有很多便于开发的套件）；个人solo开发则建议下载本地的Swagger Editor。</p>
+<p>因为不熟悉Node.js，所以简单记录一下安装流程：</p>
+<p>1、首先需要安装Node.js的尽可能新的版本，这个时候npm也会一起配套安装好。直接去官方网站下载就行了。</p>
+<p>2、来到<a href="https://github.com/swagger-api/swagger-editor" target="_blank">Swagger Editor的github页面</a>把压缩包下载到本地（或者clone）</p>
+<p>3、解压到文件夹，这个时候可以看到有个index.html文件，直接点开就能用了，并且编辑之后直接关闭也不会丢失数据（保存在浏览器的本地存储中）</p>
+<p>另外一种方法是启动静态服务器来打开编辑器，这需要做一些额外工作：</p>
+<p>1、运行命令：npm install -g http-server （安装一个类似web容器的东西）</p>
+<p>2、用安装好的工具启动静态服务器访问Swagger Editor。命令行切换到含有index.html的那个目录下，运行命令：http-server -p 端口号，</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181205143450825-1643019265.png" alt="" width="496" height="209" /></p>
+<p>之后就可以在浏览器中访问Swagger Editor啦&darr;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181205143532062-1155587005.png" alt="" width="444" height="224" /></p>
+<p>PS. 在用于测试时，响应要允许跨域才能在浏览器正确显示。</p>
+<p>========================================</p>
+<p>更新一下，可以用在线版本https://editor.swagger.io/，直接导入相应的文件就可以，也可以把编辑的内容导出，发现还可以自动生成包括spring在内的各种后端的代码，以生成spring代码为例，会产生一个接口文件，这样后端开发者就实现这些接口就行了。</p>

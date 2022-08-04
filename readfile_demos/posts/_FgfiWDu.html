@@ -1,0 +1,102 @@
+<p><span style="color: #ff0000; background-color: #ffff00;">《c++ primer, 5E》</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">第81页到第86页，笔记:</span></p>
+<p><span style="background-color: #ffffff;">&nbsp;处理string对象中的字符:</span></p>
+<p><span style="color: #ff0000; background-color: #ffffff;">1、cctype</span></p>
+<p><span style="color: #ff0000; background-color: #ffffff;">2、foreach（range for）</span></p>
+<p>3、decltype（Declared Type）</p>
+<p>4、auto</p>
+<p>5、string::size_type（s.size函数的返回值类型）</p>
+<p><span style="color: #ff0000; background-color: #ffffff;">6、使用range for改变字符串中的字符，必须把循环变量定义成引用类型</span></p>
+<p>7、访问string对象的单个字符：下标（也叫索引，类型为string::size_type）和迭代器</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">for</span>(decltype(s.size()) index = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        index </span>!= s.size() &amp;&amp; ! isspace(s[index]); ++<span style="color: #000000;">index)
+            s[index] </span>= toupper(s[index]);</pre>
+</div>
+<p>8、逻辑与运算符（&amp;&amp;）对这个运算符来说最重要的一点是，c++语言规定只有当左侧运算对象为真时才会检查右侧运算对象的情况。</p>
+<p>9、使用下标执行随机访问</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> hexdigits = <span style="color: #800000;">"</span><span style="color: #800000;">0123456789ABCDEF</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> result;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;">::size_type n;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> n)
+        </span><span style="color: #0000ff;">if</span>(n &lt;<span style="color: #000000;"> hexdigits.size())
+            result </span>+=<span style="color: #000000;"> hexdigits[n];
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Your hex number is: </span><span style="color: #800000;">"</span> &lt;&lt; result &lt;&lt; endl;</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">遇到的问题：</span><br /> </p>
+<p>1、不需要inlcude&lt;cctype&gt;就可以使用toupper(c)？</p>
+<p>2、下面的程序可编译，无法运行</p>
+<div class="cnblogs_code">
+<pre>#include&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+#include</span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include </span>&lt;typeinfo&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> s = <span style="color: #800000;">"</span><span style="color: #800000;">Keep out!</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(auto &amp;<span style="color: #000000;">c: s){
+        cout </span>&lt;&lt; typeid(c).name() &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">课后练习:</span></p>
+<p><span style="background-color: #ffff00;">练习3.6</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+#include</span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span> s(<span style="color: #800000;">"</span><span style="color: #800000;">Hello World!!!</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(auto &amp;<span style="color: #000000;">c: s)
+        c </span>= <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; s &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.7</span></p>
+<p>如果是char c那么不会改变原字符串，</p>
+<p>如果是char &amp;c效果应该和上一题一样。</p>
+<p>（验证正确）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.8</span></p>
+<p>遍历序列中的所有元素range for要比while和传统for方便，而且可读性更好。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.9</span></p>
+<p>对于这种情况，编译器不会检查下标的合法性，能编译，但是输出结果无法预知。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.10</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+#include</span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s;
+    getline(cin , s);
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;">(auto c: s)
+        </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">ispunct(c))
+            cout </span>&lt;&lt;<span style="color: #000000;"> c;
+    cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.11</span></p>
+<p>合法。应该是底层const</p>
+<p>&nbsp;</p>

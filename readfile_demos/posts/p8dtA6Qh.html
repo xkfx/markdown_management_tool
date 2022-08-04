@@ -1,0 +1,104 @@
+<p>参看维基百科，归纳出以下几条：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">JavaBeans是指符合某些标准的类，
+
+Bean这个名称用于涵盖这个标准，
+
+其目的在于创建可重用的Java组件。</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>由于Bean是很&ldquo;死板&rdquo;的东西，因此它可以持久存储，并可以借助辅助软件快速实现。</pre>
+</div>
+<div class="cnblogs_code">
+<pre>Bean有它专属的一套API。</pre>
+</div>
+<h2><span id="JavaBean_conventions" class="mw-headline">JavaBean conventions<span class="mw-editsection"><span class="mw-editsection-bracket">[edit<span class="mw-editsection-bracket">]</span></span></span></span></h2>
+<p>In order to function as a JavaBean&nbsp;class, an object class must obey certain conventions about method naming, construction, and behaviour. These conventions make it possible to have tools that can use, reuse, replace, and connect Java Beans.</p>
+<p>The required conventions are as follows:</p>
+<ul>
+<li>The class must have a public&nbsp;default constructor&nbsp;(with no arguments). This allows easy instantiation within editing and activation frameworks.</li>
+<li>The class&nbsp;properties&nbsp;must be accessible using&nbsp;<em>get</em>,&nbsp;<em>set</em>,&nbsp;<em>is</em>&nbsp;(can be used for boolean properties instead of get), and other methods (so-called&nbsp;accessor methods&nbsp;and&nbsp;mutator methods) according to a standard&nbsp;naming convention. This allows easy automated inspection and updating of bean state within frameworks, many of which include custom editors for various types of properties. Setters can have one or more than one argument.</li>
+<li>The class should be&nbsp;serializable. (This allows applications and frameworks to reliably save, store, and restore the bean's state in a manner independent of the&nbsp;VM&nbsp;and of the platform.)</li>
+</ul>
+<p>实例，1无参构造器 2getter, setter 3实现序列化</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> player;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> PersonBean <span style="color: #0000ff;">implements</span><span style="color: #000000;"><span style="color: #ff0000;"><strong> java.io.Serializable</strong></span> {
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Property &lt;code&gt;name&lt;/code&gt; (note capitalization) readable/writable.
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> String name = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> deceased = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> List list;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> List getList() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setList(List list) {
+        </span><span style="color: #0000ff;">this</span>.list=<span style="color: #000000;"> list;
+    }
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;"> No-arg constructor (takes no arguments). </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> PersonBean() {
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Getter for property &lt;code&gt;name&lt;/code&gt;
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Setter for property &lt;code&gt;name&lt;/code&gt;.
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> value
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setName(<span style="color: #0000ff;">final</span><span style="color: #000000;"> String value) {
+        name </span>=<span style="color: #000000;"> value;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Getter for property "deceased"
+     * Different syntax for a boolean field (is vs. get)
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isDeceased() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> deceased;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Setter for property &lt;code&gt;deceased&lt;/code&gt;.
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> value
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setDeceased(<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> value) {
+        deceased </span>=<span style="color: #000000;"> value;
+    }
+}</span></pre>
+</div>
+<p>在JSP页面中使用PersonBean：</p>
+<div class="cnblogs_code">
+<pre>&lt;% <span style="color: #008000;">//</span><span style="color: #008000;"> Use of PersonBean in a JSP. %&gt;</span>
+&lt;jsp:useBean id="person" <span style="color: #0000ff;">class</span>="player.PersonBean" scope="page"/&gt;
+&lt;jsp:setProperty name="person" property="*"/&gt;
+
+&lt;html&gt;
+    &lt;body&gt;<span style="color: #000000;">
+        Name: </span>&lt;jsp:getProperty name="person" property="name"/&gt;&lt;br/&gt;<span style="color: #000000;">
+        Deceased</span>? &lt;jsp:getProperty name="person" property="deceased"/&gt;&lt;br/&gt;
+        &lt;br/&gt;
+        &lt;form name="beanTest" method="POST" action="testPersonBean.jsp"&gt;<span style="color: #000000;">
+            Enter a name: </span>&lt;input type="text" name="name" size="50"&gt;&lt;br/&gt;<span style="color: #000000;">
+            Choose an option:
+            </span>&lt;select name="deceased"&gt;
+                &lt;option value="false"&gt;Alive&lt;/option&gt;
+                &lt;option value="true"&gt;Dead&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;input type="submit" value="Test the Bean"&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>

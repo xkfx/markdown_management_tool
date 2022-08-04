@@ -1,0 +1,41 @@
+<p><span style="text-decoration: underline;">filter</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> is_palindrome(n):
+    L </span>=<span style="color: #000000;"> str(n)
+    i </span>=<span style="color: #000000;"> 0
+    j </span>= len(L) - 1
+    <span style="color: #0000ff;">while</span> i !=<span style="color: #000000;"> j:
+        </span><span style="color: #0000ff;">if</span> L[i] !=<span style="color: #000000;"> L[j]:
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> False
+        i </span>+= 1<span style="color: #000000;">
+        j </span>-= 1
+    <span style="color: #0000ff;">return</span> True</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">sorted</span></p>
+<p>1、可以作用于list（包括字符串、数字），返回排序好的list。</p>
+<p>2、不传入key。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; sorted([1, 3, 2, 4, 9, 5<span style="color: #000000;">])
+[</span>1, 2, 3, 4, 5, 9]</pre>
+</div>
+<p><span style="line-height: 1.5;">3、传入key。</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; sorted([1, 3, 2, 4, 9, 5], key = <span style="color: #0000ff;">lambda</span> x: -<span style="color: #000000;">x)
+[</span>9, 5, 4, 3, 2, 1]</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">返回函数</span></p>
+<p>1、返回值函数的函数：传入函数的参数用于构造一个新的函数（这个函数的内部要使用到传入的参数），最后返回这个新构造的函数，一定程度上实现动态构造函数。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> add_a_number_creator(n):
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> add_a_number(m):
+        </span><span style="color: #0000ff;">return</span> m +<span style="color: #000000;"> n
+    </span><span style="color: #0000ff;">return</span> add_a_number</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; sum = add_a_number_creator(10<span style="color: #000000;">)
+</span>&gt;&gt;&gt; sum(1<span style="color: #000000;">)
+</span>11</pre>
+</div>
+<p>&nbsp;</p>

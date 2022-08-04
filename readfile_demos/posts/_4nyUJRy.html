@@ -1,0 +1,41 @@
+<p><img style="clear: both; display: block; margin: auto;" title="监听者" src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603095339571-1750251005.png" alt="" width="498" height="208" /></p>
+<p>&nbsp;</p>
+<p>1、你不用了解所有监听者API，并不多，一共有<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/" target="_blank">8个</a>。不过，你需要知道你能监听什么，以便在需要的时候可以查。</p>
+<p><a href="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603103531164-1931933308.png" target="_blank"><img style="clear: both; display: block; margin: auto;" title="点击查看大图" src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603103531164-1931933308.png" alt="" width="506" height="146" /></a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170617203409525-1966807815.png" alt="" width="944" height="996" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>2、关于Session和Cookie。参见<a href="http://www.cnblogs.com/xdp-gacl/p/3855702.html" target="_blank">JavaWeb学习总结(十二)&mdash;&mdash;Session by 孤傲苍狼</a></p>
+<p>&nbsp;</p>
+<p>3、HttpSessionBindingListener</p>
+<p>这是一个非常有用的监听者，为什么说它有用呢？因为它可以协助我们同步实际对象和数据库的信息。例如：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpSessionBindingEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpSessionBindingListener;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Dog <span style="color: #0000ff;">implements</span><span style="color: #000000;"> HttpSessionBindingListener {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String breed;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Dog(String breed) {
+        </span><span style="color: #0000ff;">this</span>.breed =<span style="color: #000000;"> breed;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getBreed() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> breed;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> valueBound(HttpSessionBindingEvent httpSessionBindingEvent) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果我被增加到某个session就执行这段代码</span>
+<span style="color: #000000;">    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> valueUnbound(HttpSessionBindingEvent httpSessionBindingEvent) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果我从某个session移除，就执行这段代码</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>我们的实际数据通常是存储在数据库中的，因此，我们一般需要使用数据库信息来填充Dog对象的字段，但是问题是，我们怎么保持数据库记录和Dog对象的信息同步？另外，什么时候让它们同步？</p>
+<p>很显然，我们&ldquo;要用对象&rdquo;和&ldquo;不用对象&rdquo;的时刻（在这之间，<strong>对象可能发生改变</strong>）就是我们同步的时刻，我们如何知道对象什么时候被用or不用？这就需要一个监听者&mdash;&mdash;HttpSessionBindingListener。</p>

@@ -1,0 +1,136 @@
+<p><span style="color: #ff00ff;">【装饰器】</span></p>
+<p>1、最简单的Decorator。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> author(f):
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> addName():
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">My name is xkfx.\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        f()
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> addName
+
+@author
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> helloWorld():
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Hello, World</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p>把<code>@log</code>放到<code>now()</code>函数的定义处，相当于执行了语句：helloWorld = author(helloWorld)。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> helloWorld()
+My name </span><span style="color: #0000ff;">is</span><span style="color: #000000;"> xkfx.
+
+Hello, World</span></pre>
+</div>
+<p>这个时候查看函数的名字会发现</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; helloWorld.<span style="color: #800080;">__name__</span>
+<span style="color: #800000;">'</span><span style="color: #800000;">addName</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、稍微修改一下</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> author(f):
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> addName():
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">My name is xkfx.[edition-2]\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        </span><span style="color: #ff0000;">return f()
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> addName
+@author
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> helloWorld():
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Hello, World</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> helloWorld()
+My name </span><span style="color: #0000ff;">is</span> xkfx.[edition-2<span style="color: #000000;">]
+
+Hello, World</span></pre>
+</div>
+<p>将直接调用f();改为return f();执行效果是一样的，先打印author name然后执行原函数。</p>
+<p>&nbsp;</p>
+<p>3、这个时候希望由用户输入author名，也就是包装器要接收一个字符串参数，那该怎么办？这就需要一个嵌套的decorator：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> author(authorName): 
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> decorator(func):
+        </span><span style="color: #0000ff;">def</span> wrapper(*args, **kw): <span style="color: #008000;">#</span><span style="color: #008000;"> wrapper是包装纸的意思</span>
+            <span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">author:</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> authorName)
+            </span><span style="color: #0000ff;">return</span> func() <span style="color: #008000;">#</span><span style="color: #008000;"> 调用原函数，注意是有括号的</span>
+        <span style="color: #0000ff;">return</span> wrapper <span style="color: #008000;">#</span><span style="color: #008000;"> 返回包装后的函数</span>
+    <span style="color: #0000ff;">return</span> decorator <span style="color: #008000;">#</span><span style="color: #008000;"> 返回真正的包装器</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> author
+</span>&gt;&gt;&gt; @author(<span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+... </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> printHello():
+...     </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Hello\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+...
+</span>&gt;&gt;&gt;<span style="color: #000000;"> printHello()
+author:xkfx
+Hello</span></pre>
+</div>
+<p>&nbsp;查看被包装后的函数名：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; printHello.<span style="color: #800080;">__name__</span>
+<span style="color: #800000;">'</span><span style="color: #800000;">wrapper</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>需要把原始函数的<code>__name__</code>等属性复制到<code>wrapper()</code>函数中，否则，有些依赖函数签名的代码执行就会出错。而做这件事情本身也属于&ldquo;拓展函数功能&rdquo;的范畴，用Python库内置的装饰器完成就可以了。只需记住在定义<code>wrapper()</code>的前面加上<code>@functools.wraps(func)</code>即可，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> functools
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> author(authorName): 
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> decorator(func):
+        @functools.wraps(func)
+        </span><span style="color: #0000ff;">def</span> wrapper(*args, **kw): <span style="color: #008000;">#</span><span style="color: #008000;"> wrapper是包装纸的意思</span>
+            <span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">author:</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> authorName)
+            </span><span style="color: #0000ff;">return</span> func() <span style="color: #008000;">#</span><span style="color: #008000;"> 调用原函数，注意是有括号的</span>
+        <span style="color: #0000ff;">return</span> wrapper <span style="color: #008000;">#</span><span style="color: #008000;"> 返回包装后的函数</span>
+    <span style="color: #0000ff;">return</span> decorator <span style="color: #008000;">#</span><span style="color: #008000;"> 返回真正的包装器</span>
+
+
+    </pre>
+</div>
+<p>再走一遍流程：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; printHello.<span style="color: #800080;">__name__</span>
+<span style="color: #800000;">'</span><span style="color: #800000;">printHello</span><span style="color: #800000;">'</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p><span style="line-height: 1.5;">4、练习。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> functools
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> log(func):
+    @functools.wraps(func)
+    </span><span style="color: #0000ff;">def</span> wrapper(*args, **<span style="color: #000000;">kw):
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">begin call</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        result </span>= func(*args, **<span style="color: #000000;">kw)
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">after call</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> wrapper
+
+@log
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">pass</span></pre>
+</div>
+<p>需求二不会做。</p>
+<p><span style="color: #ff00ff;">&nbsp;</span></p>
+<p><span style="line-height: 1.5; color: #ff00ff;">【偏函数】</span></p>
+<p>当函数的参数太多的时候，可以选择将部分参数固定来简化函数，固定的方式就是使用<span style="color: #ff0000; background-color: #ffff99;">functools模块中的partial函数</span>。</p>
+<p>一个简单的例子，固定谈话对象：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> say(words, name):
+    </span><span style="color: #0000ff;">print</span>(words + <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span> + name)</pre>
+</div>
+<p>原函数需要两个参数：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; say(<span style="color: #800000;">'</span><span style="color: #800000;">hello</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+hello,xkfx</span></pre>
+</div>
+<p>经简化后得到的&ldquo;偏&rdquo;函数只需要传入一个参数就够了：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; say2 = functools.partial(say, name=<span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt; say2(<span style="color: #800000;">'</span><span style="color: #800000;">hi</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+hi,xkfx</span></pre>
+</div>
+<p>&nbsp;当然固定多个参数肯定是可行的，（实际上是将要固定关键字参数传入了一个隐式的dict）</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; say2 = functools.partial(say, name=<span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, age=19<span style="color: #000000;">)
+</span>&gt;&gt;&gt; say2(<span style="color: #800000;">'</span><span style="color: #800000;">hi</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+hi,xkfx
+Your age </span><span style="color: #0000ff;">is</span> 19</pre>
+</div>

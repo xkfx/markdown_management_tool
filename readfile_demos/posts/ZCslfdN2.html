@@ -1,0 +1,190 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">Maven是干什么的？</a></li>
+<li><a href="#anchor1">用Maven的好处</a></li>
+<li><a href="#anchor2">Maven与命令行</a></li>
+<li><a href="#anchor3">Maven与IntelliJ IDEA</a></li>
+</ol></ul>
+</div>
+<h2><a name="anchor0"></a>一、Maven是干什么的？</h2>
+<div>我相信只要你写过足够多的代码，就...</div>
+<div>肯定有思考过写一个脚本方便把项目自动打包成war并部署到服务器；<br />肯定有思考过对于一个web项目用什么样的文件结构才比较合适，怎么样才算得上是best practice；<br />也许还想过弄个中心仓库免去每次都要自己网上手动找包的麻烦 ...</div>
+<div>&nbsp;- - - - - - - - - - - - -</div>
+<div>Maven正是一个做这些事情的工具。如果你真的尝试做过上面的事情，就很容易理解Maven了。</div>
+<div>那么自己弄和用Maven有什么区别呢？借用《Maven编程实战》里的一个的比喻，建立高度自定义的构建系统（自己写脚本）就像买组装PC，虽然其乐无穷，但是耗时费力，结果也不一定很好，并且实际项目中也不可能给你这么多时间。使用Maven就像购买品牌PC，省时省力，而且直接就是best practice，还能得到Maven社区的大量支持 ...</div>
+<h2><a name="anchor1"></a>二、用Maven的好处</h2>
+<p>个人觉得用Maven最大的好处在于：统一了各种规范（流程和项目结构）+依赖管理。</p>
+<p>补充一些理由：</p>
+<ol>
+<li><strong>让你在IDEA和Eclipse等各种集成环境中切换毫无压力</strong></li>
+<li><strong>方便大家合作写代码，<span style="color: #ff0000;">节约了学习成本</span>，因为各种东西都已经约定、统一好了</strong></li>
+<li><strong>并且这些约定还是best practice，不仅成熟、稳定，还好用！</strong></li>
+<li><strong>资料多、支持多，随便去GitHub上看Java项目，Maven结构的尤其多</strong></li>
+<li><strong><span style="color: #ff0000;">节省时间</span></strong>。腾出自己网上到处下jar包的时间，做更有价值的事情</li>
+<li>自动化打包部署，有效减少鼠标键盘的磨损度、缓解脱发等不良症状。。。</li>
+<li>（<a href="http://maven.apache.org/what-is-maven.html" target="_blank">手动省略号。。。。</a>）</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ol>
+<p>总之。Maven绝对是个懒人必备的工具。不过，在刚开始，你不得不花一点时间来适应、学习它（很快就会变成习惯！）。</p>
+<h2><a name="anchor2"></a>三、Maven与命令行</h2>
+<p>跟着<a href="http://maven.apache.org/users/index.html" target="_blank">官方教程</a>操作一遍差不多就好了。。稍微记录一下&darr;<a href="http://maven.apache.org/users/index.html" target="_blank"><br /></a></p>
+<p>▲运行mvn package后得到jar包的实际结构（注意resource的位置）：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181113145612350-602008935.png" alt="" width="461" height="115" /></p>
+<p>▲哪里找包：<a href="https://mvnrepository.com/" target="_blank">https://mvnrepository.com/</a></p>
+<p>▲生成简单java项目原型：</p>
+<div class="cnblogs_code">
+<pre>mvn -<span style="color: #000000;">B archetype:generate \
+  </span>-DarchetypeGroupId=<span style="color: #000000;">org.apache.maven.archetypes \
+  </span>-DgroupId=<span style="color: #000000;">com.mycompany.app \
+  </span>-DartifactId=my-app</pre>
+</div>
+<p>▲生成简单java web项目原型：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">mvn archetype:generate \
+    </span>-DarchetypeGroupId=<span style="color: #000000;">org.apache.maven.archetypes \
+    </span>-DarchetypeArtifactId=maven-archetype-<span style="color: #000000;">webapp \
+    </span>-DgroupId=<span style="color: #000000;">com.mycompany.app \
+    </span>-DartifactId=my-webapp</pre>
+</div>
+<p>▲跳过测试：</p>
+<div class="cnblogs_code">
+<pre>mvn clean <span style="color: #0000ff;">install</span> -DskipTests</pre>
+</div>
+<p>▲只跑特定的测试mvn test -Dtest=[ClassName]#[MethodName]，例：</p>
+<div class="cnblogs_code">
+<pre>$ mvn test -Dtest=ProfileDAOTest#saveProfile&nbsp;</pre>
+</div>
+<p>▲pom.xml参考（其实是方便自己copy...）</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e5d8102b-b974-4a95-a750-79dd1ae5b7f3')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_e5d8102b-b974-4a95-a750-79dd1ae5b7f3" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_e5d8102b-b974-4a95-a750-79dd1ae5b7f3" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_e5d8102b-b974-4a95-a750-79dd1ae5b7f3" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.sample.webapp<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>web-test-01<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.0-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">packaging</span><span style="color: #0000ff;">&gt;</span>war<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">packaging</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project.build.sourceEncoding</span><span style="color: #0000ff;">&gt;</span>UTF-8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project.build.sourceEncoding</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> -source 1.5 中不支持 try-with-resources</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">maven.compiler.source</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">maven.compiler.source</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">maven.compiler.target</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">maven.compiler.target</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/junit/junit </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.12<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.slf4j/slf4j-api </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.slf4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>slf4j-api<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.7.25<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/ch.qos.logback/logback-classic </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>ch.qos.logback<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>logback-classic<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/ch.qos.logback/logback-core </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>ch.qos.logback<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>logback-core<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/mysql/mysql-connector-java </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>mysql<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>mysql-connector-java<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>5.1.38<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>javax.servlet<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>javax.servlet-api<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>3.1.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>provided<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.zaxxer<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>HikariCP<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.7.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>compile<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">pom.xml</span></div>
+<p>&nbsp;</p>
+<h2><a name="anchor3"></a>四、Maven与IntelliJ IDEA</h2>
+<p>本来想写点什么，发现官网都准备好了。。<a class="externalLink" href="https://www.jetbrains.com/idea/help/maven.html">feature-rich integration for Maven</a>以及<a href="https://www.jetbrains.com/help/idea/maven-support.html" target="_blank">https://www.jetbrains.com/help/idea/maven-support.html</a></p>
+<p>不过我觉得还是应该以命令行为主，集成环境里的操作作为辅助，这样，IDEA就成了一个高级代码编辑器，之后换其它开发环境也很容易适应。</p>
+<p>▲以图表方式查看项目依赖关系：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181113170534039-653551632.png" alt="" width="369" height="354" /></p>
+<p>▲Maven怎么和web开发结合可以参考这个：<a href="https://www.imooc.com/learn/587" target="_blank">https://www.imooc.com/learn/587</a></p>

@@ -1,0 +1,44 @@
+<p>mark. jetbrain tomcat配置：<a href="https://www.jetbrains.com/help/idea/2017.1/creating-and-running-your-first-web-application.html" target="_blank">https://www.jetbrains.com/help/idea/2017.1/creating-and-running-your-first-web-application.html</a></p>
+<h3>PageContext</h3>
+<p>&nbsp;任何作用域的属性都可以从PageContext获得，甚至不知道属性处在哪个作用域都可以找到！（属性的查找遵循的顺序是：PageContext--&gt; ServletContext--&gt; ..... 不过，为什么这样的东西在servlet中没有？？）</p>
+<p>&nbsp;这意味着什么呢，我们看一下笔记16课本练习代码：</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page <span style="color: #0000ff;">import</span>="java.util.List" %&gt;
+&lt;%@ page <span style="color: #0000ff;">import</span>="java.util.Iterator" %&gt;
+&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;hello i'm result&lt;/p&gt;
+&lt;p&gt;The friends who share your hobby &lt;%=request.getParameter("hobby")%&gt;  is :&lt;/p&gt;
+&lt;%<strong><span style="color: #ff0000;">
+    List names = (List)</span> </strong><span style="color: #ff0000;"><strong>request.getAttribute("names"</strong></span><span style="color: #000000;">);
+    Iterator it </span>=<span style="color: #000000;"> names.iterator();
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (it.hasNext()) {
+        out.println(it.next() </span>+ "&lt;br /&gt;"<span style="color: #000000;">);
+    }
+</span>%&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>尝试把红色的代码换成</p>
+<div class="cnblogs_code">
+<pre> List names = (List) <strong><span style="color: #ff0000;">pageContext.getAttribute("names", PageContext.REQUEST_SCOPE);</span></strong></pre>
+</div>
+<p>重新部署、测试，这个时候发现，结果并不受影响。</p>
+<p>除此之外还有更简单的方法，那就是上面提到的属性&ldquo;查找&rdquo;：</p>
+<div class="cnblogs_code">
+<pre>    List names = (List) <strong><span style="color: #ff0000;">pageContext.findAttribute("names");</span></strong></pre>
+</div>
+<p>&nbsp;</p>
+<h3>JSP指令</h3>
+<p>省略一些根本不会用到的指令，但是为了在某些情况下能找到，还是需要mark一下：https://<a href="https://www.tutorialspoint.com/jsp/index.htm" target="_blank">www.tutorialspoint.com/jsp/index.htm</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618201024618-1416662227.png" alt="" width="503" height="403" /></p>
+<p><span style="color: #ff0000;">认识到你能做什么&mdash;&mdash;&gt;没必要去记忆这些指令，关键是要知道&ldquo;<strong>通过这些指令能做什么</strong>&rdquo;，在需要的时候去查就可以了。</span></p>
+<p><span style="color: #ff0000;">比如在页面乱码的时候要想到pageEncoding...</span></p>
+<p><span style="color: #ff0000;">在</span><span style="color: #ff0000;">ClassNotFound</span><span style="color: #ff0000;">的时候要想到import....</span></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615165832212-1148634906.png" alt="" width="751" height="406" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615165906806-829672189.png" alt="" width="780" height="349" /></p>
+<p>&nbsp;</p>

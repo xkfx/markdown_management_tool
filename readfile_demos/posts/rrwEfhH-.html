@@ -1,0 +1,17 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖</a>雪峰的官方网站。</p>
+<p><span style="background-color: #ffff99;">generator</span></p>
+<p>1、引入generator的原因。</p>
+<p>通过列表生成式，我们可以直接创建一个列表。但是，受到内存限制，列表容量肯定是有限的。而且，创建一个包含100万个元素的列表，不仅占用很大的存储空间，如果我们仅仅需要访问前面几个元素，那后面绝大多数元素占用的空间都白白浪费了。</p>
+<p>所以，如果列表元素可以按照某种算法推算出来，那我们是否可以在循环的过程中不断推算出后续的元素呢？这样就不必创建完整的list，从而节省大量的空间。在Python中，这种一边循环一边计算的机制，称为生成器：generator。</p>
+<p>&nbsp;</p>
+<p>2、<strong>创建一个generator的方式</strong>。</p>
+<p>第一种方法很简单，只要把一个列表生成式的<strong><code>[]</code>改成<code>()</code></strong>，就创建了一个generator。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; g = (x * x <span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span> range(1 , 4<span style="color: #000000;">))
+</span>&gt;&gt;&gt;<span style="color: #000000;"> g
+</span>&lt;generator object &lt;genexpr&gt; at 0x000001F706186990&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5;">3、</span><span style="line-height: 1.5;">打印出generator的每一个元素。</span></p>
+<p><em>1) next(g)</em></p>
+<p><em>2) for n in g: print(n)</em></p>

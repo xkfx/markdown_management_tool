@@ -1,0 +1,58 @@
+<p><strong><span style="color: #ff0000;">【HttpServletResponse resp】</span></strong></p>
+<p><strong><span style="color: #ff0000;">【由servlet处理响应】</span></strong></p>
+<p>1、一般可以用通过resp获得一个输出流（writer），然后通过输出流将HTML写入响应。例如：</p>
+<div class="cnblogs_code">
+<pre>      resp.setContentType("text/html"<span style="color: #000000;">);
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+        out.println(</span>"Beer Selection Advice&lt;br&gt;");</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、常用的一些方法。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515193816775-1242774657.png" alt="" width="524" height="184" /></p>
+<p>&nbsp;</p>
+<p>3、有时还会用到.....</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515193902963-2007431363.png" alt="" width="524" height="218" /></p>
+<p>&nbsp;</p>
+<p>4、当然，更通常的是用JSP返回HTML。</p>
+<p>&nbsp;</p>
+<p>5、假设你想向客户端发送一个JAR...</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> JarDownload <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException, ServletException {
+        resp.setContentType(</span>"application/jar"); <span style="color: #008000;">//</span><span style="color: #008000;"> 想让浏览器知道的事情</span>
+<span style="color: #000000;">
+        ServletContext ctx </span>=<span style="color: #000000;"> getServletContext();
+        InputStream is </span>= ctx.getResourceAsStream("/bookCode.jar"<span style="color: #000000;">);
+
+        </span><span style="color: #0000ff;">int</span> read = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">byte</span>[] bytes = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1024<span style="color: #000000;">];
+
+        OutputStream os </span>=<span style="color: #000000;"> resp.getOutputStream();
+        </span><span style="color: #0000ff;">while</span> ((read = is.read(bytes)) != -1<span style="color: #000000;">) {
+            os.write(bytes, </span>0<span style="color: #000000;">, read);
+        } </span><span style="color: #008000;">//</span><span style="color: #008000;"> 把JAR包先读到内存里再转写到输出流中。</span>
+<span style="color: #000000;">        os.flush();
+        os.close();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515200307400-27493470.png" alt="" width="782" height="354" /></p>
+<p>ps:不能先写某个类型，然后改到另外一个类型继续写。</p>
+<p>&nbsp;</p>
+<p>6、为什么要通过servlet返回文件，而不是直接返回？原因是，希望在返回特定类型文件的前后执行一些逻辑，例如判断用户是否有权限下载这个文件。</p>
+<p>&nbsp;</p>
+<p>7、需要记住的一些东西，关于输出，只有两个选择：字符或者字节。</p>
+<p>可以通过resp返回的输出流...</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170515202212432-586620661.png" alt="" width="526" height="362" /></p>
+<div class="cnblogs_code">
+<pre>        resp.getOutputStream().write( <span style="color: #008000;">/*</span><span style="color: #008000;">省略参数</span><span style="color: #008000;">*/</span> ); <span style="color: #008000;">//</span><span style="color: #008000;"> 可以写任何内容</span>
+        resp.getWriter().println(); <span style="color: #008000;">//</span><span style="color: #008000;"> 和System.out.println()类似，用于处理字符数据。实际上是包装了OutputStream的高级流PrintWriter</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,86 @@
+<div class="cnblogs_code">
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span> main(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> locate</span>
+    <span style="color: #0000ff;">char</span> filename[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, filename);
+    getchar();    </span><span style="color: #008000;">//</span><span style="color: #008000;"> input a key "Enter('\n')"
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> open</span>
+    FILE *<span style="color: #000000;">fp;
+    fp </span>= fopen(filename, <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span>(fp !=<span style="color: #000000;"> NULL)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fopen: success\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fopen: error\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> operate</span>
+    <span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">input:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">while</span>((c = getchar()) !=<span style="color: #000000;"> EOF)
+        fputc(c , fp);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> close</span>
+    <span style="color: #0000ff;">if</span>(fclose(fp) == <span style="color: #800080;">0</span><span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fclose: success\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fclose: error\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span> main(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> locate</span>
+    <span style="color: #0000ff;">char</span> filename[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, filename);
+  <span style="font-family: 黑体; font-size: 18pt; background-color: #ff0000;">  getchar();    </span></span><span style="font-family: 黑体; font-size: 18pt; background-color: #ff0000;"><span style="color: #008000;">//</span><span style="color: #008000;"> input a key "Enter('\n')"
+
+</span></span><span style="color: #008000;">    //</span><span style="color: #008000;"> open</span>
+    FILE *<span style="color: #000000;">fp;
+    fp </span>= fopen(filename, <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> operate</span>
+    <span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+
+    </span><span style="color: #0000ff;">while</span>((c = getchar()) !=<span style="color: #000000;"> EOF)
+        fputc(c , fp);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> close</span>
+    <span style="color: #0000ff;">if</span>(fclose(fp) == <span style="color: #800080;">0</span><span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fclose: success\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fclose: error\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span> main(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> flocate</span>
+    <span style="color: #0000ff;">char</span> filename[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    gets(filename);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> fopen</span>
+    FILE *<span style="color: #000000;">fp;
+    fp </span>= fopen(filename, <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> foperate</span>
+    <span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+
+    </span><span style="color: #0000ff;">while</span>((c = getchar()) !=<span style="color: #000000;"> EOF)
+        fputc(c , fp);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> fclose</span>
+<span style="color: #000000;">    fclose(fp);
+}</span></pre>
+</div>
+<p>gets(filename): 不需要再读掉一个空格，该函数本身是以多读一个'\n'作为结束标识的</p>
+<p>scanf("%s", filename): 需要再读掉一个空格</p>

@@ -1,0 +1,39 @@
+## 背景
+
+简化版错误日志：
+
+```bash
+[WARN]SqlExceptionHelper : SQL Error: 1366, SQLState: HY000
+[ERROR]SqlExceptionHelper : Incorrect string value: '\xE5\xB0\xBC\xE7\x8E\x9B' for column 'string' at row 1
+[INFO]AbstractBatchImpl : HHH000010: On release of batch it still contained JDBC statements
+[ERROR][dispatcherServlet] : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.orm.jpa.JpaSystemException: could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement] with root cause
+
+java.sql.SQLException: Incorrect string value: '\xE5\xB0\xBC\xE7\x8E\x9B' for column 'string' at row 1
+at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1098) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1046) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1371) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1031) ~[mysql-connector-java-8.0.28.jar!/:8.0.28]
+```
+
+## BUG探究
+
+很显然是字符集的问题。通过``SHOW CREATE TABLE 表名;``发现由Spring Data JPA根据``@Entity``类自动创建的表的默认字符集为``latin1``，将其修改为``utf-8``应该可以解决问题。
+
+先做最简单的尝试，我用可视化数据库操作工具``HeidiSQL``直接把相应的表的默认字符集``latin1_swedish_ci``修改为``utf8_general_ci``，然后点击保存，结果居然失败了（在0.1s内又跳回了latin1）。于是我勾选旁边的``转换数据``再次修改字符集并点保存，还是不管用。
+
+迫不得已只能通过命令行操作，用下面这个命令：
+
+```sql
+alter table 表格名称 convert to character set utf8;
+```
+
+通过``HeidiSQL``刷新查看字符集发现还是没有变化。于是我重启了一下``HeidiSQL``然后再查看字符集终于是``utf8_general_ci``因此推测刚才没用命令行其实已经修改成功了，只是需要重新连接一下数据库。
+
+改好了字符集，我启动原来报错的那个``spring boot web服务程序``，再次``POST``中文数据。
+
+这一次插入数据很顺利，没报任何错误。且直接查看数据表数据或者``GET``数据其中的中文也没有任何乱码。
+
+既然好使就暂且手动改着，反正目前也没有几张表。。。。。。。。。。。。。。如何根治该问题而不需要手动，网上看了下需要添加一些代码。。。。。。。。。。有空再探究吧！

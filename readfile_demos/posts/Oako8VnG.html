@@ -1,0 +1,56 @@
+<p><span style="background-color: #ffff99;">p38~p41：</span></p>
+<p>1、可以通过import 一个自定义类库（或者网上下的）在java中使用c风格的输入输出方式。</p>
+<p>&nbsp;</p>
+<p>2、忘记优先顺序时应该用括号明确规定计算顺序。</p>
+<p>&nbsp;</p>
+<p>3、java的操作符不同于c++，几乎只能操作&ldquo;基本类型&rdquo;，例外的是 ==、!=、=能操作所有对象，除此之外，String类支持&ldquo;+&rdquo;和&ldquo;+=&rdquo;。</p>
+<p>&nbsp;</p>
+<p>4、System.out.print()语句中包含的&ldquo;+&rdquo;操作符：意味着&ldquo;字符串连接&rdquo;，有时也意味着&ldquo;将非String类型转换为String类型&rdquo;、&ldquo;toString&rdquo;。</p>
+<p>&nbsp;</p>
+<p>5、<strong>区别基本类型的赋值（实质是内容复制）和对象的赋值</strong>。</p>
+<p>&nbsp;</p>
+<p>6、传递参数实际上是将对象传递给另外一个引用。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习2</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Tank {
+    </span><span style="color: #0000ff;">float</span><span style="color: #000000;"> size;
+}
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Tank t1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Tank();
+        t1.size </span>= 23<span style="color: #000000;">;
+        System.out.println(t1.size);
+        Tank t2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Tank();
+        t2.size </span>= 1<span style="color: #000000;">;
+        t1 </span>=<span style="color: #000000;"> t2;
+        </span>++<span style="color: #000000;">t2.size;
+        System.out.println(t1.size);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习3</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Tank {
+    </span><span style="color: #0000ff;">float</span><span style="color: #000000;"> size;
+}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> f(Tank t) {
+        t.size </span>= 100<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Tank t1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Tank();
+        t1.size </span>= 23<span style="color: #000000;">;
+        System.out.println(t1.size);
+        f(t1);
+        System.out.println(t1.size);
+    }
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">  Output:
+23.0
+100.0
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>

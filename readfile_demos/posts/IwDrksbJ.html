@@ -1,0 +1,42 @@
+<p>mysql 默认只允许 localhost 连接，因此在远程连接服务器上的 mysql 之前，需要做一些设置。在没有设置前，默认是下面的状况，mysql 只能由 localhost（127.0.0.1）连接：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# ss -ant | <span style="color: #0000ff;">grep</span> <span style="color: #800080;">3306</span><span style="color: #000000;">
+LISTEN     </span><span style="color: #800080;">0</span>      <span style="color: #800080;">50</span>               <strong> <span style="color: #800080;">127.0</span>.<span style="color: #800080;">0.1</span>:</strong><span style="color: #800080;">3306</span>                     *:*     </pre>
+</div>
+<p>&nbsp;PS.&nbsp;如果是阿里云的服务器需要先<strong>配置安全组规则。</strong></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><strong>第一步 - 修改 my.cnf</strong></span></p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <span style="color: #0000ff;">find</span> / -<span style="color: #000000;">name my.cnf
+</span>/etc/mysql/my.cnf</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180508213917470-1186924641.png" alt="" width="423" height="75" /></p>
+<p>把 my.cnf 中含 bind-address 的行注释掉就可以了。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><strong>第二步 -&nbsp; 修改 user 规则</strong></span></p>
+<ol>
+<li>进入 mysql&nbsp;</li>
+<li>USE mysql</li>
+<li>SELECT host, user FROM user;</li>
+<li>修改 user 表 ，把 root （或者其中一个 root）的 host 改成 %&nbsp;</li>
+</ol>
+<p>有时候会有多个 root ，随便改可能会违反实体完整性（host 与 user 构成 primary key），因此需要根据具体情况去改。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180508214401507-2027679194.png" alt="" width="393" height="164" /></p>
+<p><strong>&nbsp;</strong></p>
+<p><span style="color: #ff0000; background-color: #ffff99;"><strong>第三步 - 重启 mysql</strong></span></p>
+<div class="cnblogs_code">
+<pre>service mysql restart<span style="color: #ff6600;"> # 这个不一定每台机子一样。。</span></pre>
+</div>
+<p>最后，一切顺利的话，重新用 ss -ant | grep 3306 命令检查：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# ss -ant | <span style="color: #0000ff;">grep</span> <span style="color: #800080;">3306</span><span style="color: #000000;">
+LISTEN     </span><span style="color: #800080;">0</span>      <span style="color: #800080;">50</span>                        *:<span style="color: #800080;">3306</span>                     *:*  </pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><strong>命令行远程连接 MySQL</strong></span></p>
+<p>和连接本地 mysql 是一样的，不过是改了 ip&nbsp;</p>
+<p><strong><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180516191823104-1960423305.png" alt="" width="599" height="209" /></strong></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><strong>用 HeidiSQL（MySQL可视化操作界面） 远程连接 mysql&nbsp;</strong></span></p>
+<p>当然 你也可以选择用其它的 MySQL可视化操作界面例如：NAVICAT 之类的。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180508215306442-838519581.png" alt="" width="379" height="201" /></p>

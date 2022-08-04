@@ -1,0 +1,73 @@
+<p><span style="color: #0000ff;"><strong><span style="font-size: 18pt;">我</span>试图做什么</strong></span>：把我的 Java代码放到服务器上运行，并成功与客户端进行 <code>socket通信</code>。</p>
+<p><span style="color: #0000ff;"><strong>预备环境：</strong></span>刚安装好 MySQL 和 JVM 的 Linux远程服务器（<code>Debian 8.8</code>）一台。</p>
+<p>主要有如下几个步骤：</p>
+<ol>
+<li>将编译好的代码打包成可执行的 <code>jar包<code>&nbsp;</code></code></li>
+<li>在 Debian 上<code>用 JDBC 连接 MySQL</code></li>
+<li><code>socket客户端进程</code>连接 <code>socket服务端进程</code></li>
+<li>附加：在无图形操作系统下运行 GUI程序所抛出的异常</li>
+<li>附加二：让程序在断开远程连接后继续运行</li>
+</ol>
+<p>&nbsp;</p>
+<h3>1、将编译好的代码打包成可执行的 jar包&nbsp;</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114011524394-1285450320.png" alt="" width="456" height="104" /></p>
+<p>参考资料：<a href="https://www.jetbrains.com/help/idea/packaging-a-module-into-a-jar-file.html" target="_blank">[IntelliJ IDEA&nbsp;2017.3 Help] Packaging a Module into a JAR File</a></p>
+<p>设置 <code>Artifacts</code> 有两个关键点，把程序入口写入 <code>MANIFEST.MF</code> 以及把编译后的代码添加进去（一定要包括依赖包，要不然丢服务器上跑会出现&nbsp;<code>ClassNotFoundException</code>），这样才能创建可运行的 jar包。实测有效：</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114001308144-1946622963.png" alt="" width="518" height="126" /></p>
+<p>&nbsp;</p>
+<h3>2、在<code> Debian </code>上用 JDBC 连接 MySQL</h3>
+<p>首先，需要在&nbsp;Debian 上导入相关的数据库，把预先准备的<code> .sql 脚本</code>通过 <code>Xftp</code> 传到服务器上，传输好后执行如下操作：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">readlink</span> -<span style="color: #000000;">f schema.sql # 取得 schema.sql 的绝对路径并复制它！
+mysql </span>-u root -<span style="color: #000000;">p
+source </span>/root/schema.sql # 导入数据</pre>
+</div>
+<p>&nbsp;通过&nbsp;<code><span class="pln">netstat <span class="pun">-<span class="pln">tln </span></span></span></code>确认 MySQL 确实在监听 3306 端口：</p>
+<div class="cnblogs_code">
+<pre>Proto Recv-Q Send-<span style="color: #000000;">Q Local Address           Foreign Address         State      
+tcp        </span><span style="color: #800080;">0</span>      <span style="color: #800080;">0</span> <span style="color: #800080;">0.0</span>.<span style="color: #800080;">0.0</span>:<span style="color: #800080;">22</span>              <span style="color: #800080;">0.0</span>.<span style="color: #800080;">0.0</span>:*<span style="color: #000000;">               LISTEN     
+<strong>tcp        </strong></span><strong><span style="color: #800080;">0</span>      <span style="color: #800080;">0</span> <span style="color: #800080;">127.0</span>.<span style="color: #800080;">0.1</span>:<span style="color: #800080;">3306</span>          <span style="color: #800080;">0.0</span>.<span style="color: #800080;">0.0</span>:*               LISTEN </strong> </pre>
+</div>
+<p>&nbsp;把 jar包传送到服务器（在这之前，<strong>请确认数据库密码是正确的！</strong>），并尝试启动它：</p>
+<div class="cnblogs_code">
+<pre>java -jar main.jar</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;">Exception in thread "main" java.lang.UnsupportedClassVersionError:</span> chatroom/main/ServerTest : Unsupported major.minor version 52.0<span style="color: #000000;">
+    at java.lang.ClassLoader.defineClass1(Native Method)
+    at java.lang.ClassLoader.defineClass(ClassLoader.java:</span>803<span style="color: #000000;">)
+    at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:</span>142<span style="color: #000000;">)
+    at java.net.URLClassLoader.defineClass(URLClassLoader.java:</span>449<span style="color: #000000;">)
+    at java.net.URLClassLoader.access$</span>100(URLClassLoader.java:71<span style="color: #000000;">)
+    at java.net.URLClassLoader$</span>1.run(URLClassLoader.java:361<span style="color: #000000;">)
+    at java.net.URLClassLoader$</span>1.run(URLClassLoader.java:355<span style="color: #000000;">)
+    at java.security.AccessController.doPrivileged(Native Method)</span></pre>
+</div>
+<p>&nbsp;这个时候昨天写的笔记就起作用了&nbsp;<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="http://www.cnblogs.com/xkxf/p/8277582.html">Linux 笔记 #02# Installing MySQL &amp; Installing the Default JRE/JDK</a>&nbsp;，找到原来的教程安装另外一个版本的 <code>JDK</code>（<span style="color: #000000;">早知道这样一开始就该安装 <code>Oracle JDK8..</code></span>）</p>
+<p>&nbsp;</p>
+<h3>3、<code>socket客户端进程</code>连接 <code>socket服务端进程</code></h3>
+<p>安装好后再次运行，大功告成图：</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114015814707-1224539086.png" alt="" width="456" height="244" /></p>
+<p>相应客户端：</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114015933222-1178195033.png" alt="" width="343" height="133" /></p>
+<p>刚开始连了好久连不上，然后谷歌了很久<code>&ldquo;如何打开 debian xxx 端口&rdquo;</code>，最后才想起是没有添加阿里云的<code>&ldquo;安全组规则&rdquo;</code>，具体操作可以参考这个：<a id="cb_post_title_url" href="http://www.cnblogs.com/wxjnew/p/6962023.html" target="_blank">阿里云服务器Tomcat无法从外部访问</a></p>
+<p>&nbsp;</p>
+<h3>4、附加：在无图形操作系统下运行 GUI客户端程序所抛出的异常</h3>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# java -<span style="color: #000000;">jar chat.jar 
+Exception in thread </span>"main"<span style="color: #000000;"> java.awt.HeadlessException: 
+No X11 DISPLAY variable was set, but </span><span style="color: #0000ff;">this</span><span style="color: #000000;"> program performed an operation which requires it.
+    at java.awt.GraphicsEnvironment.checkHeadless(GraphicsEnvironment.java:</span>204<span style="color: #000000;">)
+    at java.awt.Window.</span>&lt;init&gt;(Window.java:536<span style="color: #000000;">)
+    at java.awt.Frame.</span>&lt;init&gt;(Frame.java:420<span style="color: #000000;">)
+    at java.awt.Frame.</span>&lt;init&gt;(Frame.java:385<span style="color: #000000;">)
+    at javax.swing.JFrame.</span>&lt;init&gt;(JFrame.java:189<span style="color: #000000;">)
+    at chatroom.client.ui.component.impl.LoginFrame.</span>&lt;init&gt;(LoginFrame.java:17<span style="color: #000000;">)
+    at chatroom.client.model.UIManager.init(UIManager.java:</span>51<span style="color: #000000;">)
+    at chatroom.client.controller.InitializationController.main(InitializationController.java:</span>12)</pre>
+</div>
+<p>只是有点好奇会发生什么，虽然考虑到无图形操作系统是没有提供这类接口的， 然而还是想试一下，看看会不会跑出来一个字符版的界面，结果显然是想多了。:p</p>
+<p>&nbsp;</p>
+<h3>5、附加二：让程序在断开远程连接后继续运行</h3>
+<p>&nbsp;参考资料一：https://www.ibm.com/developerworks/cn/linux/l-cn-screen/</p>
+<p>参考资料二：https://www.zhihu.com/question/20709809</p>

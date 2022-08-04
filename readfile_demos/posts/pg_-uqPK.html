@@ -1,0 +1,35 @@
+<h2>题</h2>
+<p>习题5-4 复合词（Compound Words，UVa 10391）。完整题目见参考[1]</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">set</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> dict;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> x) dict.insert(x);
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;::iterator it = dict.begin(); it != dict.end(); ++<span style="color: #000000;">it) {
+        </span><span style="color: #0000ff;">string</span> s = *<span style="color: #000000;">it;
+        </span><span style="color: #0000ff;">int</span> len =<span style="color: #000000;"> s.length();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i != len; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (dict.count(s.substr(<span style="color: #800080;">0</span><span style="color: #000000;">, i)) 
+                </span>&amp;&amp; dict.count(s.substr(i, len -<span style="color: #000000;"> i))) {
+                cout </span>&lt;&lt; s &lt;&lt;<span style="color: #000000;"> endl;
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }
+        }        
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+ </span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.jianshu.com/p/7c43fb5f2ecd" target="_blank">uva-10391 Compound Words</a></p>
+<p>&nbsp;</p>

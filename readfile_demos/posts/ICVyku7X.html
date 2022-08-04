@@ -1,0 +1,167 @@
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html" target="_blank">23.3.1&nbsp;Trigger Syntax and Examples</a></p>
+<p>&nbsp;</p>
+<p>意义不明的几道练习，留着备用。</p>
+<p>感觉不好写，而且难以调试。。不知道以后会不会有实际的应用场景。</p>
+<p>环境：<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_1" href="http://www.cnblogs.com/xkxf/p/8746962.html" target="_blank">MySQL 笔记（三）由 txt 文件导入数据</a></p>
+<p>1、利用游标查找所有女业务员的基本情况</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> show_female_details;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> show_female_details()
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> 用于保存 FETCH 结果的变量</span>
+    <span style="color: #0000ff;">DECLARE</span> employee_no <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> employee_name <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> sex <span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span><span style="color: #000000;"> birthday DATE;
+    </span><span style="color: #0000ff;">DECLARE</span> address <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> telephone <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span><span style="color: #000000;"> hiredate DATE;
+    </span><span style="color: #0000ff;">DECLARE</span> department <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">30</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> headship <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> salary <span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> cnt <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> 循环变量</span>
+    <span style="color: #0000ff;">DECLARE</span> i <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> 声明游标</span>
+    <span style="color: #0000ff;">DECLARE</span> employee_details <span style="color: #0000ff;">CURSOR</span> <span style="color: #0000ff;">FOR</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee;
+    </span><span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> employee_details;
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> ERROR 1337 (42000): Variable or condition declaration after cursor or handler declaration</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> employee 表的元组数</span>
+    <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">FROM</span> employee <span style="color: #0000ff;">INTO</span> cnt; <span style="color: #008080;">--</span><span style="color: #008080;"> 如果放在游标声明之前将报错。</span>
+    
+    <span style="color: #0000ff;">WHILE</span> i <span style="color: #808080;">&lt;</span> cnt DO <span style="color: #008080;">--</span><span style="color: #008080;"> 意外发现：TAB控制缩进报错，空格缩进不报错</span>
+     <span style="color: #0000ff;">SET</span> i:<span style="color: #808080;">=</span>i<span style="color: #808080;">+</span><span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+     </span><span style="color: #0000ff;">FETCH</span><span style="color: #000000;"> employee_details
+     </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> employee_no, employee_name, sex, birthday, address, telephone, hiredate, department, headship, salary;
+     </span><span style="color: #0000ff;">IF</span> sex <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">F</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">THEN</span>
+      <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_no, employee_name, sex, birthday, address, telephone, hiredate, department, headship, salary;
+     </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">IF</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">WHILE</span><span style="color: #000000;">;</span>
+<span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;
+CALL show_female_details();
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> imooc 为什么使用存储过程 补充</span></pre>
+</div>
+<p>/</p>
+<p>2、利用游标修改orderMaster表中的Ordersum的值</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> cal_sum;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> cal_sum()
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> 用于保存 FETCH 结果的变量</span>
+    <span style="color: #0000ff;">DECLARE</span> order_num <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">DECLARE</span> done <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> 当抛出 not find 的时候把 done 改成 true</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> 什么时候抛出 not find 呢？在游标 FETCH 不到数据的时候</span>
+    <span style="color: #0000ff;">DECLARE</span> order_nos <span style="color: #0000ff;">CURSOR</span> <span style="color: #0000ff;">FOR</span> <span style="color: #0000ff;">SELECT</span> order_no <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master;
+    </span><span style="color: #0000ff;">DECLARE</span> <span style="color: #0000ff;">CONTINUE</span> HANDLER <span style="color: #0000ff;">FOR</span> <span style="color: #808080;">NOT</span> FOUND <span style="color: #0000ff;">SET</span> done <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;  
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> ERROR 1338 (42000): Cursor declaration after handler declaration</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> ERROR 1337 (42000): Variable or condition declaration after cursor or handler declaration</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> 总之 cursor 的声明位置很苛刻。。。</span>
+    
+    <span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> order_nos;
+    
+    </span><span style="color: #0000ff;">WHILE</span> (<span style="color: #808080;">NOT</span><span style="color: #000000;"> done) DO
+     </span><span style="color: #008080;">--</span><span style="color: #008080;"> SELECT VERSION();</span>
+     <span style="color: #008080;">--</span><span style="color: #008080;"> SET done:=1; -- 测试专用</span>
+     <span style="color: #0000ff;">FETCH</span> order_nos <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> order_num;
+     </span><span style="color: #0000ff;">UPDATE</span><span style="color: #000000;"> order_master 
+     </span><span style="color: #0000ff;">SET</span> order_sum <span style="color: #808080;">=</span><span style="color: #000000;"> (
+      </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">SUM</span>(quantity<span style="color: #808080;">*</span><span style="color: #000000;">price)
+      </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+      </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> order_detail.order_no
+      </span><span style="color: #0000ff;">HAVING</span> order_detail.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> order_num
+     )
+     </span><span style="color: #0000ff;">WHERE</span> order_master.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> order_num;
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">WHILE</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;
+CALL cal_sum();</span></pre>
+</div>
+<p>&nbsp;/</p>
+<p>3、请使用游标和循环语句编写一个存储过程proSearchCustomer，根据客户编号，查询该客户的名称、地址以及所有与该客户有关的销售记录，销售记录按商品分组输出。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> proSearchCustomer;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> proSearchCustomer(
+    </span><span style="color: #808080;">IN</span> customer_no_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">)
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">DECLARE</span> customer_name_temp <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> address_temp <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> order_no_temp <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> product_no_temp <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> quantity_temp <span style="color: #0000ff;">int</span>(<span style="color: #800000; font-weight: bold;">11</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">DECLARE</span> price_temp <span style="color: #0000ff;">decimal</span>(<span style="color: #800000; font-weight: bold;">7</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">DECLARE</span> done <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">DECLARE</span> sales_records <span style="color: #0000ff;">CURSOR</span> <span style="color: #0000ff;">FOR</span>
+     <span style="color: #0000ff;">SELECT</span><span style="color: #000000;">
+      customer_name,
+      address,
+      y.order_no,
+      product_no,
+      quantity,
+      price
+     </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;">
+      customer x
+      </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+      </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail z <span style="color: #0000ff;">ON</span> y.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.order_no
+     </span><span style="color: #0000ff;">WHERE</span><span style="color: #000000;">
+      x.customer_no </span><span style="color: #808080;">=</span><span style="color: #000000;"> customer_no_in
+     </span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> 
+      product_no;    
+     </span><span style="color: #0000ff;">DECLARE</span> <span style="color: #0000ff;">CONTINUE</span> HANDLER <span style="color: #0000ff;">FOR</span> <span style="color: #808080;">NOT</span> FOUND <span style="color: #0000ff;">SET</span> done <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> sales_records;
+    
+    </span><span style="color: #0000ff;">WHILE</span> (<span style="color: #808080;">NOT</span><span style="color: #000000;"> done) DO
+     </span><span style="color: #0000ff;">FETCH</span><span style="color: #000000;"> sales_records
+     </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> customer_name_temp, address_temp, order_no_temp, product_no_temp, quantity_temp, price_temp;
+     </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name_temp, address_temp, order_no_temp, product_no_temp, quantity_temp, price_temp;
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">WHILE</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;
+CALL proSearchCustomer(</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">c2005001</span><span style="color: #ff0000;">'</span>);</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、随便放在这儿。。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> 第三题</span>
+<span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> getInfo;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> getInfo()
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">DECLARE</span> no_ <span style="color: #0000ff;">INT</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">DECLARE</span> name_ <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">DECLARE</span> done <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">DECLARE</span> infos <span style="color: #0000ff;">CURSOR</span> <span style="color: #0000ff;">FOR</span> <span style="color: #0000ff;">SELECT</span> id, name <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer;
+    </span><strong><span style="color: #0000ff;">DECLARE</span> <span style="color: #0000ff;">EXIT</span> HANDLER <span style="color: #0000ff;">FOR</span> <span style="color: #808080;">NOT</span> FOUND <span style="color: #0000ff;">SET</span> done <span style="color: #808080;">=</span> <span style="color: #800000;">1</span></strong><span style="color: #000000;"><strong>; </strong> 
+    
+    </span><span style="color: #0000ff;">OPEN</span><span style="color: #000000;"> infos;
+    
+    </span><span style="color: #0000ff;">WHILE</span> (<span style="color: #808080;">NOT</span><span style="color: #000000;"> done) DO
+     </span><span style="color: #0000ff;">FETCH</span> infos <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> no_, name_;
+     </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> no_, name_;
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">WHILE</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;</span></pre>
+</div>
+<p>&nbsp;/</p>
+<p>5、印象中在《MYSQL CRASH COURSE》里有提到一张表最多可以有 6 个触发器，现在的版本已经能够在一张表上建立数量不限个触发器：</p>
+<div class="cnblogs_code">
+<pre>CREATE TRIGGER ins_transaction BEFORE INSERT ON<span> account
+FOR<span> EACH ROW <strong>PRECEDES</strong> ins_sum
+SET
+@deposits = @deposits + IF(NEW.amount&gt;0,NEW.amount,0<span>),
+@withdrawals = @withdrawals + IF(NEW.amount&lt;0,-NEW.amount,0);    </span></span></span></pre>
+</div>
+<p>PRECEDES 和&nbsp;FOLLOWS 都是书上没提到的东西，规定了<strong>触发动作、触发时间都相同</strong>的触发器的执行顺序。旧版本不能用哦：</p>
+<div class="cnblogs_code">
+<pre>ERROR 1235 (42000): This version of MySQL doesn't yet support 'multiple triggers with the same action time and event for one table'</pre>
+</div>

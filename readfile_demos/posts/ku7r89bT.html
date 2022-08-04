@@ -1,0 +1,183 @@
+<p><span style="background-color: #ffff99;">p159~p164：</span><br /><span style="background-color: #ffff99;">switch语句</span><br />1、例程：统计文本中五个元音字母出现的次数。（利用输入输出重定向测试）</p>
+<div class="cnblogs_code">
+<pre>$ a &lt;input.txt&gt;output.txt</pre>
+</div>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> unsigned int 可以缩写为 unsigned</span>
+    unsigned aCnt = <span style="color: #800080;">0</span>, eCnt = <span style="color: #800080;">0</span>, iCnt = <span style="color: #800080;">0</span>, oCnt = <span style="color: #800080;">0</span>, uCnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> ch) {
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (ch) {
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                </span>++<span style="color: #000000;">aCnt;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                </span>++<span style="color: #000000;">eCnt;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                </span>++<span style="color: #000000;">iCnt;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                </span>++<span style="color: #000000;">oCnt;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                </span>++<span style="color: #000000;">uCnt;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }        
+    }
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel a: </span><span style="color: #800000;">"</span> &lt;&lt; aCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel e: </span><span style="color: #800000;">"</span> &lt;&lt; eCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel i: </span><span style="color: #800000;">"</span> &lt;&lt; iCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel o: </span><span style="color: #800000;">"</span> &lt;&lt; oCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel u: </span><span style="color: #800000;">"</span> &lt;&lt; uCnt &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>input.txt</p>
+<div class="cnblogs_code">
+<pre> In the year <span style="color: #800080;">1878</span><span style="color: #000000;"> I took my degree of Doctor of Medicine of the
+     University of London, and proceeded to Netley to go through the
+     course prescribed </span><span style="color: #0000ff;">for</span> surgeons <span style="color: #0000ff;">in</span><span style="color: #000000;"> the army. Having completed my
+     studies there, I was duly attached to the Fifth Northumberland
+     Fusiliers </span><span style="color: #0000ff;">as</span> Assistant Surgeon. The regiment was stationed <span style="color: #0000ff;">in</span><span style="color: #000000;"> India
+     at the time, and before I could join it, the second Afghan war had
+     broken </span><span style="color: #0000ff;">out</span><span style="color: #000000;">. On landing at Bombay, I learned that my corps had
+</span>+<span style="color: #000000;">
+     advanced through the passes, and was already deep </span><span style="color: #0000ff;">in</span> the enemy<span style="color: #800000;">'</span><span style="color: #800000;">s</span>
+     country. I followed, however, with many other officers who were <span style="color: #0000ff;">in</span><span style="color: #000000;">
+     the same situation </span><span style="color: #0000ff;">as</span> myself, and succeeded <span style="color: #0000ff;">in</span> reaching Candahar <span style="color: #0000ff;">in</span><span style="color: #000000;">
+     safety, </span><span style="color: #0000ff;">where</span> I found my regiment, and at once entered upon my <span style="color: #0000ff;">new</span><span style="color: #000000;">
+     duties.</span></pre>
+</div>
+<p>output.txt</p>
+<div class="cnblogs_code">
+<pre>Number of vowel a: <span style="color: #800080;">43</span><span style="color: #000000;">
+Number of vowel e: </span><span style="color: #800080;">77</span><span style="color: #000000;">
+Number of vowel i: </span><span style="color: #800080;">31</span><span style="color: #000000;">
+Number of vowel o: </span><span style="color: #800080;">43</span><span style="color: #000000;">
+Number of vowel u: </span><span style="color: #800080;">17</span></pre>
+</div>
+<p>&nbsp;&nbsp;</p>
+<p>2、case label必须<strong><span style="color: #ff0000;">整型常量</span>表达式</strong>。</p>
+<p>&nbsp;</p>
+<p>3、switch内部的控制流：如果没有break;将从该标签往后顺序执行所有的case分支。</p>
+<p>&nbsp;</p>
+<p>4、default label之后必须<strong>至少</strong>跟上一个空语句。</p>
+<p>&nbsp;</p>
+<p>5、switch内部尽量不要定义变量。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.9</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> unsigned int 可以缩写为 unsigned</span>
+    unsigned aCnt = <span style="color: #800080;">0</span>, eCnt = <span style="color: #800080;">0</span>, iCnt = <span style="color: #800080;">0</span>, oCnt = <span style="color: #800080;">0</span>, uCnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> ch) {
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">aCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">eCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">iCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">oCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">uCnt;
+    }
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel a: </span><span style="color: #800000;">"</span> &lt;&lt; aCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel e: </span><span style="color: #800000;">"</span> &lt;&lt; eCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel i: </span><span style="color: #800000;">"</span> &lt;&lt; iCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel o: </span><span style="color: #800000;">"</span> &lt;&lt; oCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel u: </span><span style="color: #800000;">"</span> &lt;&lt; uCnt &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.10</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> unsigned int 可以缩写为 unsigned</span>
+    unsigned aCnt = <span style="color: #800080;">0</span>, eCnt = <span style="color: #800080;">0</span>, iCnt = <span style="color: #800080;">0</span>, oCnt = <span style="color: #800080;">0</span>, uCnt = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> ch) {
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> || ch == <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">aCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span> || ch == <span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">eCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span> || ch == <span style="color: #800000;">'</span><span style="color: #800000;">I</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">iCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span> || ch == <span style="color: #800000;">'</span><span style="color: #800000;">O</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">oCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span> || ch == <span style="color: #800000;">'</span><span style="color: #800000;">U</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">uCnt;
+    }
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel a: </span><span style="color: #800000;">"</span> &lt;&lt; aCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel e: </span><span style="color: #800000;">"</span> &lt;&lt; eCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel i: </span><span style="color: #800000;">"</span> &lt;&lt; iCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel o: </span><span style="color: #800000;">"</span> &lt;&lt; oCnt &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of vowel u: </span><span style="color: #800000;">"</span> &lt;&lt; uCnt &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.11</span></p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> ch) {
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">aCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">eCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">iCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">oCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">uCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span>) ++<span style="color: #000000;">blankCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">tabCnt;
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>) ++<span style="color: #000000;">nCnt; 
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.12</span></p>
+<p>没按题意做，另外题目中没有规定ffff怎么处理。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    unsigned nff, nfl, nfi;
+    nff </span>= nfl = nfi = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+    </span><span style="color: #0000ff;">bool</span> lastf = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> ch) {
+        </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">f</span><span style="color: #800000;">'</span> &amp;&amp; lastf == <span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+            lastf </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (lastf) {
+            </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">f</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span>++<span style="color: #000000;">nff;
+            }
+            </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">l</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span>++<span style="color: #000000;">nfl;
+            }
+            </span><span style="color: #0000ff;">if</span> (ch == <span style="color: #800000;">'</span><span style="color: #800000;">i</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span>++<span style="color: #000000;">nfi;
+            }
+        }
+    }
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">nff=</span><span style="color: #800000;">"</span> &lt;&lt; nff &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">nfl=</span><span style="color: #800000;">"</span> &lt;&lt; nfl &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+         &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">nfi=</span><span style="color: #800000;">"</span> &lt;&lt; nfi &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.13</span></p>
+<p>a - 漏掉break</p>
+<p>b - 在switch内定义变量有可能被跳过，所以是非法的</p>
+<p>c - 非法的形式，编译器通过不了。正确的方式为case 'a': case 'b': case 'd':....</p>
+<p>d - case label必须整型常量表达式。</p>
+<p>&nbsp;</p>

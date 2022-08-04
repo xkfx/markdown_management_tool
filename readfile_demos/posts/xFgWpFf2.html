@@ -1,0 +1,85 @@
+<div class="cnblogs_code">
+<h3>While, generally speaking, HTML <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">for</span> content and CSS <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">for</span> presentation, JavaScript <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">for</span> interactivity.</h3>
+</div>
+<p>1、在HTML中插入JavaScript代码，像下面这样：</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+<strong><span style="color: #ff0000;">        &lt;script&gt;
+            alert("Hello, world.");
+        &lt;/script&gt;</span></strong>
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>alert的意思是警告，类似于message. 效果上就是弹出一个对话框。</p>
+<p>&nbsp;</p>
+<p>2、引用外部的.js文件</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<strong><span style="color: #ff0000;">        &lt;script src="script.js"&gt;&lt;/script&gt;</span></strong>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>script.js，这个文件与.html文件在同一目录下</p>
+<div class="cnblogs_code">
+<pre>alert("Hello, world.");</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、在浏览器Console中运行JavaScript代码，Chrome进入Console的快捷键是F12</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170614202019837-1217048518.png" alt="" width="405" height="216" /></p>
+<p>&nbsp;</p>
+<p>4、在正式开始学习前，需要强调的是：浏览器逐行执行JavaScript代码！</p>
+<h3><span style="color: #888888;">A browser then runs JavaScript line-by-line, starting at the top of the file or&nbsp;<code>script</code>&nbsp;element and finishing at the bottom (unless you tell it to go elsewhere).</span></h3>
+<p>&nbsp;</p>
+<h2>数据存储&nbsp;</h2>
+<p>5、询问用户姓氏的小程序</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script type="text/javascript"&gt;
+      <span style="color: #ff0000;"><strong>      var surname = prompt('Greetings friend, may I enquire as to your surname?');
+        </strong></span>&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>通过浏览器运行这段代码，将跳出一个&ldquo;对话框&rdquo;，询问你的姓氏。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615123635290-394610021.png" alt="" width="483" height="159" /></p>
+<p>&nbsp;</p>
+<p>6、在这个对话框中输入你的姓氏，点击确定，</p>
+<p>这个时候你的姓氏将被存储在一个名为<strong>surname的变量中。</strong></p>
+<p><strong>如果想再次使用这个值，通过</strong><strong>surname就可以找到它了，</strong></p>
+<p><strong><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615123922415-1824262382.png" alt="" width="460" height="147" /></strong></p>
+<p>&nbsp;</p>
+<p>7、变量类似于一个&ldquo;盒子&rdquo;，我们利用它来储存数据；它具有&ldquo;名&rdquo;和&ldquo;值&rdquo;。</p>
+<p>声明（Declaration）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">var</span><span style="color: #000000;"> surname;
+</span><span style="color: #0000ff;">var</span> age;</pre>
+</div>
+<p>初始化（Initialization）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">var</span> name = "Tom";</pre>
+</div>
+<p>赋值（assignment）</p>
+<div class="cnblogs_code">
+<pre>name = "Andy"<span style="color: #000000;">;
+age </span>= 43;</pre>
+</div>
+<p>还可以同时声明多个初始化多个变量，例如：</p>
+<p>var apples = 5, pears = 10;</p>

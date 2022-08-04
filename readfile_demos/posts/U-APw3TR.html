@@ -1,0 +1,51 @@
+<p>以下为本人捡起Java Web编程技能的记录，也可以作为一个供新手入门Java Web编程的学习路线（适用于个人开发者）。</p>
+<h2>一、准备工作</h2>
+<h3># 01 # 安装并配置Java开发环境</h3>
+<p>①下载并安装；②配置环境变量</p>
+<h3># 02 #&nbsp;安装并配置Maven</h3>
+<p>Maven是一个极其实用的依赖于Java的项目管理工具。推荐阅读《Maven实战》（一本很不错的中文书！）</p>
+<p>同理：①下载并解压；②配置环境变量；③更改Maven配置（用国内镜像、修改Maven仓库位置）</p>
+<h3># 03 # 安装并配置IntelliJ IDEA</h3>
+<p>IntelliJ IDEA是一个超级好用的编辑器，一个好的编辑器就类似一个&ldquo;老师&rdquo;，帮助你发现代码中可以改善的地方。</p>
+<p>但是应该尽可能不使用编辑器的其它功能，仅仅将其作为一个高级编辑工具。</p>
+<p>步骤：①下载并安装；②<a href="https://www.cnblogs.com/xkxf/p/14390178.html" target="_blank">更改配置，采用本地maven</a></p>
+<h2>二、尝试跑一些基础项目</h2>
+<h3># 01 # 运行一个最小可用Maven项目</h3>
+<p>见：<a href="https://www.cnblogs.com/xkxf/p/14371452.html" target="_blank">Maven笔记 #03# 创建Maven项目</a>&nbsp;</p>
+<h3># 02 # 运行一个最小可用的WEB项目（基于Spring Boot框架）</h3>
+<p>①参考<a href="https://spring.io/quickstart" target="_blank">Spring Quickstart Guide</a>通过<a href="https://start.spring.io/" target="_blank">Spring Initializr</a>构建原始项目（根据官网介绍，所有Spring项目都应该从这里出发）；</p>
+<p>②下载并解压项目，添加相应代码；</p>
+<p>③不用理会mvnw，直接用本地原装mvn打包运行项目</p>
+<h3># 03 # 将WEB项目改造成RESTful风格</h3>
+<p>RESTful是一种很流行的接口规范？</p>
+<p>①参考<a href="https://spring.io/guides/gs/rest-service/" target="_blank">Building a RESTful Web Service</a>修改上一步实现的WEB项目；</p>
+<p>②用同样的办法打包运行项目</p>
+<p>为了便于阅读，我把上述教程译成了中文：<a href="https://spring.io/guides/gs/rest-service/" target="_blank">Spring Boot笔记 #02# 构建RESTful Web服务（官方）</a></p>
+<h3># 04 # 尝试JPA</h3>
+<p>见：<a href="https://spring.io/guides/gs/accessing-data-jpa/#scratch" target="_blank">Accessing Data with JPA</a></p>
+<h3># 05 # MySQL基本操作&nbsp;</h3>
+<h2>三、重要的东西</h2>
+<h3># 01 # 建立线程安全的概念</h3>
+<p>推荐阅读《Java并发编程实践》</p>
+<p>&nbsp;spring中的控制器\service默认情况都是单例（找出处）</p>
+<p>本人写的&nbsp; 数据库连接教程 +&nbsp; 多线程书 + JPA实践</p>
+<h3># 02 # 进一步理解RESTful</h3>
+<p>在此之前先尝试JPA.</p>
+<hr />
+<p>&nbsp;</p>
+<p>进行不下去。</p>
+<p>MYSQL&nbsp; ===&gt; JPA ===&gt; J U NIT =&gt; DAO层</p>
+<p><strong>mysql</strong></p>
+<p>① 运行起来看一看。 结合 过去 的笔记敲一敲</p>
+<p>② java连接上试一试</p>
+<p><strong>maven</strong></p>
+<p>运行一个基于maven的程序， 编写一个类并且测试</p>
+<p><strong>springboot</strong></p>
+<p>spring的核心在于上下文容器， DI ,IOC等 ， 总之 ，复习相关内容</p>
+<p>从spring初始化器开始，逐步推进项目 ， 参考原来的项目</p>
+<p>先把demo跑通 ， 然后构建自己的脚手架 ， 附带从头构建脚手架的文档</p>
+<p>x 一个 CRUD RESTful程序</p>
+<p><strong>从设计一个表开始，然后是单元测试。</strong></p>
+<p>必须 明确， 项目 规模是 个人博客级别的 。&nbsp; -- -&nbsp; 日浏览 100人 以下 。</p>
+<p>以构建一个 简单 restful网站为 主线， 基于这个简单的restful网站 修改 构建需求的 网站</p>
+<p>&nbsp;</p>

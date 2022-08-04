@@ -1,0 +1,78 @@
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> abstractClasses;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.time.LocalDate;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2016/12/20.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Employee <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Person{
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> salary;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> LocalDate hireDay;
+
+    </span><span style="color: #0000ff;">public</span> Employee(String name, <span style="color: #0000ff;">double</span> salary, <span style="color: #0000ff;">int</span> year, <span style="color: #0000ff;">int</span> month, <span style="color: #0000ff;">int</span><span style="color: #000000;"> day){
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(name);
+        </span><span style="color: #0000ff;">this</span>.salary =<span style="color: #000000;"> salary;
+        hireDay </span>=<span style="color: #000000;"> LocalDate.of(year, month, day);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> getSalary(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> salary;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> LocalDate getHireDay(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> hireDay;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getDescription(){
+        </span><span style="color: #0000ff;">return</span> String.format("an employee with a salary of $%.2f"<span style="color: #000000;">, salary);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> raiseSalary(<span style="color: #0000ff;">double</span><span style="color: #000000;"> byPercent){
+        </span><span style="color: #0000ff;">double</span> raise = salary * byPercent / 100<span style="color: #000000;">;
+        salary </span>+=<span style="color: #000000;"> raise;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> equals(Object otherObject){
+        </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span> ==<span style="color: #000000;"> otherObject)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 指向同一个对象就什么事情都没有了。</span>
+        <span style="color: #0000ff;">if</span>(otherObject  == <span style="color: #0000ff;">null</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 所比较对象指向null也不用比了。</span>
+        <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.getClass() !=<span style="color: #000000;"> otherObject.getClass())
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 经以上比较可知，两个引用不指向同一个对象，并且两对象属于同类。</span>
+        Employee other =<span style="color: #000000;"> (Employee)otherObject;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 经过类型强制转化，才能能够访问otherObject对象具体类的实例域
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试实例域是否相同</span>
+       <span style="color: #0000ff;">return</span> name.equals(other.name) &amp;&amp; salary == other.salary &amp;&amp;<span style="color: #000000;"> hireDay.equals(other.hireDay);
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> abstractClasses;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2016/12/20.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Manager <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Employee{
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> bonus;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Manager(String name){
+        </span><span style="color: #0000ff;">super</span>(name, 0, 2016, 10, 19<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> equals(Object otherObject){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 比较父类实例域是否相等</span>
+        <span style="color: #0000ff;">if</span>(!<span style="color: #0000ff;">super</span><span style="color: #000000;">.equals(otherObject))
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 比较子类实例域是否相等</span>
+        Manager other =<span style="color: #000000;"> (Manager)otherObject;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.bonus ==<span style="color: #000000;"> other.bonus;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,188 @@
+<p>vuex是一个便于多个组件共享数据的一个东西。</p>
+<h2>①环境准备</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">vue create test_vuex
+cd test_vuex</span></pre>
+</div>
+<h2>②安装Vuex</h2>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> vuex@next --save</pre>
+</div>
+<p>运行后报错：</p>
+<div class="cnblogs_code">
+<pre>npm ERR!<span style="color: #000000;"> code ERESOLVE
+npm ERR</span>!<span style="color: #000000;"> ERESOLVE unable to resolve dependency tree
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>! While resolving: test_vuex@<span style="color: #800080;">0.1</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! Found: vue@<span style="color: #800080;">2.6</span>.<span style="color: #800080;">14</span><span style="color: #000000;">
+npm ERR</span>! node_modules/<span style="color: #000000;">vue
+npm ERR</span>!   vue<span style="color: #800000;">@"</span><span style="color: #800000;">^2.6.11</span><span style="color: #800000;">"</span><span style="color: #000000;"> from the root project
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>!<span style="color: #000000;"> Could not resolve dependency:
+npm ERR</span>! peer vue<span style="color: #800000;">@"</span><span style="color: #800000;">^3.0.2</span><span style="color: #800000;">"</span> from vuex@<span style="color: #800080;">4.0</span>.<span style="color: #800080;">2</span><span style="color: #000000;">
+npm ERR</span>! node_modules/<span style="color: #000000;">vuex
+npm ERR</span>!   vuex<span style="color: #800000;">@"</span><span style="color: #800000;">4.0.2</span><span style="color: #800000;">"</span><span style="color: #000000;"> from the root project
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>!<span style="color: #000000;"> Fix the upstream dependency conflict, or retry
+npm ERR</span>! this command with --force, or --legacy-peer-<span style="color: #000000;">deps
+npm ERR</span>!<span style="color: #000000;"> to accept an incorrect (and potentially broken) dependency resolution.
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>! See C:\Users\mdzz\AppData\Local\npm-cache\eresolve-report.txt <span style="color: #0000ff;">for</span><span style="color: #000000;"> a full report.
+
+npm ERR</span>! A complete log of this run can be found <span style="color: #0000ff;">in</span><span style="color: #000000;">:
+npm ERR</span>!     C:\Users\mdzz\AppData\Local\npm-cache\_logs\<span style="color: #800080;">2022</span>-<span style="color: #800080;">02</span>-11T10_10_02_737Z-debug.log</pre>
+</div>
+<p>用npm i vuex报类似错误。</p>
+<p>改用</p>
+<div class="cnblogs_code">
+<pre>cnpm i vuex</pre>
+</div>
+<p>运行成功，结果如下：</p>
+<div class="cnblogs_code">
+<pre>-<span style="color: #000000;">
+&radic; Installed </span><span style="color: #800080;">1</span><span style="color: #000000;"> packages
+&radic; Linked </span><span style="color: #800080;">2</span><span style="color: #000000;"> latest versions
+&radic; Run </span><span style="color: #800080;">0</span><span style="color: #000000;"> scripts
+peerDependencies WARNING vuex@latest requires a peer of vue@</span>^<span style="color: #800080;">3.0</span>.<span style="color: #800080;">2</span> but vue@<span style="color: #800080;">2.6</span>.<span style="color: #800080;">14</span><span style="color: #000000;"> was installed
+&radic; All packages installed (</span><span style="color: #800080;">2</span> packages installed from npm registry, used 1s(network 1s), speed <span style="color: #800080;">144</span>.32KB/s, json <span style="color: #800080;">3</span>(<span style="color: #800080;">84</span>.35KB), tarball <span style="color: #800080;">70</span>.8KB)</pre>
+</div>
+<h2>③改用更低版本的Vuex</h2>
+<p>首先，查看依赖：</p>
+<div class="cnblogs_code">
+<pre>&gt;npm <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+test_vuex@</span><span style="color: #800080;">0.1</span>.<span style="color: #800080;">0</span><span style="color: #000000;"> D:\2022_1_15_VUE\test_vuex
+</span>+-- _@vue_devtools-api@<span style="color: #800080;">6.0</span>.<span style="color: #800080;">6</span><span style="color: #000000;">@@vue@ extraneous
+</span>+-- <strong>_vuex@<span style="color: #800080;">4.0</span>.<span style="color: #800080;">2</span>@vuex@npm:vuex@<span style="color: #800080;">4.0</span>.<span style="color: #800080;">2</span><span style="color: #000000;"> extraneous
+</span></strong>+-- @vue/cli-plugin-babel@<span style="color: #800080;">4.5</span>.<span style="color: #800080;">15</span>
++-- @vue/cli-plugin-eslint@<span style="color: #800080;">4.5</span>.<span style="color: #800080;">15</span>
++-- @vue/cli-service@<span style="color: #800080;">4.5</span>.<span style="color: #800080;">15</span>
++-- @vue/devtools-api@<span style="color: #800080;">6.0</span>.<span style="color: #800080;">6</span> extraneous -&gt; .\node_modules\_@vue_devtools-api@<span style="color: #800080;">6.0</span>.<span style="color: #800080;">6</span>@@vue\devtools-<span style="color: #000000;">api
+</span>+-- babel-eslint@<span style="color: #800080;">10.1</span>.<span style="color: #800080;">0</span>
++-- bindings@<span style="color: #800080;">1.5</span>.<span style="color: #800080;">0</span><span style="color: #000000;"> extraneous
+</span>+-- core-js@<span style="color: #800080;">3.21</span>.<span style="color: #800080;">0</span>
++-- eslint-plugin-vue@<span style="color: #800080;">6.2</span>.<span style="color: #800080;">2</span>
++-- eslint@<span style="color: #800080;">6.8</span>.<span style="color: #800080;">0</span>
++-- <span style="color: #0000ff;">file</span>-uri-to-path@<span style="color: #800080;">1.0</span>.<span style="color: #800080;">0</span><span style="color: #000000;"> extraneous
+</span>+-- nan@<span style="color: #800080;">2.15</span>.<span style="color: #800080;">0</span><span style="color: #000000;"> extraneous
+</span>+-- vue-template-compiler@<span style="color: #800080;">2.6</span>.<span style="color: #800080;">14</span>
++--<strong> vue@<span style="color: #800080;">2.6</span>.<span style="color: #800080;">14</span></strong><span style="color: #000000;">
+`</span>--<strong> vuex@<span style="color: #800080;">4.0</span>.<span style="color: #800080;">2</span> extraneous -&gt; .\node_modules\_vuex@<span style="color: #800080;">4.0</span>.<span style="color: #800080;">2</span>@vuex</strong></pre>
+</div>
+<p>卸载vuex@4.0.2：</p>
+<div class="cnblogs_code">
+<pre>npm uninstall vuex</pre>
+</div>
+<p>重新安装3.6.2版本（https://www.npmjs.com/package/vuex/v/3.6.2）：</p>
+<div class="cnblogs_code">
+<pre>npm i vuex@<span style="color: #800080;">3.6</span>.<span style="color: #800080;">2</span> --save</pre>
+</div>
+<h2>④参考官方教程目录结构，创建文件，配置并启用Vuex</h2>
+<p><a href="https://v3.vuex.vuejs.org/zh/guide/structure.html" target="_blank">https://v3.vuex.vuejs.org/zh/guide/structure.html</a></p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220212170105961-1632755370.png" alt="" width="278" height="104" loading="lazy" /></p>
+<p>index.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import Vuex from </span>'vuex'
+<span style="color: #008000;">//</span><span style="color: #008000;"> 应用vuex插件</span>
+<span style="color: #000000;">Vue.use(Vuex)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于响应组件中的动作</span>
+const actions =<span style="color: #000000;"> {}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于操作state</span>
+const mutations =<span style="color: #000000;"> {}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于存储数据</span>
+const state =<span style="color: #000000;"> {}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建并暴露store</span>
+export <span style="color: #0000ff;">default</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vuex.Store({
+    actions,
+    mutations,
+<strong>    state</strong>
+})</span></pre>
+</div>
+<p>main.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<strong><span style="color: #000000;">
+import store from </span>'./store'</strong><span style="color: #000000;">
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span>
+
+<span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  render: h </span>=&gt;<span style="color: #000000;"> h(App),
+  store,
+}).$mount(</span>'#app')</pre>
+</div>
+<h2>⑤编写HelloWorld程序</h2>
+<p>一个重要的图：</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220212173220697-296658213.png" alt="" width="464" height="365" loading="lazy" /></p>
+<p>例子程序效果图：</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220213151705250-864874756.gif" alt="" width="383" height="216" loading="lazy" /></p>
+<p>index.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import Vuex from </span>'vuex'
+<span style="color: #008000;">//</span><span style="color: #008000;"> 应用vuex插件</span>
+<span style="color: #000000;">Vue.use(Vuex)
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于响应组件中的动作（业务逻辑放这里）</span>
+const actions =<span style="color: #000000;"> {
+    increaseX(context, val) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isNaN(val)) {
+            alert(</span>'请输入数字'<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+        }
+      <strong>  context.commit(</strong></span><strong>'INCREASE_X'</strong><span style="color: #000000;"><strong>, val)</strong>
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于操作state</span>
+const mutations =<span style="color: #000000;"> {
+    INCREASE_X(state, val) {
+        state.x </span>+=<span style="color: #000000;"> val;
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 用于存储数据</span>
+const state =<span style="color: #000000;"> {
+    x: </span>100<span style="color: #000000;">,
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建并暴露store</span>
+export <span style="color: #0000ff;">default</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vuex.Store({
+    actions,
+    mutations,
+    state
+})</span></pre>
+</div>
+<p>HelloWorld.vue：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>输出store中的x的值{{$store.state.x}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> v-model.number</span><span style="color: #0000ff;">="val"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="increaseX"</span><span style="color: #0000ff;">&gt;</span>让x加{{val}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+  name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">HelloWorld</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+  data() {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+      val: </span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">,
+    }
+  },
+  methods: {
+    increaseX() {
+      </span><strong><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$store.dispatch(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">increaseX</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span></strong><span style="background-color: #f5f5f5; color: #000000;"><strong>.val)</strong>
+    }
+  },
+  mounted() {
+    console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$store)
+  },
+}
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>

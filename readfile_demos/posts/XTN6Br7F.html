@@ -1,0 +1,63 @@
+<p><span style="color: #ff0000;">不完全翻译，结合谷歌，一定主观性，还可能有误，原始内容地址：https://www.tutorialspoint.com/jsp/jsp_environment_setup.htm</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99; color: #ff0000;">【注释】这篇貌似有点旧。最好参考网上的最新教程</span></p>
+<p>开发环境是指你开发、测试、运行程序的地方。</p>
+<p>本教程将指导你搭建JSP开发环境，其中包括以下步骤 &mdash;</p>
+<h2>配置Java Development Kit（JDK）</h2>
+<p>此步骤涉及下载Java Software Development Kit（SDK），以及配置PATH环境变量。</p>
+<p>您可以从Oracle的Java站点下载SDK&nbsp;&minus;&nbsp;<a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" rel="nofollow" target="_blank">Java SE Downloads</a>.</p>
+<p>下载JDK之后，请按照指定的说明进行安装和配置。<span><span>最后，设置</span></span><strong><span><span>PATH和JAVA_HOME</span></span></strong><span><span>环境变量指向包含<strong>java</strong>和<strong>javac的</strong>目录。</span></span></p>
+<p><span><span><span><span>如果你正在使用Windows并在</span></span><strong><span><span>C:\jdk1.5.0_20</span></span></strong><span><span>中</span><span>安装了SDK&nbsp;</span><span>，则需要在</span></span><strong><span><span>C:\autoexec.bat</span></span></strong><span><span>文件</span><span>中添加以下行</span><span>。</span></span></span></span></p>
+<pre class="result notranslate">set PATH = C:\jdk1.5.0_20\bin;%PATH%
+set JAVA_HOME = C:\jdk1.5.0_20
+</pre>
+<p><span style="background-color: #ffff99; color: #ff0000;">【注释】也许可以写一个批处理一步完成配置。</span></p>
+<p><span>或者，在</span><strong>Windows NT/2000/XP</strong><span>上也可以右键单击&ldquo;&nbsp;</span><strong>我的电脑&rdquo;</strong><span>，选择&ldquo;&nbsp;</span><strong>属性&rdquo;</strong><span><span>，然后</span><span>选择&ldquo;&nbsp;</span></span><strong>高级&rdquo;</strong><span><span>，然后</span><span>选择&ldquo;&nbsp;</span></span><strong>环境变量&rdquo;</strong><span><span>。</span><span>然后，更新PATH值，然后按OK按钮。</span></span></p>
+<p><span>在Unix（Solaris，Linux等）上，如果SDK安装在</span><strong>/usr/local/jdk1.5.0_20中</strong><span>，并且使用C shell，则将以下内容放入</span><strong>.cshrc</strong><span>文件中。</span></p>
+<pre class="result notranslate">setenv PATH /usr/local/jdk1.5.0_20/bin:$PATH
+setenv JAVA_HOME /usr/local/jdk1.5.0_20</pre>
+<p><span><span class="goog-text-highlight">或者，如果你使用</span><span class="goog-text-highlight">像</span><strong><span class="goog-text-highlight">Borland JBuilder，Eclipse，IntelliJ IDEA</span></strong><span class="goog-text-highlight">或</span><strong><span class="goog-text-highlight">Sun ONE Studio</span></strong><span class="goog-text-highlight">这样的</span></span><strong><span><span class="goog-text-highlight">集成开发环境（IDE）</span></span></strong><span><span class="goog-text-highlight">，那么可以编译并运行一个简单的程序来确认IDE知道安装Java的位置。</span></span></p>
+<h2><span class="goog-text-highlight">配置Web服务器：Tomcat</span></h2>
+<p><span><span>市场上有许多支持JavaServer Pages和Servlets的Web服务器，</span><span>一些Web服务器可以免费下载，Tomcat是其中之一。</span></span></p>
+<p><span><span>Apache Tomcat是支持JavaServer Pages和Servlet技术的开源软件，可用作测试JSP和Servlet的独立服务器，并可与Apache Web服务器集成。</span><span>以下是在你的PC上设置Tomcat的步骤 -</span></span></p>
+<ul class="list">
+<li>
+<p>从&nbsp;<a href="https://tomcat.apache.org/" rel="nofollow" target="_blank">https://tomcat.apache.org/</a>.下载最新版本的Tomcat&nbsp;</p>
+</li>
+<li><span><span class="goog-text-highlight">下载安装后，将压缩包解压到一个方便的位置。</span><span>例如，在</span></span><strong><span><span>Windows上的C:\apache-tomcat-5.5.29或</span></span></strong><span><span>&nbsp;Linux/Unix上的</span><strong><span>/usr/local/apache-tomcat-5.5.29中</span></strong><span>，并创建</span><span>指向这些位置的</span></span><strong><span><span>CATALINA_HOME</span></span></strong><span><span>环境变量。</span></span></li>
+</ul>
+<p>可以通过在Windows上执行以下命令来启动Tomcat -</p>
+<pre class="prettyprint notranslate prettyprinted"><span class="pun">%<span class="pln">CATALINA_HOME<span class="pun">%<span class="pln">\b<span class="kwd">in<span class="pln">\startup<span class="pun">.<span class="pln">bat
+ 
+<span class="kwd">or<span class="pln">
+ 
+C<span class="pun">:<span class="pln">\apache<span class="pun">-<span class="pln">tomcat<span class="pun">-<span class="lit">5.5<span class="pun">.<span class="lit">29<span class="pln">\b<span class="kwd">in<span class="pln">\startup<span class="pun">.<span class="pln">bat</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<p>可以通过在Unix（Solaris，Linux等）上执行以下命令来启动Tomcat：</p>
+<pre class="prettyprint notranslate prettyprinted"><span class="pln">$CATALINA_HOME<span class="pun">/<span class="pln">bin<span class="pun">/<span class="pln">startup<span class="pun">.<span class="pln">sh
+ 
+<span class="kwd">or<span class="pln">
+ 
+<span class="pun">/<span class="pln">usr<span class="pun">/<span class="kwd">local<span class="pun">/<span class="pln">apache<span class="pun">-<span class="pln">tomcat<span class="pun">-<span class="lit">5.5<span class="pun">.<span class="lit">29<span class="pun">/<span class="pln">bin<span class="pun">/<span class="pln">startup<span class="pun">.<span class="pln">sh</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<p>启动成功后，可通过<strong>http://localhost:8080/</strong>访问Tomcat附带的默认Web应用程序。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170610111011887-1064545678.png" alt="" width="554" height="294" /></p>
+<p><span><span>有关配置和运行Tomcat的更多信息，请参见本文档中的文档以及Tomcat网站 -&nbsp;</span></span><a href="https://tomcat.apache.org/" rel="nofollow" target="_blank"><span><span>https://tomcat.apache.org/</span></span></a><span><span>。</span></span></p>
+<p>可以通过在Windows上执行以下命令来停止Tomcat -</p>
+<pre class="prettyprint notranslate prettyprinted"><span class="pun">%<span class="pln">CATALINA_HOME<span class="pun">%<span class="pln">\b<span class="kwd">in<span class="pln">\shutdown
+<span class="kwd">or<span class="pln">
+
+C<span class="pun">:<span class="pln">\apache<span class="pun">-<span class="pln">tomcat<span class="pun">-<span class="lit">5.5<span class="pun">.<span class="lit">29<span class="pln">\b<span class="kwd">in<span class="pln">\shutdown</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<p>可以通过在Unix（Solaris，Linux等）上执行以下命令来停止Tomcat -</p>
+<pre class="prettyprint notranslate prettyprinted"><span class="pln">$CATALINA_HOME<span class="pun">/<span class="pln">bin<span class="pun">/<span class="pln">shutdown<span class="pun">.<span class="pln">sh
+
+<span class="kwd">or<span class="pln">
+
+<span class="pun">/<span class="pln">usr<span class="pun">/<span class="kwd">local<span class="pun">/<span class="pln">apache<span class="pun">-<span class="pln">tomcat<span class="pun">-<span class="lit">5.5<span class="pun">.<span class="lit">29<span class="pun">/<span class="pln">bin<span class="pun">/<span class="pln">shutdown<span class="pun">.<span class="pln">sh</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+<h2>配置 CLASSPATH</h2>
+<p><span>由于servlet不属于Java SE的一部分，所以你必须将servlet类的路径标识出来。</span></p>
+<p><span>如果你正在使用Windows，则需要将以下行放在</span><strong>C:\autoexec.bat</strong><span>文件中。</span></p>
+<pre class="result notranslate">set CATALINA = C:\apache-tomcat-5.5.29
+set CLASSPATH = %CATALINA%\common\lib\jsp-api.jar;%CLASSPATH%</pre>
+<p><span><span class="goog-text-highlight">或者，在</span></span><strong><span><span class="goog-text-highlight">Windows NT/2000/XP</span></span></strong><span><span class="goog-text-highlight">上也可以右键单击</span></span><strong><span><span class="goog-text-highlight">我的电脑</span></span></strong><span><span class="goog-text-highlight">，选择</span></span><strong><span><span class="goog-text-highlight">属性</span></span></strong><span><span class="goog-text-highlight">，然后</span><span class="goog-text-highlight">选择</span></span><strong><span><span class="goog-text-highlight">高级</span></span></strong><span><span class="goog-text-highlight">，然后选择</span></span><strong><span><span class="goog-text-highlight">环境变量</span></span></strong><span><span class="goog-text-highlight">。</span><span>然后，更新CLASSPATH值，按OK按钮。</span></span></p>
+<p><span>在Unix（Solaris，Linux等）上，如果使用C shell，则将以下行放入</span><strong>.cshrc</strong><span>文件中。</span></p>
+<pre class="result notranslate">setenv CATALINA = /usr/local/apache-tomcat-5.5.29
+setenv CLASSPATH $CATALINA/common/lib/jsp-api.jar:$CLASSPATH</pre>

@@ -1,0 +1,98 @@
+<p>原始的 Python list 虽然很好用，但是不具备能够&ldquo;整体&rdquo;进行数学运算的性质，并且速度也不够快（按照视频上的说法），而 Numpy.array 恰好可以弥补这些缺陷。</p>
+<p>初步应用就是&ldquo;整体数学运算&rdquo;和&ldquo;subset（取子集、随机访问）&rdquo;。</p>
+<h3>&nbsp;1、如何构造一个 Numpy array</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create list baseball</span>
+baseball = [180, 215, 210, 210, 188, 176, 209, 200<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Import the numpy package as np</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create a numpy array from baseball: np_baseball</span>
+np_baseball =<span style="color: #000000;"> np.array(baseball)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out type of np_baseball</span>
+<span style="color: #0000ff;">print</span>(type(np_baseball))</pre>
+</div>
+<h3>2、利用 Numpy 进行整体数学运算</h3>
+<p>example - 1：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> height is available as a regular list</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create a numpy array from height: np_height</span>
+np_height =<span style="color: #000000;"> np.array(height)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out np_height</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(np_height)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Convert np_height to m: np_height_m</span>
+np_height_m = np_height * 0.0254
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Print np_height_m</span>
+<span style="color: #0000ff;">print</span>(np_height_m)</pre>
+</div>
+<p>&nbsp;example - 2：&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> height and weight are available as a regular lists</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create array from height with correct units: np_height_m</span>
+np_height_m = np.array(height) * 0.0254
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Create array from weight with correct units: np_weight_kg</span>
+np_weight_kg = np.array(weight) * 0.453592
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Calculate the BMI: bmi</span>
+bmi = np_weight_kg / np_height_m ** 2
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Print out bmi</span>
+<span style="color: #0000ff;">print</span>(bmi)</pre>
+</div>
+<h3>&nbsp;3、Subset of Numpy array</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> height and weight are available as a regular lists</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Calculate the BMI: bmi</span>
+np_height_m = np.array(height) * 0.0254<span style="color: #000000;">
+np_weight_kg </span>= np.array(weight) * 0.453592<span style="color: #000000;">
+bmi </span>= np_weight_kg / np_height_m ** 2
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Create the light array</span>
+light = bmi &lt; 21
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Print out light</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(light)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out BMIs of all baseball players whose BMI is below 21</span>
+<span style="color: #0000ff;">print</span>(bmi[light])</pre>
+</div>
+<p>这种取子集的方式整体上看起来很自然，但是让我不解的是：为什么 bmi &lt; 21 不直接返回一个子集呢？稍微思考了一下，bmi &lt; 21 本身也是一个类似与 np_array1 &lt; np_array2 的整体数学运算，返回值显然必须是一个布尔型的 np_array3</p>
+<p>另外，我发现直接把一个布尔数组放进&ldquo;[ ]&rdquo;中取子集本身也非常巧妙、自然。</p>
+<p>虽然 NumPy Array 很有&ldquo;个性&rdquo;，但是仍具备很多和 Python list 一样的共性：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> height and weight are available as a regular lists</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Store weight and height lists as numpy arrays</span>
+np_weight =<span style="color: #000000;"> np.array(weight)
+np_height </span>=<span style="color: #000000;"> np.array(height)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the weight at index 50</span>
+<span style="color: #0000ff;">print</span>(np_weight[50<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out sub-array of np_height: index 100 up to and including index 110</span>
+<span style="color: #0000ff;">print</span>(np_height[100:111])</pre>
+</div>
+<h3>4、Numpy 的副作用（NumPy Side Effects）</h3>
+<p><strong>First of all,&nbsp;</strong><code>numpy</code>&nbsp;arrays cannot contain elements with different types. If you try to build such a list, some of the elements' types are changed to end up with a homogeneous list. This is known as&nbsp;<em>type coercion</em>.</p>
+<p><strong>Second,</strong> the typical arithmetic operators, such as&nbsp;<code>+</code>,&nbsp;<code>-</code>,&nbsp;<code>*</code>&nbsp;and&nbsp;<code>/</code>&nbsp;have a different meaning for regular Python lists and&nbsp;<code>numpy</code>&nbsp;arrays.</p>

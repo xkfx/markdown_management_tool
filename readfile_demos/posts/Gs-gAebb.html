@@ -1,0 +1,79 @@
+<h2>准备工作</h2>
+<p>cnpm install hexo-cli -g</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225131736438-558655151.png" alt="" width="595" height="276" loading="lazy" /></p>
+<h2>初始化博客源文件</h2>
+<p>hexo init blog（这个blog可以替换成你喜欢的名字）</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225131656902-1852406963.png" alt="" width="577" height="124" loading="lazy" /></p>
+<p>cd blog</p>
+<p>npm install</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225131831855-486102514.png" alt="" width="337" height="109" loading="lazy" /></p>
+<h2>调试博客</h2>
+<p>hexo server</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225131914000-827207514.png" alt="" width="586" height="61" loading="lazy" /></p>
+<p>这样就可以在http://localhost:4000/访问你的博客</p>
+<h2>将博客部署到GitHub Pages</h2>
+<p>采用这个方式，源文件不会被上传（https://hexo.io/docs/github-pages#One-command-deployment）</p>
+<p>首先安装工具hexo-deployer-git（https://www.npmjs.com/package/hexo-deployer-git）：</p>
+<div class="cnblogs_code">
+<pre>cnpm <span style="color: #0000ff;">install</span> hexo-deployer-git --save</pre>
+</div>
+<p>编辑config.yml，修改deployment部分</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225163244778-924366531.png" alt="" width="252" height="204" loading="lazy" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">deploy:
+  type: git
+  repo: https://github.com/</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">username</span><span style="color: #0000ff;">&gt;</span>/<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+  # example, https://github.com/你的用户名/你的用户名.github.io
+  branch: gh-pages（改成对应分支，例如master）</span></pre>
+</div>
+<p>每当你更新源文件并希望部署到github pages时，执行：</p>
+<div class="cnblogs_code">
+<pre>hexo clean &amp;&amp; hexo deploy</pre>
+</div>
+<h2>更换博客主题</h2>
+<p>第一步，下载主题（在官网导航处随便找一个演示）。主题文件放在博客源文件目录下的themes目录下，例如下载一个叫做hermes的主题：</p>
+<div class="cnblogs_code">
+<pre>$ git clone https:<span style="color: #008000;">//</span><span style="color: #008000;">github.com/claymcleod/hexo-theme-hermes.git<span style="color: #ff0000;"><strong> themes/hermes</strong></span></span>
+Cloning into <span style="color: #800000;">'</span><span style="color: #800000;">themes/hermes</span><span style="color: #800000;">'</span><span style="color: #000000;">...
+remote: Enumerating objects: </span><span style="color: #800080;">1070</span>, <span style="color: #0000ff;">done</span><span style="color: #000000;">.
+remote: Total </span><span style="color: #800080;">1070</span> (delta <span style="color: #800080;">0</span>), reused <span style="color: #800080;">0</span> (delta <span style="color: #800080;">0</span>), pack-reused <span style="color: #800080;">1070</span><span style="color: #000000;">
+Receiving objects: </span><span style="color: #800080;">100</span>% (<span style="color: #800080;">1070</span>/<span style="color: #800080;">1070</span>), <span style="color: #800080;">637.14</span> KiB | <span style="color: #800080;">963.00</span> KiB/s, <span style="color: #0000ff;">done</span><span style="color: #000000;">.
+Resolving deltas: </span><span style="color: #800080;">100</span>% (<span style="color: #800080;">493</span>/<span style="color: #800080;">493</span>), <span style="color: #0000ff;">done</span>.</pre>
+</div>
+<p>第二步，配置文件。同样是编辑config.yml，修改theme</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225233131954-111190236.png" alt="" width="368" height="81" loading="lazy" /></p>
+<div class="cnblogs_code">
+<pre>theme: hermes</pre>
+</div>
+<p>第三步，刷新测试。</p>
+<div class="cnblogs_code">
+<pre>hexo clean &amp;&amp;<span style="color: #000000;"> hexo g
+hexo s</span></pre>
+</div>
+<p>访问http://localhost:4000/发现没有显示想要的东西</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225233701152-1333877113.png" alt="" width="404" height="140" loading="lazy" /></p>
+<p>原因是没有按照该主题（https://github.com/claymcleod/hexo-theme-hermes）的要求去做（没有下载相应的插件。</p>
+<p>按<a class="Link--primary" href="https://github.com/claymcleod/hexo-theme-hermes#readme" data-view-component="true">README.md</a>：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;"># Install required plugins
+npm i hexo</span>-renderer-pug --<span style="color: #000000;">save
+
+# Install recommended plugins
+npm i hexo</span>-generator-<span style="color: #000000;">feed \
+      hexo</span>-generator-<span style="color: #000000;">feed \
+      hexo</span>-generator-<span style="color: #000000;">sitemap \
+      hexo</span>-<span style="color: #000000;">browsersync \
+      hexo</span>-generator-<span style="color: #000000;">archive \
+      </span>--<span style="color: #000000;">save
+
+# Set some </span><span style="color: #0000ff;">nice</span>-to-<span style="color: #000000;">have configuration options
+</span><span style="color: #0000ff;">sed</span> -i.bak <span style="color: #800000;">'</span><span style="color: #800000;">s/relative_link: false/relative_link: true/g</span><span style="color: #800000;">'</span> _config.yml &amp;&amp; <span style="color: #0000ff;">rm</span><span style="color: #000000;"> _config.yml.bak
+
+# Start the hexo server
+hexo server</span></pre>
+</div>
+<h2>写博客</h2>
+<p>通过hexo n "文章名字"创建文章，然后在项目根目录\source\_posts中编辑文章</p>
+<p>通过hexo clean 可以清理原来的public文件夹</p>
+<p>通过hexo g生成新的静态文件</p>
+<p>通过hexo s调试</p>

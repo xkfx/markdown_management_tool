@@ -1,0 +1,143 @@
+<h4>索引</h4>
+<ul>
+<li><a href="#a1">正则表达式：MySQL only supports a small <strong>subset</strong> of what is supported in most regular expression implementations</a></li>
+<li><a href="#a2">计算字段，应用程序计算 VS. 数据库计算，Concat. 假名 + - * /</a></li>
+<li><a href="#a3">测试 算数. 函数表达式</a></li>
+<li><a href="#a4">MySQL 函数. API</a></li>
+<li><a href="#a4">聚集函数示例</a></li>
+</ul>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a1"></a>Using MySQL Regular Expressions</span></h4>
+<p>&rarr;<strong> 默认</strong>大小写不敏感</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <strong><span style="color: #0000ff;">SELECT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">312HEWQKHD</span><span style="color: #ff0000;">'</span> REGEXP <span style="color: #ff0000;">'</span><span style="color: #ff0000;">[0-9]</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------------------------+</span>
+<span style="color: #808080;">|</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">312HEWQKHD</span><span style="color: #ff0000;">'</span> REGEXP <span style="color: #ff0000;">'</span><span style="color: #ff0000;">[0-9]</span><span style="color: #ff0000;">'</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------------------------+</span>
+<span style="color: #808080;">|</span>                           <span style="color: #800000; font-weight: bold;">1</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------------------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span><strong> <span style="color: #0000ff;">SELECT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">HEWQKHD</span><span style="color: #ff0000;">'</span> REGEXP <span style="color: #ff0000;">'</span><span style="color: #ff0000;">[0-9]</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------------------+</span>
+<span style="color: #808080;">|</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">HEWQKHD</span><span style="color: #ff0000;">'</span> REGEXP <span style="color: #ff0000;">'</span><span style="color: #ff0000;">[0-9]</span><span style="color: #ff0000;">'</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------------------+</span>
+<span style="color: #808080;">|</span>                        <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>测试 正则表达式并不需要一张特定的表 <strong>&uarr;&nbsp;<tt>REGEXP</tt> checks always return <tt>0</tt> (not a match) or <tt>1</tt> (match).&nbsp;</strong></p>
+<p>正常而言，LIKE 能做的事情正则一定能做，正则能做的 LIKE 不一定能做（例如说 ' x | x '），效率上我倾向于正则比较慢（因为比较繁琐，匹配的东西多），但是实际情况还是要试了才知道。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a2"></a>Understanding Calculated Fields</span></h4>
+<p>ps.&nbsp;Fields 和&nbsp;<span class="docEmphasis">column 通常指一个东西</span></p>
+<p class="docText">Rather than retrieve the data as it is and then reformat it within your client application or report, what you really want is<span style="color: #ff0000;"> to retrieve converted, calculated, or reformatted data <strong>directly from the database</strong>.</span></p>
+<p class="docText">This is where calculated fields come in. Unlike all the columns we retrieved in the chapters thus far, calculated fields don't actually exist in database tables. Rather, a calculated field is created<span style="color: #ff0000;"> on-the-fly </span>within a SQL <tt>SELECT</tt>&nbsp;statement.</p>
+<p class="docText">Many&nbsp;of the conversions and reformatting that can be performed within SQL statements can also be performed directly in your client application. However, as a rule, it is<span style="color: #ff0000;"> far quicker<span style="color: #000000;"> t</span></span><span style="color: #000000;">o</span> perform these operations on the database server than it is to perform them within the client because Database Management Systems (DBMS) are built to perform this type of processing quickly and efficiently.</p>
+<p class="docText">/</p>
+<p class="docText">In MySQL <tt>SELECT</tt> statements, you can concatenate columns using the <tt>Concat()</tt> function.</p>
+<p class="docText"><span class="docEmphStrong"><span style="color: #ff00ff;"><strong>MySQL Is Different</strong> </span>Most DBMSs use operators <tt>+</tt> or <tt>||</tt> for concatenation; MySQL uses the <tt>Concat()</tt> function. Keep this in mind when converting SQL statements to MySQL.</span></p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> Concat(vend_name, <span style="color: #ff0000;">'</span><span style="color: #ff0000;"> (</span><span style="color: #ff0000;">'</span>, vend_country, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">)</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> vendors
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> vend_name;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------------------------------------+</span>
+<span style="color: #808080;">|</span> Concat(vend_name, <span style="color: #ff0000;">'</span><span style="color: #ff0000;"> (</span><span style="color: #ff0000;">'</span>, vend_country, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">)</span><span style="color: #ff0000;">'</span>) <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------------------------------------+</span>
+<span style="color: #808080;">|</span> ACME (USA)                                 <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Anvils R Us (USA)                          <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Furball Inc. (USA)                         <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Jet <span style="color: #0000ff;">Set</span> (England)                          <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Jouets Et Ours (France)                    <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> LT Supplies (USA)                          <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">6</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> Concat(<span style="color: #ff00ff;">RTrim</span>(vend_name), <span style="color: #ff0000;">'</span><span style="color: #ff0000;"> (</span><span style="color: #ff0000;">'</span>, <span style="color: #ff00ff;">RTrim</span>(vend_country), <span style="color: #ff0000;">'</span><span style="color: #ff0000;">)</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> vendors
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> vend_name;</pre>
+</div>
+<p class="docText"><span class="docEmphStrong">The <tt>trim()</tt> Functions In addition to <tt>RTrim()</tt> (which,&nbsp;as just seen, trims the right side of a string), MySQL supports the use of <tt>LTrim()</tt> (which trims the left side of a string), and <tt>trim()</tt> (which trims both the right and left).</span></p>
+<p class="docText">/</p>
+<p class="docText">Using Aliases</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> Concat(<span style="color: #ff00ff;">RTrim</span>(vend_name), <span style="color: #ff0000;">'</span><span style="color: #ff0000;"> (</span><span style="color: #ff0000;">'</span>, <span style="color: #ff00ff;">RTrim</span>(vend_country), <span style="color: #ff0000;">'</span><span style="color: #ff0000;">)</span><span style="color: #ff0000;">'</span>) <span style="color: #0000ff;">AS</span>
+    <span style="color: #808080;">-&gt;</span><span style="color: #000000;"> vend_title
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> vendors
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> vend_name;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------------+</span>
+<span style="color: #808080;">|</span> vend_title              <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------------+</span>
+<span style="color: #808080;">|</span> ACME (USA)              <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Anvils R Us (USA)       <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Furball Inc. (USA)      <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Jet <span style="color: #0000ff;">Set</span> (England)       <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Jouets Et Ours (France) <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> LT Supplies (USA)       <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------------+</span>
+<span style="color: #800000; font-weight: bold;">6</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> prod_id,
+       quantity,
+       item_price,
+     <strong>  quantity</strong></span><strong><span style="color: #808080;">*</span>item_price <span style="color: #0000ff;">AS</span> <span style="color: #ff00ff;">expanded_price
+</span></strong><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems
+</span><span style="color: #0000ff;">WHERE</span> order_num <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">20005</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<h4 class="docText"><span style="text-decoration: underline;"><span class="docEmphStrong"><a name="a3"></a>How to Test Calculations </span></span></h4>
+<p class="docText"><span class="docEmphStrong"><tt>SELECT</tt> provides a great way to test and experiment with functions and calculations. Although <tt>SELECT</tt> is usually used to retrieve data from a table, the <tt>FROM</tt> clause may be omitted to simply access and work with expressions. For example, <tt>SELECT 3 * 2</tt>; would return <tt>6</tt>, <tt>SELECT Trim(' abc ');</tt> would return <tt>abc</tt>, and <tt>SELECT Now()</tt> uses the <tt>Now()</tt> function to return the current date and time. You get the ideause <tt>SELECT</tt> to experiment as needed.</span></p>
+<p class="docText">&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a4"></a>Using Functions</span></h4>
+<ol>
+<li>在 MySQL 中自定义函数是允许的。</li>
+<li>允许在 WHERE SELECT INSERT <strong>等</strong>.各种地方使用函数。</li>
+<li>存在类似&nbsp;Soundex 的比较有趣的函数，以及例如 IF 的方便函数。</li>
+</ol>
+<p>官方 API &rarr;&nbsp;<a href="https://dev.mysql.com/doc/refman/5.7/en/functions.html" target="_blank">MySQL 5.7 Reference Manual&nbsp;&nbsp;/&nbsp; Functions and Operators</a></p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_id, order_num, order_date
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> Date(order_date) <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">2005-09-01</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+---------------------+</span>
+<span style="color: #808080;">|</span> cust_id <span style="color: #808080;">|</span> order_num <span style="color: #808080;">|</span> order_date          <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+---------------------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">10001</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20005</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">2005</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">09</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">01</span> <span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+---------------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.01</span> sec)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_id, order_num, order_date
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">Year</span>(order_date) <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">2005</span> <span style="color: #808080;">AND</span> <span style="color: #ff00ff;">Month</span>(order_date) <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+---------------------+</span>
+<span style="color: #808080;">|</span> cust_id <span style="color: #808080;">|</span> order_num <span style="color: #808080;">|</span> order_date          <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+---------------------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">10001</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20005</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">2005</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">09</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">01</span> <span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">10003</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20006</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">2005</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">09</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">12</span> <span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">10004</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20007</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">2005</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">09</span><span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">30</span> <span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span>:<span style="color: #800000; font-weight: bold;">00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+---------------------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>在处理时间相关的问题时可能会比较有用。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">Using Aggregate Functions</span></h4>
+<p><span class="docEmphStrong"><strong>Aggregate Functions</strong> Functions that operate<span style="color: #ff0000;"><strong> on a set of rows</strong> </span>to calculate and return a single value.</span></p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> num_items,
+    </span><span style="color: #808080;">-&gt;</span>        <span style="color: #ff00ff;">MIN</span>(prod_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> price_min,
+    </span><span style="color: #808080;">-&gt;</span>        <span style="color: #ff00ff;">MAX</span>(prod_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> price_max,
+    </span><span style="color: #808080;">-&gt;</span>        <span style="color: #ff00ff;">AVG</span>(<span style="color: #0000ff;">DISTINCT</span> prod_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> price_avg
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span> num_items <span style="color: #808080;">|</span> price_min <span style="color: #808080;">|</span> price_max <span style="color: #808080;">|</span> price_avg <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span>        <span style="color: #800000; font-weight: bold;">14</span> <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">2.50</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">55.00</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">17.780833</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-----------+-----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p class="docText">Aggregate functions are used to summarize data. MySQL supports a range of aggregate functions, all of which can be used in multiple ways to return just the results you need. These functions are designed to be highly efficient, and they usually return result<span style="color: #ff0000;">s far more quickly t</span>han you could calculate them yourself within your own client application.</p>

@@ -1,0 +1,164 @@
+<p><a href="http://eloquentjavascript.net/11_async.html" target="_blank">http://eloquentjavascript.net/11_async.html</a></p>
+<p>&nbsp;</p>
+<p>1、异步VS.同步</p>
+<p><a href="https://www.zhihu.com/question/19732473/answer/20851256" target="_blank">知乎</a>上看到的一个解释。</p>
+<p>打个比方。你去书店借书，问书店老板有没有《代码大全》。</p>
+<p>如果是同步的处理方式，老板会说：&ldquo;你在这儿站着别动，我去找找看&rdquo;。于是你在柜台等啊等啊，直到老板重新出现并告诉你结果。而异步的处理方式则是，老板直接告诉你，让我找一下啊，等会儿打电话通知你，然后你就开开心心地（？）回家了...&nbsp;</p>
+<p>&nbsp;</p>
+<p>2、乌鸦科技<br />许多人都知道乌鸦是一种特别聪明的鸟。它们能够使用工具，提前做好计划，记住事情，甚至互相交流。<br />但大多数人所不知道的是，它们还隐藏了许多我们所不知道的能力。我听一位很有信誉的鸦科专家说，乌鸦的科技距离人类并不是非常遥远，并且它们正在迎头赶上。<br />举个例子，许多乌鸦文明都具有构建计算设备的能力。这些设备不同于人类的电子计算设备，而是通过微小昆虫们的行动来运作，这些昆虫是与白蚁密切相关的物种，它们和乌鸦形成了共生关系。乌鸦为它们提供食物，作为回报，昆虫构建和操控它们复杂的菌落，在他们内部生物的帮助下进行计算。<br />这些菌落通常位于大且存在时间长的乌鸦巢中。乌鸦和昆虫共同构建了一个球状粘土结构的网络，隐藏在构成乌鸦巢的树枝之间，昆虫正是在这里生活和工作。<br />这些机器采用光信号和其它设备通信。乌鸦将反光材料嵌入特殊的通信杆中，昆虫用这些材料将光线反射到另一个巢穴，将数据编码为一系列快速的闪光。<br />我们的朋友，鸦科专家已经绘制了Rh?ne河畔Hi&egrave;res-sur-Amby村的乌鸦巢穴网络部署图。这张地图显示了巢穴及其连接。<br />在这个令人震惊的融合演化的例子中，乌鸦计算机能够运行JavaScript。在本章中，我们将为它们编写一些基本的网络功能。</p>
+<p>&nbsp;</p>
+<p>3、回调函数<br />异步编程的一种方法是让执行慢速操作的函数接收一个额外的参数&mdash;&mdash;回调函数。当慢速操作完成之后，将（以结果作为参数）调用回调函数。<br />例如，在Node.js和浏览器中都可用的setTimeout函数，等待给定的毫秒数（1秒钟是1000毫秒），然后调用一个函数。</p>
+<div class="cnblogs_code">
+<pre>setTimeout(() =&gt; console.log("Tick"), 500);</pre>
+</div>
+<p>等待通常不是一种非常重要的工作，但在执行例如更新动画、检查某些任务花费的时间是否超过给定时间时，它可能很有用。</p>
+<p>连续执行多个带回调的异步操作意味着你必须连续传递新函数来处理操作之后的后续计算。<br />大多数乌鸦巢计算机都有一个用于持久化数据的灯泡，信息被蚀刻成树枝，以便以后可以检索。蚀刻或检索数据需要花费一些时间，因此用于数据存储、检索的接口都是异步的，并且需要回调函数。<br />持久化灯泡基于名称来存储由JSON编码的数据。乌鸦可以把隐藏食物的地点的信息存储在名称"food caches"下，它可以包含指向描述实际缓存的数据的名称数组。要在持久化灯泡中查找Big Oak（大橡树）乌鸦巢穴的食物缓存，乌鸦可以运行如下代码：</p>
+<div class="cnblogs_code">
+<pre>import {bigOak} from "./crow-tech"<span style="color: #000000;">;
+
+bigOak.readStorage(</span>"food caches", caches =&gt;<span style="color: #000000;"> {
+  let firstCache </span>= caches[0<span style="color: #000000;">];
+  bigOak.readStorage(firstCache, info </span>=&gt;<span style="color: #000000;"> {
+    console.log(info);
+  });
+});</span></pre>
+</div>
+<p>（所有绑定名称和字符串都已从乌鸦语言翻译成英语。）<br />这种编程风格是可行的，但因为你最终会进入另一个函数，缩进级别会随着每个异步操作（回调函数体？）而增加。做更复杂的事情，比如同时运行多个动作，可能会让你感到有点别扭。<br />乌鸦巢计算机使用请求-响应对进行通信。这意味着一个乌鸦巢发送消息给另外一个乌鸦巢，另外一个乌鸦巢收到消息后将立即回复消息，确认消息已经收到，并可能包含对消息中所询问的问题的回复。<br />每条消息都标有一个类型，该类型决定了消息应该被如何处理。我们的代码可以定义针对特定类型请求的处理程序（handler），当接到这样的请求时，就调用对应的处理程序（handler）以生成响应。<br />由&ldquo;./crow-tech&rdquo;模块导出的接口提供基于回调机制的用于通信的函数。乌鸦利用一个send方法来发送请求。目标巢穴的名称、请求的类型和请求的内容是该方法的前三个参数，它的最后一个参数（也就是第四个参数）是一个准备在接到响应时调用的回调函数。</p>
+<div class="cnblogs_code">
+<pre>bigOak.send("Cow Pasture", "note", "Let's caw loudly at 7PM"<span style="color: #000000;">,
+            () </span>=&gt; console.log("Note delivered."));</pre>
+</div>
+<p>但是为了使乌鸦巢能够接收该请求，我们首先必须定义名为&ldquo;note&rdquo;的请求类型。处理该请求的代码不仅要在这个乌鸦巢计算机上运行，还要运行在可以接收此类消息的所有乌鸦巢上。我们现在假设有一只乌鸦飞过，并在所有乌鸦巢上安装了我们的handler代码。</p>
+<div class="cnblogs_code">
+<pre>import {defineRequestType} from "./crow-tech"<span style="color: #000000;">;
+
+defineRequestType(</span>"note", (nest, content, source, done) =&gt;<span style="color: #000000;"> {
+  console.log(`${nest.name} received note: ${content}`);
+  done();
+});</span></pre>
+</div>
+<p>defineRequestType函数定义了一种新类型的请求。该示例添加了对&ldquo;note&rdquo;请求的支持，它仅向给定的乌鸦巢发送note。我们的实现调用了console.log，以便我们可以验证请求是否到达。乌鸦巢有一个name属性，保存它们的名称。<br />赋予handler的第四个参数done是一个在完成请求时必须调用的回调函数。如果我们使用handler的返回值作为响应值，那么这意味着请求处理器（handler）本身不能执行异步工作。执行异步工作的函数通常在工作完成之前就返回，并在它完成异步工作时调用回调函数。所以在这种情况下，我们需要一些异步机制&mdash;&mdash;另一个回调函数，在响应可用时发出信号。<br /><span style="color: #888888;">【处理程序本身是一个回调函数，处理程序是异步工作的，done又是另外一个回调函数，在处理程序执行完后调用done】</span><br />异步具有传染性。调用异步工作的函数的任何函数本身都必须是异步的，使用回调或类似机制来传递其结果。调用回调函数比简单地返回一个值更容易出错，因此需要以这种方式构建大部分内容的程序并不是很好。</p>
+<p>&nbsp;</p>
+<p>4、Promises<br />使用抽象概念通常是一件比较困难的事情，但是当这些概念可以用值表示时，就显得比较容易了。例如说在异步操作的例子中，你可以返回一个表示未来事件的对象，而不是安排在未来的某个时间调用函数。<br />这就是为什么我们需要Promise标准类。promise是一种异步操作，可以在某个时刻完成并生成一个结果值。当它的结果值可用时，它能够通知任何对此结果值感兴趣的人。<span style="color: #888888;">【所谓感兴趣的人其实就是指需要该结果值作为参数的回调函数】</span><br />创建promise最简单的方式是调用Promise.resolve函数。此函数确保你传递的值被包装在promise中。 如果它已经是一个promise，它就简单地返回 - 否则，你将得到一个新的promise，该promise在你创建的那一刻就已经完成，并将你传递的值作为promise的结果值。</p>
+<div class="cnblogs_code">
+<pre>let fifteen = Promise.resolve(15<span style="color: #000000;">);
+fifteen.then(value </span>=&gt;<span style="color: #000000;"> console.log(`Got ${value}`));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Got 15</span></pre>
+</div>
+<p>可以使用then方法获得promise的结果值。这需要传入一个回调函数，当promise完成（或者说解决）并生成一个结果值时，该函数将被调用。你可以向单个promise添加多个回调，并且即使你在promise已经解决（已完成）之后才添加这些回调，仍然会触发它们。<br />then方法做的事情远不止于此。它还返回另外一个promise，它的结果值为处理函数所返回的值，如果处理函数返回的是一个promise，则等待该promise完成，以promise的resolve返回值作为其结果值（继续向下传递给then的回调）。<br />为了便于理解，我们可以把promises视为一种将值转移到异步世界的设备。 一个正常的值就仅仅是在那里而已。一个promise的值既可能已经在那里，也可能在将来的某个时间点才出现。根据promises定义的计算将作用于此类经过包装值，并在得到结果值时异步执行。<br />可以使用Promise的构造函数创建promise。它的接口非常奇怪 - 构造函数需要一个函数作为参数，它会立即调用这个函数，并向该函数传递一个可以用来完成promise的函数。这就是的Promise构造器的工作方式，而不是例如使用一个resolve方法，因此只有创建promise的代码才能完成它。<br />为readStorage函数创建符合promise接口规范的方法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> storage(nest, name) {
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise(resolve =&gt;<span style="color: #000000;"> {
+    nest.readStorage(name, result </span>=&gt;<span style="color: #000000;"> resolve(result));
+  });
+}
+
+storage(bigOak, </span>"enemies"<span style="color: #000000;">)
+  .then(value </span>=&gt; console.log("Got", value));</pre>
+</div>
+<p>此异步函数返回了一个有意义的值。这就是promises的最大优点 - 它简化了异步函数的使用。相反于不断传递回调，基于promise的函数看起来更像是常规函数：它们将输入作为参数并返回其输出。唯一的区别是输出可能并非是即时的。</p>
+<p>&nbsp;</p>
+<p>5、Failure</p>
+<p>常规的js编程可能会抛异常，异步操作也有可能抛异常，而且还相当不好处理。</p>
+<p>一个广泛采用的方法是用回调函数来接收异常信息：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> (boolean, obj) &rarr; undefined</span>
+<span style="color: #0000ff;">function</span> callback(<strong>success, data,</strong> <span style="color: #008000;">/*</span><span style="color: #008000;"> other args.. </span><span style="color: #008000;">*/</span><span style="color: #000000;">) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Such callback functions must always check whether they received an exception </span>
+<span style="color: #000000;">    
+}</span></pre>
+</div>
+<p>用promise则是这样的：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">new</span> Promise((_, reject) =&gt; reject(<span style="color: #0000ff;">new</span> Error("Fail"<span style="color: #000000;">)))
+  .then(value </span>=&gt; console.log("Handler 1"<span style="color: #000000;">))
+  .</span><span style="color: #0000ff;">catch</span>(reason =&gt;<span style="color: #000000;"> {
+    console.log(</span>"Caught failure " +<span style="color: #000000;"> reason);
+    </span><span style="color: #0000ff;">return</span> "nothing"<span style="color: #000000;">;
+  })
+  .then(value </span>=&gt; console.log("Handler 2"<span style="color: #000000;">, value));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Caught failure Error: Fail</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; Handler 2 nothing</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>6、Networks are hard</p>
+<p>回调函数能表达的东西，promise一定也能表达。</p>
+<p>网络环境是很容易发生意外的，所以对request方法而言，设定恰当的超时时间很有必要的，否则程序就有可能因为迟迟收不到响应而莫名其妙挂掉：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Timeout extends Error {}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> request(nest, target, type, content) {
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((resolve, reject) =&gt;<span style="color: #000000;"> {
+    let done </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> attempt(n) {
+      nest.send(target, type, content, <strong>(failed, value) </strong></span>=&gt;<span style="color: #000000;"> {
+        done </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (failed) reject(failed);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> resolve(value);
+      });
+      setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (done) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (n &lt; 3) attempt(n + 1<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span> reject(<span style="color: #0000ff;">new</span> Timeout("Timed out"<span style="color: #000000;">));
+      }, </span>250<span style="color: #000000;">);
+    }
+    attempt(</span>1<span style="color: #000000;">);
+  });
+}</span></pre>
+</div>
+<p>构建异步的循环必须用递归！在上面的例子中。send和setTimeout都是异步的，循环是不会因为异步函数而停下来的。</p>
+<p>相应的请求处理程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> requestType(name, handler) {
+  defineRequestType(name, (nest, content, source,
+                           callback) </span>=&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+      Promise.resolve(handler(nest, content, source))
+        .then(response </span>=&gt; callback(<span style="color: #0000ff;">null</span><span style="color: #000000;">, response),
+              failure </span>=&gt;<span style="color: #000000;"> callback(failure));
+    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (exception) {
+      callback(exception);
+    }
+  });
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>7、Collections of promises</p>
+<p>Promise.all：</p>
+<div class="cnblogs_code">
+<pre>requestType("ping", () =&gt; "pong"<span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> availableNeighbors(nest) {
+  let requests </span>= nest.neighbors.map(neighbor =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> request(nest, neighbor, "ping"<span style="color: #000000;">)
+      .then(() </span>=&gt; <span style="color: #0000ff;">true</span>, () =&gt; <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+  });
+  </span><span style="color: #0000ff;">return</span> Promise.all(requests).then(result =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> nest.neighbors.filter((_, i) =&gt;<span style="color: #000000;"> result[i]);
+  });
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>8、Network flooding</p>
+<div class="cnblogs_code">
+<pre>import {everywhere} from "./crow-tech"<span style="color: #000000;">;
+
+everywhere(nest </span>=&gt;<span style="color: #000000;"> {
+  nest.state.gossip </span>=<span style="color: #000000;"> [];
+});
+
+</span><span style="color: #0000ff;">function</span> sendGossip(nest, message, exceptFor = <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+  nest.state.gossip.push(message);
+  </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let neighbor of nest.neighbors) {
+    </span><span style="color: #0000ff;">if</span> (neighbor == exceptFor) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+    request(nest, neighbor, </span>"gossip"<span style="color: #000000;">, message);
+  }
+}
+
+requestType(</span>"gossip", (nest, message, source) =&gt;<span style="color: #000000;"> {
+  </span><span style="color: #0000ff;">if</span> (nest.state.gossip.includes(message)) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+  console.log(`${nest.name} received gossip </span>'<span style="color: #000000;">${
+               message}</span>'<span style="color: #000000;"> from ${source}`);
+  sendGossip(nest, message, source);
+});</span></pre>
+</div>

@@ -1,0 +1,99 @@
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;<span style="color: #000000;">
+#include</span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include</span>&lt;time.h&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> bloodD = <span style="color: #800080;">3200</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> bloodW = <span style="color: #800080;">1788</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> MP = <span style="color: #800080;">240</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> action;
+    </span><span style="color: #0000ff;">int</span> tmp = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> tmp2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> score = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> round = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Update by xkfx ( E-mail: wyzxk_fx@163.com ) 2016-10-27\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    srand((</span><span style="color: #0000ff;">int</span>)time(<span style="color: #800080;">0</span><span style="color: #000000;">));
+    </span><span style="color: #0000ff;">for</span>(round = <span style="color: #800080;">1</span>; round &lt;= <span style="color: #800080;">13</span>; round ++<span style="color: #000000;">){
+        srand(rand());
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">输出回合数</span>
+        printf(<span style="color: #800000;">"</span><span style="color: #800000;">---Details above------ Round - %d -----\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, round);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">输出恶龙血量</span>
+        printf(<span style="color: #800000;">"</span><span style="color: #800000;">&lt;Deathwing&gt; \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">HP = %d , MP = ??? \n</span><span style="color: #800000;">"</span><span style="color: #000000;">, bloodD);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">输出勇者血量 与 MP</span>
+        printf(<span style="color: #800000;">"</span><span style="color: #800000;">&lt;Warrior&gt; \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">HP = %d , MP = %d \n</span><span style="color: #800000;">"</span><span style="color: #000000;">, bloodW, MP);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">---------------------------------------\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">输出勇者的技能列表
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("\n");</span>
+        printf(<span style="color: #800000;">"</span><span style="color: #800000;">YOUR ACTIONS:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">    1 --- ATTACK --- 20 MP\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">    2 --- DEFENSE --- 10 MP\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">    3 --- GATHER STRENGTH --- 0 MP \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">    4 -SWORD OF JUDGEMENT --- ALL HP \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">&gt; Warrior , please choose your action:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">选择下一步行动</span>
+        scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">action);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">计算下一回合数据</span>
+        system(<span style="color: #800000;">"</span><span style="color: #800000;">cls</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;">(action){
+        </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">1</span><span style="color: #000000;">:
+            tmp </span>= <span style="color: #800080;">100</span> + rand()%<span style="color: #800080;">217</span><span style="color: #000000;">;
+            bloodD </span>= bloodD - tmp -<span style="color: #000000;"> tmp2;
+            MP </span>= MP - <span style="color: #800080;">20</span><span style="color: #000000;">;
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\nYour cause %d damage !\n</span><span style="color: #800000;">"</span>, tmp+<span style="color: #000000;">tmp2);
+            score </span>= score + tmp+<span style="color: #000000;">tmp2;
+            tmp2 </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">2</span><span style="color: #000000;">:
+            tmp </span>= <span style="color: #800080;">400</span> + rand()%<span style="color: #800080;">300</span><span style="color: #000000;">;
+            bloodW </span>= bloodW +<span style="color: #000000;"> tmp;
+            MP </span>= MP - <span style="color: #800080;">10</span><span style="color: #000000;">;
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\nYour recovery %d HP !\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, tmp);
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">3</span><span style="color: #000000;">:
+            tmp2 </span>= tmp2 + rand()%<span style="color: #800080;">827</span><span style="color: #000000;">;
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\nWarrior:I will find you and I will kill you...\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">4</span><span style="color: #000000;">:
+            bloodW </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            tmp </span>= <span style="color: #800080;">754</span> + rand()%<span style="color: #800080;">1230</span><span style="color: #000000;">;
+            score </span>= score +<span style="color: #000000;"> tmp;
+            bloodD </span>= bloodD -<span style="color: #000000;"> tmp;
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\nWarrior:SWORD OF JUDGEMENT!!!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Your cause %d damage !\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, tmp);
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Deathwing:All will burn!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        tmp </span>= <span style="color: #800080;">200</span>+rand()%<span style="color: #800080;">546</span><span style="color: #000000;">;
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">You got a few injuries - %d HP\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, tmp);
+        bloodW </span>= bloodW -<span style="color: #000000;"> tmp;
+        </span><span style="color: #0000ff;">if</span>((bloodD &lt; <span style="color: #800080;">0</span>) || (bloodW &lt; <span style="color: #800080;">0</span><span style="color: #000000;">))
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">if</span>(bloodD &lt; <span style="color: #800080;">0</span> &amp;&amp; bloodW &gt; <span style="color: #800080;">0</span><span style="color: #000000;">){
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">...\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">......\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">You have kill the Dragon!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">.....\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">What a brave Warrior!</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">You final score: %d\n</span><span style="color: #800000;">"</span>, <span style="color: #800080;">3270</span> + (<span style="color: #800080;">10</span>-round)*<span style="color: #800080;">478</span>+<span style="color: #000000;">score);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">......\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(bloodW &lt; <span style="color: #800080;">0</span> &amp;&amp; bloodD &gt; <span style="color: #800080;">0</span><span style="color: #000000;">){
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">...\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">......\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">GAME OVER\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">You final score: %d\n</span><span style="color: #800000;">"</span>, round*<span style="color: #800080;">328</span> +<span style="color: #000000;">score);
+    }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">The game ended in a draw\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    system(</span><span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,107 @@
+<p><span style="background-color: #ffff99;">p131~p135：</span></p>
+<p>1、除非必要否则不使用后缀加加（减减），会有额外的性能开销。</p>
+<p><br />2、混用解引用和递增运算符。*pointer++，后缀运算符优先于解引用运算符。</p>
+<p>&nbsp;</p>
+<p>3、运算对象可按任意顺序求值，即使是在<strong>赋值号</strong>两侧也无法确定究竟哪边先求。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">p133</span></p>
+<p>1、点运算符和箭头运算符。ptr-&gt;mem等价于(*ptr).mem。</p>
+<p>&nbsp;</p>
+<p>2、<strong>解引用运算符*优先级低于点运算符.！！！</strong>别写*p.size()这样的表达式。（等价于*(p.size())）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">p134</span><br />1、条件运算符。cond ? expr1 : expr2;先判断cond的真假，然后根据真假决定计算哪一条表达式。</p>
+<p>&nbsp;</p>
+<p>2、嵌套条件运算符。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> grade;
+    std::cin </span>&gt;&gt;<span style="color: #000000;"> grade;    
+    std::cout </span>&lt;&lt; <span style="color: #ff0000;">(</span>(grade &gt; <span style="color: #800080;">90</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">high pass</span><span style="color: #800000;">"</span> : (grade &lt; <span style="color: #800080;">60</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">fail</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">pass</span><span style="color: #800000;">"</span><span style="color: #ff0000;">)</span> &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、条件运算符满足右结合律。</p>
+<p>&nbsp;</p>
+<p>4、条件运算符的优先级非常低，通常要在两段加括号：<strong>(cond ? expr1 : expr2)</strong>。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.17</span></p>
+<p><span style="background-color: #ffff99;">练习 4.18</span><br /><em>跳过第一个元素，从第二个元素开始输出。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.19</span><br /><em>（a）确保ptr指针非空，判断ptr指向元素非零，最后将ptr移动到下一位。</em><br /><em>（b）假设ival的值为0，则原式等价与&ldquo;0 &amp;&amp; 1&rdquo;。</em><br /><em>（c）前两个表达式属于短路求值，运算顺序确定，而这个表达试的行为是未定义的：无法确定运算顺序。</em><br /><em>改为：vec[ival+1] &lt;= vec[ival]</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.20</span><br /><em>a 合法，访问*iter后iter移动到下一个元素。</em><br /><em>b 非法，访问*iter，之后将*iter这个元素+1，由于是字符串所以加1操作非法。</em><br /><em>c 非法，点运算符优先级高，应该改为(*iter).empty()。</em><br /><em>d 合法</em><br /><em>e 非法</em><br /><em>f 合法</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.21</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    std::vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec = {<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">6</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">8</span>, <span style="color: #800080;">9</span>, <span style="color: #800080;">10</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">x : ivec) {
+        (x </span>% <span style="color: #800080;">2</span> == <span style="color: #800080;">1</span>) ? x *= <span style="color: #800080;">2</span><span style="color: #000000;"> : x;
+    }
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">x : ivec) {
+        std::cout </span>&lt;&lt; x &lt;&lt;<span style="color: #000000;"> std::endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.22</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> grade;
+    std::cin </span>&gt;&gt;<span style="color: #000000;"> grade;
+    std::cout </span>&lt;&lt; ((grade &gt; <span style="color: #800080;">90</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">high pass</span><span style="color: #800000;">"</span> : (grade &gt; <span style="color: #800080;">75</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">pass</span><span style="color: #800000;">"</span> : (grade &gt; <span style="color: #800080;">60</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">low pass</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">fail</span><span style="color: #800000;">"</span>) &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> grade;
+    std::cin </span>&gt;&gt;<span style="color: #000000;"> grade;
+    </span><span style="color: #0000ff;">if</span> (grade &gt; <span style="color: #800080;">90</span><span style="color: #000000;">) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">high pass</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (grade &gt; <span style="color: #800080;">75</span><span style="color: #000000;">) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">pass</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (grade &gt; <span style="color: #800080;">60</span><span style="color: #000000;">){
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">low pass</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">fail</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>版本2更容易理解一些。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.23</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span> s = <span style="color: #800000;">"</span><span style="color: #800000;">word</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 错误的表达式：string pl = s + s[s.size() - 1] == 's' ? "" : "s";
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 下标运算符[]的优先级最高，最先计算，之后是+、==、？：、=
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 之所以会错是因为按照这个运算顺序会把字符串s + (s[s.size() - 1]和字符's'比较，这是非法的。</span>
+    <span style="color: #0000ff;">string</span> pl = s + (s[s.size() - <span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">s</span><span style="color: #800000;">'</span> ? <span style="color: #800000;">""</span> : <span style="color: #800000;">"</span><span style="color: #800000;">s</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    std::cout </span>&lt;&lt; pl &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.24</span></p>
+<p>&nbsp;布吉岛。</p>

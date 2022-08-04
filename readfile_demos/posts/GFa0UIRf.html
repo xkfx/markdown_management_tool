@@ -1,0 +1,247 @@
+<p>// 留着备用。</p>
+<p>三个基本款分别是ConsoleAppender、FileAppender（以及他的兄弟RandomAccessFileAppender）、RollingFileAppender（以及他的兄弟RollingRandomAccessFileAppender），其中RollingFileAppender是三个appender中的老大，因为他一个人的文档篇幅就是其它两个appender文档篇幅总和的6~7倍左右。。。</p>
+<p>关于三个appender的简单介绍：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Configuration </span><span style="color: #ff0000;">status</span><span style="color: #0000ff;">="WARN"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 在Appenders中定义可选的输出&ldquo;目的地&rdquo; </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Appenders官方文档地址https://logging.apach
+        e.org/log4j/2.x/manual/appenders.html，其次是可
+        以直接去看org.apache.logging.log4j.core.appender
+        包下的appender源代码 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Console </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="SYSTEM_OUT"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 在pattern中定义输出格式，各种占位符（转
+            义符）的用法、含义可查询文档https://logging.a
+            pache.org/log4j/2.x/manual/layouts.html </span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout </span><span style="color: #ff0000;">pattern</span><span style="color: #0000ff;">="%m%n"</span><span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 对于ConsoleAppender而言，Layout是必要的，
+            默认就是%m%n </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Console</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> FileAppender。servlet容器中的两个web应用程序
+        可以拥有它们各自的配置，如果Log4j位于它们共同使用
+        的类加载器中，则可以安全地将日志写入同一个文件。默认
+         启用bufferedIO以及immediateFlush（前者提高性能，后
+         者可以保证写入，缓冲区没满也写入！每次写操作都会调
+         用flush，不过有点影响性能），如果是异步Logger，即便
+         immediateFlush设置为false，异步Logger和appender也
+         将在一批事件结束时自动flush，这样做比较高效同时
+          保证了数据写入磁盘 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">File </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="MyFile"</span><span style="color: #ff0000;"> fileName</span><span style="color: #0000ff;">="logs/app.log"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout </span><span style="color: #ff0000;">pattern</span><span style="color: #0000ff;">="%m%n"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">File</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 似乎可以看作是FileAppender的进化版，实现上不大
+        一样，根据报导，相比启用了bufferedIO的FileAppender
+        性能提高了20-200%（RandomAccessFile没有bufferedIO
+        这个选项，因为它总是buffered的！） </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">RandomAccessFile </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="MyRandomAccessFile"</span><span style="color: #ff0000;"> fileName</span><span style="color: #0000ff;">="logs/app.log"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>%d %p %c{1.} [%t] %m%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">RandomAccessFile</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">RollingFileAppender是一个OutputStreamAppender，
+        它写入fileName参数中指定的文件，并根据TriggeringPolicy
+        和RolloverPolicy将文件翻转。对于RollingFileAppender而
+        言，这两个Policy都是必要的，TriggeringPolicy确定是否应
+        该执行滚动，而RolloverStrategy定义如何执行滚动。</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">RollingFile </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="RollingFileInfo"</span><span style="color: #ff0000;"> fileName</span><span style="color: #0000ff;">="logs/info.log"</span><span style="color: #ff0000;">
+                     filePattern</span><span style="color: #0000ff;">="logs/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ThresholdFilter </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="info"</span><span style="color: #ff0000;"> onMatch</span><span style="color: #0000ff;">="ACCEPT"</span><span style="color: #ff0000;"> onMismatch</span><span style="color: #0000ff;">="DENY"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout </span><span style="color: #ff0000;">pattern</span><span style="color: #0000ff;">="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] %l %logger{36} - %msg%n"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">OnStartupTriggeringPolicy </span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">SizeBasedTriggeringPolicy </span><span style="color: #ff0000;">size</span><span style="color: #0000ff;">="20 MB"</span> <span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">TimeBasedTriggeringPolicy </span><span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了30 </span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">DefaultRolloverStrategy </span><span style="color: #ff0000;">max</span><span style="color: #0000ff;">="30"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">RollingFile</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 故障转移追加器，如果primary追加器失败了，
+        就继续按照顺序尝试Failovers中的appenders </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Failover </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="Failover"</span><span style="color: #ff0000;"> primary</span><span style="color: #0000ff;">="MyFile"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Failovers</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">AppenderRef </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Failovers</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Failover</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">AppenderRef </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Root</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>针对RollingFileAppender的笔记&darr;</p>
+<p>测试程序，负责源源不断地打log：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.webapp.util;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.LogManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.logging.log4j.Logger;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestLog4j2 {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER =<span style="color: #000000;"> LogManager.getLogger();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 10000; i++<span style="color: #000000;">) {
+            LOGGER.info(</span>"Rolling file appender example..."<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                Thread.sleep(</span>500<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>示例之一（DefaultRolloverStrategy&nbsp;）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 实时写到mylog.log，每隔两分钟进行一次rollover，
+    rollover策略为按照时间作为增量命名日志文件并压缩归档。</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Configuration </span><span style="color: #ff0000;">status</span><span style="color: #0000ff;">="WARN"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 便于在控制台观察实际输出情况 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Console </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="SYSTEM_OUT"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5p %c{-2} - %m%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Console</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 大概可以视为RollingFileAppender的进化版，没
+        有bufferedIO这个属性，对于RollingRandomAccessFile，
+        缓存是固定开启的。fileName是实时写入的（未归档）文
+        件名，filePattern则是归档文件的命名模式，因为开启了
+         异步日志所以这里immediateFlush设置为false（不过好像
+         不管它也无所谓），bufferSize缓冲区大小暂时默认，
+         最后，TriggeringPolicy和RolloverStrategy是必须有的，
+         没有显示定义就会采用默认的。</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">RollingRandomAccessFile  </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="RollingRandomAccessFile"</span><span style="color: #ff0000;"> fileName</span><span style="color: #0000ff;">="logs/mylog.log"</span><span style="color: #ff0000;"> immediateFlush</span><span style="color: #0000ff;">="false"</span><span style="color: #ff0000;">
+                     filePattern</span><span style="color: #0000ff;">="logs/time-based-logs/%d{yyyy-MM-dd-hh-mm}.log.zip"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 生成的日志文件名要么按照时间来增长，filePattern中需要%d，
+            要么就以整数增长，filePattern中需要%i，<span style="text-decoration: line-through;">又或者两个搭配（意义似乎不是很大
+            因为rollover一次计数器又从1开始了。。），文件名仅按照时间增长的话，
+            RolloverStrategy设置max，min参数似乎也没多什么意义</span>了。</span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 如果filePattern以".gz", ".zip", ".bz2", ".deflate", ".pack200",或者".xz"结尾，
+            那么将使用与相对应的压缩方案压缩生成的归档文件。</span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5p %c{-2} - %m%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">决定是否应该执行rollover，只要有任何一个
+            policy返回true那么就进行rollover，rollover的
+            意思大概可以理解为：当日志文件满足特定条件时
+            将触发的事件，例如创建一个新的文件/把原有的文件
+            归档/删除等，具体怎样rollover由RolloverStrategy
+            决定 </span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> jvm重启就进行一次rollover</span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">OnStartupTriggeringPolicy </span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 文件大小达到20mb进行一次rollover </span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">SizeBasedTriggeringPolicy </span><span style="color: #ff0000;">size</span><span style="color: #0000ff;">="20 MB"</span> <span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> TimeBasedTriggeringPolicy是最多用到的Policy，
+                interval默认值是1，根据filePattern中日期的最小单位，例如
+                在该配置里是mm（分钟），设置interval="2"则每隔两分钟将发生
+                一次rollover，按当前配置，具体表现就是隔两分钟得到一个log.zip。
+                modulate就是让第一次rollover发生在区间边界上（即便还没到
+                interval的时长），按照当前配置，首次rollover会发生在比如
+                8点50分0秒，这样之后的rollover就是8点52分0秒、8点54分0秒..
+                这样做的好处在于rollover的时机就变得很有规律很好预测，生成的
+                文件还很整齐（假设时间最小单位为天，interval="1"，那么就
+                变成稳定每天0点自动rollover了。。）。还有个属性叫maxRandomDelay，
+                防止很多应用在同一时间一起rollover的，暂时不理它。
+                  </span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">TimeBasedTriggeringPolicy </span><span style="color: #ff0000;">interval</span><span style="color: #0000ff;">="2"</span><span style="color: #ff0000;"> modulate</span><span style="color: #0000ff;">="true"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> DefaultRolloverStrategy，默认rollover策略。参数：
+            fileIndex有两个值，max和min，就是决定生成文件是从序号大的到
+            序号小的，还是从序号小的到序号大。min，计数器的起始值，
+             默认是1；max，计数器的最大值，默认是7。还有两个参数暂时不管。</span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">DefaultRolloverStrategy</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">RollingRandomAccessFile</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 用来debug。只要additivity不设置为false，日志起码会被打印到控制台。</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">AppenderRef </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Root</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 测试对象。将日志转发给RollingFileAppender </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Logger </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="org.sample.webapp.util.TestLog4j2"</span><span style="color: #ff0000;"> level</span><span style="color: #0000ff;">="debug"</span><span style="color: #ff0000;"> additivity</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">AppenderRef </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="RollingRandomAccessFile"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Logger</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>运行若干分钟后的结果：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181128220327310-740487051.png" alt="" /></p>
+<p>下面是官方的example，将反驳上面注释里的一些自以为是的观点。。</p>
+<p>/</p>
+<p>示例之二，提速版官方xml（DefaultRolloverStrategy&nbsp;）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 将在同一天创建最多7个归档(1-7号)，这些归档存储在基于
+当前年和月的目录文件中，并用gzip压缩每个归档，我把所有时间
+相关的变小两个单位修改成：每分钟最多7个归档，并存在基于
+日和小时的目录文件中,并用gzip压缩每个归档 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Configuration </span><span style="color: #ff0000;">status</span><span style="color: #0000ff;">="warn"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="MyApp"</span><span style="color: #ff0000;"> packages</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 形如$${date:yyyy-MM}参考https://logging.apache.org/log4j/2.x/manual/lookups.html#DateLookup</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">RollingFile </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="RollingFile"</span><span style="color: #ff0000;"> fileName</span><span style="color: #0000ff;">="logs/app.log"</span><span style="color: #ff0000;">
+                     filePattern</span><span style="color: #0000ff;">="logs/$${date:dd-HH}/app-%d{HH-mm-dd}-%i.log.gz"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 原来的值logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz </span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>%d %p %c{1.} [%t] %m%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">TimeBasedTriggeringPolicy </span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 所以时间%d和整数%i同时用的意义就在于，当单个日志文件到达最大size
+                的时候创建一个新的文件 </span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">SizeBasedTriggeringPolicy </span><span style="color: #ff0000;">size</span><span style="color: #0000ff;">="1 KB"</span><span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">RollingFile</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">AppenderRef </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="RollingFile"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Root</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>运行若干分钟后的结果：</p>
+<p>&nbsp;<img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181128223507820-285723085.png" alt="" width="319" height="380" /></p>
+<p>/</p>
+<p>示例之三，提速版本官方xml（DirectWrite Rollover Strategy，好像和默认的也没多大差别。。）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Configuration </span><span style="color: #ff0000;">status</span><span style="color: #0000ff;">="warn"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="MyApp"</span><span style="color: #ff0000;"> packages</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">RollingFile </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="RollingFile"</span><span style="color: #ff0000;"> filePattern</span><span style="color: #0000ff;">="logs/app-%d{yyyy-MM-dd-mm}-%i.log.gz"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>%d %p %c{1.} [%t] %m%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Pattern</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">PatternLayout</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">SizeBasedTriggeringPolicy </span><span style="color: #ff0000;">size</span><span style="color: #0000ff;">="2 KB"</span><span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Policies</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 直接往filePattern所指定的文件写，没有rename这个环节</span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">DirectWriteRolloverStrategy </span><span style="color: #ff0000;">maxFiles</span><span style="color: #0000ff;">="10"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">RollingFile</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Appenders</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">AppenderRef </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="RollingFile"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Root</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Loggers</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>运行若干分钟的结果：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181128225529393-914254252.png" alt="" width="296" height="236" /></p>
+<p>&nbsp;</p>

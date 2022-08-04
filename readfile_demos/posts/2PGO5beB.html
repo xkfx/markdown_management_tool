@@ -1,0 +1,158 @@
+<p><span style="color: #ff00ff;">【构造函数】</span></p>
+<p>1、构造器就是创建对象时被调用的代码。</p>
+<p>2、如果没有自定义构造器，那么编译器将自动合成一个默认的无参构造器。</p>
+<p>3、自定义的构造器不允许加const，所创建const的对象只有在构造器代码执行完后，才被赋予const性质。</p>
+<p>4、如果自定义了构造器，那么默认的构造器将无效化，可以理解为自定义内容覆盖了默认的内容。&mdash;&mdash; &ldquo;要么什么都不做，要么全部都交给你来做。&rdquo;</p>
+<p>5、构造函数使用类内初始值并不是一个坏选择。</p>
+<p>6、default。（在练习中体现）</p>
+<p>7、构造函数初始值列表。（在练习中体现）</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">7.11</span></p>
+<p>ps：定义在类内的函数默认为内联的！类外的不是。（内联函数可以提高性能，那么，为什么不把所有函数都定义成内联函数呢？<a href="http://blog.csdn.net/andrew_yau/article/details/7687356" target="_blank">内联函数的优缺点</a>）</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data.h</span>
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 新增的构造函数</span>
+    Sales_data() = <span style="color: #0000ff;">default</span>; <span style="color: #008000; background-color: #ff0000;">//</span><span style="color: #008000;"><span style="background-color: #ff0000;"> 完</span>全等同于合成默认构造器，不写就没有！！！</span>
+    Sales_data(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;s): bookNo(s) {} <span style="color: #008000; background-color: #ff0000;">//</span><span style="color: #008000;"><span style="background-color: #ff0000;"> &ldquo;:&rdquo;</span>到&ldquo;}&rdquo;之间为构造函数初始值列表</span>
+    Sales_data(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;s, unsigned n, <span style="color: #0000ff;">double</span> p): bookNo(s), units_sold(n), revenue(p*<span style="color: #000000;">n) {}
+    Sales_data(istream</span>&amp;<span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> public部分，对象看起来是怎么样的。</span>
+    std::<span style="color: #0000ff;">string</span> isbn() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span> bookNo; } <span style="color: #008000;">//</span><span style="color: #008000;"> inline function</span>
+    Sales_data&amp; combine(<span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">double</span> avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> private部分，数据成员。</span>
+    std::<span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data的非成员接口函数</span>
+Sales_data add(<span style="color: #0000ff;">const</span> Sales_data&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::ostream </span>&amp;print(std::ostream&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::istream </span>&amp;read(std::istream&amp;, Sales_data&amp;<span style="color: #000000;">);
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data.cpp</span>
+Sales_data&amp; Sales_data::combine(<span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">rhs)
+{
+    units_sold </span>+=<span style="color: #000000;"> rhs.units_sold;
+    revenue </span>+=<span style="color: #000000;"> rhs.revenue;
+    </span><span style="color: #0000ff;">return</span> *<span style="color: #0000ff;">this</span><span style="color: #000000;">;
+}
+istream </span>&amp;read(istream &amp;<span style="color: #0000ff;">is</span>, Sales_data &amp;<span style="color: #000000;">item)
+{
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">is</span> &gt;&gt; item.bookNo &gt;&gt; item.units_sold &gt;&gt;<span style="color: #000000;"> price;
+    item.revenue </span>= price *<span style="color: #000000;"> item.units_sold;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">is</span><span style="color: #000000;">;
+}
+ostream </span>&amp;print(ostream &amp;os, <span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">item)
+{
+    os </span>&lt;&lt; item.isbn() &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; item.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; item.revenue &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> item.avg_price();
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> os;
+}
+</span><span style="color: #0000ff;">double</span> Sales_data::avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (units_sold)
+        </span><span style="color: #0000ff;">return</span> revenue/<span style="color: #000000;">units_sold;
+    </span><span style="color: #0000ff;">else</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+Sales_data add(</span><span style="color: #0000ff;">const</span> Sales_data &amp;lhs, <span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">rhs)
+{
+    Sales_data sum </span>=<span style="color: #000000;"> lhs;
+    sum.combine(rhs);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+}
+Sales_data::Sales_data(istream </span>&amp;<span style="color: #0000ff;">is</span><span style="color: #000000;">)
+{
+    read(</span><span style="color: #0000ff;">is</span>, *<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> main.cpp</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data data1; </span><span style="color: #008000;">//</span><span style="color: #008000;"> default</span>
+    Sales_data data2(<span style="color: #800000;">"</span><span style="color: #800000;">ISOD233</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Sales_data data3(</span><span style="color: #800000;">"</span><span style="color: #800000;">ISOD233</span><span style="color: #800000;">"</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">22.5</span><span style="color: #000000;">);
+    Sales_data data4(cin);
+    
+    print(cout, data1) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    print(cout, data2) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    print(cout, data3) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    print(cout, data4) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+     0 0 0
+    ISOD233 0 0 0
+    ISOD233 3 67.5 22.5
+    DASD23 4 88 22
+    </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.12</span></p>
+<p>就知道这题有坑。</p>
+<div class="cnblogs_code">
+<pre>prog1.cpp: In constructor <span style="color: #800000;">'</span><span style="color: #800000;">Sales_data::Sales_data(std::istream&amp;)</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+prog1.cpp:</span><span style="color: #800080;">13</span>:<span style="color: #800080;">17</span>: error: <span style="color: #800000;">'</span><span style="color: #800000;">read</span><span style="color: #800000;">'</span> was not declared <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">this</span><span style="color: #000000;"> scope
+   read(</span><span style="color: #0000ff;">is</span>, *<span style="color: #0000ff;">this</span>);</pre>
+</div>
+<p>翻了一下收藏的博客，发现这道题要用友元函数（下一小节）。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.13</span></p>
+<p>参考（不会写）。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Sales_data total(cin);
+    </span><span style="color: #0000ff;">if</span> (total.units_sold &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        Sales_data trans;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (read(cin, trans)) {
+            </span><span style="color: #0000ff;">if</span> (total.isbn() ==<span style="color: #000000;"> trans.isbn())
+                total.combine(trans);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                print(cout, total) </span>&lt;&lt;<span style="color: #000000;"> endl;
+                total </span>=<span style="color: #000000;"> trans;
+            }
+        }
+        print(cout, total) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?!</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl; 
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.14</span></p>
+<p>是这样吗？</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">    Sales_data()
+    {
+        units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        revenue </span>= <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.15</span></p>
+<p>测试无误。</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #008000;">//</span><span style="color: #008000;"> constructor</span>
+    Person() = <span style="color: #0000ff;">default</span><span style="color: #000000;">;
+    Person(</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">name): name(name) {}
+    Person(</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;name, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">address): name(name), address(address) {}
+    Person(istream</span>&amp;);</pre>
+</div>
+<div class="cnblogs_code">
+<pre>Person::Person(istream &amp;<span style="color: #0000ff;">is</span><span style="color: #000000;">)
+{
+    read(</span><span style="color: #0000ff;">is</span>, *<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【拷贝、赋值和析构】</span></p>
+<p>如果我们不主动定义这些操作，那么编译器将会替我们合成它们。</p>
+<p>默认的析构函数将会在语句块结束时被调用，销毁局部变量。</p>
+<p>某些类（管理动态内存的类）不能依赖于合成的版本，因此有时候不得不定义这些函数。</p>
+<p>&nbsp;</p>

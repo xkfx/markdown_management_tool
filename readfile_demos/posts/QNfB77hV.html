@@ -1,0 +1,25 @@
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> trans{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            File inFile </span>= <span style="color: #0000ff;">new</span> File("D:/****/src.txt"<span style="color: #000000;">);
+            File outFile </span>= <span style="color: #0000ff;">new</span> File("D:/****/target.txt"<span style="color: #000000;">);
+            
+            FileReader fr </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileReader(inFile);
+            BufferedReader br </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BufferedReader(fr);
+            
+            FileWriter fw </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileWriter(outFile);
+            PrintWriter pw </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PrintWriter(fw);
+            
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(br.ready()){
+                pw.println(</span>"\"" + br.readLine() + "\","<span style="color: #000000;">);
+            }
+            
+            pw.close();
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,133 @@
+<p>来自 stackoverflow 的内容居多。</p>
+<p><a href="#a1">1- MySQL VARCHAR size?&nbsp;</a></p>
+<p><a href="#a2">2- 数据库设计范式</a></p>
+<p><a href="#a3">3- What is&nbsp;<code>InnoDB</code>&nbsp;and&nbsp;<code>MyISAM</code>&nbsp;in&nbsp;<code>MySQL</code>&nbsp;?</a></p>
+<p><a href="#a4">4- <strong>为什么手写</strong>DDL？</a></p>
+<p><a href="#a5">5-&nbsp;Data access object (DAO) in Java</a></p>
+<p>&nbsp;</p>
+<h3><a name="a1"></a>MySQL VARCHAR size?&nbsp;</h3>
+<p>Q:</p>
+<p>I'm wondering, if I have a VARCHAR of 200 characters and that I put a string of 100 characters, will it use 200 bytes or it will just use the actual size of the string?</p>
+<p>A:</p>
+<p>100 characters.</p>
+<p>This is the&nbsp;<em>var</em>&nbsp;(variable) in&nbsp;<code>varchar</code>: you only store what you enter (and an extra 2 bytes to store length upto 65535)</p>
+<p>If it was&nbsp;<code>char(200)</code>&nbsp;then you'd always store 200 characters, padded with 100 spaces</p>
+<p>See the docs:&nbsp;<a href="http://dev.mysql.com/doc/refman/5.0/en/char.html">"The CHAR and VARCHAR Types"</a>&nbsp; <span style="color: #ff00ff;">------- by&nbsp;<a href="https://stackoverflow.com/users/27535/gbn"><span style="color: #ff00ff;">gbn</span></a></span></p>
+<p>补充:</p>
+<div class="lemma-summary">
+<p class="para">VARCHAR(M)是一种比CHAR更加灵活的数据类型，同样用于表示<a href="https://baike.baidu.com/item/%E5%AD%97%E7%AC%A6" target="_blank">字符</a>数据，但是VARCHAR可以保存可变长度的字符串。其中M代表该数据类型所允许保存的字符串的最大长度，只要长度小于该最大值的字符串都可以被保存在该数据类型中。因此，对于那些难以估计确切长度的<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1" target="_blank">数据对象</a>来说，使用VARCHAR数据类型更加明智。MySQL4.1以前,VARCHAR数据类型所支持的最大长度255,5.0以上版本支持65535字节长度,utf8编码下最多支持21843个字符(不为空) &nbsp;<span style="color: #ff00ff;">------ 来自百度百科</span></p>
+<p class="para">&nbsp;</p>
+<h3 class="para"><a name="a2"></a>数据库设计范式</h3>
+<p>如何能设计出优秀的数据库呢？专家们经过多年研究终于&middot;&middot;&middot;&middot;&middot; &nbsp;一般按照范式来进行数据库设计就得到良好的数据库，范式的目的在于：消除数据冗余和编程便利。</p>
+<p>第一范式就是得到纯二维表，<span style="color: #888888;"> // 只有纯二维的表才能装进数据库</span></p>
+<p>第二范式是消除非主键依赖关系，<span style="color: #888888;"> // &ldquo;有些列并不直接依赖于主键&rdquo;，就是说和主键没关系的东西应该扔到另外一张表中去。</span></p>
+<p>第三范式是消除函数依赖关系。<span style="color: #888888;">// 能算出来的就别额外拿一列装了。。。</span></p>
+<p>做范式的主要手段是&ldquo;拆表&rdquo;，但是要它有副作用，&middot;&middot;&middot;&middot;&middot;&middot;，所以要在数据冗余和编码容易之间寻找平衡点，到了第三范式，基本上就是平衡点了。 &nbsp;<span style="color: #ff00ff;">------ 《 Java 就该这样学》</span></p>
+<p>&nbsp;</p>
+<h3><span style="color: #000000;"><a name="a3"></a>What is&nbsp;<code>InnoDB</code>&nbsp;and&nbsp;<code>MyISAM</code>&nbsp;in&nbsp;<code>MySQL</code>&nbsp;?</span></h3>
+<p><code>InnoDB</code>&nbsp;and&nbsp;<code>MYISAM</code>, are storage engines for&nbsp;<code>MySQL</code>.</p>
+<p>These two differ on their locking implementation:&nbsp;<code>InnoDB</code>&nbsp;locks the particular row in the table, and&nbsp;<code>MyISAM</code>&nbsp;locks the entire&nbsp;<code>MySQL</code>&nbsp;table.</p>
+<p>You can specify the type by giving&nbsp;<code>MYISAM</code>&nbsp;OR&nbsp;<code>InnoDB</code>&nbsp;while creating a table in DB. &nbsp; <span style="color: #ff00ff;">&nbsp;------ by&nbsp;<a href="https://stackoverflow.com/users/619363/siva"><span style="color: #ff00ff;">Siva</span></a></span></p>
+<p>&nbsp;</p>
+<h3><strong><a name="a4"></a>为什么手写 DDL （</strong><strong>Data Definition Language</strong><strong>）？</strong></h3>
+<p><strong>schema.sql（</strong>demo<strong>）</strong>:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> 数据库初始化脚本</span>
+
+<span style="color: #008080;">--</span><span style="color: #008080;"> 创建数据库</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">DATABASE</span><span style="color: #000000;"> chat;
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 使用数据库</span>
+<span style="color: #0000ff;">use</span><span style="color: #000000;"> chat;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 创建表</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span> <span style="color: #ff00ff;">user</span><span style="color: #000000;">(
+  </span><span style="color: #ff00ff;">user_id</span> <span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> AUTO_INCREMENT COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">用户id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  username </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">用户名（邮箱）</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  password </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">密码</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  nickname </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">昵称</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  other </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">120</span>) COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">其他</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span> (<span style="color: #ff00ff;">user_id</span><span style="color: #000000;">)
+)ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8 COMMENT<span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">用户基本信息</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> friend_relation(
+  </span><span style="color: #ff00ff;">user_id</span> <span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">用户id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  friend_id </span><span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">好友id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+)ENGINE</span><span style="color: #808080;">=</span>InnoDB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8 COMMENT<span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">好友关系表</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> group_relation(
+  </span><span style="color: #ff00ff;">user_id</span> <span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">用户id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,,
+  group_id </span><span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">群组id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+)ENGINE</span><span style="color: #808080;">=</span>InnoDB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8 COMMENT<span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">群组关系表</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 初始化数据</span>
+<span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span>
+  <span style="color: #ff0000;">'</span><span style="color: #ff0000;">user</span><span style="color: #ff0000;">'</span>(<span style="color: #ff0000;">'</span><span style="color: #ff0000;">username</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">password</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">nickname</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">other</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+  (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">11122@gmail.com</span><span style="color: #ff0000;">'</span>, <span style="color: #800000; font-weight: bold;">123456</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">老大</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">这人很懒，啥也没写</span><span style="color: #ff0000;">'</span><span style="color: #000000;">),
+  (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">jhgm49@163.com</span><span style="color: #ff0000;">'</span>, <span style="color: #800000; font-weight: bold;">123456</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">老二</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">平平淡淡才是真</span><span style="color: #ff0000;">'</span><span style="color: #000000;">);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> INSERT INTO</span><span style="color: #008080;">
+--</span><span style="color: #008080;">   'friend_relation'('user_id', 'friend_id')</span><span style="color: #008080;">
+--</span><span style="color: #008080;"> VALUES</span>
+
+
+<span style="background-color: #ffff99; color: #ff0000;"><strong>-- 为什么手写 DDL ( Data Definition Language )
+-- 记录每次上线的 DDL 修改
+-- 上线 V 1.1
+-- xxx
+-- 上线 V 1.2
+-- xxx x x</strong></span></pre>
+</div>
+<p>MySQL 如果表存在就删掉：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TABLE</span> <span style="color: #0000ff;">IF</span> <span style="color: #0000ff;">EXISTS</span></strong> tbl_name;</pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="a5"></a>Data access object (DAO) in Java</h3>
+<p>Q:</p>
+<p>I was going through a document and I came across a term called&nbsp;<code>DAO</code>. I found out that it is a Data Access Object. Can someone please explain me what this actually is?</p>
+<p>I know that it is some kind of an interface for accessing data from different types of sources, in the middle of this little research of mine I bumped into a concept called data source or data source object, and things got messed up in my mind.</p>
+<p>I really want to know what a&nbsp;<code>DAO</code>&nbsp;is programmatically in terms of where it is used. How it is used? Any links to pages that explain this concept from the very basic stuff is also appreciated. <span style="color: #ff00ff;">&nbsp;------ by&nbsp;<a href="https://stackoverflow.com/users/2781031/vasanth-nag-k-v"><span style="color: #ff00ff;">Vasanth Nag K V</span></a></span></p>
+<p>A:</p>
+<p>The Data Access Object is basically an object or an interface that provides access to an underlying database or any other persistence storage.</p>
+<p>That definition from:&nbsp;<a href="http://en.wikipedia.org/wiki/Data_access_object">http://en.wikipedia.org/wiki/Data_access_object</a></p>
+<p>Check also the sequence diagram here:&nbsp;<a href="http://www.oracle.com/technetwork/java/dataaccessobject-138824.html">http://www.oracle.com/technetwork/java/dataaccessobject-138824.html</a></p>
+<p>Maybe a simple example can help you understand the concept:</p>
+<p>Let's say we have an entity to represent an employee:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Employee {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getId() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> id;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setId(<span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {
+        </span><span style="color: #0000ff;">this</span>.id =<span style="color: #000000;"> id;
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setName(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+
+}</span></pre>
+</div>
+<p>The employee entities will be persisted into a corresponding&nbsp;<strong><code>Employee</code></strong>&nbsp;table in a database. A simple DAO interface to handle the database operation required to manipulate an employee entity will be like:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">interface</span><span style="color: #000000;"> EmployeeDAO {
+
+    List</span>&lt;Employee&gt;<span style="color: #000000;"> findAll();
+    List</span>&lt;Employee&gt;<span style="color: #000000;"> findById();
+    List</span>&lt;Employee&gt;<span style="color: #000000;"> findByName();
+    </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> insertEmployee(Employee employee);
+    </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> updateEmployee(Employee employee);
+    </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> deleteEmployee(Employee employee);
+
+}</span></pre>
+</div>
+<p>Next we have to provide a concrete implementation for that interface to deal with SQL server, and another to deal with flat files, etc. <span style="color: #ff00ff;">&nbsp;------ by&nbsp;<a href="https://stackoverflow.com/users/531310/rami"><span style="color: #ff00ff;">Rami</span></a></span></p>
+</div>

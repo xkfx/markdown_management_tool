@@ -1,0 +1,691 @@
+<p>转自<a href="http://media.techtarget.com/searchDomino/downloads/29713C06.pdf" target="_blank"> Crawling the Web with Java By James Holmes</a></p>
+<p>无需任何扩展包，可直接运行。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.event.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.net.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.util.regex.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.swing.table.*<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> The Search Web Crawler</span>
+
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> SearchCrawler <span style="color: #0000ff;">extends</span><span style="color: #000000;"> JFrame
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Max URLs drop-down values.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String[] MAX_URLS =<span style="color: #000000;">
+            {</span>"50", "100", "500", "1000"<span style="color: #000000;">};
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Cache of robot disallow lists.</span>
+    <span style="color: #0000ff;">private</span> HashMap disallowListCache = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HashMap();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Search GUI controls.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> JTextField startTextField;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JComboBox maxComboBox;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JCheckBox limitCheckBox;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JTextField logTextField;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JTextField searchTextField;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JCheckBox caseCheckBox;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JButton searchButton;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Search stats GUI controls.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> JLabel crawlingLabel2;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JLabel crawledLabel2;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JLabel toCrawlLabel2;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JProgressBar progressBar;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JLabel matchesLabel2;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Table listing search matches.</span>
+    <span style="color: #0000ff;">private</span> JTable table;<span style="color: #008000;">//</span><span style="color: #008000;"> Flag for whether or not crawling is underway.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> crawling;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Matches log file print writer.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> PrintWriter logFileWriter;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Constructor for Search Web Crawler.</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> SearchCrawler()
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set application title.</span>
+        setTitle("Search Crawler"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set window size.</span>
+        setSize(600, 600<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Handle window closing events.</span>
+        addWindowListener(<span style="color: #0000ff;">new</span><span style="color: #000000;"> WindowAdapter() {
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> windowClosing(WindowEvent e) {
+                actionExit();
+            }
+        });
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set up File menu.</span>
+        JMenuBar menuBar = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JMenuBar();
+        JMenu fileMenu </span>= <span style="color: #0000ff;">new</span> JMenu("File"<span style="color: #000000;">);
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        JMenuItem fileExitMenuItem </span>= <span style="color: #0000ff;">new</span> JMenuItem("Exit"<span style="color: #000000;">,
+                KeyEvent.VK_X);
+        fileExitMenuItem.addActionListener(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ActionListener() {
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent e) {
+                actionExit();
+            }
+        });
+        fileMenu.add(fileExitMenuItem);
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set up search panel.</span>
+        JPanel searchPanel = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        GridBagConstraints constraints;
+        GridBagLayout layout </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagLayout();
+        searchPanel.setLayout(layout);
+        JLabel startLabel </span>= <span style="color: #0000ff;">new</span> JLabel("Start URL:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(startLabel, constraints);
+        searchPanel.add(startLabel);
+        startTextField </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        layout.setConstraints(startTextField, constraints);
+        searchPanel.add(startTextField);
+        JLabel maxLabel </span>= <span style="color: #0000ff;">new</span> JLabel("Max URLs to Crawl:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(maxLabel, constraints);
+        searchPanel.add(maxLabel);
+        maxComboBox </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JComboBox(MAX_URLS);
+        maxComboBox.setEditable(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(maxComboBox, constraints);
+        searchPanel.add(maxComboBox);
+        limitCheckBox </span>=
+                <span style="color: #0000ff;">new</span> JCheckBox("Limit crawling to Start URL site"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.WEST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(0, 10, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(limitCheckBox, constraints);
+        searchPanel.add(limitCheckBox);
+        JLabel blankLabel </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JLabel();
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        layout.setConstraints(blankLabel, constraints);
+        searchPanel.add(blankLabel);
+        JLabel logLabel </span>= <span style="color: #0000ff;">new</span> JLabel("Matches Log File:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(logLabel, constraints);
+        searchPanel.add(logLabel);
+        String file </span>=<span style="color: #000000;">
+                System.getProperty(</span>"user.dir") +<span style="color: #000000;">
+                        System.getProperty(</span>"file.separator") +
+                        "crawler.log"<span style="color: #000000;">;
+        logTextField </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField(file);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        layout.setConstraints(logTextField, constraints);
+        searchPanel.add(logTextField);
+        JLabel searchLabel </span>= <span style="color: #0000ff;">new</span> JLabel("Search String:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(searchLabel, constraints);
+        searchPanel.add(searchLabel);
+        searchTextField </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        constraints.gridwidth</span>= 2<span style="color: #000000;">;
+        constraints.weightx </span>= 1.0d<span style="color: #000000;">;
+        layout.setConstraints(searchTextField, constraints);
+        searchPanel.add(searchTextField);
+        caseCheckBox </span>= <span style="color: #0000ff;">new</span> JCheckBox("Case Sensitive"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        layout.setConstraints(caseCheckBox, constraints);
+        searchPanel.add(caseCheckBox);
+        searchButton </span>= <span style="color: #0000ff;">new</span> JButton("Search"<span style="color: #000000;">);
+        searchButton.addActionListener(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ActionListener() {
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent e) {
+                actionSearch();
+            }
+        });
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 5, 5<span style="color: #000000;">);
+        layout.setConstraints(searchButton, constraints);
+        searchPanel.add(searchButton);
+        JSeparator separator </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JSeparator();
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 5, 5<span style="color: #000000;">);
+        layout.setConstraints(separator, constraints);
+        searchPanel.add(separator);
+        JLabel crawlingLabel1 </span>= <span style="color: #0000ff;">new</span> JLabel("Crawling:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(crawlingLabel1, constraints);
+        searchPanel.add(crawlingLabel1);
+        crawlingLabel2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JLabel();
+        crawlingLabel2.setFont(
+                crawlingLabel2.getFont().deriveFont(Font.PLAIN));
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        layout.setConstraints(crawlingLabel2, constraints);
+        searchPanel.add(crawlingLabel2);
+        JLabel crawledLabel1 </span>= <span style="color: #0000ff;">new</span> JLabel("Crawled URLs:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(crawledLabel1, constraints);
+        searchPanel.add(crawledLabel1);
+        crawledLabel2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JLabel();
+        crawledLabel2.setFont(
+                crawledLabel2.getFont().deriveFont(Font.PLAIN));
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        layout.setConstraints(crawledLabel2, constraints);
+        searchPanel.add(crawledLabel2);
+        JLabel toCrawlLabel1 </span>= <span style="color: #0000ff;">new</span> JLabel("URLs to Crawl:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(toCrawlLabel1, constraints);
+        searchPanel.add(toCrawlLabel1);
+        toCrawlLabel2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JLabel();
+        toCrawlLabel2.setFont(
+                toCrawlLabel2.getFont().deriveFont(Font.PLAIN));
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        layout.setConstraints(toCrawlLabel2, constraints);
+        searchPanel.add(toCrawlLabel2);
+        JLabel progressLabel </span>= <span style="color: #0000ff;">new</span> JLabel("Crawling Progress:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 0<span style="color: #000000;">);
+        layout.setConstraints(progressLabel, constraints);
+        searchPanel.add(progressLabel);
+        progressBar </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JProgressBar();
+        progressBar.setMinimum(</span>0<span style="color: #000000;">);
+        progressBar.setStringPainted(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 0, 5<span style="color: #000000;">);
+        layout.setConstraints(progressBar, constraints);
+        searchPanel.add(progressBar);
+        JLabel matchesLabel1 </span>= <span style="color: #0000ff;">new</span> JLabel("Search Matches:"<span style="color: #000000;">);
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.anchor </span>=<span style="color: #000000;"> GridBagConstraints.EAST;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 10, 0<span style="color: #000000;">);
+        layout.setConstraints(matchesLabel1, constraints);
+        searchPanel.add(matchesLabel1);matchesLabel2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JLabel();
+        matchesLabel2.setFont(
+                matchesLabel2.getFont().deriveFont(Font.PLAIN));
+        constraints </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> GridBagConstraints();
+        constraints.fill </span>=<span style="color: #000000;"> GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth </span>=<span style="color: #000000;"> GridBagConstraints.REMAINDER;
+        constraints.insets </span>= <span style="color: #0000ff;">new</span> Insets(5, 5, 10, 5<span style="color: #000000;">);
+        layout.setConstraints(matchesLabel2, constraints);
+        searchPanel.add(matchesLabel2);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set up matches table.</span>
+        table =
+                <span style="color: #0000ff;">new</span> JTable(<span style="color: #0000ff;">new</span> DefaultTableModel(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[][]{},
+                        </span><span style="color: #0000ff;">new</span> String[]{"URL"<span style="color: #000000;">}) {
+                    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span> isCellEditable(<span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span><span style="color: #000000;"> column)
+                    {
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    }
+                });
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set up Matches panel.</span>
+        JPanel matchesPanel = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        matchesPanel.setBorder(
+                BorderFactory.createTitledBorder(</span>"Matches"<span style="color: #000000;">));
+        matchesPanel.setLayout(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+        matchesPanel.add(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> JScrollPane(table),
+                BorderLayout.CENTER);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add panels to display.</span>
+        getContentPane().setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+        getContentPane().add(searchPanel, BorderLayout.NORTH);
+        getContentPane().add(matchesPanel, BorderLayout.CENTER);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Exit this program.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionExit() {
+        System.exit(</span>0<span style="color: #000000;">);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Handle Search/Stop button being clicked.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionSearch() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> If stop button clicked, turn crawling flag off.</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (crawling) {
+            crawling </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        ArrayList errorList </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Validate that start URL has been entered.</span>
+        String startUrl =<span style="color: #000000;"> startTextField.getText().trim();
+        </span><span style="color: #0000ff;">if</span> (startUrl.length() &lt; 1<span style="color: #000000;">) {
+            errorList.add(</span>"Missing Start URL."<span style="color: #000000;">);
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Verify start URL.</span>
+        <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (verifyUrl(startUrl) == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            errorList.add(</span>"Invalid Start URL."<span style="color: #000000;">);
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Validate that Max URLs is either empty or is a number.</span>
+        <span style="color: #0000ff;">int</span> maxUrls = 0<span style="color: #000000;">;
+        String max </span>=<span style="color: #000000;"> ((String) maxComboBox.getSelectedItem()).trim();
+        </span><span style="color: #0000ff;">if</span> (max.length() &gt; 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                maxUrls </span>=<span style="color: #000000;"> Integer.parseInt(max);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (NumberFormatException e) {
+            }
+            </span><span style="color: #0000ff;">if</span> (maxUrls &lt; 1<span style="color: #000000;">) {
+                errorList.add(</span>"Invalid Max URLs value."<span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Validate that matches log file has been entered.</span>
+        String logFile =<span style="color: #000000;"> logTextField.getText().trim();
+        </span><span style="color: #0000ff;">if</span> (logFile.length() &lt; 1<span style="color: #000000;">) {
+            errorList.add(</span>"Missing Matches Log File."<span style="color: #000000;">);
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Validate that search string has been entered.</span>
+        String searchString =<span style="color: #000000;"> searchTextField.getText().trim();
+        </span><span style="color: #0000ff;">if</span> (searchString.length() &lt; 1<span style="color: #000000;">) {
+            errorList.add(</span>"Missing Search String."<span style="color: #000000;">);
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Show errors, if any, and return.</span>
+        <span style="color: #0000ff;">if</span> (errorList.size() &gt; 0<span style="color: #000000;">) {
+            StringBuffer message </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuffer();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Concatenate errors into single message.</span>
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; errorList.size(); i++<span style="color: #000000;">) {
+            message.append(errorList.get(i));
+                </span><span style="color: #0000ff;">if</span> (i + 1 &lt;<span style="color: #000000;"> errorList.size()) {
+                    message.append(</span>"\n"<span style="color: #000000;">);
+                }
+            }
+            showError(message.toString());
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Remove "www" from start URL if present.</span>
+        startUrl =<span style="color: #000000;"> removeWwwFromUrl(startUrl);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Start the Search Crawler.</span>
+<span style="color: #000000;">        search(logFile, startUrl, maxUrls, searchString);
+    }
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> search(<span style="color: #0000ff;">final</span> String logFile, <span style="color: #0000ff;">final</span><span style="color: #000000;"> String startUrl,
+                        </span><span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> maxUrls, <span style="color: #0000ff;">final</span><span style="color: #000000;"> String searchString)
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Start the search in a new thread.</span>
+        Thread thread = <span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Show hour glass cursor while crawling is under way.</span>
+<span style="color: #000000;">                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Disable search controls.</span>
+                startTextField.setEnabled(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                maxComboBox.setEnabled(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                limitCheckBox.setEnabled(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                logTextField.setEnabled(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                searchTextField.setEnabled(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                caseCheckBox.setEnabled(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Switch Search button to "Stop."</span>
+                searchButton.setText("Stop"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Reset stats.</span>
+                table.setModel(<span style="color: #0000ff;">new</span> DefaultTableModel(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[][]{},
+                        </span><span style="color: #0000ff;">new</span> String[]{"URL"<span style="color: #000000;">}) {
+                    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span> isCellEditable(<span style="color: #0000ff;">int</span> row, <span style="color: #0000ff;">int</span><span style="color: #000000;"> column)
+                    {
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    }
+                });
+             updateStats(startUrl, </span>0, 0<span style="color: #000000;">, maxUrls);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open matches log file.</span>
+                <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    logFileWriter </span>= <span style="color: #0000ff;">new</span> PrintWriter(<span style="color: #0000ff;">new</span><span style="color: #000000;"> FileWriter(logFile));
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+                    showError(</span>"Unable to open matches log file."<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Turn crawling flag on.</span>
+                crawling = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Perform the actual crawling.</span>
+<span style="color: #000000;">                crawl(startUrl, maxUrls, limitCheckBox.isSelected(),
+                        searchString, caseCheckBox.isSelected());
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Turn crawling flag off.</span>
+                crawling = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Close matches log file.</span>
+                <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    logFileWriter.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+                    showError(</span>"Unable to close matches log file."<span style="color: #000000;">);
+                }
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Mark search as done.</span>
+                crawlingLabel2.setText("Done"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Enable search controls.</span>
+                startTextField.setEnabled(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                maxComboBox.setEnabled(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                limitCheckBox.setEnabled(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                logTextField.setEnabled(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                searchTextField.setEnabled(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                caseCheckBox.setEnabled(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Switch search button back to "Search."</span>
+                searchButton.setText("Search"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Return to default cursor.</span>
+<span style="color: #000000;">                setCursor(Cursor.getDefaultCursor());
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Show message if search string not found.</span>
+                <span style="color: #0000ff;">if</span> (table.getRowCount() == 0<span style="color: #000000;">) {
+                    JOptionPane.showMessageDialog(SearchCrawler.</span><span style="color: #0000ff;">this</span><span style="color: #000000;">,
+                            </span>"Your Search String was not found. Please try another."<span style="color: #000000;">,
+                            </span>"Search String Not Found"<span style="color: #000000;">,
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
+        thread.start();
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Show dialog box with error message.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> showError(String message) {
+        JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, message, "Error"<span style="color: #000000;">,
+                JOptionPane.ERROR_MESSAGE);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Update crawling stats.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> updateStats(
+            String crawling, </span><span style="color: #0000ff;">int</span> crawled, <span style="color: #0000ff;">int</span> toCrawl, <span style="color: #0000ff;">int</span><span style="color: #000000;"> maxUrls)
+    {
+        crawlingLabel2.setText(crawling);
+        crawledLabel2.setText(</span>"" +<span style="color: #000000;"> crawled);
+        toCrawlLabel2.setText(</span>"" +<span style="color: #000000;"> toCrawl);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Update progress bar.</span>
+        <span style="color: #0000ff;">if</span> (maxUrls == -1<span style="color: #000000;">) {
+            progressBar.setMaximum(crawled </span>+<span style="color: #000000;"> toCrawl);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            progressBar.setMaximum(maxUrls);
+        }
+        progressBar.setValue(crawled);
+        matchesLabel2.setText(</span>"" +<span style="color: #000000;"> table.getRowCount());
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add match to matches table and log file.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> addMatch(String url) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Add URL to matches table.</span>
+        DefaultTableModel model =<span style="color: #000000;">
+                (DefaultTableModel) table.getModel();
+        model.addRow(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Object[]{url});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Add URL to matches log file.</span>
+        <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+           logFileWriter.println(url);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            showError(</span>"Unable to log match."<span style="color: #000000;">);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Verify URL format.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> URL verifyUrl(String url) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Only allow HTTP URLs.</span>
+        <span style="color: #0000ff;">if</span> (!url.toLowerCase().startsWith("http://"<span style="color: #000000;">))
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Verify format of URL.</span>
+        URL verifiedUrl = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            verifiedUrl </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> URL(url);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> verifiedUrl;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Check if robot is allowed to access the given URL.</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isRobotAllowed(URL urlToCheck) {
+        String host </span>=<span style="color: #000000;"> urlToCheck.getHost().toLowerCase();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Retrieve host's disallow list from cache.</span>
+        ArrayList disallowList =<span style="color: #000000;">
+                (ArrayList) disallowListCache.get(host);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> If list is not in the cache, download and cache it.</span>
+        <span style="color: #0000ff;">if</span> (disallowList == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            disallowList </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList();
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                URL robotsFileUrl </span>=
+                        <span style="color: #0000ff;">new</span> URL("http://" + host + "/robots.txt"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open connection to robot file URL for reading.</span>
+                BufferedReader reader =
+                        <span style="color: #0000ff;">new</span> BufferedReader(<span style="color: #0000ff;">new</span><span style="color: #000000;"> InputStreamReader(
+                                robotsFileUrl.openStream()));
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Read robot file, creating list of disallowed paths.</span>
+<span style="color: #000000;">                String line;
+                </span><span style="color: #0000ff;">while</span> ((line = reader.readLine()) != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (line.indexOf("Disallow:") == 0<span style="color: #000000;">) {
+                        String disallowPath </span>=<span style="color: #000000;">
+                                line.substring(</span>"Disallow:"<span style="color: #000000;">.length());
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Check disallow path for comments and remove if present.</span>
+                        <span style="color: #0000ff;">int</span> commentIndex = disallowPath.indexOf("#"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">if</span> (commentIndex != - 1<span style="color: #000000;">) {
+                            disallowPath </span>=<span style="color: #000000;">
+                                    disallowPath.substring(</span>0<span style="color: #000000;">, commentIndex);
+                        }
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Remove leading or trailing spaces from disallow path.</span>
+                        disallowPath =<span style="color: #000000;"> disallowPath.trim();
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add disallow path to list.</span>
+<span style="color: #000000;">                        disallowList.add(disallowPath);
+                    }
+                }
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add new disallow list to cache.</span>
+<span style="color: #000000;">                disallowListCache.put(host, disallowList);
+            }
+            </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Assume robot is allowed since an exception
+            is thrown if the robot file doesn't exist. </span><span style="color: #008000;">*/</span>
+                <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Loop through disallow list to see if
+            crawling is allowed for the given URL. </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+        String file </span>=<span style="color: #000000;"> urlToCheck.getFile();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; disallowList.size(); i++<span style="color: #000000;">) {
+            String disallow </span>=<span style="color: #000000;"> (String) disallowList.get(i);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (file.startsWith(disallow)) {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Download page at given URL.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> String downloadPage(URL pageUrl) {
+    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open connection to URL for reading.</span>
+        BufferedReader reader =
+                <span style="color: #0000ff;">new</span> BufferedReader(<span style="color: #0000ff;">new</span><span style="color: #000000;"> InputStreamReader(
+                        pageUrl.openStream()));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Read page into buffer.</span>
+<span style="color: #000000;">        String line;
+        StringBuffer pageBuffer </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuffer();
+        </span><span style="color: #0000ff;">while</span> ((line = reader.readLine()) != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            pageBuffer.append(line);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> pageBuffer.toString();
+    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+}
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Remove leading "www" from a URL's host if present.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> String removeWwwFromUrl(String url) {
+        </span><span style="color: #0000ff;">int</span> index = url.indexOf("://www."<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (index != -1<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span> url.substring(0, index + 3) +<span style="color: #000000;">
+                    url.substring(index </span>+ 7<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (url);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Parse through page contents and retrieve links.</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> ArrayList retrieveLinks(
+            URL pageUrl, String pageContents, HashSet crawledList,
+            </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> limitHost)
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Compile link matching pattern.</span>
+        Pattern p =<span style="color: #000000;">
+                Pattern.compile(</span>"&lt;a\\s+href\\s*=\\s*\"?(.*?)[\"|&gt;]"<span style="color: #000000;">,
+                        Pattern.CASE_INSENSITIVE);
+        Matcher m </span>=<span style="color: #000000;"> p.matcher(pageContents);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create list of link matches.</span>
+        ArrayList linkList = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (m.find()) {
+        String link </span>= m.group(1<span style="color: #000000;">).trim();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Skip empty links.</span>
+        <span style="color: #0000ff;">if</span> (link.length() &lt; 1<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Skip links that are just page anchors.</span>
+        <span style="color: #0000ff;">if</span> (link.charAt(0) == '#'<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Skip mailto links.</span>
+        <span style="color: #0000ff;">if</span> (link.indexOf("mailto:") != -1<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Skip JavaScript links.</span>
+        <span style="color: #0000ff;">if</span> (link.toLowerCase().indexOf("javascript") != -1<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Prefix absolute and relative URLs if necessary.</span>
+        <span style="color: #0000ff;">if</span> (link.indexOf("://") == -1<span style="color: #000000;">) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Handle absolute URLs.</span>
+            <span style="color: #0000ff;">if</span> (link.charAt(0) == '/'<span style="color: #000000;">) {
+                link </span>= "http://" + pageUrl.getHost() +<span style="color: #000000;"> link;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Handle relative URLs.</span>
+            } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                String file </span>=<span style="color: #000000;"> pageUrl.getFile();
+                </span><span style="color: #0000ff;">if</span> (file.indexOf('/') == -1<span style="color: #000000;">) {
+                    link </span>= "http://" + pageUrl.getHost() + "/" +<span style="color: #000000;"> link;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    String path </span>=<span style="color: #000000;">
+                            file.substring(</span>0, file.lastIndexOf('/') + 1<span style="color: #000000;">);
+                    link </span>= "http://" + pageUrl.getHost() + path +<span style="color: #000000;"> link;
+                }
+            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Remove anchors from link.</span>
+        <span style="color: #0000ff;">int</span> index = link.indexOf('#'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (index != -1<span style="color: #000000;">) {
+            link </span>= link.substring(0<span style="color: #000000;">, index);
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Remove leading "www" from URL's host if present.</span>
+        link =<span style="color: #000000;"> removeWwwFromUrl(link);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Verify link and skip if invalid.</span>
+        URL verifiedLink =<span style="color: #000000;"> verifyUrl(link);
+        </span><span style="color: #0000ff;">if</span> (verifiedLink == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;"> If specified, limit links to those
+        having the same host as the start URL. </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">if</span> (limitHost &amp;&amp;
+                !<span style="color: #000000;">pageUrl.getHost().toLowerCase().equals(
+                        verifiedLink.getHost().toLowerCase()))
+        {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Skip link if it has already been crawled.</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (crawledList.contains(link)) {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add link to list.</span>
+<span style="color: #000000;">        linkList.add(link);
+    }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (linkList);
+    }
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Determine whether or not search string is
+    matched in the given page contents. </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> searchStringMatches(
+            String pageContents, String searchString,
+            </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> caseSensitive)
+    {
+        String searchContents </span>=<span style="color: #000000;"> pageContents;
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> If case-sensitive search, lowercase
+page contents for comparison. </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">caseSensitive) {
+            searchContents </span>=<span style="color: #000000;"> pageContents.toLowerCase();
+        }</span><span style="color: #008000;">//</span><span style="color: #008000;"> Split search string into individual terms.</span>
+        Pattern p = Pattern.compile("[\\s]+"<span style="color: #000000;">);
+        String[] terms </span>=<span style="color: #000000;"> p.split(searchString);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Check to see if each term matches.</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; terms.length; i++<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (caseSensitive) {
+                </span><span style="color: #0000ff;">if</span> (searchContents.indexOf(terms[i]) == -1<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (searchContents.indexOf(terms[i].toLowerCase()) == -1<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Perform the actual crawling, searching for the search string.</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> crawl(
+            String startUrl, </span><span style="color: #0000ff;">int</span> maxUrls, <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> limitHost,
+            String searchString, </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> caseSensitive)
+    {
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Set up crawl lists.</span>
+        HashSet crawledList = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HashSet();
+        LinkedHashSet toCrawlList </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> LinkedHashSet();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Add start URL to the to crawl list.</span>
+<span style="color: #000000;">        toCrawlList.add(startUrl);
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Perform actual crawling by looping
+        through the To Crawl list. </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">while</span> (crawling &amp;&amp; toCrawlList.size() &gt; 0<span style="color: #000000;">)
+        {
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Check to see if the max URL count has
+            been reached, if it was specified.</span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">if</span> (maxUrls != -1<span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (crawledList.size() ==<span style="color: #000000;"> maxUrls) {
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Get URL at bottom of the list.</span>
+            String url =<span style="color: #000000;"> (String) toCrawlList.iterator().next();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Remove URL from the To Crawl list.</span>
+<span style="color: #000000;">            toCrawlList.remove(url);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Convert string url to URL object.</span>
+            URL verifiedUrl =<span style="color: #000000;"> verifyUrl(url);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Skip URL if robots are not allowed to access it.</span>
+            <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isRobotAllowed(verifiedUrl)) {
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Update crawling stats.</span>
+<span style="color: #000000;">            updateStats(url, crawledList.size(), toCrawlList.size(),
+                    maxUrls);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add page to the crawled list.</span>
+<span style="color: #000000;">            crawledList.add(url);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Download the page at the given URL.</span>
+            String pageContents =<span style="color: #000000;"> downloadPage(verifiedUrl);
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> If the page was downloaded successfully, retrieve all its
+            links and then see if it contains the search string. </span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">if</span> (pageContents != <span style="color: #0000ff;">null</span> &amp;&amp; pageContents.length() &gt; 0<span style="color: #000000;">)
+            {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Retrieve list of valid links from page.</span>
+                ArrayList links =<span style="color: #000000;">
+                        retrieveLinks(verifiedUrl, pageContents, crawledList,
+                                limitHost);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add links to the To Crawl list.</span>
+<span style="color: #000000;">                toCrawlList.addAll(links);
+                </span><span style="color: #008000;">/*</span><span style="color: #008000;"> Check if search string is present in
+                page, and if so, record a match. </span><span style="color: #008000;">*/</span>
+                <span style="color: #0000ff;">if</span><span style="color: #000000;"> (searchStringMatches(pageContents, searchString,
+                        caseSensitive))
+                {
+                    addMatch(url);
+                }
+            }
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Update crawling stats.</span>
+<span style="color: #000000;">            updateStats(url, crawledList.size(), toCrawlList.size(),
+                maxUrls);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Run the Search Crawler.</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SearchCrawler crawler </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> SearchCrawler();
+        crawler.show();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

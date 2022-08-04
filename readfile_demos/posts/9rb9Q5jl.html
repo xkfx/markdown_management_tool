@@ -1,0 +1,30 @@
+<h2 class="docText">Globalization and Localization</h2>
+<p class="docText">When discussing multiple languages and characters sets, you will run into the following important terms:</p>
+<ul>
+<li>
+<p class="docList"><span class="docEmphStrong"><strong>Character sets</strong> are collections of letters and symbols.</span></p>
+</li>
+<li>
+<p class="docList"><span class="docEmphStrong" style="color: #ff6600;"><strong>Encodings</strong>&nbsp;are the internal representations of the members of a character set.</span></p>
+</li>
+<li>
+<p class="docList"><span class="docEmphStrong"><strong>Collations</strong> are the instructions that dictate how characters are to be compared.</span></p>
+</li>
+</ul>
+<p><span class="docEmphStrong">关于字符集和排序规则的几点注意事项：</span></p>
+<ul>
+<li>在常规操作，诸如 SELECT、INSERT 的时候，我们无须担心字符集的问题，因为字符集、排序顺序是在服务器、数据库、表的层次上被设置的。这些东西通常在你安装数据库的时候就已经配置好了。</li>
+<li>如果创建表的时候没有指明字符集，数据库将自动给你配置默认的字符集。</li>
+<li>甚至可以为指定的列专门设置字符集。</li>
+<li>在排序、GROUP BY、使用聚集函数等很多场景都可以指定特定的排序规则（COLLATE&nbsp;）</li>
+</ul>
+<p>&nbsp;几个顾名思义的操作：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> 显示当前的字符集和排序规则</span>
+SHOW VARIABLES <span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">character%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+SHOW VARIABLES </span><span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">collation%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 显示所有可用的字符集和排序规则</span>
+SHOW <span style="color: #0000ff;">CHARACTER</span> <span style="color: #0000ff;">SET</span><span style="color: #000000;">;
+SHOW COLLATION;</span></pre>
+</div>
+<p>&nbsp;</p>

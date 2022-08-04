@@ -1,0 +1,57 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 　　　　　　　　┏┓　　　┏┓
+ * 　　　　　　　┏┛┻━━━┛┻┓
+ * 　　　　　　　┃　　　　　　　┃ 　
+ * 　　　　　　　┃　　　━　　　┃
+ * 　　　　　　　┃　＞　　　＜　┃
+ * 　　　　　　　┃　　　　　　　┃
+ * 　　　　　　　┃...　⌒　...　┃
+ * 　　　　　　　┃　　　　　　　┃
+ * 　　　　　　　┗━┓　　　┏━┛
+ * 　　　　　　　　　┃　　　┃　Code is far away from bug with the animal protecting　　　　　　　　　　
+ * 　　　　　　　　　┃　　　┃ 神兽保佑,代码无bug
+ * 　　　　　　　　　┃　　　┃　　　　　　　　　　　
+ * 　　　　　　　　　┃　　　┃ 　　　　　　
+ * 　　　　　　　　　┃　　　┃
+ * 　　　　　　　　　┃　　　┃　　　　　　　　　　　
+ * 　　　　　　　　　┃　　　┗━━━┓
+ * 　　　　　　　　　┃　　　　　　　┣┓
+ * 　　　　　　　　　┃　　　　　　　┏┛
+ * 　　　　　　　　　┗┓┓┏━┳┓┏┛
+ * 　　　　　　　　　　┃┫┫　┃┫┫
+ * 　　　　　　　　　　┗┻┛　┗┻┛
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Person p1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Chinese();
+        Person p2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> American();
+        p1.say();
+        p2.say();
+    }
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> Output:
+你好
+Hello
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Person {
+    </span><span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> say();
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Chinese <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Person {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> say() {
+        System.out.println(</span>"你好"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> American <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Person {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> say() {
+        System.out.println(</span>"Hello"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;也可以实现一个Sayable接口。</p>

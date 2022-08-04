@@ -1,0 +1,54 @@
+<p>参考：imooc：http://www.imooc.com/video/7706</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170420200029149-905052282.png" alt="" width="475" height="247" /></p>
+<p>1、创建Hibernate的配置文件。</p>
+<p>将依赖包导入项目。http://blog.csdn.net/a153375250/article/details/50851049</p>
+<p class="post-title">IntelliJ IDEA配置 Hibernate：https://smiletm.github.io/2016/12/03/IntelliJ-Hibernate/</p>
+<p>Add Framework Support配置Hibernate Support:https://www.jetbrains.com/help/idea/2017.1/enabling-hibernate-support.html</p>
+<p>可能以后要参考的：http://www.cnblogs.com/flowwind/p/4751984.html</p>
+<p><span style="color: #ff0000;">IntelliJ IDEA没有Hibernate的Frameworks support！要下载企业版。http://blog.csdn.net/gnail_oug/article/details/53977118</span></p>
+<p>创建maven项目。</p>
+<p>编写pom.xml：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version = "1.0" encoding = "UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.xkfx.mydao<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>mydao<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.0-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>Maven Hello World Project<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+<strong><span style="color: #ff00ff;">    &lt;dependencies&gt;
+        &lt;!--添加junit依赖--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.10&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;!-- 添加Hibernate依赖 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+            &lt;version&gt;4.2.4.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;</span></strong>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>import change之后，add frameworks support:</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170420220626837-772654091.png" alt="" width="326" height="84" /></p>
+<p>&nbsp;后续：https://smiletm.github.io/2016/12/03/IntelliJ-Hibernate/</p>
+<p>编辑hibernate.cfg.xml:通过添加数据库自动编辑。（<span style="color: #ff0000;">需要下载相应的驱动.jar</span>）</p>
+<p>2、创建持久化类。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170421081231556-611683046.png" alt="" width="533" height="104" /></p>
+<p>hbm详解：http://blog.csdn.net/tuke_tuke/article/details/49717991、http://blog.sina.com.cn/s/blog_7ffb8dd5010144yo.html</p>
+<p>根据相应的表创建相应的映射类和hbm映射配置文件，参考：http://www.cnblogs.com/yangyquin/p/5438248.html</p>
+<p>参考单词：entity实体、Persistence持久。</p>
+<p>创建成功后还需要修改：添加构造器、toString()等。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170421083557618-1903111507.png" alt="" width="506" height="184" /></p>
+<p>&nbsp;</p>

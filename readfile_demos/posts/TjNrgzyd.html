@@ -1,0 +1,129 @@
+<p>对象初始化语块执行顺序:</p>
+<p>static initialization block</p>
+<p>new Employee1----------</p>
+<p>instance field initialization</p>
+<p>object initialization block<br />Employee(String name, double salary)</p>
+<p>&nbsp;</p>
+<p><em id="__mceDel">new Employee2----------<br />instance field initialization<br />object initialization block<br />Employee(String name, double salary)<br />Employee(double salary)</em></p>
+<p>&nbsp;</p>
+<p><em id="__mceDel">new Employee3----------<br />instance field initialization<br />object initialization block<br /></em></p>
+<p>&nbsp;<em id="__mceDel" style="line-height: 1.5;"><em id="__mceDel">Employee()</em></em></p>
+<p>&nbsp;</p>
+<p><em id="__mceDel"><em id="__mceDel">1676 xkfx 30000.0<br />1677 Employee #1677 60000.0<br />1678  0.0</em></em></p>
+<p>Process finished with exit code 0</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Random;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2016/12/14.
+ *  only 20
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Employee{
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> nextId;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span> String name = test(); <span style="color: #008000;">//</span><span style="color: #008000;"> instance field initialization</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> salary;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> static initialization block</span>
+    <span style="color: #0000ff;">static</span><span style="color: #000000;">{
+        Random generator </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Random();
+        nextId </span>= generator.nextInt(10000<span style="color: #000000;">);
+        System.out.println(</span>"static initialization block"<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> object initialization block</span>
+<span style="color: #000000;">    {
+        id </span>= nextId ++<span style="color: #000000;">;
+        System.out.println(</span>"object initialization block"<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> three overloads constructors</span>
+    <span style="color: #0000ff;">public</span> Employee(String name, <span style="color: #0000ff;">double</span><span style="color: #000000;"> salary){
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+        </span><span style="color: #0000ff;">this</span>.salary =<span style="color: #000000;">salary;
+        System.out.println(</span>"Employee(String name, double salary)"<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span> Employee(<span style="color: #0000ff;">double</span><span style="color: #000000;"> salary){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> calls the Employee(String, double) constructor</span>
+        <span style="color: #0000ff;">this</span>("Employee #" +<span style="color: #000000;"> nextId, salary);
+        System.out.println(</span>"Employee(double salary)"<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> the default constructor</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Employee(){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> name initialized to "" --see above
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> salary not explicitly set--initialized to 0
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> id initialized in initialization block</span>
+        System.out.println("Employee()"<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName(){
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.name;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> getSalary(){
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.salary;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getId(){
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.id;
+    }
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String test(){
+        System.out.println(</span>"----------instance field initialization"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> ""<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>main加载程序逻辑:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2016/12/14.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ConstructorTest{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        Employee[] staff </span>= <span style="color: #0000ff;">new</span> Employee[3<span style="color: #000000;">];
+
+        staff[</span>0] = <span style="color: #0000ff;">new</span> Employee("xkfx" , 30000<span style="color: #000000;">);
+        staff[</span>1] = <span style="color: #0000ff;">new</span> Employee(60000<span style="color: #000000;">);
+        staff[</span>2] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Employee();
+
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;">(Employee e: staff){
+            System.out.println(e.getId()</span>+" "+e.getName()+" "+<span style="color: #000000;">e.getSalary());
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>网上copy的一段不知道有没有误</p>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td id="postmessage_182492" class="t_f">java程序在内存中的存储分配情况：<br /><br />堆区:&nbsp;<br />1.存储的全部是对象，每个对象都包含一个与之对应的class的信息。(class的目的是得到操作指令)&nbsp;<br />2.jvm只有一个堆区(heap)被所有线程共享，堆中不存放基本类型和对象引用，只存放对象本身&nbsp;<br />栈区:&nbsp;<br />1.每个线程包含一个栈区，栈中只保存基础数据类型的对象和自定义对象的引用(不是对象)，对象都存放在堆区中&nbsp;<br />2.每个栈中的数据(原始类型和对象引用)都是私有的，其他栈不能访问。&nbsp;<br />3.栈分为3个部分：基本类型变量区、执行环境上下文、操作指令区(存放操作指令)。&nbsp;<br />方法区:&nbsp;<br />1.又叫静态区，跟堆一样，被所有的线程共享。方法区包含所有的class和static变量。&nbsp;<br />2.方法区中包含的都是在整个程序中永远唯一的元素，如class，static变量。</td>
+
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+</table>

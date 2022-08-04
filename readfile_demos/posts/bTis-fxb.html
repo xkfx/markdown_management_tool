@@ -1,0 +1,94 @@
+<p><span style="color: #ff0000; background-color: #ffff00;">1、内部类：</span></p>
+<p>有什么用？</p>
+<p>1、可以访问该类定义所在作用域中的数据，包括私有数据。</p>
+<p>2、当想定义一个回调函数而不想编写大量代码时，使用匿名内部类比较便捷。</p>
+<p>3、内部类可以对同一个包中的其他类隐藏起来。</p>
+<p><span style="background-color: #ffff00;">什么时候用？</span></p>
+<p>1、想省代码</p>
+<p>2、想访问本类数据</p>
+<p>3、想隐藏数据（要写的类，仅被一个类使用一次）</p>
+<p><span style="background-color: #ffff00;">简单内部类举例</span></p>
+<p>：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionListener;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/12.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> InnerClassTest{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        TalkingClock clock </span>= <span style="color: #0000ff;">new</span> TalkingClock(1000 , <span style="color: #0000ff;">true</span>); <span style="color: #008000;">//</span><span style="color: #008000;">参数改成100系统不响铃</span>
+<span style="color: #000000;">        clock.start();
+
+        JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">null</span> , "Quit?");  <span style="color: #008000;">//</span><span style="color: #008000;">没有这两行代码，程序无法运行？？？</span>
+        System.exit(0<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> TalkingClock{
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> interval;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> beep;
+
+    </span><span style="color: #0000ff;">public</span> TalkingClock(<span style="color: #0000ff;">int</span> interval, <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> beep){
+        </span><span style="color: #0000ff;">this</span>.interval =<span style="color: #000000;"> interval;
+        </span><span style="color: #0000ff;">this</span>.beep =<span style="color: #000000;"> beep;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Starts the clock
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> start(){
+        ActionListener listener </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> TimePrinter();
+        Timer t </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Timer(interval , listener);
+        t.start();
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> TimePrinter <span style="color: #0000ff;">implements</span> ActionListener{    <span style="color: #008000;">//</span><span style="color: #008000;">设置成private就实现了封装
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">这里有一个不可见的隐式引用 outer = 外围类对象
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">下面的beep等价于 outer.beep
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">TimePrinter有一个隐式的构造器 public TimePrinter(TalkingClock clock){ outer = clock; }</span>
+<span style="color: #000000;">
+        @Override
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent e) {
+            System.out.println(</span>"..."<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span>(beep) Toolkit.getDefaultToolkit().beep();    <span style="color: #008000;">//</span><span style="color: #008000;">内部类可以访问外围类对象的数据域</span>
+<span style="color: #000000;">        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">内部类的语法规则</span></p>
+<p>：</p>
+<p><span style="background-color: #ffff00;">局部内部类</span></p>
+<p>：在一个方法中定义类</p>
+<p><span style="background-color: #ffff00;">匿名内部类</span></p>
+<p>：例如</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> start(<span style="color: #0000ff;">int</span> interval, <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> beep)
+{
+    ActionListener listener </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ActionListener(){
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent event){
+            System.out.println(</span>"..."<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(beep){
+                Toolkit.getDefaultToolkit().beep();
+            }
+        }
+    };
+    Timer t </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Timer(interval, listener);
+    t.start();
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">如何将静态内部类镶嵌在辅助类中</span></p>
+<p>：</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">&nbsp;</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">2、代理</span></p>
+<p>有什么用？</p>
+<p>可以在运行时创建一个实现了一组给定接口的新类。</p>
+<p>只有在编译时无法确定需要实现哪个接口时才有必要使用。</p>
+<p>什么时候用？</p>
+<p>&nbsp;</p>

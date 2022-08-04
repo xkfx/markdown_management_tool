@@ -1,0 +1,175 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">思路1：分治策略</a></li>
+<li><a href="#anchor1">思路2：Brute Force - O(n^3)</a></li>
+<li><a href="#anchor2">思路3</a></li>
+</ol></ul>
+</div>
+<p>问题描述：https://leetcode.com/problems/longest-substring-without-repeating-characters/</p>
+<h2><a name="anchor0"></a>思路1：分治策略</h2>
+<p>按照算法导论上的分治算法框架强行写的。</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('29dc9d97-c967-4af8-bd8c-024249796177')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_29dc9d97-c967-4af8-bd8c-024249796177" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_29dc9d97-c967-4af8-bd8c-024249796177" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_29dc9d97-c967-4af8-bd8c-024249796177" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">class CommonUtil {
+    static lightCopy(obj) {
+        let result </span>=<span style="color: #000000;"> {}
+        Object.assign(result, obj);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> O(???), Runtime: 7792 ms, faster than 1.00% ...</span>
+<span style="color: #0000ff;">var</span> lengthOfLongestSubstring = <span style="color: #0000ff;">function</span><span style="color: #000000;">(s) {
+    </span><span style="color: #0000ff;">if</span> (s == "") <span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+
+    let buildMaps </span>= (symbol, p, q, r) =&gt;<span style="color: #000000;"> {
+        let map </span>=<span style="color: #000000;"> [],
+            length </span>= 0<span style="color: #000000;">;
+        let current </span>= () =&gt; q -<span style="color: #000000;"> length;
+        </span><span style="color: #0000ff;">if</span> (symbol == "right"<span style="color: #000000;">) {
+            current </span>= () =&gt; q - 1 +<span style="color: #000000;"> length;
+        }
+
+        let init </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个空对象,免去繁琐的初始化过程</span>
+            map[length++] =<span style="color: #000000;"> {};
+        };
+
+        let isSafe </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 越界or字符重复返回false</span>
+            let out = symbol == "right" ? current() &gt;= r : current() &lt;<span style="color: #000000;"> p;
+            let repeat </span>= map[length - 1<span style="color: #000000;">][s[current()]];
+            </span><span style="color: #0000ff;">return</span> !out &amp;&amp; !<span style="color: #000000;">repeat;
+        };
+
+        let createMap </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 复制map&gt;&gt;添加元素&gt;&gt;为下次调用做准备</span>
+            map[length] = CommonUtil.lightCopy(map[length - 1<span style="color: #000000;">]);
+            map[length][s[current()]] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            length</span>++<span style="color: #000000;">;
+        };
+
+        init();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (isSafe()) {
+            createMap();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> map;
+    };
+
+    let combineMaps </span>= (leftMaps, rightMaps, max) =&gt;<span style="color: #000000;"> {
+        let compatible </span>= (map1, map2) =&gt;<span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (map1.length &lt;<span style="color: #000000;"> map2.length) {
+                let temp </span>=<span style="color: #000000;"> map1;
+                map1 </span>=<span style="color: #000000;"> map2;
+                map2 </span>=<span style="color: #000000;"> temp;
+            }
+            let keys </span>=<span style="color: #000000;"> Object.keys(map2);
+            </span><span style="color: #0000ff;">return</span> !keys.some(x =&gt;<span style="color: #000000;"> map1[x]);
+        };
+
+        let getPairs </span>= (totalReduce) =&gt;<span style="color: #000000;"> {
+            let reducePairs </span>=<span style="color: #000000;"> [];
+            </span><span style="color: #0000ff;">for</span> (let k = 0; k &lt;= totalReduce; ++<span style="color: #000000;">k) {
+                reducePairs.push({
+                    i: k,
+                    j: totalReduce </span>-<span style="color: #000000;"> k,
+                });
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> reducePairs;
+        };
+
+        const leftLen </span>= leftMaps.length - 1<span style="color: #000000;">,
+            rightLen </span>= rightMaps.length - 1<span style="color: #000000;">,
+            baseLen </span>= leftLen +<span style="color: #000000;"> rightLen;
+
+        let sum </span>= 0<span style="color: #000000;">;
+        let totalReduce </span>= 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> ((sum = baseLen - totalReduce) &gt;<span style="color: #000000;"> max) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只检测比子问题解的值更大的情形,由大往小找,一旦找到立刻停止搜索</span>
+            let reducePairs =<span style="color: #000000;"> getPairs(totalReduce);
+            </span><span style="color: #0000ff;">for</span> (let k = 0; k != reducePairs.length; ++<span style="color: #000000;">k) {
+                let i </span>= leftLen -<span style="color: #000000;"> reducePairs[k].i;
+                let j </span>= rightLen -<span style="color: #000000;"> reducePairs[k].j;
+                </span><span style="color: #0000ff;">if</span> (i &gt; 0 &amp;&amp; j &gt; 0 &amp;&amp;<span style="color: #000000;"> compatible(leftMaps[i], rightMaps[j])) {
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+                }
+            }
+            totalReduce</span>++<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> max;
+    };
+
+    let findMaxCrossingSubstring </span>= (p, q, r, subMaxLength) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (s[q - 1] == s[q]) { <span style="color: #008000;">//</span><span style="color: #008000;"> 不可连接</span>
+            <span style="color: #0000ff;">return</span><span style="color: #000000;"> subMaxLength;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            let leftMaps </span>= buildMaps("left"<span style="color: #000000;">, p, q, r);
+            let rightMaps </span>= buildMaps("right"<span style="color: #000000;">, p, q, r);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> combineMaps(leftMaps, rightMaps, subMaxLength);
+        }
+    };
+
+    let findMax </span>= (start, end) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (start + 1 &lt;<span style="color: #000000;"> end) {
+            let mid </span>= Math.floor((start + end) / 2); <span style="color: #008000;">//</span><span style="color: #008000;"> Divide</span>
+            let maxLeft = findMax(start, mid); <span style="color: #008000;">//</span><span style="color: #008000;"> Conquer</span>
+            let maxRight = findMax(mid, end); <span style="color: #008000;">//</span><span style="color: #008000;"> Conquer</span>
+            const subMaxLength = Math.max(maxLeft, maxRight); <span style="color: #008000;">//</span><span style="color: #008000;"> Combine</span>
+            <span style="color: #0000ff;">return</span> findMaxCrossingSubstring(start, mid, end, subMaxLength); <span style="color: #008000;">//</span><span style="color: #008000;"> Combine</span>
+        } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span> 1; <span style="color: #008000;">//</span><span style="color: #008000;"> basecase</span>
+<span style="color: #000000;">        }
+    };
+
+    </span><span style="color: #0000ff;">return</span> findMax(0<span style="color: #000000;">, s.length);
+};</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h2><a name="anchor1"></a>思路2：Brute Force - O(n^3)</h2>
+<div class="cnblogs_code">
+<pre>let satisfyCondition = (i, j, s) =&gt;<span style="color: #000000;"> {
+    let map </span>=<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">for</span> (let k = i; k &lt;= j; ++<span style="color: #000000;">k) {
+        </span><span style="color: #0000ff;">if</span> (map[s[k]]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        map[s[k]] </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+};
+</span>
+<span style="color: #0000ff;">var</span> lengthOfLongestSubstring2 = <span style="color: #0000ff;">function</span><span style="color: #000000;">(s) {
+    </span><span style="color: #0000ff;">if</span> (s == "") <span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+    let max </span>= 1<span style="color: #000000;">,
+        length, i, j;
+    </span><span style="color: #0000ff;">for</span> (i = 0; i != s.length; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (j = i + 1; j != s.length; ++<span style="color: #000000;">j) {
+            length </span>= j - i + 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (length &gt;<span style="color: #000000;"> max) {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (satisfyCondition(i, j, s)) {
+                    max </span>=<span style="color: #000000;"> length;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> max;
+};</span></pre>
+</div>
+<h2><a name="anchor2"></a>思路3</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">var</span> lengthOfLongestSubstring = <span style="color: #0000ff;">function</span><span style="color: #000000;">(s) {
+    </span><span style="color: #0000ff;">if</span> (s.length &lt; 2) <span style="color: #0000ff;">return</span><span style="color: #000000;"> s.length;
+    let max </span>= 0, lastBegin = 0, code, characterIndex = <span style="color: #0000ff;">new</span> Array(255<span style="color: #000000;">), fresh;
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i !== s.length; ++<span style="color: #000000;">i) {
+        code </span>=<span style="color: #000000;"> s.charCodeAt(i);
+        </span><span style="color: #0000ff;">if</span> (characterIndex[code] &gt;=<span style="color: #000000;"> lastBegin) {
+            lastBegin </span>= characterIndex[code] + 1<span style="color: #000000;">;
+        }
+        fresh </span>= i - lastBegin + 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (fresh &gt;<span style="color: #000000;"> max) {
+            max </span>=<span style="color: #000000;"> fresh;
+        }
+        characterIndex[code] </span>=<span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> max;
+};</span></pre>
+</div>
+<p>&nbsp;</p>

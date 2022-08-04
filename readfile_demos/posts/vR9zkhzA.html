@@ -1,0 +1,86 @@
+<h3>单条删除页面跳转</h3>
+<p>1、首先打开JSP页面，找到删除</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708162724987-425282622.png" alt="" width="383" height="68" /></p>
+<p>&nbsp;</p>
+<p>2、这个时候要把它改成servlet的URL，并决定要传给后台什么数据，例如我需要传一个待删数据的ID</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708163515456-17308773.png" alt="" width="799" height="105" /></p>
+<p>id并不是什么见不得人的东西（而且是后台也不需要太多讲究），所以把信息附带在URL上就可以了，（basePath指的是WEB APP的根目录，在JSP里加上下面的代码就可以用了</p>
+<div class="cnblogs_code">
+<pre>&lt;%<span style="color: #000000;">
+String path </span>=<span style="color: #000000;"> request.getContextPath();
+String basePath </span>= request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/"<span style="color: #000000;">;
+</span>%&gt;</pre>
+</div>
+<p>形如${xxxx}的是EL表达式。完成上述步骤之后可以测试一下，在Chrome下F12观察URL变化以及HTTP报文</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708164805097-1200189208.png" alt="" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708164817940-125082085.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>3、在web.xml中建立相应的servlet的映射。</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>DeleteOneServlet<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>com.imooc.servlet.DeleteOneServlet<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+  
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>DeleteOneServlet<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/DeleteOneServlet.action<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、servlet获取参数调用对应的Service即可。。</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #008000;">//</span><span style="color: #008000;"> 设置编码</span>
+        req.setCharacterEncoding("UTF-8"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 接受页面的值</span>
+        String id = req.getParameter("id"<span style="color: #000000;">);
+        MaintainService maintainService </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> MaintainService();
+        maintainService.deleteOne(id);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 页面跳转</span>
+        req.getRequestDispatcher("/List.action").forward(req, resp);</pre>
+</div>
+<p>&nbsp;最后还需要重新对页面进行初始化。</p>
+<p>&nbsp;</p>
+<h3>多条删除页面跳转</h3>
+<p>1、相应的页面长这个样子</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708170120019-1411857799.png" alt="" width="179" height="127" /></p>
+<p>在勾选要删除的数据之后点击&ldquo;删除&rdquo;来<img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708170154362-501906974.png" alt="" width="121" height="33" />多条数据</p>
+<p>&nbsp;</p>
+<p>2、同理，在页面中找到对应的删除字样，</p>
+<p>通过这个按钮提交表单到删除多条信息的servlet</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708170737847-1199596198.png" alt="" /></p>
+<p>这个时候需要借助一下JS，如下所示</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * jQuery采用一种非常简洁的语法来获取HTML元素&mdash;&mdash;$()，它是一个特殊的函数
+ * ${}返回对象所有的方法，例如$().css()与$().height()既是getter也是setter
+ * jQuery 对 AJAX(Asynchronous JavaScript and XML) 有良好的支持,它是$的一个属性：$.AJAX
+ </span><span style="color: #008000;">*/</span>
+
+<span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 调用后台批量删除方法
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function deleteBatch(basePath) {
+    </span><span style="color: #0000ff;">if</span> ($('input[type=checkbox]:checked').size() &gt; 0<span style="color: #000000;">) {
+        $(</span>'#mainForm').attr("action", basePath + "DeleteBatchServlet.action"<span style="color: #000000;">);
+        $(</span>'#mainForm'<span style="color: #000000;">).submit();
+        </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+         * 剧毒。。写成 ${'#mainForm'} 调试了超久
+         </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        alert(</span>"请选中要删除的 Message "<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<p>然后把.js包含进去</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708171635440-308925489.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>3、还需要做的工作是，附带选中的id作为信息，方式是给单选框加上ID</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708171417159-1939320466.png" alt="" width="733" height="65" /></p>
+<p>&nbsp;修改a标签</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708185448628-902173462.png" alt="" width="668" height="39" /></p>
+<p>采用同样的方法测试</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708185840987-989466598.png" alt="" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170708185853253-698865639.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>4、最后在servlet中接数据，调Service，重新初始化页面就OK了（还要编辑一下web.xml</p>

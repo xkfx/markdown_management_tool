@@ -1,0 +1,54 @@
+<h2>INDEX</h2>
+<ul>
+<li><a href="#a1">Updating Data</a></li>
+<li><a href="#a2"><span class="docEmphStrong">The&nbsp;<tt>IGNORE</tt>&nbsp;Keyword</span></a></li>
+<li><a href="#a3"><span class="docEmphStrong">Deleting Data</span></a></li>
+<li class="docText"><a href="#a4"><span class="docEmphStrong">Faster Deletes</span></a></li>
+<li class="docText"><span style="color: #ff0000;"><strong><a href="#a5"><span class="docEmphStrong" style="color: #ff0000;">Guidelines for Updating and Deleting Data&nbsp;</span></a></strong></span></li>
+</ul>
+<h2><a name="a1"></a>Updating Data</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">UPDATE</span><span style="color: #000000;"> customers
+</span><span style="color: #0000ff;">SET</span> cust_name <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">The Fudds</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    cust_email </span><span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">elmer@fudd.com</span><span style="color: #ff0000;">'</span>
+<span style="color: #0000ff;">WHERE</span> cust_id <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">10005</span>;</pre>
+</div>
+<p>To delete a column's value, you can set it to&nbsp;<tt>NULL</tt>&nbsp;(assuming the table is defined to allow&nbsp;<tt>NULL</tt>&nbsp;values). You can do this as follows:</p>
+<div class="cnblogs_code">
+<pre>UPDATE<span> customers
+SET cust_email = NULL
+WHERE cust_id = 10005;</span></pre>
+</div>
+<p class="docText">Here the&nbsp;<tt>NULL</tt>&nbsp;keyword is used to save no value to the&nbsp;<tt>cust_email</tt>&nbsp;column.</p>
+<h2><span class="docEmphStrong"><a name="a2"></a>The <tt>IGNORE</tt> Keyword</span></h2>
+<p class="docText">If&nbsp;your <tt>UPDATE</tt> statement updates multiple rows and an error occurs while updating one or more of those rows, the entire <tt>UPDATE</tt> operation is cancelled (and any rows updated before the error occurred are restored to their original values). To continue processing updates, even if an error occurs, use the <tt>IGNORE</tt> keyword, like this:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">UPDATE</span> IGNORE customers ...</pre>
+</div>
+<h2 id="524050-837" class="docSection1Title"><a name="a3"></a>Deleting Data</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customers
+</span><span style="color: #0000ff;">WHERE</span> cust_id <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">10006</span>;</pre>
+</div>
+<p><span class="docEmphStrong"><tt>DELETE</tt> takes no column names or wildcard characters. <tt>DELETE</tt> deletes entire rows, not columns. To delete specific columns use an <tt>UPDATE</tt> statement (as seen earlier in this chapter).</span></p>
+<h2 class="docText"><span class="docEmphStrong"><a name="a4"></a>Faster Deletes</span></h2>
+<p class="docText"><span class="docEmphStrong">If&nbsp;you really do want to delete all rows from a table, don't use <tt>DELETE</tt>. Instead, use the <tt>trUNCATE TABLE</tt> statement that accomplished the same thing but does it much quicker (<tt>trUNCATE</tt> actually drops and recreates the table, instead of deleting each row individually).</span></p>
+<h2 class="docText"><span class="docEmphStrong"><a name="a5"></a>Guidelines for Updating and Deleting Data&nbsp;</span></h2>
+<p class="docText">Here are some best practices that many SQL programmers follow:</p>
+<ul>
+<li>
+<p class="docList">Never execute an <tt>UPDATE</tt> or a <tt>DELETE</tt> without a <tt>WHERE</tt> clause unless you really do intend to update and delete every row.</p>
+</li>
+<li>
+<p class="docList">Make sure every table has a primary key (refer to <a class="docLink">Chapter 15</a>, "Joining Tables," if you have forgotten what this is), and use it as the <tt>WHERE</tt> clause whenever possible. (You may specify individual primary keys, multiple values, or value ranges.)</p>
+</li>
+<li>
+<p class="docList">Before you use a <tt>WHERE</tt> clause with an <tt>UPDATE</tt> or a <tt>DELETE</tt>, first test it with a <tt>SELECT</tt> to make sure it is filtering the right recordsit is far too easy to write incorrect <tt>WHERE</tt> clauses.</p>
+</li>
+<li>
+<p class="docList">Use database enforced referential integrity (refer to <a class="docLink">Chapter 15</a> for this one, too) so MySQL will not allow the deletion of rows that have data in other tables related to them.</p>
+</li>
+</ul>
+<div class="docNote">
+<p class="docNoteTitle">The bottom line is that MySQL has no Undo button. Be very careful using <tt>UPDATE</tt> and <tt>DELETE</tt>, or you'll find yourself updating and deleting the wrong data.</p>
+</div>

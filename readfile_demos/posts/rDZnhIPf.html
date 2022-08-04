@@ -1,0 +1,109 @@
+<p>课件地址：<a href="https://wenku.baidu.com/view/bac2ff10f18583d0496459f3.html" target="_blank">https://wenku.baidu.com/view/bac2ff10f18583d0496459f3.html</a></p>
+<p>1.测试环境变量：HOME,PWD,IFS等<br />2.测试位置变量：$$,$#,$0,$1,$2,$3,$@,$*，再测试当IFS=&lsquo;&rsquo;和取消IFS时$@和$*的输出<br />3.使用if和case对&ldquo;是否选修了Linux课程&rdquo;的问题做出回答<br />4.列出当前目录下包含sh文件的详细信息<br />5.列出1~50之间的奇数<br />6.计算1+2+&hellip;+n</p>
+<p>7.统计/etc目录下的文件数和目录数<br />8.设计一函数使能只列指定目录下的子目录<br />9.设计一函数能实现向文件追加记录的功能（记录由若干变量构成）<br />10.监控某个用户是否登陆<br /> 11将指定目录下的.txt文件成批量地改名为 .doc</p>
+<p><span style="text-decoration: underline;">1~2</span></p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+endl() {
+    </span><span style="color: #0000ff;">echo</span> -e <span style="color: #800000;">"</span><span style="color: #800000;">=======end===============\n</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}
+
+</span><span style="color: #0000ff;">echo</span> $HOME; endl # =&gt; /c/Users/<span style="color: #000000;">mdzz
+</span><span style="color: #0000ff;">echo</span> $PWD; endl # =&gt; /c/Users/mdzz/Desktop/<span style="color: #000000;">2018linux
+</span><span style="color: #0000ff;">echo</span><span style="color: #000000;"> $IFS; endl
+</span><span style="color: #0000ff;">echo</span> $$,$#,$<span style="color: #800080;">0</span>,$<span style="color: #800080;">1</span>,$<span style="color: #800080;">2</span>,$<span style="color: #800080;">3</span>,$@,$*; endl # =&gt; <span style="color: #800080;">5544</span>,<span style="color: #800080;">0</span>,exercise.<span style="color: #0000ff;">sh</span>,,,,,</pre>
+</div>
+<p><span style="text-decoration: underline;">2</span></p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+endl() {
+    </span><span style="color: #0000ff;">echo</span> -e <span style="color: #800000;">"</span><span style="color: #800000;">=======end===============\n</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}
+
+list</span>=<span style="color: #800000;">"</span><span style="color: #800000;">we:are:champion</span><span style="color: #800000;">"</span><span style="color: #000000;">
+ifs_old</span>=<span style="color: #000000;">$IFS
+IFS</span>=$<span style="color: #800000;">'</span><span style="color: #800000;">:</span><span style="color: #800000;">'</span>
+<span style="color: #0000ff;">for</span> val <span style="color: #0000ff;">in</span><span style="color: #000000;"> $list
+</span><span style="color: #0000ff;">do</span>
+  <span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">n=$val</span><span style="color: #800000;">"</span>
+<span style="color: #0000ff;">done</span><span style="color: #000000;">
+IFS</span>=<span style="color: #000000;">$ifs_old; endl
+
+ifs_old</span>=<span style="color: #000000;">$IFS
+IFS</span>=<span style="color: #800000;">''</span>
+<span style="color: #0000ff;">echo</span> $@,$*<span style="color: #000000;">
+IFS</span>=<span style="color: #000000;">$ifs_old
+</span><span style="color: #0000ff;">echo</span> $@,$*; endl</pre>
+</div>
+<p><span style="text-decoration: underline;">3</span></p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #0000ff;">sh</span>
+<span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">是否选修了Linux课程</span><span style="color: #800000;">"</span><span style="color: #000000;">
+read yesorno
+</span><span style="color: #0000ff;">if</span> [ <span style="color: #800000;">"</span><span style="color: #800000;">$yesorno</span><span style="color: #800000;">"</span> = <span style="color: #800000;">"</span><span style="color: #800000;">yes</span><span style="color: #800000;">"</span><span style="color: #000000;"> ]
+</span><span style="color: #0000ff;">then</span>
+    <span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">Good.</span><span style="color: #800000;">"</span>
+<span style="color: #0000ff;">elif</span> [ <span style="color: #800000;">"</span><span style="color: #800000;">$yesorno</span><span style="color: #800000;">"</span> = <span style="color: #800000;">"</span><span style="color: #800000;">no</span><span style="color: #800000;">"</span> ]; <span style="color: #0000ff;">then</span>
+    <span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">what a pity!</span><span style="color: #800000;">"</span>
+<span style="color: #0000ff;">else</span>
+    <span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">Sorry, $yesorno not recognized. Enter yes or no</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    exit </span><span style="color: #800080;">1</span>
+<span style="color: #0000ff;">fi</span><span style="color: #000000;">
+exit </span><span style="color: #800080;">0</span></pre>
+</div>
+<p><span style="text-decoration: underline;">4~7</span></p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+#####脚本一######
+#输入绝对路径，查找包含.sh结尾的文件及目录输出到file.tmp里
+# read </span>-p <span style="color: #800000;">"</span><span style="color: #800000;">请输入要查询的目录：</span><span style="color: #800000;">"</span><span style="color: #000000;"> DIR
+# </span><span style="color: #0000ff;">find</span> ${DIR} -name <span style="color: #800000;">"</span><span style="color: #800000;">*.sh</span><span style="color: #800000;">"</span> &gt; <span style="color: #0000ff;">file</span><span style="color: #000000;">.tmp
+#</span>!/bin/<span style="color: #000000;">bash
+#####脚本二#####
+#输入要查询的目录，如果文件不存在创建文件，如果存在退出
+# read </span>-p <span style="color: #800000;">"</span><span style="color: #800000;">请输入要查询的目录：</span><span style="color: #800000;">"</span><span style="color: #000000;"> DIR
+# read </span>-p <span style="color: #800000;">"</span><span style="color: #800000;">请输入要创建的文件：</span><span style="color: #800000;">"</span><span style="color: #000000;"> FILENAME
+# </span><span style="color: #0000ff;">if</span> [ -d $DIR ];<span style="color: #0000ff;">then</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">if</span> [ ! -f $FILENAME ];<span style="color: #0000ff;">then</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">touch</span><span style="color: #000000;"> $FILENAME
+# </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">${FILENAME} 创建成功</span><span style="color: #800000;">"</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">${FILENAME} 文件已经存在</span><span style="color: #800000;">"</span><span style="color: #000000;">
+# exit </span><span style="color: #800080;">0</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">fi</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">指定的目录不存在!</span><span style="color: #800000;">"</span><span style="color: #000000;">
+# </span><span style="color: #0000ff;">fi</span><span style="color: #000000;">
+
+DIR</span>=`<span style="color: #0000ff;">ls</span> -<span style="color: #000000;">l`
+# </span><span style="color: #0000ff;">echo</span><span style="color: #000000;"> $DIR
+</span><span style="color: #0000ff;">ls</span> -l *.<span style="color: #0000ff;">sh</span>
+
+<span style="color: #0000ff;">echo</span> {<span style="color: #800080;">1</span>..<span style="color: #800080;">50</span>..<span style="color: #800080;">2</span>} # 罗列1 ~<span style="color: #000000;">50的奇数
+
+# 求 </span><span style="color: #800080;">1</span>+<span style="color: #800080;">2</span>+<span style="color: #800080;">3</span>+..+<span style="color: #000000;">n
+read </span>-p <span style="color: #800000;">"</span><span style="color: #800000;">请输入数字n;</span><span style="color: #800000;">"</span><span style="color: #000000;"> N
+</span><span style="color: #0000ff;">sum</span>=<span style="color: #800080;">0</span>
+<span style="color: #0000ff;">for</span> ((i=<span style="color: #800080;">1</span>; i&lt;=$N; i++));<span style="color: #0000ff;">do</span>
+    <span style="color: #0000ff;">sum</span>=$(($i+$<span style="color: #0000ff;">sum</span><span style="color: #000000;">))
+</span><span style="color: #0000ff;">done</span>
+<span style="color: #0000ff;">echo</span> $<span style="color: #0000ff;">sum</span><span style="color: #000000;">
+
+#统计当前目录文件数和目录数
+FILE_NUM</span>=`<span style="color: #0000ff;">find</span> ./ -type f |<span style="color: #0000ff;">wc</span> -<span style="color: #000000;">l` #统计文件数
+DIR_NUM</span>=`<span style="color: #0000ff;">find</span> ./ -type d |<span style="color: #0000ff;">wc</span> -<span style="color: #000000;">l` #统计目录数
+</span><span style="color: #0000ff;">echo</span><span style="color: #000000;"> $FILE_NUM
+</span><span style="color: #0000ff;">echo</span> $DIR_NUM</pre>
+</div>
+<p><span style="text-decoration: underline;">11</span></p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+</span><span style="color: #0000ff;">for</span> <span style="color: #0000ff;">file</span> <span style="color: #0000ff;">in</span> `<span style="color: #0000ff;">ls</span> | <span style="color: #0000ff;">grep</span><span style="color: #000000;"> .txt`
+</span><span style="color: #0000ff;">do</span><span style="color: #000000;">
+    NEW_FILE</span>=`<span style="color: #0000ff;">echo</span> $<span style="color: #0000ff;">file</span><span style="color: #000000;">`
+    # ${</span><span style="color: #0000ff;">string</span>/substring/<span style="color: #000000;">replacement} # substring可以是正则表达式
+    NEW_FILE</span>=${NEW_FILE/.txt/<span style="color: #000000;">.doc}
+    </span><span style="color: #0000ff;">mv</span> $<span style="color: #0000ff;">file</span><span style="color: #000000;"> $NEW_FILE
+</span><span style="color: #0000ff;">done</span></pre>
+</div>
+<p>&nbsp;</p>

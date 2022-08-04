@@ -1,0 +1,113 @@
+<p>p109~p110：</p>
+<p><span style="background-color: #ffff99;">&nbsp;C风格字符串</span></p>
+<p>特点：</p>
+<p>1、不方便，不安全，尽量不使用。</p>
+<p>2、必须以 '\0'结束。（只有这样才能使用C风格字符串函数）</p>
+<p>3、一般利用指针操作这些字符。</p>
+<p>4、可以用字符串字面值来初始化字符数组。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> ca1[] = <span style="color: #800000;">"</span><span style="color: #800000;">A C-style character string</span><span style="color: #800000;">"</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> ca1其实是指向数组首元素的指针。</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.37</span></p>
+<p>这道题输出有点奇怪。。。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> ca[] = {<span style="color: #800000;">'</span><span style="color: #800000;">h</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">l</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">l</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *cp =<span style="color: #000000;"> ca;
+    </span><span style="color: #0000ff;">while</span> (*<span style="color: #000000;">cp) {
+        cout </span>&lt;&lt; *cp &lt;&lt;<span style="color: #000000;"> endl;
+        </span>++<span style="color: #000000;">cp;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>输出结果：</p>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;<span style="color: #000000;">a
+h
+e
+l
+l
+o
+
+
+a</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.38</span></p>
+<p><em>搬运。</em></p>
+<div class="cnblogs_code">
+<pre>Pointer addition <span style="color: #0000ff;">is</span> forbidden <span style="color: #0000ff;">in</span> C++<span style="color: #000000;">, you can only subtract two pointers.
+
+The reason </span><span style="color: #0000ff;">for</span> <span style="color: #0000ff;">this</span> <span style="color: #0000ff;">is</span> that subtracting two pointers gives a logically explainable result - the offset <span style="color: #0000ff;">in</span> memory between two pointers. Similarly, you can subtract or add an integral number to/<span style="color: #0000ff;">from</span> a pointer, which means <span style="color: #800000;">"</span><span style="color: #800000;">move the pointer up or down</span><span style="color: #800000;">"</span>. Adding a pointer to a pointer <span style="color: #0000ff;">is</span> something which <span style="color: #0000ff;">is</span> hard to explain. What would the resulting pointner represent?<span style="color: #000000;">
+
+If by any chance you explicitly need a pointer to a place </span><span style="color: #0000ff;">in</span> memory whose address <span style="color: #0000ff;">is</span> the sum of some other two addresses, you can cast the two pointers to <span style="color: #0000ff;">int</span>, add ints, and cast back to a pointer. Remember though, that <span style="color: #0000ff;">this</span> solution needs huge care about the pointer arithmetic and <span style="color: #0000ff;">is</span> something you really should never <span style="color: #0000ff;">do</span>.</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.39</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;cstring&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> ca1[] = <span style="color: #800000;">"</span><span style="color: #800000;">string-A</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> ca2[] = <span style="color: #800000;">"</span><span style="color: #800000;">string-B</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (strcmp(ca1 , ca2) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">string-A big</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">string-B big</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span> s1 = <span style="color: #800000;">"</span><span style="color: #800000;">string-A</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span> s2 = <span style="color: #800000;">"</span><span style="color: #800000;">string-B</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Big one is: </span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (s1 &gt;<span style="color: #000000;"> s2) {
+        cout </span>&lt;&lt; s1 &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; s2 &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">&nbsp;练习 3.40</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;cstring&gt;<span style="color: #000000;">
+#include</span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> s1[<span style="color: #800080;">100</span>] = <span style="color: #800000;">"</span><span style="color: #800000;">stringA</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span> s2[] = <span style="color: #800000;">"</span><span style="color: #800000;">stringB</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    strcat(s1 , s2);
+    </span><span style="color: #0000ff;">char</span> s[<span style="color: #800080;">100</span><span style="color: #000000;">];
+    strcpy(s , s1);
+    cout </span>&lt;&lt; s &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

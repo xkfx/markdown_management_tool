@@ -1,0 +1,54 @@
+<h4>索引</h4>
+<ul>
+<li><a href="#a1">理解相关表. foreign key</a></li>
+<li><a href="#a2">JOIN 与保持参照完整性</a></li>
+<li><a href="#a3">关于JOIN 的一些建议，子查询 VS. 联表查询</a></li>
+</ul>
+<p>&nbsp;</p>
+<p>我发现<a href="https://dev.mysql.com/doc/refman/5.7/en/tutorial.html" target="_blank"> MySQL 的官方文档</a>里是有教程的。</p>
+<p class="r"><a href="https://www.w3schools.com/sql/" target="_blank">SQL Tutorial - W3Schools</a></p>
+<p class="r"><a href="https://community.modeanalytics.com/sql/tutorial/introduction-to-sql/" target="_blank">The SQL Tutorial for Data Analysis | SQL Tutorial - Mode Analytics</a></p>
+<p class="r">&nbsp;</p>
+<h4><a name="a1"></a>Understanding Relational Tables</h4>
+<blockquote>
+<p><span style="font-family: 'courier new', courier;">The key here is that <span style="color: #ff0000;"><strong>having multiple occurrences of the same data is never a good thing</strong></span>, and that principle is the basis for relational database design. Relational tables are designed so information is split into multiple tables, one for each data type. The tables are related to each other through common values (and thus the <span class="docEmphasis">relational in relational design).</span></span></p>
+</blockquote>
+<p>书上举了一个产品表和供应商表的例子，一个供应商可以对应很多的产品，不把供应商的信息放在每一行产品的理由有如下几点：</p>
+<ol>
+<li>多个产品的供应商是一致的，重复相同的信息很浪费空间</li>
+<li>如果供应商的信息改变，你不得不更新每一条该供应商相关的产品记录</li>
+<li>很大概率出现数据不一致的情况</li>
+</ol>
+<p>所以产品和供应商应该分两张表存，两张表都应该有 primary key ， 供应商表专门存供应商的信息，而产品表专门存产品的信息，每一个产品记录除了包含一个供应商的 id 属性不应该包含任何供应商的其他信息，这个属性对应的字段叫做&nbsp; foreign key （和供应商表的 primary key 相关系）这么做有如下几个好处：</p>
+<ol>
+<li>没有重复数据，节省时间和空间</li>
+<li>需要修改供应商信息时只需要修改一处就好了</li>
+<li>因为数据没有被重复，很好的保证了数据一致性</li>
+</ol>
+<p>&nbsp;</p>
+<h4 class="docSection2Title"><a name="a2"></a>Why Use Joins?</h4>
+<p>As just explained, breaking data into multiple tables enables more efficient storage(高效存储), easier manipulation(易于操作), and greater scalability(极高的可扩展性). But these benefits come with a price.</p>
+<p>If data is stored in multiple tables, how can you retrieve that data with a single SELECT statement?</p>
+<p>The answer is to use a join.</p>
+<p>&nbsp;It is important to understand that a join<span style="color: #ff0000;"> is not a physical entity</span> in other words, it does not exist in the actual database tables. A join is created by MySQL as needed, and <span style="color: #ff0000;">it persists for the duration of the query execution.</span></p>
+<p>- maintaining <span class="docEmphasis">referential integrity 是说 MySQL 只允许合法的数据（foreign key 的值在主表中存在的数据）插入到关系表中。</span></p>
+<p>&nbsp;</p>
+<h4 class="docSection1Title"><a name="a3"></a>Creating a Join</h4>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> vend_name, prod_name, prod_price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> vendors, products
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> vend_name, prod_name;</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> vend_name, prod_name, prod_price
+</span><span style="color: #0000ff;">FROM</span> vendors <span style="color: #0000ff;">INNER</span> <span style="color: #808080;">JOIN</span><span style="color: #000000;"> products
+ </span><span style="color: #0000ff;">ON</span> vendors.vend_id <span style="color: #808080;">=</span> products.vend_id;</pre>
+</div>
+<ol>
+<li>虽然默认就是 inner join （<a href="https://www.runoob.com/w3cnote/sql-join-image-explain.html" target="_blank">看这个</a>），但是最好还是用 INNER JOIN ON 语句，这样你就再也不会忘记 JOIN 的类型了。</li>
+<li>无条件的inner join是笛卡儿积，有条件的才是取交集（<a href="https://www.cnblogs.com/canger/p/9760217.html" target="_blank">看这个</a>）</li>
+<li>JOIN 是在运行时临时做的，关联的表越多越消耗资源，所以不必要就不要乱联表</li>
+</ol>
+<p>&nbsp;</p>
+<p class="docText"><span class="docEmphStrong"><strong>It Pays to Experiment</strong> As you can see, there is often more than one way to perform any given SQL operation. And there is rarely a definitive right or wrong way. Performance can be affected by the type of operation, the amount of data in the tables, whether indexes and keys are present, and a whole slew of other criteria. Therefore, it is often worth experimenting with different selection mechanisms to find the one that works best for you.</span></p>
+<p class="docText">联表快还是子查询快取决于具体情况，所以在必要时候可以进行测试。。 。问题 在于 。。 如何测试？？ -- &gt; 待更新</p>

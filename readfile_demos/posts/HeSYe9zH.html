@@ -1,0 +1,20 @@
+<p>p272~p273</p>
+<p>1、除<strong>捕获异常</strong>外的另一种异常处理方式：<strong>将异常继续传递给方法调用者。</strong></p>
+<p>即：在方法首部添加throws说明符号，取代 try catch语句。</p>
+<p><strong>对于方法的调用者而言</strong>：要么处理异常，要么继续传递。（这里由编译器检查）</p>
+<p>&nbsp;</p>
+<p>2、通常<strong>继续传递异常</strong>比<strong>强行处理异常</strong>要好。</p>
+<p>&nbsp;</p>
+<p>3、<span style="color: #ff0000;">不允许在子类的 throws说明符中出现超过超类方法所列出的异常类范围。</span>（子集）</p>
+<p>&nbsp;</p>
+<p>4、抛出多个异常的方式：逗号。</p>
+<p>&nbsp;</p>
+<p>5、捕获多个异常的方式：</p>
+<p>try {</p>
+<p>　　// code</p>
+<p>　　// more code</p>
+<p>} catch (Exception1 e) {</p>
+<p>　　// handler1</p>
+<p>} catch (Exception2 e) {</p>
+<p>　　// handler2</p>
+<p>} ....</p>

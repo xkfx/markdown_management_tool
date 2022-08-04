@@ -1,0 +1,370 @@
+<p><a href="#1">__slots__</a></p>
+<p><a href="#2">@property</a></p>
+<p><a href="#3">多重继承</a></p>
+<p><a href="#4">定制类</a></p>
+<p><a href="#5">枚举类</a></p>
+<p><a href="#6">元类</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="1"></a><strong><span style="color: #ff00ff;">【使用__slots__】</span></strong></p>
+<p>1、动态语言的一个特点就是允许给实例绑定任意的方法和变量，而静态语言（例如Java）必须事先将属性方法写进类里。</p>
+<p>给实例绑定变量：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">class</span><span style="color: #000000;"> Student:
+...     </span><span style="color: #0000ff;">pass</span><span style="color: #000000;">
+...
+</span>&gt;&gt;&gt; s =<span style="color: #000000;"> Student()
+</span>&gt;&gt;&gt; s.name = <span style="color: #800000;">'</span><span style="color: #800000;">Lily</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt;<span style="color: #000000;"> s.name
+</span><span style="color: #800000;">'</span><span style="color: #800000;">Lily</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>给实例绑定方法需要借助types模块的MethodType方法：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">def</span><span style="color: #000000;"> setAge(self, age):
+...     self.age </span>=<span style="color: #000000;"> age
+...
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> types <span style="color: #0000ff;">import</span><span style="color: #000000;"> MethodType
+</span>&gt;&gt;&gt; s.setAge =<span style="color: #000000;"> MethodType(setAge, s)
+</span>&gt;&gt;&gt; s.setAge(5<span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> s.age
+</span>5</pre>
+</div>
+<p>还可以给class绑定方法，使得方法对所有实例都有效：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; Student.setAge = setAge</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、万一需要限制属性怎么办？即只允许类的实例<span style="background-color: #ffff99;">添加</span>有限个属性。</p>
+<p>这个时候可以使用一个特殊的类变量__slots__：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">class</span><span style="color: #000000;"> Employee(object):
+...     </span><span style="color: #800080;">__slots__</span> = (<span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">salary</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+...
+</span>&gt;&gt;&gt; e =<span style="color: #000000;"> Employee()
+</span>&gt;&gt;&gt; e.name = <span style="color: #800000;">'</span><span style="color: #800000;">Wang fang</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; e.salary = 18000
+&gt;&gt;&gt; e.age = 18 <span style="color: #008000;">#</span><span style="color: #008000;"> age无法被添加为实例的属性！</span>
+<span style="color: #000000;">Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+AttributeError: </span><span style="color: #800000;">'</span><span style="color: #800000;">Employee</span><span style="color: #800000;">'</span> object has no attribute <span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>但是需要注意的是，__slots__对继承的子类是不起作用的！</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;"><a name="2"></a>【使用@property】</span></strong></p>
+<p>1、简而言之，@property就是一个类的方法的&ldquo;装饰器&rdquo;，添加在类的方法名的上一行，作用是把一个方法变成属性调用（即允许s.field这种访问方式），又能进行适当的参数检查。一个简单的例子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/usr/bin/env python3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Movie(object):
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 把一个getter方法变成属性</span>
+<span style="color: #000000;">    @property 
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> title(self):
+        </span><span style="color: #0000ff;">return</span> self._title <span style="color: #008000;">#</span><span style="color: #008000;"> 不能和装饰器@title.setter重名，所以使用_title</span>
+<span style="color: #000000;">
+    @title.setter
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> title(self, title):
+        </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> isinstance(title, str):
+            </span><span style="color: #0000ff;">raise</span> ValueError(<span style="color: #800000;">'</span><span style="color: #800000;">title must be a str!</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        self._title </span>=<span style="color: #000000;"> title
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 类测试</span>
+<span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    m </span>=<span style="color: #000000;"> Movie()
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> m.title = 123</span>
+    m.title = <span style="color: #800000;">'</span><span style="color: #800000;">Tokyo Ghoul</span><span style="color: #800000;">'</span>
+    <span style="color: #0000ff;">print</span>(m.title)</pre>
+</div>
+<p>如果输入的title不是str类型，则会输出：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 20, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 14, <span style="color: #0000ff;">in</span><span style="color: #000000;"> title
+ValueError: title must be a str!</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、如果要将上面的title属性改为只读，只需要删去setter方法就可以了。</p>
+<p>&nbsp;</p>
+<p>3、练习。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/usr/bin/env python3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Screen(object):
+
+    @property
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> width(self):
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> self._width
+    
+    @width.setter
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> width(self, width):
+        </span><span style="color: #0000ff;">if</span> width &lt;=<span style="color: #000000;"> 0:
+            </span><span style="color: #0000ff;">raise</span> ValueError(<span style="color: #800000;">'</span><span style="color: #800000;">width must larger than 0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        self._width </span>=<span style="color: #000000;"> width
+    
+    @property
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> height(self):
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> self._height
+    
+    @height.setter
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> height(self, height):
+        </span><span style="color: #0000ff;">if</span> height &lt;=<span style="color: #000000;"> 0:
+            </span><span style="color: #0000ff;">raise</span> ValueError(<span style="color: #800000;">'</span><span style="color: #800000;">height must larger than 0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        self._height </span>=<span style="color: #000000;"> height
+    
+    @property
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> area(self):
+        </span><span style="color: #0000ff;">return</span> self._width * self._height</pre>
+</div>
+<p><span style="line-height: 1.5;">测试结果：</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> Screen
+</span>&gt;&gt;&gt; s =<span style="color: #000000;"> Screen()
+</span>&gt;&gt;&gt; s.width =<span style="color: #000000;"> 0
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 13, <span style="color: #0000ff;">in</span><span style="color: #000000;"> width
+    </span><span style="color: #0000ff;">raise</span> ValueError(<span style="color: #800000;">'</span><span style="color: #800000;">width must larger than 0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+ValueError: width must larger than 0
+</span>&gt;&gt;&gt; s.width = 80
+&gt;&gt;&gt; s.height = 70
+&gt;&gt;&gt; s.area = 10<span style="color: #000000;">
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+AttributeError: can</span><span style="color: #800000;">'</span><span style="color: #800000;">t set attribute</span>
+&gt;&gt;&gt;<span style="color: #000000;"> s.area
+</span>5600</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;"><a name="3"></a>【多重继承】</span></strong></p>
+<p>1、多重继承：类似于Java可以实现多个接口。（仅仅是类似，不等于！）</p>
+<p>&nbsp;</p>
+<p>2、引用网友：第一个继承的是生父，后边的都是继父，继父的名字后面要加MixIn表明身份，如果方法有冲突，优先继承生父的。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Dog(Mammal, RunnableMixIn, CarnivorousMixIn):
+    </span><span style="color: #0000ff;">pass</span></pre>
+</div>
+<p>注：第一个是主线继承，后两个是增加的功能。</p>
+<p><span style="color: #ff00ff;">&nbsp;&nbsp;</span></p>
+<p><strong><span style="color: #ff00ff;"><a name="4"></a>【定制类】</span></strong></p>
+<p><span style="color: #ff0000;"><span style="color: #000000;">1、</span>__str__()<span style="color: #000000;">、</span>__repr__()</span>类似于Java中的toString()。前者用于s.print(object)、后者用于直接输入s时的输出。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span> <span style="color: #800080;">__str__</span><span style="color: #000000;">(self):
+...         </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span><span style="color: #800000;">Student object (name: %s)</span><span style="color: #800000;">'</span> % self.name</pre>
+</div>
+<p>偷懒的写法：写完__str__()后，__repr__ = __str__</p>
+<p>&nbsp;</p>
+<p>2、<span style="color: #ff0000;">__iter__()<span style="color: #000000;">、</span>__next__()</span>。简单的例子：</p>
+<div class="cnblogs_code">
+<pre>#!/usr/bin/<span style="color: #000000;">env python3
+# </span>-*- coding: utf-<span style="color: #800080;">8</span> -*-
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> f():
+    def __init__(self):
+        self.a </span>= <span style="color: #800080;">0</span><span style="color: #000000;">
+
+    def __iter__(self):
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> self # 返回一个迭代对象给for
+
+    def __next__(self): # 实现一个next方法给for调用
+        self.a </span>+= <span style="color: #800080;">1</span>
+        <span style="color: #0000ff;">return</span> self.a </pre>
+</div>
+<p>&nbsp;</p>
+<p>4、<span style="color: #ff0000;">__getitem__</span>：让自定义对象表现得像list、str等类型一样。（可以进行索引、切片等操作）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__getitem__</span><span style="color: #000000;">(self, n):
+        </span><span style="color: #0000ff;">return</span> n</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> f
+</span>&gt;&gt;&gt; f()[1<span style="color: #000000;">]
+</span>1
+&gt;&gt;&gt; f()[3<span style="color: #000000;">]
+</span>3</pre>
+</div>
+<p>&nbsp;如果要支持切片：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__getitem__</span><span style="color: #000000;">(self, n):
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(n, int):
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(n, slice):
+            start </span>=<span style="color: #000000;"> n.start
+            stop </span>=<span style="color: #000000;"> n.stop
+            </span><span style="color: #0000ff;">if</span> start == None: <span style="color: #008000;">#</span><span style="color: #008000;">例如[:3]默认为[0:3]</span>
+                start =<span style="color: #000000;"> 0
+            L </span>=<span style="color: #000000;"> []
+            </span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(start, stop):
+                L.append(x)
+            </span><span style="color: #0000ff;">return</span> L</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; f()[1:3<span style="color: #000000;">]
+[</span>1, 2]</pre>
+</div>
+<p>&nbsp;</p>
+<p>5、<span style="color: #ff0000;">__getattr__</span>：attr是attribute的简写。当实例本身不具备某个属性，却又强行被调用的时候会调用该函数。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self):
+        self.a </span>= 1111<span style="color: #000000;">
+        self.b </span>= 33333
+    
+    <span style="color: #0000ff;">def</span> <span style="color: #800080;">__getattr__</span><span style="color: #000000;">(self, attr):
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">"</span><span style="color: #800000;">i had not attribute </span><span style="color: #800000;">"</span> + attr + <span style="color: #800000;">"</span><span style="color: #800000;">!</span><span style="color: #800000;">"</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> f().a
+</span>1111
+&gt;&gt;&gt;<span style="color: #000000;"> f().b
+</span>33333
+&gt;&gt;&gt;<span style="color: #000000;"> f().c
+</span><span style="color: #800000;">'</span><span style="color: #800000;">i had not attribute c!</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>&nbsp;当然也可以返回函数。</p>
+<p><span style="line-height: 1.5;">利用完全动态的<code>__getattr__</code>，可以写出一个链式调用。。。<br /></span></p>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5;">6、<span style="color: #ff0000;">__call__</span>。</span></p>
+<p><span style="line-height: 1.5;">1）判断一个变量是对象还是函数：callable()。</span></p>
+<p><span style="line-height: 1.5;">2）把对象变成函数的方法：重写__call__方法。</span></p>
+<p><span style="line-height: 1.5;">such：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> f:
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__call__</span><span style="color: #000000;">(self, a, b):
+        </span><span style="color: #0000ff;">return</span> a + b</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; sum =<span style="color: #000000;"> f()
+</span>&gt;&gt;&gt; sum(1, 2<span style="color: #000000;">)
+</span>3</pre>
+</div>
+<p>&nbsp;</p>
+<p>更多python的定制方法参考python官方文档。</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;"><a name="5"></a>【使用枚举类】</span></strong></p>
+<p>在Python中枚举类型也可以被视为一个类。</p>
+<p>1、有两种方式可以创建这种类。</p>
+<p>1）赋值法。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; from <span style="color: #0000ff;">enum</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> Enum
+</span>&gt;&gt;&gt; Colors = Enum('Colors', ('RED', 'YELLOW', 'BLUE'))</pre>
+</div>
+<p><span style="line-height: 1.5;">自然的操作，尝试打印一个Enum常量：</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> Colors.RED
+</span>&lt;Colors.RED: 1&gt; </pre>
+</div>
+<p><span style="line-height: 1.5;">2）继承Enum。</span></p>
+<div class="cnblogs_code">
+<pre>from <span style="color: #0000ff;">enum</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> Enum, unique
+<br />@unique
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Colors(Enum):
+    RED </span>= 10086<span style="color: #000000;">
+    YELLOW </span>= 111<span style="color: #000000;">
+    BLUE </span>= 2222</pre>
+</div>
+<p>尝试打印：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> Colors
+</span>&gt;&gt;&gt;<span style="color: #000000;"> Colors.RED
+</span>&lt;Colors.RED: 10086&gt;</pre>
+</div>
+<p>10086即是RED的value。ps：@unique装饰器可以帮助检查有没有重复值。</p>
+<p>&nbsp;</p>
+<p>2、枚举类用于逻辑关系运算 &amp; 打印枚举类型变量</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; myColor =<span style="color: #000000;"> Colors.BLUE
+</span>&gt;&gt;&gt; myColor ==<span style="color: #000000;"> Colors.RED
+False
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">print</span><span style="color: #000000;">(myColor)
+Colors.BLUE</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><a name="6"></a>【使用元类】</span></p>
+<p>&nbsp;1、Python中的type()。</p>
+<p>type()是用来干嘛的呢？根据字面上的意思很容易想到，可以通过type来输出Python中各种构件的类型，例如：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; type(1<span style="color: #000000;">)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">int</span><span style="color: #800000;">'</span>&gt;
+&gt;&gt;&gt; type(<span style="color: #800000;">'</span><span style="color: #800000;">hi python</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">str</span><span style="color: #800000;">'</span>&gt;
+&gt;&gt;&gt; type(<span style="color: #0000ff;">lambda</span><span style="color: #000000;"> x: x)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">function</span><span style="color: #800000;">'</span>&gt;</pre>
+</div>
+<p>尝试传入类名、对象会发现：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyClass(object):
+...     </span><span style="color: #0000ff;">pass</span><span style="color: #000000;">
+...
+</span>&gt;&gt;&gt;<span style="color: #000000;"> type(MyClass)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">type</span><span style="color: #800000;">'</span>&gt;
+&gt;&gt;&gt;<span style="color: #000000;"> type(MyClass())
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">__main__.MyClass</span><span style="color: #800000;">'</span>&gt;</pre>
+</div>
+<p>MyClass()对象的类型是MyClass，而MyClass类的类型是type！</p>
+<p>这就说明，MyClass本身也可以被看作是由type创建的对象，而MyClass这个对象又具备创建对象的能力。</p>
+<p>因此，type()除了可以用于查看各种Python构件的类型外，还可以用来创建类。</p>
+<p>实际上在Python的解释器内部创建类的工作都是自动调用type()完成的。那么如何手动调用type()呢？</p>
+<p>只需要将传统的class创建方式映射到type()上来就可以了。</p>
+<p>一个传统的dog：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Dog(object):
+
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, name, age):
+        self.name </span>=<span style="color: #000000;"> name
+        self.age </span>=<span style="color: #000000;"> age
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> run(self):
+        </span><span style="color: #0000ff;">print</span>(self.name + <span style="color: #800000;">'</span><span style="color: #800000;"> run!\n</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> Dog
+</span>&gt;&gt;&gt; i = Dog(<span style="color: #800000;">'</span><span style="color: #800000;">Huahua</span><span style="color: #800000;">'</span>, 2<span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> i.run()
+Huahua run!</span></pre>
+</div>
+<p><span style="line-height: 1.5;">一个type()创建的dog类：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 先把组件写好</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 构造器</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f1(self, name, age):
+    self.name </span>=<span style="color: #000000;"> name
+    self.age </span>=<span style="color: #000000;"> age
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> run方法</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f2(self):
+    </span><span style="color: #0000ff;">print</span>(self.name + <span style="color: #800000;">'</span><span style="color: #800000;"> run!\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 组装成type()</span>
+Dog = type(<span style="color: #800000;">'</span><span style="color: #800000;">Dog</span><span style="color: #800000;">'</span>, (object,), dict(<span style="color: #800080;">__init__</span>=f1, run=f2))</pre>
+</div>
+<p>测试：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">def</span><span style="color: #000000;"> f1(self, name, age):
+...     self.name </span>=<span style="color: #000000;"> name
+...     self.age </span>=<span style="color: #000000;"> age
+...
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">def</span><span style="color: #000000;"> f2(self):
+...     </span><span style="color: #0000ff;">print</span>(self.name + <span style="color: #800000;">'</span><span style="color: #800000;"> run!\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+...
+</span>&gt;&gt;&gt; Dog = type(<span style="color: #800000;">'</span><span style="color: #800000;">Dog</span><span style="color: #800000;">'</span>, (object,), dict(<span style="color: #800080;">__init__</span>=f1, run=<span style="color: #000000;">f2))
+</span>&gt;&gt;&gt; i = Dog(<span style="color: #800000;">'</span><span style="color: #800000;">Lele</span><span style="color: #800000;">'</span>, 3<span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> i.run()
+Lele run!</span></pre>
+</div>
+<p>&nbsp;为什么使用type()而不是class来创建类呢？因为type()更具动态性。</p>
+<p>&nbsp;</p>
+<p>2、元类。参考博客：<a href="http://blog.jobbole.com/21351/" target="_blank">深刻理解Python中的元类</a></p>
+<p>为什么使用metaclass？和使用type一样，为了创建基于上下文的类。</p>
+<p>什么是metaclass？type就是Python内置的一个metaclass！</p>
+<p>一个使用metaclass会让事情变得简单的例子：数据库的GUI。（用type做不了，非metaclass不可）</p>
+<p>定义metaclass</p>
+<p>用metaclass创建类</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="foot"></a>这里是FO是</p>
+<p>&nbsp;</p>

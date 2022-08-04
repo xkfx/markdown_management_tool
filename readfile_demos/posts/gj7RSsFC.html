@@ -1,0 +1,42 @@
+<p><span style="font-family: 宋体;"><a href="#a1">什么是属性？</a></span></p>
+<p><span style="font-family: 宋体;"><a href="#a2">属性和参数</a></span></p>
+<p><span style="font-family: 宋体;"><a href="#a3">属性的3个作用域</a></span></p>
+<p><span style="font-family: 宋体;"><a href="#a4">属性API</a></span></p>
+<p><span style="font-family: 宋体;"><a href="#a5">属性不好的一面</a></span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<p><span style="font-family: 宋体;"><a name="a1"></a>1、到底什么是属性（Attribute）？</span></p>
+<p><span style="font-family: 宋体;">属性就是一个对象，可以被设置（bound，也可以叫绑定）到另外三个servlet API对象ServletContext、HttpSession、HttpServletRequest中。可以把它简单地认为是一个名/值对，名是String、值是object。在实际中，我们并不知道也不关心它具体如何实现，我们关心的只是属性所在的作用域。</span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<p><span style="font-family: 宋体;"><a name="a2"></a>2、属性不是参数（P<span class="op_dict_text2"><span class="op_dict_text2">arameter</span></span>）！</span></p>
+<p><span style="font-family: 宋体;">笔记1中的参数&mdash;&mdash;请求参数：</span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603200917930-1955477019.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;">笔记7中的参数&mdash;&mdash;servlet初始化参数：</span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603201126758-1688298583.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603201141008-303975423.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;">以及，上下文初始化参数参数：</span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603201259977-262768979.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603201324305-2052112772.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<p><span style="font-family: 宋体;"><a name="a3"></a>3、属性的3个作用域：</span></p>
+<ul>
+<li><span style="font-family: 宋体;">ServletContext属性（上下文属性）&mdash;&mdash;Web应用中的每一部分都能访问</span></li>
+<li><span style="font-family: 宋体;">HttpSession属性（会话属性）&mdash;&mdash;能访问特定的HttpSession的部分才可访问</span></li>
+<li><span style="font-family: 宋体;">HttpServletRequest属性（请求属性）&mdash;&mdash;能访问特定的ServletRequest的部分才可访问</span></li>
+</ul>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<p><span style="font-family: 宋体;"><a name="a4"></a>4、设置、访问属性的API&mdash;&mdash;每个接口（ServletContext、HttpS......）的属性API完全相同</span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603202849727-700508505.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;">关于Enumeration，参见<a href="http://blog.csdn.net/qq924862077/article/details/48022185" target="_blank">Java-Enumeration总结 by&nbsp;IAMTJW</a></span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<p><span style="font-family: 宋体;"><a name="a5"></a>5、属性不好的一面.&middot;&middot;.```..``..`.`.`...`..</span></p>
+<ol>
+<li><span style="font-family: 宋体;">上下文属性不是线程安全的！一个上下文属性可能同时被多个servlet所更改、访问。糟糕的解决方案是给doGet(或者是其它方法)加上synchronized，这样并不能解决问题，原因在于synchronized只能防止同一个servlet中的其他线程访问上下文属性，但是不能阻止另外一个servlet访问。关于synchronized参见<a href="http://www.cnblogs.com/GnagWang/archive/2011/02/27/1966606.html" target="_blank">java synchronized详解&nbsp;by&nbsp;Gang.Wang</a>。<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603204816649-1516579781.png" alt="" width="843" height="286" /></span>
+<p><span style="font-family: 宋体;">正确的方法是：对上下文加锁，而不是对servlet加锁。怎么实现呢？看下面的代码：<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603210634618-1686893319.png" alt="" width="760" height="158" /></span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+</li>
+<li><span style="font-family: 宋体;">会话属性是线程安全的吗？不是，因为用户可能打开好几个浏览器窗口...解决方案类似：<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603213239649-24842837.png" alt="" width="709" height="184" /></span></li>
+<li><span style="font-family: 宋体;"><strong>只有</strong>请求属性和局部变量是线程安全的！<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170603213633414-250965981.png" alt="" /></span>
+<p><span style="font-family: 宋体;">要注意的是servlet的实例域不是线程安全的，除非实现了SingleThreadModel,或者是同步服务方法，但这是十分糟糕的做法，会让Web应用的效率变得非常差，所以，一个servlet根本不该有实例变量，有也应该是final的，如果真的需要在多个线程中共享一些东西，那就把它加到合适的作用域上去。</span></p>
+</li>
+</ol>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>

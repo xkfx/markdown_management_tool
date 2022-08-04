@@ -1,0 +1,31 @@
+<p><span style="background-color: #ffff00;">《c++ primer, 5E》</span></p>
+<p>第58页到第64页，笔记:</p>
+<p>1、运行时才能获得具体值的常量不属于常量表达式（constexpr）。</p>
+<p>2、如果认定变量是一个常量表达式，那就把它声明成constexpr。</p>
+<p>3、定义于所以函数体之外的对象其地址固定不变。</p>
+<p>4、在typedef char *pstring中，pstring是指向char的指针，</p>
+<p>因此const pstring 就是指向char 的常量指针。</p>
+<p>5、auto一般会忽略掉顶层const。</p>
+<p>6、不能为非常量引用绑定字面值。</p>
+<p>7、c++11：auto与decltype的区别。引用在任何地方都被当作别名对待，</p>
+<p>只有在decltype处是一个例外。</p>
+<p>8、int *p = &amp;i，对p进行解引用得到的是引用类型，故decltype(*p)结果类型是int&amp;。</p>
+<p>9、decltype（（variable））的结果永远是引用。赋值是会产生引用类型的典型表达式，</p>
+<p>引用类型就是左值类型，表达式i=x的结果类型是int&amp;（表达式本身也有值， 可以作为操作数）</p>
+<p><span style="background-color: #ffff00;">遇到的问题：</span><br /> <br />1、以c++11标准编译：g++ -g -Wall -std=c++11 prog1.cpp。</p>
+<p><br /><span style="background-color: #ffff00;">课后练习:</span></p>
+<p><span style="color: #ff0000;">练习2.32</span></p>
+<p>非法。</p>
+<p><span style="color: #ff0000;">练习2.33</span></p>
+<p>合法； 合法； 合法；<br />非法； 非法； 非法；</p>
+<p><span style="color: #ff0000;">练习2.34</span></p>
+<p>略</p>
+<p><span style="color: #ff0000;">练习2.35</span></p>
+<p>i是int常量；<br />j是int变量；<br />k是i的引用；<br />p是指向常量的指针；<br />j2是int常量；<br />k2是i的引用；</p>
+<p><span style="color: #ff0000;">练习2.36</span></p>
+<p>c是int型，结束后是4；<br />d是a的引用，结果是3；</p>
+<p><span style="color: #ff0000;">练习2.37</span></p>
+<p>c是int型, 值为3；<br />d是int型的引用，值为3；</p>
+<p><span style="color: #ff0000;">练习2.38</span></p>
+<p>略</p>
+<p>&nbsp;</p>

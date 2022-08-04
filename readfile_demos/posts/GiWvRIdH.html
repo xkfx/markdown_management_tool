@@ -1,0 +1,350 @@
+<p>看到第四章才发现这本书已经太旧了。。看到第 3 章为止吧。前三章主要讲的内容：一些编码常识、怎样选择元<span style="color: #ff0000;">素、盒子模型（主要是 Margin）、定位（绝对、相对、浮动、fixed 等）</span></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">第一章&nbsp;</span></h4>
+<p><strong><em>conventions</em></strong></p>
+<p><strong><em><a href="https://validator.w3.org/" target="_blank">validator</a>&nbsp;</em></strong></p>
+<p><span class="fontstyle0"><strong><em>DOCTYPE switching</em> </strong><br /></span></p>
+<p><span class="fontstyle0">The browser chooses which rendering method to use based on the existence of a DOCTYPE declaration and the DTD being used. <br /></span></p>
+<p><span class="fontstyle0">Despite writing valid CSS, if you choose the wrong DOCTYPE,<br />your pages will be rendered in quirks mode and behave in a buggy and unpredictable way. </span></p>
+<p><a href="https://www.w3.org/TR/html4/" target="_blank"><span class="fontstyle0"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324123634004-1991540267.png" alt="" width="354" height="211" /></span></a></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><span class="fontstyle0">第二章</span></span></h4>
+<p><em><strong><span class="fontstyle0"><span class="fontstyle0">Selectors<br /></span></span></strong></em></p>
+<p><em><strong><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0">The cascade and specificity <br /></span></span></span></strong></em></p>
+<p><em><strong><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0">Inheritance:&nbsp;<span class="fontstyle0">inherited styles <span style="color: #ff0000;">have</span> <span style="color: #ff0000;">a null&nbsp;specificity </span></span></span></span></span></span></strong></em></p>
+<p><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><em><span class="fontstyle0"><span class="fontstyle0"><strong>Structural comments</strong> </span></span></em><br /></span></span></span></span></p>
+<p><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><span class="fontstyle0"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324124251272-1272613162.png" alt="" width="616" height="169" /></span></span></span></span></span></span></p>
+<p>配合 Ctrl + F 使用。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">第三章</span></h4>
+<p><em><strong>Box model</strong></em></p>
+<p><em><strong>Positioning: normal flow(+relative), floats, absolute(+fixed)</strong></em></p>
+<p><em><strong><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325094240369-96199558.png" alt="" width="632" height="47" /></strong></em></p>
+<p>尝试一：增大 padding borders margins 不会影响 content 的区域，而是增加盒子的整体大小。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box1 p </span>{<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> pink</span>;<span style="color: #ff0000;">
+    border-width</span>:<span style="color: #0000ff;"> 0px</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> 只是为了说明 border 也是可以设置&ldquo;粗细&rdquo;的 </span><span style="color: #008000;">*/</span> 
+}<span style="color: #800000;">
+
+#box1 #p1 </span>{<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 5px</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> dashed</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 10px</span>;
+}<span style="color: #800000;">
+
+#box1 #p2 </span>{
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324212556452-1734698665.png" alt="" />&nbsp; &nbsp; &nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324212543136-1459234458.png" alt="" />&nbsp;</p>
+<p>/</p>
+<p>尝试二： Margin collapsing</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box1 #p1 </span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 30px</span>;
+}<span style="color: #800000;">
+
+#box1 #p2 </span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 20px</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324212805932-90751976.png" alt="" /></p>
+<p>/</p>
+<p>尝试三：Collapse on themselves</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="box1"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p2"</span><span style="color: #0000ff;">&gt;</span>你<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box1 #p1 </span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 30px</span>;
+}<span style="color: #800000;">
+
+#box1 #p2 </span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 20px</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324213219894-1562505214.png" alt="" width="457" height="130" />在&ldquo;你&rdquo;的上面还有 30px 空间。</p>
+<p>/</p>
+<p>尝试四：Margin collapsing 之包含关系</p>
+<div class="cnblogs_code">
+<pre>#branding {
+    width: 15em;
+    height: 15em;<strong>
+    margin: 30px;</strong>
+    background-color: darkorchid;
+}
+
+#branding .tel {
+    width: 10em;
+    height: 10em;<strong>
+    margin: 20px;</strong>
+    background-color: white;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325093057520-1920316418.png" alt="" width="281" height="257" />可以观察到左边是不会层叠的，上面和下面会，具体的实际数值取决于更大那个（可以是里面的！）。</p>
+<p>&nbsp;/</p>
+<p>尝试五：改变盒子的类型</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="box1"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p1"</span><span style="color: #0000ff;">&gt;</span>白日依山尽<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p2"</span><span style="color: #0000ff;">&gt;</span>黄河入海流<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p3"</span><span style="color: #0000ff;">&gt;</span>欲穷千里目<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box1 #p1 </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>; 
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 对 div 来说这是默认的 </span><span style="color: #008000;">*/</span>
+}<span style="color: #800000;">
+
+#box1 #p2 </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline</span>;
+}<span style="color: #800000;">
+
+#box1 #p3 </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> none</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324214156519-1902846744.png" alt="" />&nbsp;欲穷千里目不占空间！ （彻底消失）</p>
+<p>/</p>
+<p>尝试六：inline block</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="block1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="inline1"</span><span style="color: #0000ff;">&gt;</span>我不行了<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="inline1"</span><span style="color: #0000ff;">&gt;</span>躺在担架上<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="block1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#block1 </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> pink</span>;
+}<span style="color: #800000;">
+
+#inline1 </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;"> 
+    width</span>:<span style="color: #0000ff;"> 10em</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 在行内框里显示的设置长度高度是没有用的 哦 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> royalblue</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325095215031-89480356.png" alt="" width="183" height="257" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#block1 </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> pink</span>;
+}<span style="color: #800000;">
+
+#inline1 </span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> dashed 1em</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 可以通过改变 margin padding border 来改变行间距</span><span style="color: #008000;">*/</span>
+  <strong>  <span style="color: #008000;">/*</span><span style="color: #008000;"> 注意仅仅是行间距，垂直间距不会变化 </span><span style="color: #008000;">*/</span></strong><span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> royalblue</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325095525026-1158427466.png" alt="" /></p>
+<p>可以通过改变行高改变垂直间距：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#inline1 </span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> dashed 1em</span>;<span style="color: #ff0000;">
+    line-height</span>:<span style="color: #0000ff;"> 3em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> royalblue</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325100813356-1478288053.png" alt="" /></p>
+<p>或者直接改成 display: inline-block;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325101107874-1094258895.png" alt="" width="148" height="161" /></p>
+<p>匿名块框（奇怪怎么没有border?）：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325101627806-463892363.png" alt="" width="302" height="116" /></p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="block1"</span><span style="color: #0000ff;">&gt;</span><strong><span style="color: #000000;">
+            如果我在这里打一行字
+            </span></strong><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="inline1"</span><span style="color: #0000ff;">&gt;</span>我不行了<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="inline1"</span><span style="color: #0000ff;">&gt;</span>躺在担架上<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="block1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#inline1, <strong>div:first-line </strong></span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> dashed 1em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> royalblue</span>;
+}</pre>
+</div>
+<p>/</p>
+<p>尝试七：Relative positioning</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box1 #p1 </span>{
+}<span style="color: #800000;">
+
+#box1 #p2 </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 20px</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 20px</span>;
+}<span style="color: #800000;">
+
+#box1 #p3 </span>{
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324214742806-1885602428.png" alt="" />&nbsp;本质上还是 normal flow&nbsp;</p>
+<p>/</p>
+<p>尝试八：Absolute positioning</p>
+<p>绝对定位令对象元素从原来的&ldquo;文档流&rdquo;中脱离。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box1 #p2 </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 20px</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 20px</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180324215055987-1094526196.png" alt="" /></p>
+<p>&nbsp;/</p>
+<p>尝试九：Absolute positioning 之二</p>
+<p>w3school：绝对定位的元素的位置相对于<strong>最近的<span style="color: #ff0000;">已定位</span></strong>祖先元素，如果元素没有已定位的祖先元素，那么它的位置相对于<span style="text-decoration: line-through;">最初的包含块</span>。(这取决于user agent)</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="branding"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="tel"</span><span style="color: #0000ff;">&gt;</span>Tel: 3123 2312 0981<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>注意是最近的<strong>已定位的</strong>祖先元素哦！！下面两个效过是不一样的：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#branding </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 70em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;"> /* 这样才算已定位，虽然其实并没有做相对偏移 */
+    background-color</span>:<span style="color: #0000ff;"> darkorchid</span>;
+}<span style="color: #800000;">
+
+#branding .tel </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> left</span>;
+}</pre>
+</div>
+<p>tel 相对于 branding &darr;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325091150437-1745004429.png" alt="" width="329" height="183" /></p>
+<p>tel 相对于 body（或者是用户视图，不管放大缩小总是在可以看到的那块区域的那个绝对位置，视觉上会变大就是了） &darr;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#branding </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 70em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> darkorchid</span>;
+}<span style="color: #800000;">
+
+#branding .tel </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> left</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325091954925-413462416.png" alt="" width="269" height="243" /></p>
+<p>/</p>
+<p>尝试十：fixed</p>
+<p>效果和上面那个 去掉 relative 一样，相对 viewport 的绝对定位</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#branding </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 70em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> darkorchid</span>;
+}<span style="color: #800000;">
+
+#branding .tel </span>{<strong><span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> fixed</span>;</strong><span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> left</span>;
+}</pre>
+</div>
+<p>&nbsp;/</p>
+<p>尝试十一：float: left;</p>
+<div class="cnblogs_code">
+<pre>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="box1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="box2"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="box3"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">div </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 10em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> crimson</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">float: left;</span><span style="color: #008000;">*/</span>
+}</pre>
+</div>
+<p>无&nbsp;float: left;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325104158095-704949499.png" alt="" width="429" height="183" /></p>
+<p>float: left;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325104305767-795856934.png" alt="" width="313" height="116" /></p>
+<p>如果没有足够的水平空间，浮动元素将向下移动，直到有足够的空间：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">#box2 </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 5em</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 24em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> aquamarine</span>;
+}<span style="color: #800000;">
+
+#box3 </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 40em</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 7em</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> chartreuse</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325104952546-490104436.png" alt="" width="529" height="86" /></p>
+<p>放大 &darr;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325105041742-100260380.png" alt="" width="425" height="147" /></p>
+<p>再放大 &darr;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325105116368-784091190.png" alt="" width="357" height="142" /></p>
+<p>继续放大 &darr;</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325105200311-1248733441.png" alt="" width="329" height="249" /></p>
+<p>&nbsp;/</p>
+<p>尝试十二：clear</p>
+<div class="cnblogs_code">
+<pre>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">我与父亲不相见已二年余了，我最不能忘记的是他的背影。
+那年冬天，祖母死了，父亲的差使1也交卸了，正是祸不单行的日子。我从北京到徐州，打算跟着父亲奔丧2回家。到徐州见着父亲，看见满院狼藉3的东西，又想起祖母，不禁簌簌地流下眼泪。父亲说：&ldquo;事已如此，不必难过，好在天无绝人之路！&rdquo;
+回家变卖典质4，父亲还了亏空；又借钱办了丧事。这些日子，家中光景5很是惨澹，一半为了丧事，一半为了父亲赋闲6。丧事完毕，父亲要到南京谋事，我也要回北京念书，我们便同行。
+到南京时，有朋友约去游逛，勾留7了一日；第二日上午便须渡江到浦口，下午上车北去。父亲因为事忙，本已说定不送我，叫旅馆里一个熟识的茶房8陪我同去。他再三嘱咐茶房，甚是仔细。但他终于不放心，怕茶房不妥帖9；颇踌躇10了一会。其实我那年已二十岁，北京已来往过两三次，是没有什么要紧的了。他踌躇了一会，终于决定还是自己送我去。我再三劝他不必去；他只说：&ldquo;不要紧，他们去不好！&rdquo;
+我们过了江，进了车站。我买票，他忙着照看行李。行李太多，得向脚夫11行些小费才可过去。他便又忙着和他们讲价钱。我那时真是聪明过分，总觉他说话不大漂亮，非自己插嘴不可，但他终于讲定了价钱；就送我上车。他给我拣定了靠车门的一张椅子；我将他给我做的紫毛大衣铺好座位。他嘱我路上小心，夜里要警醒些，不要受凉。又嘱托茶房好好照应我。我心里暗笑他的迂；他们只认得钱，托他们只是白托！而且我这样大年纪的人，难道还不能料理自己么？我现在想想，我那时真是太聪明了。
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="context"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">我说道：&ldquo;爸爸，你走吧。&rdquo;他望车外看了看，说：&ldquo;我买几个橘子去。你就在此地，不要走动。&rdquo;我看那边月台的栅栏外有几个卖东西的等着顾客。走到那边月台，须穿过铁道，须跳下去又爬上去。父亲是一个胖子，走过去自然要费事些。我本来要去的，他不肯，只好让他去。我看见他戴着黑布小帽，穿着黑布大马褂12，深青布棉袍，蹒跚13地走到铁道边，慢慢探身下去，尚不大难。可是他穿过铁道，要爬上那边月台，就不容易了。他用两手攀着上面，两脚再向上缩；他肥胖的身子向左微倾，显出努力的样子。这时我看见他的背影，我的泪很快地流下来了。我赶紧拭干了泪。怕他看见，也怕别人看见。我再向外看时，他已抱了朱红的橘子往回走了。过铁道时，他先将橘子散放在地上，自己慢慢爬下，再抱起橘子走。到这边时，我赶紧去搀他。他和我走到车上，将橘子一股脑儿放在我的皮大衣上。于是扑扑衣上的泥土，心里很轻松似的。过一会儿说：&ldquo;我走了，到那边来信！&rdquo;我望着他走出去。他走了几步，回过头看见我，说：&ldquo;进去吧，里边没人。&rdquo;等他的背影混入来来往往的人里，再找不着了，我便进来坐下，我的眼泪又来了。
+近几年来，父亲和我都是东奔西走，家中光景是一日不如一日。他少年出外谋生，独力支持，做了许多大事。哪知老境却如此颓唐！他触目伤怀，自然情不能自已。情郁于中，自然要发之于外；家庭琐屑便往往触他之怒。他待我渐渐不同往日。但最近两年不见，他终于忘却我的不好，只是惦记着我，惦记着他的儿子。我北来后，他写了一信给我，信中说道：&ldquo;我身体平安，惟膀子疼痛厉害，举箸14提笔，诸多不便，大约大去之期15不远矣。&rdquo;我读到此处，在晶莹的泪光中，又看见那肥胖的、青布棉袍黑布马褂的背影。唉！我不知何时再能与他相见！[2] 
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325111206994-956417281.png" alt="" width="288" height="170" />原始状态，浮动状态 &darr;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325111748607-2116557037.png" alt="" width="198" height="176" /></p>
+<p>clear: left （它表示框的左边不应该挨着 浮动框）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">span </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+    clear</span>:<span style="color: #0000ff;"> left</span>;
+}<span style="color: #800000;">
+
+#context </span>{<span style="color: #ff0000;">
+    clear</span>:<span style="color: #0000ff;"> left</span>;
+}</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180325111548155-1110739136.png" alt="" width="409" height="191" /></p>
+<p><strong><span style="color: #0000ff;"><span style="color: #0000ff;"><a class="postTitle2" href="http://www.cnblogs.com/acorn/p/5249089.html">CSS浮动(float,clear)通俗讲解</a>&nbsp; 这篇写得挺通俗</span></span></strong></p>
+<p>&nbsp;</p>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/12871710/what-does-the-css-rule-clear-both-do" target="_blank">What does the CSS rule &ldquo;clear: both&rdquo; do?</a>&nbsp;其实是在讲为什么需要 clear.both ，和书上的内容有点相似</p>
+<p>&nbsp;</p>

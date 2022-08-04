@@ -1,0 +1,375 @@
+<p>本文的主要内容：</p>
+<ol>
+<li><a href="#a1">HTTP VS. WebSocket</a></li>
+<li><a href="#a2">WebSocket 的客户端实现（JavaScript）</a></li>
+<li><a href="#a3">WebSocket 的服务端实现（Java &amp; apache WebSocketAPI）</a></li>
+<li><a href="#a4">WebSocket 其他资料</a></li>
+</ol>
+<p>&nbsp;</p>
+<h2><a name="a1"></a>HTTP VS. WebSocket</h2>
+<p>简单来讲， WebSocket 就是一种允许服务端主动向客户端 PUSH 数据的技术。</p>
+<p>传统的 HTTP 只能是客户端先主动向服务器发起请求然后获得服务器响应。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">WebSocket是HTML5开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。
+
+在WebSocket API中，浏览器和服务器只需要做一个握手的动作，然后，浏览器和服务器之间就形成了一条快速通道。两者之间就直接可以数据互相传送。
+
+浏览器通过 JavaScript 向服务器发出建立 WebSocket 连接的请求，连接建立以后，客户端和服务器端就可以通过 TCP 连接直接交换数据。
+
+当你获取 Web Socket 连接后，你可以通过 send() 方法来向服务器发送数据，并通过 onmessage 事件来接收服务器返回的数据。</span></pre>
+</div>
+<p>上面是<a href="http://www.runoob.com/html/html5-websocket.html" target="_blank">网络上</a>对于 websocket 的一段简短介绍。</p>
+<p>值得一提的是，有不少人认为 websocket （于2011年被IETF定为标准RFC 6455）是一项可以取代 AJAX （约 1998 年前后得到应用）的技术。</p>
+<p>简单的草图（。。自己画的<span style="text-decoration: line-through;">不太</span>极不严谨，例如说ws最开始有个 HTTP 验证漏掉了。。但是可以表达大概意思吧）：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180531170011323-219850185.png" alt="" width="729" height="292" /></p>
+<p>然后是我收集的一些关于 websocket 的资料：</p>
+<p>1、<a href="https://en.wikipedia.org/wiki/WebSocket">WebSocket - Wikipedia</a>&nbsp;比较权威、全面</p>
+<p><a name="z2"></a>2、<a href="http://blog.teamtreehouse.com/an-introduction-to-websockets">An Introduction to WebSockets - Treehouse Blog</a>&nbsp;生动的个人博客</p>
+<p>3、<a href="https://www.websocket.org/">websocket.org - Powered by Kaazing</a>&nbsp;以 websocket 为主题的网站！（websocket.org -&nbsp;WebSocket&nbsp;technology, demos, articles, and products.）</p>
+<p>4、<a href="http://www.runoob.com/html/html5-websocket.html">菜鸟教程之 websocket&nbsp;</a>&nbsp;赶时间的看这个。</p>
+<p>总而言之，websocket 非常强大，应用也非常多，例如说可以用来构建基于浏览器的网页游戏、即时聊天工具之类的。</p>
+<p>&nbsp;</p>
+<p>顺便收藏（主题无关 ~ ）：</p>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/4931323/whats-the-difference-between-getrequesturi-and-getpathinfo-methods-in-httpservl">What's the difference between getRequestURI and getPathInfo methods in HttpServletRequest?</a></p>
+<p>&nbsp;</p>
+<h2><a name="a2"></a>WebSocket 的客户端实现（JavaScript）</h2>
+<p>客户端代码完全拷贝自上面列出来的<a href="#z2">资料二</a>：</p>
+<p>&nbsp;index.html</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="utf-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>WebSockets Demo<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="style.css"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="page-wrapper"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>WebSockets Demo<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="status"</span><span style="color: #0000ff;">&gt;</span>Connecting...<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="messages"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="message-form"</span><span style="color: #ff0000;"> action</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">textarea </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="message"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="Write your message here..."</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">textarea</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #0000ff;">&gt;</span>Send Message<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="close"</span><span style="color: #0000ff;">&gt;</span>Close Connection<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="app.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>/</p>
+<p>style.css</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('056a0913-70ae-4d90-ba42-060c7c99066c')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_056a0913-70ae-4d90-ba42-060c7c99066c" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_056a0913-70ae-4d90-ba42-060c7c99066c" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_056a0913-70ae-4d90-ba42-060c7c99066c" class="cnblogs_code_hide">
+<pre><span style="color: #800000;">*, *:before, *:after </span>{<span style="color: #ff0000;">
+    -moz-box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;<span style="color: #ff0000;">
+    -webkit-box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;<span style="color: #ff0000;">
+    box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;
+}<span style="color: #800000;">
+
+html </span>{<span style="color: #ff0000;">
+    font-family</span>:<span style="color: #0000ff;"> Helvetica, Arial, sans-serif</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #333</span>;
+}<span style="color: #800000;">
+
+#page-wrapper </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 650px</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #FFF</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 1em</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 1em auto</span>;<span style="color: #ff0000;">
+    border-top</span>:<span style="color: #0000ff;"> 5px solid #69c773</span>;<span style="color: #ff0000;">
+    box-shadow</span>:<span style="color: #0000ff;"> 0 2px 10px rgba(0,0,0,0.8)</span>;
+}<span style="color: #800000;">
+
+h1 </span>{<span style="color: #ff0000;">
+    margin-top</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+
+#status </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 0.9rem</span>;<span style="color: #ff0000;">
+    margin-bottom</span>:<span style="color: #0000ff;"> 1rem</span>;
+}<span style="color: #800000;">
+
+.open </span>{<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> green</span>;
+}<span style="color: #800000;">
+
+.closed </span>{<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> red</span>;
+}<span style="color: #800000;">
+
+
+ul </span>{<span style="color: #ff0000;">
+    list-style</span>:<span style="color: #0000ff;"> none</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 0.95rem</span>;
+}<span style="color: #800000;">
+
+ul li </span>{<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0.5rem 0.75rem</span>;<span style="color: #ff0000;">
+    border-bottom</span>:<span style="color: #0000ff;"> 1px solid #EEE</span>;
+}<span style="color: #800000;">
+
+ul li:first-child </span>{<span style="color: #ff0000;">
+    border-top</span>:<span style="color: #0000ff;"> 1px solid #EEE</span>;
+}<span style="color: #800000;">
+
+ul li span </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 90px</span>;<span style="color: #ff0000;">
+    font-weight</span>:<span style="color: #0000ff;"> bold</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 0.7rem</span>;<span style="color: #ff0000;">
+    text-transform</span>:<span style="color: #0000ff;"> uppercase</span>;<span style="color: #ff0000;">
+    letter-spacing</span>:<span style="color: #0000ff;"> 1px</span>;
+}<span style="color: #800000;">
+
+.sent </span>{<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #F7F7F7</span>;
+}<span style="color: #800000;">
+
+.received </span>{}<span style="color: #800000;">
+
+#message-form </span>{<span style="color: #ff0000;">
+    margin-top</span>:<span style="color: #0000ff;"> 1.5rem</span>;
+}<span style="color: #800000;">
+
+textarea </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0.5rem</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 1rem</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> 1px solid #D9D9D9</span>;<span style="color: #ff0000;">
+    border-radius</span>:<span style="color: #0000ff;"> 3px</span>;<span style="color: #ff0000;">
+    box-shadow</span>:<span style="color: #0000ff;"> inset 0 1px 1px rgba(0, 0, 0, 0.1)</span>;<span style="color: #ff0000;">
+    min-height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+    margin-bottom</span>:<span style="color: #0000ff;"> 1rem</span>;
+}<span style="color: #800000;">
+
+button </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+    border-radius</span>:<span style="color: #0000ff;"> 3px</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> none</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 0.9rem</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0.6rem 1em</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> white</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0 0.25rem</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #BABABA</span>;<span style="color: #ff0000;">
+    border-bottom</span>:<span style="color: #0000ff;"> 1px solid #999</span>;
+}<span style="color: #800000;">
+
+button[type="submit"] </span>{<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #86b32d</span>;<span style="color: #ff0000;">
+    border-bottom</span>:<span style="color: #0000ff;"> 1px solid #5d7d1f</span>;
+}<span style="color: #800000;">
+
+button:hover </span>{<span style="color: #ff0000;">
+    opacity</span>:<span style="color: #0000ff;"> 0.75</span>;<span style="color: #ff0000;">
+    cursor</span>:<span style="color: #0000ff;"> pointer</span>;
+}</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>/</p>
+<p>app.js</p>
+<div class="cnblogs_code">
+<pre>window.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Get references to elements on the page.</span>
+    <span style="color: #0000ff;">var</span> form = document.getElementById('message-form'<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> messageField = document.getElementById('message'<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> messagesList = document.getElementById('messages'<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> socketStatus = document.getElementById('status'<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> closeBtn = document.getElementById('close'<span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> The rest of the code in this tutorial will go here...</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> Create a new WebSocket.</span>
+    <span style="color: #0000ff;">var</span> socket = <span style="color: #0000ff;">new</span> WebSocket('ws://echo.websocket.org'<span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Show a connected message when the WebSocket is opened.</span>
+    socket.onopen = <span style="color: #0000ff;">function</span><span style="color: #000000;">(event) {
+        socketStatus.innerHTML </span>= 'Connected to: ' +<span style="color: #000000;"> event.currentTarget.url;
+        socketStatus.className </span>= 'open'<span style="color: #000000;">;
+    };
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Handle any errors that occur.</span>
+    socket.onerror = <span style="color: #0000ff;">function</span><span style="color: #000000;">(error) {
+        console.log(</span>'WebSocket Error: ' +<span style="color: #000000;"> error);
+    };
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Send a message when the form is submitted.</span>
+    form.onsubmit = <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+        e.preventDefault();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Retrieve the message from the textarea.</span>
+        <span style="color: #0000ff;">var</span> message =<span style="color: #000000;"> messageField.value;
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Send the message through the WebSocket.</span>
+<span style="color: #000000;">        socket.send(message);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Add the message to the messages list.</span>
+        messagesList.innerHTML += '&lt;li class="sent"&gt;&lt;span&gt;Sent:&lt;/span&gt;' + message +
+            '&lt;/li&gt;'<span style="color: #000000;">;
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Clear out the message field.</span>
+        messageField.value = ''<span style="color: #000000;">;
+
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    };
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Handle messages sent by the server.</span>
+    socket.onmessage = <span style="color: #0000ff;">function</span><span style="color: #000000;">(event) {
+        </span><span style="color: #0000ff;">var</span> message =<span style="color: #000000;"> event.data;
+        messagesList.innerHTML </span>+= '&lt;li class="received"&gt;&lt;span&gt;Received:&lt;/span&gt;' +<span style="color: #000000;">
+            message </span>+ '&lt;/li&gt;'<span style="color: #000000;">;
+    };
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Show a disconnected message when the WebSocket is closed.</span>
+    socket.onclose = <span style="color: #0000ff;">function</span><span style="color: #000000;">(event) {
+        socketStatus.innerHTML </span>= 'Disconnected from WebSocket.'<span style="color: #000000;">;
+        socketStatus.className </span>= 'closed'<span style="color: #000000;">;
+    };
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Close the WebSocket connection when the close button is clicked.</span>
+    closeBtn.onclick = <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+        e.preventDefault();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Close the WebSocket.</span>
+<span style="color: #000000;">        socket.close();
+
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    };
+};</span></pre>
+</div>
+<p>&nbsp;/</p>
+<p>直接把 三个文件放在同一个目录下，用浏览器打开 index.html 就可以用了。连接的是<a href="http://blog.teamtreehouse.com/an-introduction-to-websockets" target="_blank">代码原作者</a>的 websocket 服务器。</p>
+<p>&nbsp;</p>
+<h2><a name="a3"></a>WebSocket 的服务端实现（Java &amp; apache WebSocketAPI）</h2>
+<p>代码来自<a href="https://github.com/xkfx/tomcat/blob/trunk/webapps/examples/WEB-INF/classes/websocket/chat/ChatAnnotation.java" target="_blank">&nbsp;Tomcat 的 websocket example</a>&nbsp;相比自己写的肯定要规范些。&darr;</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201806/1042431-20180601203814322-628503359.gif" alt="" width="743" height="465" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      </span><span style="color: #008000; text-decoration: underline;">http://www.apache.org/licenses/LICENSE-2.0</span><span style="color: #008000;">
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+package org.sample.web;
+
+import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.server.ServerEndpoint;
+
+@ServerEndpoint(value </span>= <span style="color: #800000;">"</span><span style="color: #800000;">/websocket</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ChatAnnotation {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> final String GUEST_PREFIX = <span style="color: #800000;">"</span><span style="color: #800000;">Guest</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> final AtomicInteger connectionIds = <span style="color: #0000ff;">new</span> AtomicInteger(<span style="color: #800080;">0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> final Set&lt;ChatAnnotation&gt; connections =
+            <span style="color: #0000ff;">new</span> CopyOnWriteArraySet&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> final String nickname;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Session session;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ChatAnnotation() {
+        nickname </span>= GUEST_PREFIX +<span style="color: #000000;"> connectionIds.getAndIncrement();
+    }
+
+
+    @OnOpen
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> start(Session session) {
+        </span><span style="color: #0000ff;">this</span>.session =<span style="color: #000000;"> session;
+        connections.add(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        String message </span>= String.format(<span style="color: #800000;">"</span><span style="color: #800000;">* %s %s</span><span style="color: #800000;">"</span>, nickname, <span style="color: #800000;">"</span><span style="color: #800000;">has joined.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        broadcast(message);
+    }
+
+
+    @OnClose
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> end() {
+        connections.remove(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        String message </span>= String.format(<span style="color: #800000;">"</span><span style="color: #800000;">* %s %s</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                nickname, </span><span style="color: #800000;">"</span><span style="color: #800000;">has disconnected.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        broadcast(message);
+    }
+
+
+    @OnMessage
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> incoming(String message) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Never trust the client</span>
+        String filteredMessage = String.format(<span style="color: #800000;">"</span><span style="color: #800000;">%s: %s</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                nickname, message.toString());
+        broadcast(filteredMessage);
+    }
+
+
+
+
+    @OnError
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onError(Throwable t) throws Throwable {
+    }
+
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> broadcast(String msg) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (ChatAnnotation client : connections) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                synchronized (client) {
+                    client.session.getBasicRemote().sendText(msg);
+                }
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                connections.remove(client);
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    client.session.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e1) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Ignore</span>
+<span style="color: #000000;">                }
+                String message </span>= String.format(<span style="color: #800000;">"</span><span style="color: #800000;">* %s %s</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        client.nickname, </span><span style="color: #800000;">"</span><span style="color: #800000;">has been disconnected.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+                broadcast(message);
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;在运行之前需要修改 app.js 中的地址：</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #008000;">//</span><span style="color: #008000;"> The rest of the code in this tutorial will go here...</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> Create a new WebSocket.</span>
+    <span style="color: #0000ff;">var</span> socket = <span style="color: #0000ff;">new</span> WebSocket('ws://localhost:8080/websocket');</pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="a4"></a>WebSocket 其他资料</h2>
+<p>当然，上面仅用到了 WebSocket API 的一个小子集，要想真正用好这些 API 并没那么简单。下面是我找到的一些学习资料（基本上看 URL 就知道什么内容了）：</p>
+<p>1、<a href="https://docs.oracle.com/javaee/7/api/javax/websocket/package-summary.html" target="_blank">https://docs.oracle.com/javaee/7/api/javax/websocket/package-summary.html</a></p>
+<p>2、<a href="https://docs.oracle.com/javaee/7/tutorial/websocket.htm" target="_blank">https://docs.oracle.com/javaee/7/tutorial/websocket.htm</a></p>
+<p>3、<a href="http://www.oracle.com/technetwork/articles/java/jsr356-1937161.html" target="_blank">http://www.oracle.com/technetwork/articles/java/jsr356-1937161.html</a></p>
+<p>4、<a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_a_WebSocket_server_in_Java" target="_blank">https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_a_WebSocket_server_in_Java</a>&nbsp;</p>
+<p>5、<a href="http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html" target="_blank">http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html</a></p>
+<p>6、<a href="http://www.baeldung.com/java-websockets" target="_blank">http://www.baeldung.com/java-websockets</a></p>
+<p>7、<a href="https://tomcat.apache.org/tomcat-9.0-doc/websocketapi/index.html" target="_blank">https://tomcat.apache.org/tomcat-9.0-doc/websocketapi/index.html</a></p>
+<p>8、<a href="https://benas.github.io/2016/02/21/using-the-java-api-for-webSocket-to-create-a-chat-server.html" target="_blank">https://benas.github.io/2016/02/21/using-the-java-api-for-webSocket-to-create-a-chat-server.html</a></p>

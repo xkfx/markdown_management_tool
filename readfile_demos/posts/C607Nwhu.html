@@ -1,0 +1,122 @@
+<p><span style="background-color: #ffff00;">p99~p101:</span></p>
+<p>1、迭代器的指向：容器内的元素或者尾元素的下一位。</p>
+<p><br />2、迭代器与整数相加减<strong>返回值为</strong>移动了若干位置的迭代器。</p>
+<p>&nbsp;</p>
+<p>3、迭代器间相加减<strong>返回值则是类</strong>型为<strong> difference_type</strong> 的带符号整数。</p>
+<p>&nbsp;</p>
+<p>4、使用迭代器运算的一个经典算法是二分搜索。</p>
+<p>&nbsp;</p>
+<p>（注：字典序实际是按照ASCII来排的，具体如下:</p>
+<p>&nbsp;</p>
+<p>0-9(对应数值48-59);A-Z(对应数值65-90);a-z(对应数值97-122);因此，按照从小到大排序，大写总是排在前面</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义一个有序的vector&lt;string&gt;</span>
+    vector&lt;<span style="color: #0000ff;">string</span>&gt; svec{<span style="color: #800000;">"</span><span style="color: #800000;">Abigal</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Baey</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Candice</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">DAISY</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">EILEEN</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">FREDERICA</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">GINA</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输入要查找的名字</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    cin </span>&gt;&gt;<span style="color: #000000;"> name;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 二分搜索</span>
+    auto beg = svec.begin(), end =<span style="color: #000000;"> svec.end();
+    auto mid </span>= svec.begin() + (end - beg)/<span style="color: #800080;">2</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (mid != end &amp;&amp; *mid !=<span style="color: #000000;"> name) {
+        </span><span style="color: #0000ff;">if</span> (name &lt; *<span style="color: #000000;">mid) {
+            end </span>=<span style="color: #000000;"> mid;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            beg </span>= mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+       <span style="color: #ff0000;"> mid </span></span><span style="color: #ff0000;">= beg + (end - beg)/2</span><span style="color: #000000;"><span style="color: #ff0000;">;</span>
+    }
+    </span><span style="color: #0000ff;">if</span> (*mid ==<span style="color: #000000;"> name) {
+        cout </span>&lt;&lt; mid - svec.begin() &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Not found!</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.24</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> temp) {
+        v.push_back(temp);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 用迭代器遍历、访问元素</span>
+    <span style="color: #0000ff;">for</span>(auto it =<span style="color: #000000;"> v.cbegin();
+        it </span>!= v.cend() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">it) {
+        cout </span>&lt;&lt; *it + *(it + <span style="color: #800080;">1</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> temp) {
+        v.push_back(temp);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 用迭代器遍历、访问元素</span>
+    auto head =<span style="color: #000000;"> v.cbegin();
+    auto tail </span>= v.cend() - <span style="color: #800080;">1</span><span style="color: #000000;">;    
+    </span><span style="color: #0000ff;">for</span>( ; head &lt;= tail; ++head, --<span style="color: #000000;">tail) {
+        cout </span>&lt;&lt; *head + *tail &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.25</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;unsigned&gt; score(<span style="color: #800080;">11</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    unsigned grade;
+    auto ind </span>=<span style="color: #000000;"> score.begin();
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> grade) {
+        </span><span style="color: #0000ff;">if</span> (grade &lt;= <span style="color: #800080;">100</span><span style="color: #000000;">)
+            </span>++*(ind + grade/<span style="color: #800080;">10</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto i: score) {
+        cout </span>&lt;&lt; i &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.26</span></p>
+<p>迭代器间不支持加法运算。（参考99页）</p>

@@ -1,0 +1,21 @@
+<p>1、设计package原因</p>
+<p>　　理解基目录的概念，思考jre加载class的顺序,如果没有package会怎么样？有了之后又是怎么样。。？</p>
+<p>　　主要:确保类名的唯一性。</p>
+<p>　　次要:方便组织代码</p>
+<p>2、怎样访问\导入一个类???</p>
+<p>&nbsp;</p>
+<p>　　一个类可以使用所属包中的所有类，以及其他包中的公有类。</p>
+<p>　　源文件是指(.java文件)而类是指(.class).</p>
+<p>　　一个类(.class 不是.java)访问另一个包中的公有类的源文件书写方式有两种 :</p>
+<p>　　1-首先确保所要访问的类在classpath里</p>
+<p>　　2-import式访问 or 全名式访问(事实上在字节码中都是全名式访问 类全名：</p>
+<pre>com.xkfx.corejava.Employee </pre>
+<p>,import语句的唯一好处就是书写简洁)</p>
+<p>&nbsp;</p>
+<p>3、怎样把类(.class)放入包中</p>
+<p>&nbsp;</p>
+<p>　　如果没有在源文件（.java）头放置 package 语句, 编译后这个源文件的类就被放置在一个default package</p>
+<p>　　1、将包名 写在源文件的开头</p>
+<p>　　2、将 包中的文件 .class 放到完整的 与包名匹配的【子目录】中 去 (不管在 c盘还是d 盘, 不管外面套了几层文件 )</p>
+<p>　　ps: compiler .java可以在所有基目录下 直接或通过配合路径名 完成 但是&nbsp;java .class 加载类必须严格放在包中 除非是 default package。。。</p>
+<p>4、当 在命令行下 键入 java + com.xk.test.classname + enter 之后计算机 或是 jvm在做什么? &nbsp; (这是起点)</p>

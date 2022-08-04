@@ -1,0 +1,64 @@
+<h1><a href="https://www.datacamp.com/home" target="_blank">源：DataCamp</a></h1>
+<p>&nbsp;</p>
+<p>datacamp 的 DAILY PRACTICE&nbsp; + 日常收集。</p>
+<p><a href="#a1">Functions</a></p>
+<p><a href="#a2">Built-in functions</a></p>
+<p><strong><span style="color: #ff0000;"><span style="color: #ff0000;"><a href="#a3">Help!</a></span></span></strong></p>
+<p class="exercise--title"><a href="#a4">Multiple arguments</a></p>
+<p>&nbsp;</p>
+<div class="dc-edge-to-edge__item" data-reactid="37">
+<h3 class="vex--title" data-reactid="38"><a name="a1"></a>Functions</h3>
+<p>By now, you have an idea about how to use max() and round(), but how could you know that a function such as round() exists in Python in the first place? Well, this is something you will learn with time.<strong> Whenever you are doing a rather standard task in Python, you can be pretty sure that thers is already a function that can do this for you.</strong> In that case, you should definitely use it! Just do a quick internet search and you will find the function you need with a nice usage example!</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180104230657378-1539824625.png" alt="" width="445" height="128" /></p>
+<p>&nbsp;</p>
+<h3><a name="a2"></a>Built-in functions</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create variables var1 and var2</span>
+var1 = [1, 2, 3, 4<span style="color: #000000;">]
+var2 </span>=<span style="color: #000000;"> True
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out type of var1</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(type(var1))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out length of var1</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(len(var1))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Convert var2 to an integer: out2</span>
+out2 = int(var2)</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a3"></a>Help!</h3>
+<p>Maybe you already know the name of a Python function, but you still have to figure out how to use it. Ironically, you have to ask for information about a function with another function:&nbsp;<a href="https://docs.python.org/3/library/functions.html#help" target="_blank"><code>help()</code></a>.&nbsp;</p>
+<p>To get help on the&nbsp;<a href="https://docs.python.org/3/library/functions.html#max" target="_blank"><code>max()</code></a>&nbsp;function, for example, you can use one of these calls:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">help(max)
+?max</span></pre>
+</div>
+<p>Use the Shell on the right to open up the documentation on&nbsp;<a href="https://docs.python.org/3/library/functions.html#complex" target="_blank"><code>complex()</code></a>. Which of the following statements is true?</p>
+<p>&nbsp;</p>
+</div>
+<div class="dc-edge-to-edge__item vex--xp" data-reactid="39">
+<h3 class="exercise--title"><a name="a4"></a>Multiple arguments</h3>
+<p>Have a look at the documentation of&nbsp;<a href="https://docs.python.org/3/library/functions.html#sorted" target="_blank"><code>sorted()</code></a>&nbsp;by typing&nbsp;<code>help(sorted)</code>&nbsp;in the IPython Shell.</p>
+<p>You'll see that&nbsp;<a href="https://docs.python.org/3/library/functions.html#sorted" target="_blank"><code>sorted()</code></a>&nbsp;takes three arguments:&nbsp;<code>iterable</code>,&nbsp;<code>key</code>&nbsp;and&nbsp;<code>reverse</code>.</p>
+<p><code>key=None</code>&nbsp;means that if you don't specify the&nbsp;<code>key</code>argument, it will be&nbsp;<code>None</code>.&nbsp;<code>reverse=False</code>&nbsp;means that if you don't specify the&nbsp;<code>reverse</code>&nbsp;argument, it will be&nbsp;<code>False</code>.</p>
+<p>In this exercise, you'll only have to specify&nbsp;<code>iterable</code>&nbsp;and&nbsp;<code>reverse</code>, not&nbsp;<code>key</code>. The first input you pass to&nbsp;<a href="https://docs.python.org/3/library/functions.html#sorted" target="_blank"><code>sorted()</code></a>will be matched to the&nbsp;<code>iterable</code>&nbsp;argument, but what about the second input? To tell Python you want to specify&nbsp;<code>reverse</code>&nbsp;without changing anything about&nbsp;<code>key</code>, you can use&nbsp;<code>=</code>:</p>
+<div class="cnblogs_code">
+<pre>sorted(<span style="color: #800080;">___</span>, reverse = <span style="color: #800080;">___</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create lists first and second</span>
+first = [11.25, 18.0, 20.0<span style="color: #000000;">]
+second </span>= [10.75, 9.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Paste together first and second: full</span>
+full = first +<span style="color: #000000;"> second
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Sort full in descending order: full_sorted</span>
+full_sorted = sorted(full, reverse=<span style="color: #000000;">True)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out full_sorted</span>
+<span style="color: #0000ff;">print</span>(full_sorted)</pre>
+</div>
+<p>&nbsp;</p>
+</div>

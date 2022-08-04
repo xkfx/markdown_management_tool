@@ -1,0 +1,329 @@
+<p>基本上是《Head First Servlets and JSP》内容的整理、扩充。顺便推荐一个供参考的JSP教程：<a href="https://www.tutorialspoint.com/jsp/index.htm" target="_blank">JSP Tutorial&nbsp;</a>内容很全面，还有一些有趣的实例。</p>
+<ul>
+<li><a href="#cc">完整代码参考</a></li>
+<li><a href="#a1">EL隐式对象汇总</a></li>
+<li><a href="#a2">pageContext使用参考</a></li>
+<li><a href="#a3">EL表达式的基本规则</a></li>
+<li><a href="#a4">关于EL的一些细节</a></li>
+<li><a href="#a5">通过EL获得request参数</a></li>
+<li><a href="#a6">从request得到更多信息</a></li>
+<li><a href="#a7">获得Request Method？</a></li>
+<li><a href="#a8">xxxxScope有意义吗？</a></li>
+<li><a href="#a9">通过EL调用函数</a></li>
+<li><a href="#a10">EL与数学运算</a></li>
+</ul>
+<p><span style="background-color: #ffff99;"><a name="a1"></a>1、<strong>EL隐式对象汇总</strong>。如下所示：</span></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620175318945-1471325757.png" alt="" width="611" height="556" /></p>
+<p>更详细的内容可以参考&nbsp;<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/java-class/p/4710916.html">JSP 4个域对象-9个内置对象-11个EL隐式对象</a></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;"><a name="a2"></a>2、EL中的&ldquo;爸爸&rdquo;&mdash;&mdash;<strong>pageContext</strong></span></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620154655210-288463330.png" alt="" width="678" height="303" /></p>
+<p>&nbsp;</p>
+<p><a name="a3"></a><span style="background-color: #ffff99;">3、<strong>EL表达式的基本规则</strong></span></p>
+<p>EL表达式的基本格式为<strong>${........}，下面所说的映射指的的是类似于map（也叫字典）的东西（具有&ldquo;键&rdquo;和&ldquo;值&rdquo;）；</strong><strong>而bean指的是例如person、dog这样的对象。</strong></p>
+<p>&nbsp;</p>
+<p><strong>点号</strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620162156398-1569843282.png" alt="" width="430" height="217" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620162217273-361800595.png" alt="" width="466" height="227" /></p>
+<p>&nbsp;</p>
+<p><strong>[]是更好的点号</strong></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620162938210-921894919.png" alt="" width="521" height="323" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620163103163-1810782351.png" alt="" width="672" height="360" /></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;"><strong><a name="a4"></a>4</strong>、<strong>使用EL的一些细节</strong></span></p>
+<p><strong><span style="color: #ff00ff;">【细节A】</span></strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620164021335-1085679265.png" alt="" width="522" height="55" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620164006116-1883142077.png" alt="" width="664" height="133" /></p>
+<p><strong><span style="color: #ff00ff;">&nbsp;</span></strong></p>
+<p><strong><span style="color: #ff00ff;">【细节B】</span></strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620165040741-289243431.png" alt="" width="430" height="49" /></p>
+<p><strong>也就是说，如果不是list["xxx"]而是list[xxx]的话，xxx将会被计算！</strong></p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;">【细节C】</span></strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620165335148-1971909572.png" alt="" width="308" height="67" /></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620165433288-1374726070.png" alt="" width="523" height="332" /></p>
+<p>&nbsp;</p>
+<p><strong><a name="a5"></a>5、<span style="background-color: #ffff99;">通过EL获得request参数</span>，类似于下面这样的</strong></p>
+<p><strong><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621192353866-2090346908.png" alt="" /></strong></p>
+<p><a href="#c1">链接到代码</a></p>
+<p>&nbsp;</p>
+<p><strong><a name="a6"></a>6<span style="background-color: #ffff99;">、如果想从请求得到更多信息呢？</span>例如说，你想得到服务器主机的信息。</strong><a href="#c2">链接到代码</a></p>
+<p>&nbsp;</p>
+<p><strong><a name="a7"></a>7、</strong><span style="background-color: #ffff99;">不能通过<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621192838538-1053726017.png" alt="" width="252" height="32" />，也不能通过<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621192858913-1091558960.png" alt="" />（EL根本没有request这个隐式对象！），</span></p>
+<p><span style="background-color: #ffff99;">关键时刻还得靠<strong>pageContext</strong>！<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621193017788-1946515109.png" alt="" width="436" height="49" /></span></p>
+<p>&nbsp;</p>
+<p>xxxScope这种东西，只是属性（<span class="op_dict_exp">attribute</span>）的一个映射表罢了！<a href="#c3">链接到代码</a></p>
+<p>&nbsp;</p>
+<p><strong><a name="a8"></a>8、<span style="background-color: #ffff99;">如果我们想获取某个person的名字，既可以使用${person.name}（自动查找4个作用域！），也可以使用${requestScope.person.name}（指定作用域查找），</span></strong></p>
+<p><span style="background-color: #ffff99;"><strong>前者更为简单、直观，那么xxxScope有存在的意义吗？</strong></span></p>
+<ol>
+<li>防止命名冲突，在多个作用域存在同名属性能够正确引用。</li>
+<li>解决一种特殊情况，比如我们在Servlet中，或者是JSP脚本中使用右边的句子<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620215351304-1285322435.png" alt="" width="400" height="35" /></li>
+</ol>
+<p>在这之后要获得person的名字，类似<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620215406070-1887154579.png" alt="" width="207" height="42" />这样是行不通的（都是点号的锅！。。），这种情况只有xxxScope可以解决，<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170620215446663-661621756.png" alt="" width="448" height="52" />这样就ok了。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;小狗领养中心&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action="addDog" method="get" accept-charset="UTF-8"&gt;
+    &lt;p&gt;你的名字：&lt;input type="text" name="name" value="王明" style="width:80px;"&gt;&lt;/p&gt;
+    &lt;p&gt;年龄：&lt;input type="text" name="age" value="19" style="width:50px;"&gt;&lt;/p&gt;
+    &lt;p&gt;qq：&lt;input type="text" name="qq" value="55667788" style="width:90px;"&gt;&lt;/p&gt;
+
+    &lt;hr&gt;
+    &lt;!-- 下面是演示内容 --&gt;
+    &lt;p&gt;第一个食物：&lt;input type="text" name="food" value="青菜"&gt;&lt;/p&gt;
+    &lt;p&gt;第二个食物：&lt;input type="text" name="food" value="马铃薯"&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;input type="submit" value="确定领养"&gt;&lt;/p&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p><a name="cc"></a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>领养成功<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="po.Person"</span><span style="color: #ff0000;"> scope</span><span style="color: #0000ff;">="request"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="age"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>成功领养！狗的名字是：${person.dog.name}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">person 是请求作用域的一个属性，点号右边是&ldquo;bean性质&rdquo; --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${person.name}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${person.age}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${person.qq}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${person.dog}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">表达式左侧还可以是一个EL隐式对象，尝试输出一些东西 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>打印【person对象】：${requestScope.person}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>打印【Request parameters】：${param}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>换种方式打印：${paramValues}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>打印【HTTP request headers】：${header}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>打印这个：${cookie}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">点号右边是&ldquo;映射键&rdquo; --%</span><span style="color: #0000ff;">&gt;</span>
+    <a name="c1"></a><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${param.age}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${param.qq}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">通过JSP直接获得请求参数（Request parameters） --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${cookie.JSESSIONID}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">paramValues其实是这么用的 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>food1: ${paramValues.food[0]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>food2: ${paramValues.food[1]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <a name="c2"></a><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">得到&ldquo;host&rdquo;首部 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Host is: ${header.host}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>or:${header["host"]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <a name="c3"></a><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">得到&ldquo;http&rdquo;请求方法，这里涉及到一个问题 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Method is: ${pageContext.request.method}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">打印JSESSIONID --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>JSESSIONID is: ${cookie.JSESSIONID.value}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">打印上下文初始化参数值 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>my email is: ${initParam.myEmail}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">pageContext是个例外，它是实实在在的pageContext对象的引用 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${pageContext.findAttribute("person")}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${pageContext.request.queryString}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">[] 演示 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${person.name}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${person["name"]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">打印String数组 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>数组：${musicList}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${musicList[0]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${musicList[2]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${musicList[99]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">越界访问不会抛锚，也不会留白 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${musicList["2"]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">自动完成类型转换 --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">这样是合法的！ --%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${musicMap[J]}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><a href="http://pan.baidu.com/s/1ge9a9EF" target="_blank">&nbsp;完整war打包下载</a></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">成功领养！狗的名字是：小黄</span></p>
+<hr />
+<p><span style="color: #ff00ff;">王明</span></p>
+<p><span style="color: #ff00ff;">19</span></p>
+<p><span style="color: #ff00ff;">55667788</span></p>
+<p><span style="color: #ff00ff;">po.Dog@50b68c6d</span></p>
+<hr />
+<p><span style="color: #ff00ff;">打印【person对象】：po.Person@2909cd1e</span></p>
+<p><span style="color: #ff00ff;">打印【Request parameters】：{qq=55667788, name=&ccedil;&aelig;, age=19, food=&eacute;&egrave;}</span></p>
+<p><span style="color: #ff00ff;">换种方式打印：{qq=[Ljava.lang.String;@a3a764c, name=[Ljava.lang.String;@5a79efe0, age=[Ljava.lang.String;@3e48d526, food=[Ljava.lang.String;@59ce9ecc}</span></p>
+<p><span style="color: #ff00ff;">打印【HTTP request headers】：{referer=http://localhost:8080/, accept-language=zh-CN,zh;q=0.8, cookie=JSESSIONID=62E8FAF608E7A23D82CE1ECD0EF32C12, host=localhost:8080, upgrade-insecure-requests=1, connection=keep-alive, cache-control=max-age=0, accept-encoding=gzip, deflate, sdch, br, user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36, accept=text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8}</span></p>
+<p><span style="color: #ff00ff;">打印这个：{JSESSIONID=javax.servlet.http.Cookie@1f0baf}</span></p>
+<p><span style="color: #ff00ff;">19</span></p>
+<p><span style="color: #ff00ff;">55667788</span></p>
+<p><span style="color: #ff00ff;">javax.servlet.http.Cookie@1f0baf</span></p>
+<p><span style="color: #ff00ff;">food1: &eacute;&egrave;</span></p>
+<p><span style="color: #ff00ff;">food2: &eacute;&copy;&not;&eacute;&egrave;&macr;</span></p>
+<p><span style="color: #ff00ff;">Host is: localhost:8080</span></p>
+<p><span style="color: #ff00ff;">or:localhost:8080</span></p>
+<p><span style="color: #ff00ff;">Method is: GET</span></p>
+<p><span style="color: #ff00ff;">JSESSIONID is: 62E8FAF608E7A23D82CE1ECD0EF32C12</span></p>
+<p><span style="color: #ff00ff;">my email is: dasds@163.com</span></p>
+<hr />
+<p><span style="color: #ff00ff;">po.Person@2909cd1e</span></p>
+<p><span style="color: #ff00ff;">name=%E7%8E%8B%E6%98%8E&amp;age=19&amp;qq=55667788&amp;food=%E9%9D%92%E8%8F%9C&amp;food=%E9%A9%AC%E9%93%83%E8%96%AF</span></p>
+<hr />
+<p><span style="color: #ff00ff;">王明</span></p>
+<p><span style="color: #ff00ff;">王明</span></p>
+<p><span style="color: #ff00ff;">数组：[Ljava.lang.String;@40803f51</span></p>
+<p><span style="color: #ff00ff;">music1</span></p>
+<p><span style="color: #ff00ff;">music3</span></p>
+<p><span style="color: #ff00ff;">music3</span></p>
+<p><span style="color: #ff00ff;">青花瓷</span></p>
+<p>&nbsp;</p>
+<p><strong><a name="a9"></a>9、<span style="background-color: #ffff99;">通过EL调用函数</span>，你需要做的事情如下：</strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621154531663-1677074391.png" alt="" width="601" height="710" /></p>
+<p>让我们来写一个掷骰子的JSP。（就是打开页面，随机出来一个1~6的数）</p>
+<p>ttag library descriptor这部分内容好像有点旧了，费了一番功夫才跑出来。</p>
+<p>首先要从oracal下载一个这样的文件web-jsptaglibrary_2_0.xsd（google搜索一下就有了，或者点<a href="http://www.jianshu.com/p/51e713d5397f" target="_blank">这里</a>），放在WEB-INF目录下</p>
+<p>创建 myFunctions.tld，同样放在WEB-INF目录下，内容如下</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">taglib </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;"> xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+        xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"</span><span style="color: #ff0000;">
+        version</span><span style="color: #0000ff;">="2.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tlib-version</span><span style="color: #0000ff;">&gt;</span>1.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tlib-version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">short-name</span><span style="color: #0000ff;">&gt;</span>hi<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">short-name</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">function</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>rollIt<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">function-class</span><span style="color: #0000ff;">&gt;</span>service.DiceRoller<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">function-class</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">function-signature</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            int rollDice()
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">function-signature</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">function</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">taglib</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;在JSP中声明这个函数，</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ taglib </span><span style="color: #ff0000;">prefix</span><span style="color: #0000ff;">="mine"</span><span style="color: #ff0000;"> uri</span><span style="color: #0000ff;">="/WEB-INF/myFunctions.tld"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;使用函数，</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${mine:rollIt()}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>关于它的参数</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621180050726-28987900.png" alt="" width="387" height="287" /></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;"><strong><a name="a10"></a>10、EL与数学运算</strong></span></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621180241757-1552116920.png" alt="" width="662" height="154" /></p>
+<p>&nbsp;</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621180932616-1153147607.png" alt="" width="771" height="220" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621180949570-2031173706.png" alt="" width="327" height="417" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621181009601-1026691262.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong>EL可以妥善的处理非法运算</strong></span></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621183013648-1966336291.png" alt="" width="466" height="233" /></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621183217741-1141508536.png" alt="" width="302" height="313" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170621183230851-60804854.png" alt="" width="438" height="599" /></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>Doing Math<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%
+        String </span><span style="color: #ff0000;">num </span><span style="color: #0000ff;">= "2"</span><span style="color: #ff0000;">;
+        request.setAttribute("num", num);
+        Integer i </span><span style="color: #0000ff;">= new </span><span style="color: #ff0000;">Integer(3);
+        request.setAttribute("integer", i);
+        ArrayList list </span><span style="color: #0000ff;">= new </span><span style="color: #ff0000;">ArrayList();
+        list.add("true");
+        list.add("false");
+        list.add("2");
+        list.add("10");
+        request.setAttribute("list", list);
+    %</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${num &gt; 3}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${integer le 12}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${requestScope["nteger"] ne 4 and 6 le num || false}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${list[0] || list["1"] and true}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${num &gt; integer}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${num == integer-1}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="po.Dog"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="myDog"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="myDog"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="${list[1]}"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">jsp:useBean</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${myDog.name and true}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${42 div 0}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${mine:rollIt() le 0}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3><span style="color: #ff00ff;">Doing Math</span></h3>
+<p><span style="color: #ff00ff;">false</span></p>
+<p><span style="color: #ff00ff;">true</span></p>
+<p><span style="color: #ff00ff;">false</span></p>
+<p><span style="color: #ff00ff;">true</span></p>
+<p><span style="color: #ff00ff;">false</span></p>
+<p><span style="color: #ff00ff;">true</span></p>
+<p><span style="color: #ff00ff;">false</span></p>
+<p><span style="color: #ff00ff;">Infinity</span></p>
+<p><span style="color: #ff00ff;">false</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #888888;">addDog.java</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> service;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> po.Dog;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> po.Person;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.HashMap;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Map;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Random;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> addDog <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        req.setCharacterEncoding(</span>"utf-8"<span style="color: #000000;">);
+
+        Person p </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Person();
+        p.setName(</span><span style="color: #0000ff;">new</span> String(req.getParameter("name").getBytes("iso8859-1"),"UTF-8")); <span style="color: #008000;">//</span><span style="color: #008000;"> 解决form提交中文的乱码问题！</span>
+        p.setQq(req.getParameter("qq"<span style="color: #000000;">));
+
+        p.setDog(next());
+        req.setAttribute(</span>"person"<span style="color: #000000;">, p);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为了 el [] 的演示需要</span>
+        String[] music = {"music1", "music2", "music3"<span style="color: #000000;">};
+        req.setAttribute(</span>"musicList"<span style="color: #000000;">, music);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 演示需要</span>
+        Map musicMap = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HashMap();
+        musicMap.put(</span>"DJ", "BT"<span style="color: #000000;">);
+        musicMap.put(</span>"J CHOU", "青花瓷"<span style="color: #000000;">);
+        req.setAttribute(</span>"musicMap"<span style="color: #000000;">, musicMap);
+        req.setAttribute(</span>"J", "J CHOU"<span style="color: #000000;">);
+
+        RequestDispatcher view </span>= req.getRequestDispatcher("/result.jsp"<span style="color: #000000;">);
+        view.forward(req, resp);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    </span><span style="color: #0000ff;">private</span> Random rand = <span style="color: #0000ff;">new</span> Random(47); <span style="color: #008000;">//</span><span style="color: #008000;"> 47是一个无关紧要的数字</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Dog next() {
+        </span><span style="color: #0000ff;">switch</span> (rand.nextInt(3<span style="color: #000000;">)) {
+            </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">case</span> 0: <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Dog("大黄"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">case</span> 1: <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Dog("富贵"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">case</span> 2: <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Dog("小黄"<span style="color: #000000;">);
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

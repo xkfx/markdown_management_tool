@@ -1,0 +1,199 @@
+<p>学校用 sqlserver ，记录数据移植到 mysql 过程中的一些问题（对应数据类型，主键外键等）。</p>
+<p>&nbsp;</p>
+<p>索引：</p>
+<ul>
+<li><a href="#a1">查看数据的物理路径</a></li>
+<li><a href="#a2">查看表相关的信息（SHOW CREATE TABLE、DESC）</a></li>
+<li><a href="#a3">删库</a></li>
+<li><a href="#a4">创建表（要求在创建的过程中，分别为每张表合理建立主键、外键约束）：VARCHAR VS. CHAR）</a></li>
+<li><a href="#a5">外键约束</a></li>
+<li><a href="#a6" target="_blank">表结构修改</a></li>
+<li><a href="#a7">索引操作（非聚集和聚集）</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><a name="a1"></a>1、查看 MySql数据库物理文件存放路径</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> show global variables <span style="color: #808080;">like</span> "<span style="color: #808080;">%</span>datadir<span style="color: #808080;">%</span><span style="color: #000000;">";
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------------+---------------------------------------------+</span>
+<span style="color: #808080;">|</span> Variable_name <span style="color: #808080;">|</span> Value                                       <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------------+---------------------------------------------+</span>
+<span style="color: #808080;">|</span> datadir       <span style="color: #808080;">|</span> C:\ProgramData\MySQL\MySQL Server <span style="color: #800000; font-weight: bold;">5.5</span>\Data\ <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------------+---------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>所有数据库都放在这个默认目录下（可以自行修改），随便打开一个数据库，内容如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180319131756487-219426638.png" alt="" width="519" height="136" /></p>
+<p>我发现 db.opt 是可以打开来编辑的，可以修改字符集什么的。</p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、Getting Information About Tables</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span><span style="color: #000000;"> SHOW TABLES;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+</span>
+<span style="color: #808080;">|</span> Tables_in_mangast <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+</span>
+<span style="color: #808080;">|</span> manga             <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> SHOW <span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> manga;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----+-----------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> <span style="color: #0000ff;">Table</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">Create</span> <span style="color: #0000ff;">Table</span>                                                                                                                                                                                                                                                                                                                                                                                                    <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----+-----------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> manga <span style="color: #808080;">|</span> <span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> `manga` (
+  `manga_id` </span><span style="color: #0000ff;">bigint</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> AUTO_INCREMENT COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  `manga_name` </span><span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">40</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画名字</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  `manga_discription` </span><span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">120</span>) <span style="color: #0000ff;">DEFAULT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画描述</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  `manga_status` </span><span style="color: #0000ff;">tinyint</span>(<span style="color: #800000; font-weight: bold;">4</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">0</span><span style="color: #ff0000;">'</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画描述</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (`manga_id`)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1004</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8 COMMENT<span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画表</span><span style="color: #ff0000;">'</span>                  <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----+-----------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">DESC</span><span style="color: #000000;"> manga;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+--------------+------+-----+---------+----------------+</span>
+<span style="color: #808080;">|</span> Field             <span style="color: #808080;">|</span> Type         <span style="color: #808080;">|</span> <span style="color: #0000ff;">Null</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">Key</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">Default</span> <span style="color: #808080;">|</span> Extra          <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+--------------+------+-----+---------+----------------+</span>
+<span style="color: #808080;">|</span> manga_id          <span style="color: #808080;">|</span> <span style="color: #0000ff;">bigint</span>(<span style="color: #800000; font-weight: bold;">20</span>)   <span style="color: #808080;">|</span> NO   <span style="color: #808080;">|</span> PRI <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>    <span style="color: #808080;">|</span> auto_increment <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> manga_name        <span style="color: #808080;">|</span> <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">40</span>)  <span style="color: #808080;">|</span> NO   <span style="color: #808080;">|</span>     <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>    <span style="color: #808080;">|</span>                <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> manga_discription <span style="color: #808080;">|</span> <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">120</span>) <span style="color: #808080;">|</span> YES  <span style="color: #808080;">|</span>     <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>    <span style="color: #808080;">|</span>                <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> manga_status      <span style="color: #808080;">|</span> <span style="color: #0000ff;">tinyint</span>(<span style="color: #800000; font-weight: bold;">4</span>)   <span style="color: #808080;">|</span> NO   <span style="color: #808080;">|</span>     <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">0</span>       <span style="color: #808080;">|</span>                <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+--------------+------+-----+---------+----------------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span><span style="color: #000000;"> DESCRIBE manga;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+--------------+------+-----+---------+----------------+</span>
+<span style="color: #808080;">|</span> Field             <span style="color: #808080;">|</span> Type         <span style="color: #808080;">|</span> <span style="color: #0000ff;">Null</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">Key</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">Default</span> <span style="color: #808080;">|</span> Extra          <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+--------------+------+-----+---------+----------------+</span>
+<span style="color: #808080;">|</span> manga_id          <span style="color: #808080;">|</span> <span style="color: #0000ff;">bigint</span>(<span style="color: #800000; font-weight: bold;">20</span>)   <span style="color: #808080;">|</span> NO   <span style="color: #808080;">|</span> PRI <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>    <span style="color: #808080;">|</span> auto_increment <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> manga_name        <span style="color: #808080;">|</span> <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">40</span>)  <span style="color: #808080;">|</span> NO   <span style="color: #808080;">|</span>     <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>    <span style="color: #808080;">|</span>                <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> manga_discription <span style="color: #808080;">|</span> <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">120</span>) <span style="color: #808080;">|</span> YES  <span style="color: #808080;">|</span>     <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>    <span style="color: #808080;">|</span>                <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> manga_status      <span style="color: #808080;">|</span> <span style="color: #0000ff;">tinyint</span>(<span style="color: #800000; font-weight: bold;">4</span>)   <span style="color: #808080;">|</span> NO   <span style="color: #808080;">|</span>     <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">0</span>       <span style="color: #808080;">|</span>                <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+--------------+------+-----+---------+----------------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>DESC 是 DESCRIBE 的简写形式</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、删库</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> {<span style="color: #0000ff;">DATABASE</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">SCHEMA</span>} <span style="color: #ff0000;">[</span><span style="color: #ff0000;">IF EXISTS</span><span style="color: #ff0000;">]</span> <span style="color: #ff00ff;">db_name</span></pre>
+</div>
+<p><a class="link" title="13.1.22&nbsp;DROP DATABASE Syntax" href="https://dev.mysql.com/doc/refman/5.7/en/drop-database.html"><code class="literal">DROP DATABASE</code></a>&nbsp;returns the number of tables that were removed. This corresponds to the number of&nbsp;<code class="filename">.frm</code>&nbsp;files removed.</p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、创建表（要求在创建的过程中，分别为每张表合理建立主键、外键约束）</p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><strong>相关资料</strong></span></p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/constraint-foreign-key.html" target="_blank">1.8.3.2 FOREIGN KEY Constraints</a></p>
+<p><span style="color: #ff00ff;"><strong><a href="https://dev.mysql.com/doc/refman/5.7/en/create-table.html" target="_blank"><span style="color: #ff00ff;">13.1.18 CREATE TABLE Syntax</span></a></strong></span></p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/create-table-foreign-keys.html" target="_blank">13.1.18.6 Using FOREIGN KEY Constraints</a></p>
+<p class="r"><a href="https://docs.oracle.com/cd/B13789_01/server.101/b10759/clauses002.htm" target="_blank">constraint</a></p>
+<p class="r"><span style="background-color: #ffff99; color: #ff0000;"><strong>CHAR 与 VARCHAR 对比</strong></span></p>
+<p class="r"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180319145952101-1642430774.png" alt="" width="620" height="136" /></p>
+<p class="r"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180319150324722-952111071.png" alt="" width="694" height="214" /></p>
+<p>&nbsp;如果是定长的指示字段例如 Y 或者 N ，建议用 CHAR 比较节省空间， VARCAHR 要两个字节， CHAR 只要一个字节；非定长的用 VARCHAR。</p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><strong>Fixed-Point Types (Exact Value) - DECIMAL, NUMERIC</strong></span> ------- ps.&nbsp;定点类型（准确值）&nbsp;&nbsp;decimal =&nbsp;十进制</p>
+<p>这个数据类型用于存储精确的数值，例如货币。</p>
+<p>MySQL 中的 DECIMAL 和 SQLServer 中的 NUMERIC 是类似的。</p>
+<p>例如说&nbsp;salary <span class="token datatype">DECIMAL<span class="token punctuation">(<span class="token number">5<span class="token punctuation">,<span class="token number">2<span class="token punctuation">) 的存储范围为&nbsp;<code class="literal">-999.99</code>&nbsp;到&nbsp;<code class="literal">999.99</code></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、外键约束</p>
+<p>Corresponding columns in the foreign key and the referenced key must have similar data types.&nbsp;<span class="emphasis"><em>The size and sign of integer types must be the same</em>. The length of string types need not be the same. For nonbinary (character) string columns, the character set and collation must be the same. <strong>（应用条件）</strong></span></p>
+<p>For storage engines supporting foreign keys, MySQL rejects any&nbsp;<a class="link" title="13.2.5&nbsp;INSERT Syntax" href="https://dev.mysql.com/doc/refman/5.7/en/insert.html"><code class="literal">INSERT</code></a>&nbsp;or&nbsp;<a class="link" title="13.2.11&nbsp;UPDATE Syntax" href="https://dev.mysql.com/doc/refman/5.7/en/update.html"><code class="literal">UPDATE</code></a>&nbsp;operation that attempts to create a foreign key value in a child table if there is no a matching candidate key value in the parent table. <strong>（对子表的影响）</strong></p>
+<p>When an&nbsp;<a class="link" title="13.2.11&nbsp;UPDATE Syntax" href="https://dev.mysql.com/doc/refman/5.7/en/update.html"><code class="literal">UPDATE</code></a>&nbsp;or&nbsp;<a class="link" title="13.2.2&nbsp;DELETE Syntax" href="https://dev.mysql.com/doc/refman/5.7/en/delete.html"><code class="literal">DELETE</code></a>&nbsp;operation affects a key value in the parent table that has matching rows in the child table, the result depends on the&nbsp;<span class="emphasis"><em>referential action</em>&nbsp;specified using&nbsp;<code class="literal">ON UPDATE</code>&nbsp;and&nbsp;<code class="literal">ON DELETE</code>subclauses of the&nbsp;<code class="literal">FOREIGN KEY</code>&nbsp;clause. <strong>（父表变动如何影响子表 &darr;）</strong></span></p>
+<p><code class="literal">CASCADE</code>: Delete or update the row from the parent table, and automatically delete or update the matching rows in the child table. Both&nbsp;<code class="literal">ON DELETE CASCADE</code>&nbsp;and&nbsp;<code class="literal">ON UPDATE CASCADE</code>&nbsp;are supported. Between two tables, do not define several&nbsp;<code class="literal">ON UPDATE CASCADE</code>&nbsp;clauses that act on the same column in the parent table or in the child table.</p>
+<p><code class="literal">SET NULL</code>: Delete or update the row from the parent table, and set the foreign key column or columns in the child table to&nbsp;<code class="literal">NULL</code>. Both&nbsp;<code class="literal">ON DELETE SET NULL</code>&nbsp;and&nbsp;<code class="literal">ON UPDATE SET NULL</code>&nbsp;clauses are supported.</p>
+<p>If you specify a&nbsp;<code class="literal">SET NULL</code>&nbsp;action,&nbsp;<span class="emphasis"><em>make sure that you have not declared the columns in the child table as&nbsp;<code class="literal">NOT NULL</code></em>.</span></p>
+<p><span class="emphasis"><code class="literal">RESTRICT</code>: Rejects the delete or update operation for the parent table. Specifying&nbsp;<code class="literal">RESTRICT</code>&nbsp;(or&nbsp;<code class="literal">NO ACTION</code>) is the same as omitting the&nbsp;<code class="literal">ON DELETE</code>&nbsp;or&nbsp;<code class="literal">ON UPDATE</code>&nbsp;clause.</span></p>
+<p><span class="emphasis"><code class="literal">NO ACTION</code>: A keyword from standard SQL. In MySQL, equivalent to&nbsp;<code class="literal">RESTRICT</code>. The MySQL Server rejects the delete or update operation for the parent table if there is a related foreign key value in the referenced table. Some database systems have deferred checks, and&nbsp;<code class="literal">NO ACTION</code>&nbsp;is a deferred check. In MySQL, foreign key constraints are checked immediately, so&nbsp;<code class="literal">NO ACTION</code>&nbsp;is the same as<code class="literal">RESTRICT</code>.<strong> （和 RESTRICT 完全相同。）</strong></span></p>
+<p><span class="emphasis"><code class="literal">SET DEFAULT</code>: This action is recognized by the MySQL parser, but both&nbsp;<a class="link" title="Chapter&nbsp;14&nbsp;The InnoDB Storage Engine" href="https://dev.mysql.com/doc/refman/5.7/en/innodb-storage-engine.html"><code class="literal">InnoDB</code></a>&nbsp;and&nbsp;<a class="link" title="Chapter&nbsp;21&nbsp;MySQL NDB Cluster 7.5 and NDB Cluster 7.6" href="https://dev.mysql.com/doc/refman/5.7/en/mysql-cluster.html"><code class="literal">NDB</code></a>&nbsp;reject table definitions containing&nbsp;<code class="literal">ON DELETE SET DEFAULT</code>&nbsp;or&nbsp;<code class="literal">ON UPDATE SET DEFAULT</code>&nbsp;clauses.</span></p>
+<p><strong><span class="emphasis">For an&nbsp;<code class="literal">ON DELETE</code>&nbsp;or&nbsp;<code class="literal">ON UPDATE</code>&nbsp;that is not specified, the default action is always&nbsp;<code class="literal">RESTRICT</code>. （默认行为）</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">DATABASE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> orderdb;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">DATABASE</span><span style="color: #000000;"> orderdb;
+</span><span style="color: #0000ff;">USE</span><span style="color: #000000;"> orderdb;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> employee (
+    employee_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">),
+    employee_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">),
+    sex </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">),
+    birthday DATE,
+    address </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    telephone </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+    hiredate DATE COMMENT </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">聘用日期</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    department </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">30</span><span style="color: #000000;">),
+    headship </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span>) COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">职务</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    salary </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(employee_no)
+    
+)    ENGINE</span><span style="color: #808080;">=</span><span style="color: #000000;">INNODB;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customer (
+    customer_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+    customer_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">),
+    telephone </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+    address </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">),
+    zip </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">6</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(customer_no)
+    
+)    ENGINE</span><span style="color: #808080;">=</span><span style="color: #000000;">INNODB;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> product (
+    product_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+    product_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">),
+    product_class </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+    product_price </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">7</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(product_no)
+    
+)    ENGINE</span><span style="color: #808080;">=</span><span style="color: #000000;">INNODB;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_master (
+
+    order_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+    customer_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+    saler_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">),
+    order_date DATE,
+    order_sum </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">9</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    invoiceno </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">10</span>) COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">发票号码</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_no),
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (customer_no) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> customer(customer_no)
+    
+)    ENGINE</span><span style="color: #808080;">=</span><span style="color: #000000;">INNODB;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_detail (
+    order_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+    product_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+    quantity </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+    price </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">7</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_no, product_no),
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_no) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> order_master(order_no),
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (product_no) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> product(product_no)
+    
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6、表结构的修改</p>
+<p>修改客户表结构，要求客户名称和客户电话属性为not null</p>
+<p>修改员工表结构，要求员工姓名和电话属性为not null</p>
+<p>修改订单表结构，要求发票号码属性为not null</p>
+<p>一种方式是修改上面的 schema.sql 然后重新跑这个脚本（没有数据的情况下），另外一种方法是：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span> customer MODIFY customer_name <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span>, MODIFY telephone <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">;
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span> employee MODIFY employee_name <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span>, MODIFY telephone <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">;
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span> order_master MODIFY invoiceno <span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">10</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、索引操作</p>
+<p align="left">在已创建的基本表的基础上，完成以下索引</p>
+<p align="left">（1）在员工表中按所得薪水建立一个非聚集索引salaryIdx</p>
+<p align="left">（2）在订单主表中，首先按订金金额的升序，然后按业务员编号的降序建立一个非聚集索引salenosumIdx。</p>
+<p align="left">参考资料：<a href="http://blog.csdn.net/zc474235918/article/details/50580639" target="_blank">快速理解聚集索引和非聚集索引</a></p>
+<p align="left">&nbsp;</p>

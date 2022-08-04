@@ -1,0 +1,65 @@
+<p><span style="background-color: #ffff99;">什么是java中的封装</span><br />1、封装的概念：隐藏信息、隐藏具体的实现细节。</p>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5;">2、封装的<strong>实现步骤</strong>：</span></p>
+<p>1）修改属性的可见性，private。<br />2）创建<strong>修改器方法</strong>和<strong>访问器方法</strong>，getXXX/setXXX。（未必一定要写，可以完全隐藏起来，仅供内部使用 ）<br />3）对属性的<strong>合法性</strong>进行判断。例如：Jframe.setSize(a , b)中的参数不能无限大，如果太大就设置为默认值。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">使用包管理 Java 中的类</span><br />1、包的命名规范是全小写。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的访问修饰符</span><br />1、private：仅自己的方法可以直接访问。</p>
+<p><br />2、friendly：（隐式、默认）本类和同包类可直接访问。</p>
+<p><br />3、protected：在friendly的基础上补充了子类可直接访问（可直接访问的意思是子类可以super.field或者super.method？）。</p>
+<p><br />4、public：所有类都可以直接访问。（new a().public field）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的 this 关键字</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">什么是 Java 中的内部类</span><br />1、概念：Inner Class就是定义在一个类里面的类。</p>
+<p>&nbsp;</p>
+<p>2、意义：一是提供更好的封装，二是有时候相对外部类用起来更方便。<br />对外部类而言，可以把内部类隐藏起来（自己用，但也不是直接使用），而不被包中的其它类访问；<br />对内部类本身而言，可以使用外部类的所有数据，<strong>私有</strong>的也可以！</p>
+<p>&nbsp;</p>
+<p>3、具体实现：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">外部类HelloWorld</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloWorld {
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 内部类Inner，类Inner在类HelloWorld的内部</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Inner {
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 内部类的方法</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> show() {
+            System.out.println(</span>"welcome to imooc!"<span style="color: #000000;">);
+        }
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建外部类对象</span>
+        HelloWorld hello = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HelloWorld();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过<strong>外部类对象</strong>调用<strong>内部类构造方法</strong>来创建内部类对象</span>
+        Inner i = hello.<span style="color: #0000ff;">new</span><span style="color: #000000;"> Inner();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 调用内部类对象的方法</span>
+<span style="color: #000000;">        i.show();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的成员内部类</span><br />1、内部类中最常见的就是成员内部类，也称为<strong>普通内部类</strong>。</p>
+<p>&nbsp;</p>
+<p>2、位置：成员变量的位置。</p>
+<p>&nbsp;</p>
+<p>3、无法直接new内部类对象，必须通过外部类对象创建。</p>
+<p>&nbsp;</p>
+<p>4、编译后除了产生Outer.class还会生成一个<strong>Outer$Inner.class。</strong></p>
+<p>&nbsp;</p>
+<p>5、需要在类内创建内部类对象才可以调用内部类的方法、属性。</p>
+<p>&nbsp;</p>
+<p>6、内部类访问外部类的成员变量或者方法。<br />变量不同名的情况：直接使用变量a、b<br />内部类和外部类具有同名变量的情况：b访问内部类的b，而Outer.this.b访问外部类的b。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的静态内部类</span><br />1、静态内部类不能直接访问外部类的非静态变量，但是可以通过<strong><span style="text-decoration: underline;">new 外部类().成员</span></strong>的方式访问。</p>
+<p>&nbsp;</p>
+<p>2、如果外部类的静态成员与内部类的成员名称相同，可通过&ldquo;<strong>类名.静态成员</strong>&rdquo;访问外部类的静态成员；如果外部类的静态成员与内部类的成员名称不相同，则可通过&ldquo;<strong>成员名</strong>&rdquo;直接调用外部类的静态成员。</p>
+<p>&nbsp;</p>
+<p>3、<strong>特点</strong>：创建静态内部类的对象时，不需要外部类的对象，可以直接创建 <span style="text-decoration: underline;"><strong>内部类 对象名= new 内部类()</strong></span>;</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的方法内部类</span><br />1、概念：方法内部类就是内部类定义在外部类的方法中，方法内部类只在该方法的内部可见，即<span style="text-decoration: underline;"><strong>只在该方法内可以使用</strong></span>。</p>
+<p>&nbsp;</p>
+<p>2、一定要注意哦：由于方法内部类不能在外部类的方法以外的地方使用，因此方法内部类<span style="text-decoration: underline;">不能使用访问控制符和 static 修饰符</span>。</p>

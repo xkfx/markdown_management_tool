@@ -1,0 +1,50 @@
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span> strcpy(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">while</span>((*t++ = *s++) != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        ;
+    </span>*t = *<span style="color: #000000;">s;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> *s = <span style="color: #800000;">"</span><span style="color: #800000;">how are you?</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span> *<span style="color: #000000;">t;
+    
+    strcpy(s , t);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, t);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span> strcpy(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+    
+    i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">s[0] = 'a';　　//这句无法正常运行， 下一句可以</span>
+    t[<span style="color: #800080;">0</span>] = <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span><span style="color: #000000;">; 　　
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">while((t[i] = s[i++]) != '\0')</span>
+<span style="color: #000000;">        ;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> *s = <span style="color: #800000;">"</span><span style="color: #800000;">how are you?</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span> *<span style="color: #000000;">t;
+    
+    strcpy(s , t);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, t);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>c89:<br />s所指向的字符串常量是不可以被改变的，</p>
+<p>t可以当作字符数组使用。在</p>
+<pre>void strcpy(char *s, char *<span>t) 的函数体中，可以用字符数组形式访问、修改内容</span></pre>

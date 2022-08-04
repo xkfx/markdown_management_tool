@@ -1,0 +1,217 @@
+<p>1、采用MVC，不仅要求业务逻辑和表示分离。实际上，业务逻辑甚至根本不知道表示的存在。MVC的关键是，业务逻辑要与表示分离，而要求在中间放上别的东西，这样业务逻辑本身就可以作为一个可以重用的Java类存在，它根本不用对视图有所了解。</p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><strong>2、MVC迷你教程，创建和部署MVC Web应用。</strong></span></p>
+<p><strong><a href="#a1">第一步：分析用户视图，以及高层体系结构</a></strong></p>
+<p><strong><a href="#a2">第二步：创建用于开发这个项目的开发环境</a></strong></p>
+<p><strong><a href="#a3">第三步：创建用于部署这个项目的部署环境</a></strong></p>
+<p><strong><a href="#a4">第四步：对Web应用的各个组件完成迭代的开发和测试</a></strong></p>
+<p>&nbsp;</p>
+<p><strong><a name="a1"></a>第一步：分析用户视图，以及高层体系结构</strong>（方便以后&ldquo;从容地&rdquo;扩展这个应用）</p>
+<p>&nbsp;</p>
+<p><strong><a name="a2"></a>第二步：创建用于开发这个项目的开发环境</strong></p>
+<p>使用标准的包结构，这样才能得到包的所有好处：项目管理，命名空间管理，可移植和可重用。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513094859847-1802096347.png" alt="" width="792" height="346" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513095007441-45003598.png" alt="" width="796" height="340" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513095102488-636049470.png" alt="" width="900" height="207" /></p>
+<p>&nbsp;</p>
+<p><strong><a name="a3"></a>第三步：创建用于部署这个项目的部署环境</strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513095316644-1731170112.png" alt="" width="792" height="761" /></p>
+<p>&nbsp;</p>
+<p><strong><a name="a4"></a>第四步：对Web应用的各个组件完成迭代的开发和测试</strong></p>
+<p><a href="#b1"><strong>Ⅰ、构建和测试用户最初请求的HTML表单</strong></a></p>
+<p><a href="#b2"><strong>Ⅱ、构建控制器servlet的第一个版本，并用前面的HTML表单测试这个控制器</strong></a></p>
+<p><a href="#b3"><strong>Ⅲ、为专家/模型类构建一个测试类，然后构建并测试专家/模型类本身</strong></a></p>
+<p><a href="#b4"><strong>Ⅳ、把servlet升级到第二个版本，该版本增加一个功能，可以调用模型类来得到啤酒建议</strong></a></p>
+<p><strong><a href="#b5">Ⅴ、构建JSP，把servlet升级到第三个版本（把表示分派到JSP），然后再测试整个应用</a></strong></p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #000000;"><a name="b1"></a>Ⅰ、构建和测试用户最初请求的HTML表单</span></strong></p>
+<p>创建form.html</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="{CHARSET}"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>form.html<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">在html看来，SelectBeer.do就是要调用的servlet</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">align</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;</span>Beer Selection Page<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="post"</span><span style="color: #ff0000;"> action</span><span style="color: #0000ff;">="SelectBeer.do"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>select beer characteristics<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            Color:
+            </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="color"</span><span style="color: #ff0000;"> size</span><span style="color: #0000ff;">="1"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>light<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>amber<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>brown<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>dark<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br </span><span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">center</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">center</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>部署并测试</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513103301832-232850032.png" alt="" width="276" height="201" /></p>
+<p>&nbsp;在开发环境的etc文件下创建部署描述文件web.xml</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>Ch3 Beer<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>com.example.web.BeerSelect<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>Ch3 Beer<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/SelectBeer.do<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>部署并测试</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513104813347-805619970.png" alt="" width="347" height="155" /></p>
+<p>&nbsp;流程详解：<a id="cb_post_title_url" href="http://www.cnblogs.com/xkxf/p/6848362.html">把逻辑名映射到servlet文件</a></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><strong><a name="b2"></a>Ⅱ、构建控制器servlet的第一个版本，并用前面的HTML表单测试这个控制器</strong></span></p>
+<p>idea快速重写父类方法的快捷是ctrl+0.</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.PrintWriter;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> BeerSelect <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 之所以是doPost,是因为在html中的表单指出method=post</span>
+        resp.setContentType("text/html"<span style="color: #000000;">);
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+        out.println(</span>"Beer Selection Advice&lt;br&gt;"<span style="color: #000000;">);
+        String c </span>= req.getParameter("color"<span style="color: #000000;">);
+        out.println(</span>"&lt;br&gt;Got beer color" +<span style="color: #000000;"> c);
+    }
+}</span></pre>
+</div>
+<p>把.class文件部署到相应的tomcat目录下，重启tomcat（必要的！），完成测试。如果在这个时候如果对.class文件有修改，只有重启tomcat才能生效，对于html的修改则不是必须的。</p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><strong><a name="b3"></a>Ⅲ、为专家/模型类构建一个测试类，然后构建并测试专家/模型类本身</strong></span></p>
+<p><span style="color: #000000;"><a href="http://jingyan.baidu.com/article/46650658243c5ff548e5f875.html" target="_blank">如何用junit编写测试类？</a>、<a href="http://www.cnblogs.com/xkxf/p/6843248.html#a1" target="_blank">单元测试</a><br /></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.model;
+
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> BeerExpert {
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> List getBrands(String color) {
+        List brands </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList();
+        </span><span style="color: #0000ff;">if</span> (color.equals("amber"<span style="color: #000000;">)) {
+            brands.add(</span>"Jack Amber"<span style="color: #000000;">);
+            brands.add(</span>"Red Moose"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            brands.add(</span>"Jail Pale Ale"<span style="color: #000000;">);
+            brands.add(</span>"Gout Stout"<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> brands;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="color: #000000;"><a name="b4"></a>Ⅳ、把servlet升级到第二个版本，该版本增加一个功能，可以调用模型类来得到啤酒建议</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.example.model.BeerExpert;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> BeerSelect <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 之所以是doPost,是因为在html中的表单指出method=post</span>
+        resp.setContentType("text/html"<span style="color: #000000;">);
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+        out.println(</span>"Beer Selection Advice&lt;br&gt;"<span style="color: #000000;">);
+        String c </span>= req.getParameter("color"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> out.println("&lt;br&gt;Got beer color " + c);</span>
+        BeerExpert be = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BeerExpert();
+        List result </span>=<span style="color: #000000;"> be.getBrands(c);
+        Iterator it </span>=<span style="color: #000000;"> result.iterator();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (it.hasNext()) {
+            out.print(</span>"&lt;br&gt;try: " +<span style="color: #000000;"> it.next());
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513225902785-611977388.png" alt="" width="721" height="314" /></p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #000000;"><a name="b5"></a>Ⅴ、构建JSP，把servlet升级到第三个版本（把表示分派到JSP），然后再测试整个应用</span></strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513225944504-153148501.png" alt="" width="737" height="392" /></p>
+<p>&nbsp;result.jsp</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page <span style="color: #0000ff;">import</span>="java.util.*" %&gt;
+
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1 align="center"&gt;Beer Recommendations JSP&lt;/h1&gt;
+        &lt;p&gt;
+        &lt;%<span style="color: #3366ff;">
+            List styles =<strong> (List)request</strong>.getAttribute("styles"</span><span style="color: #000000;"><span style="color: #3366ff;">);</span>
+            Iterator it </span>=<span style="color: #000000;"> styles.iterator();
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (it.hasNext()) {
+                out.print(</span>"&lt;br&gt;try: " +<span style="color: #000000;"> it.next());
+            }
+        </span>%&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170513231319629-1967181570.png" alt="" width="683" height="427" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.example.model.BeerExpert;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> BeerSelect <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 之所以是doPost,是因为在html中的表单指出method=post
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> resp.setContentType("text/html");
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> PrintWriter out = resp.getWriter();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> out.println("Beer Selection Advice&lt;br&gt;");</span>
+        String c = req.getParameter("color"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> out.println("&lt;br&gt;Got beer color " + c);</span>
+        BeerExpert be = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BeerExpert();
+        List result </span>=<span style="color: #000000;"> be.getBrands(c);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Iterator it = result.iterator();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> while (it.hasNext()) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">    out.print("&lt;br&gt;try: " + it.next());
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> }</span>
+        req.setAttribute("styles", result); <span style="color: #008000;">//</span><span style="color: #008000;"> 为请求增加一个属性，供JSP使用。</span>
+<span style="color: #000000;">
+        RequestDispatcher view </span>= req.getRequestDispatcher("result.jsp"); <span style="color: #008000;">//</span><span style="color: #008000;"> 为JSP实例化一个请求分派器</span>
+<span style="color: #000000;">
+        view.forward(req, resp); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 使用请求分派器要求容器准备好JSP，并向JSP发送请求和响应</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,244 @@
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">课本第291页第4题
+#include</span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, m, i, k;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> p_begin;
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">100</span><span style="color: #000000;">];
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; n; i ++<span style="color: #000000;">)
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">arr[i]);
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">m);
+    p_begin </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    p_begin </span>= p_begin - m &lt; <span style="color: #800080;">0</span>?
+    -(p_begin - m) % n : (p_begin - m) %<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">for</span>(i = p_begin, k = <span style="color: #800080;">0</span>; k &lt; n; k++<span style="color: #000000;">){
+        </span><span style="color: #0000ff;">if</span>(i &gt;= n) i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span>, arr[i++<span style="color: #000000;">]);
+    }
+}
+
+课本第291页第11题
+#include</span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">void</span> sort(<span style="color: #0000ff;">char</span> *p[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> n);
+    </span><span style="color: #0000ff;">char</span> s[<span style="color: #800080;">100</span>][<span style="color: #800080;">100</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">char</span> *p[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> input strings </span>
+    <span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; i ++<span style="color: #000000;">)
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, s[i]);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; i ++<span style="color: #000000;">)
+        p[i] </span>=<span style="color: #000000;"> s[i];
+    
+    sort(p ,</span><span style="color: #800080;">10</span><span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> display outputs on console</span>
+    <span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; i ++<span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, p[i]);
+}
+
+</span><span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">for</span>( ; *s == *t; s++, t++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">if</span>(*s == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> *s - *<span style="color: #000000;">t;
+}
+
+</span><span style="color: #0000ff;">void</span> sort(<span style="color: #0000ff;">char</span> *p[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+{
+    </span><span style="color: #0000ff;">char</span> *temp = <span style="color: #800000;">"</span><span style="color: #800000;">hello world!</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n ; i ++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; n - i - <span style="color: #800080;">1</span>; j ++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(strcmp(p[j] , p[j+<span style="color: #800080;">1</span>]) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">){
+                temp </span>=<span style="color: #000000;"> p[j];
+                p[j] </span>= p[j+<span style="color: #800080;">1</span><span style="color: #000000;">];
+                p[j</span>+<span style="color: #800080;">1</span>] =<span style="color: #000000;"> temp;
+            }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+}
+
+课本习题 
+#include</span>&lt;stdio.h&gt;<span style="color: #000000;">
+#include</span>&lt;ctype.h&gt;
+
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, j;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+    </span><span style="color: #0000ff;">char</span> s[<span style="color: #800080;">100</span>][<span style="color: #800080;">100</span><span style="color: #000000;">];
+
+    i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    c </span>= <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(c !=<span style="color: #000000;"> EOF){
+        </span><span style="color: #0000ff;">while</span>(!isdigit(c =<span style="color: #000000;"> getchar()))
+            ;
+        j </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        s[i][j</span>++] = (<span style="color: #0000ff;">char</span>)c;   <span style="color: #008000;">//</span><span style="color: #008000;"> 为了判断是不是数字要多读一个。</span>
+        <span style="color: #0000ff;">while</span>(isdigit(c =<span style="color: #000000;"> getchar()))
+            s[i][j</span>++] = (<span style="color: #0000ff;">char</span><span style="color: #000000;">)c;
+        s[i</span>++][j] = <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d digits\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, i);
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; i; k ++<span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s[k]);
+}
+
+课本第292页 18题
+#include</span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> *p[] =<span style="color: #000000;"> {
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">January</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">February</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">March</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">April</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">May</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">June</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">July</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">August</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">September</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">October</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">November</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">December</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    };
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> month;
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">month);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, p[month-<span style="color: #800080;">1</span><span style="color: #000000;">]);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">习题六
+
+</span><span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">for</span>( ; *s == *t; s++, t++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">if</span>(*s == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> *s - *<span style="color: #000000;">t;
+}
+
+习题四
+
+#include</span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, m, i, k;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> p_begin;
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">100</span><span style="color: #000000;">];
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; n; i ++<span style="color: #000000;">)
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">arr[i]);
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">m);
+    p_begin </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    p_begin </span>= p_begin - m &lt; <span style="color: #800080;">0</span>?
+    -(p_begin - m) % n : (p_begin - m) %<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">for</span>(i = p_begin, k = <span style="color: #800080;">0</span>; k &lt; n; k++<span style="color: #000000;">){
+        </span><span style="color: #0000ff;">if</span>(i &gt;= n) i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span>, arr[i++<span style="color: #000000;">]);
+    }
+}
+D:\lab_</span>&gt;<span style="color: #000000;">a
+</span><span style="color: #800080;">3</span>
+<span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">3</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">2</span> <span style="color: #800080;">3</span> <span style="color: #800080;">1</span><span style="color: #000000;">
+
+习题三
+
+#include</span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> m, n, i;
+    </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; i ++<span style="color: #000000;">)
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, arr+<span style="color: #000000;">i);
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;m, &amp;<span style="color: #000000;">n);
+    </span><span style="color: #0000ff;">for</span>(i = m; i &lt;= n; i ++<span style="color: #000000;">)
+        sum </span>+= *(arr+<span style="color: #000000;">i);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">sum = %d</span><span style="color: #800000;">"</span><span style="color: #000000;">, sum);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+D:\lab_</span>&gt;<span style="color: #000000;">a
+</span><span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">3</span> <span style="color: #800080;">4</span> <span style="color: #800080;">5</span> <span style="color: #800080;">6</span> <span style="color: #800080;">7</span> <span style="color: #800080;">8</span> <span style="color: #800080;">9</span> <span style="color: #800080;">0</span>
+<span style="color: #800080;">2</span> <span style="color: #800080;">3</span><span style="color: #000000;">
+sum </span>= <span style="color: #800080;">7</span><span style="color: #000000;">
+
+习题七
+
+#include</span>&lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> MAXSIZE 1000
+
+<span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">char</span> *, <span style="color: #0000ff;">char</span> *, <span style="color: #0000ff;">char</span><span style="color: #000000;"> c);
+</span><span style="color: #0000ff;">int</span> length(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">s);
+</span><span style="color: #0000ff;">char</span><span style="color: #000000;"> ori_str[MAXSIZE];
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> insert_str[MAXSIZE];
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> inputs</span>
+<span style="color: #000000;">    gets(ori_str);
+    gets(insert_str);
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">c);
+    insert(ori_str, insert_str, c);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> outputs</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, ori_str);
+}
+
+</span><span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">char</span> s[], <span style="color: #0000ff;">char</span> t[], <span style="color: #0000ff;">char</span><span style="color: #000000;"> c)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> k, i, j;
+    </span><span style="color: #0000ff;">int</span> p_last = length(s) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> length_t =<span style="color: #000000;"> length(t);
+    
+    k </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("a");</span>
+    <span style="color: #0000ff;">while</span>(s[k] != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+        </span><span style="color: #0000ff;">if</span>(s[k] ==<span style="color: #000000;"> c){
+            </span><span style="color: #0000ff;">for</span>(i = p_last; i &gt;= k+<span style="color: #800080;">1</span>; i --<span style="color: #000000;">)
+                s[i</span>+length_t] =<span style="color: #000000;"> s[i];
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("b");</span>
+            j = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span>(i = k+<span style="color: #800080;">1</span>; i &lt;= k+length_t; i ++<span style="color: #000000;">)
+                s[i] </span>= t[j ++<span style="color: #000000;">];
+        }
+        k </span>+=<span style="color: #000000;"> length_t;
+    }
+}
+
+</span><span style="color: #0000ff;">int</span> length(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">s)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    
+    </span><span style="color: #0000ff;">for</span>(n = <span style="color: #800080;">0</span>; *s != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>; s++, n++<span style="color: #000000;">)
+        ;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+}
+
+D:\lab_</span>&gt;<span style="color: #000000;">a
+aaaaa
+d
+a
+adadadad</span></pre>
+</div>
+<p>&nbsp;</p>

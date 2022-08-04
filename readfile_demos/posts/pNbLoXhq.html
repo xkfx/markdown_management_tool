@@ -1,0 +1,897 @@
+<h2>问题描述</h2>
+<p>从网上下载一个vue项目，npm install时出现如下错误：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('b869e07c-2e03-4a4c-8663-b74f357b1250')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_b869e07c-2e03-4a4c-8663-b74f357b1250" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_b869e07c-2e03-4a4c-8663-b74f357b1250" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_b869e07c-2e03-4a4c-8663-b74f357b1250" class="cnblogs_code_hide">
+<pre>npm ERR! code <span style="color: #800080;">1</span><span style="color: #000000;">
+npm ERR</span>! path D:\2022_2_11_clear\sadjkl\node_modules\node-<span style="color: #000000;">sass
+npm ERR</span>!<span style="color: #000000;"> command failed
+npm ERR</span>! command C:\WINDOWS\system32\cmd.exe /d /s /c node scripts/<span style="color: #000000;">build.js
+npm ERR</span>! Building: D:\Program Files\nodejs\node.exe D:\2022_2_11_clear\sadjkl\node_modules\node-gyp\bin\node-gyp.js rebuild --verbose --libsass_ext= --libsass_cflags= --libsass_ldflags= --libsass_library=<span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> it worked <span style="color: #0000ff;">if</span><span style="color: #000000;"> it ends with ok
+npm ERR</span>!<span style="color: #000000;"> gyp verb cli [
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\Program Files\\nodejs\\node.exe</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\2022_2_11_clear\\sadjkl\\node_modules\\node-gyp\\bin\\node-gyp.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">rebuild</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--verbose</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_ext=</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_cflags=</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_ldflags=</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_library=</span><span style="color: #800000;">'</span><span style="color: #000000;">
+npm ERR</span>!<span style="color: #000000;"> gyp verb cli ]
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> using node-gyp@<span style="color: #800080;">3.8</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> using node@<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span> | win32 |<span style="color: #000000;"> x64
+npm ERR</span>!<span style="color: #000000;"> gyp verb command rebuild []
+npm ERR</span>!<span style="color: #000000;"> gyp verb command clean []
+npm ERR</span>! gyp verb clean removing <span style="color: #800000;">"</span><span style="color: #800000;">build</span><span style="color: #800000;">"</span><span style="color: #000000;"> directory
+npm ERR</span>!<span style="color: #000000;"> gyp verb command configure []
+npm ERR</span>! gyp verb check python checking <span style="color: #0000ff;">for</span> Python executable <span style="color: #800000;">"</span><span style="color: #800000;">python2</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;"> the PATH
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` failed Error: not found: python2
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at getNotFoundError (D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">13</span>:<span style="color: #800080;">12</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at F (D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">68</span>:<span style="color: #800080;">19</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at E (D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">80</span>:<span style="color: #800080;">29</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">89</span>:<span style="color: #800080;">16</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\sadjkl\node_modules\isexe\index.js:<span style="color: #800080;">42</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\sadjkl\node_modules\isexe\windows.js:<span style="color: #800080;">36</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at FSReqCallback.oncomplete (node:fs:<span style="color: #800080;">198</span>:<span style="color: #800080;">21</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` failed  python2 Error: not found: python2
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at getNotFoundError (D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">13</span>:<span style="color: #800080;">12</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at F (D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">68</span>:<span style="color: #800080;">19</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at E (D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">80</span>:<span style="color: #800080;">29</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\sadjkl\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">89</span>:<span style="color: #800080;">16</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\sadjkl\node_modules\isexe\index.js:<span style="color: #800080;">42</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\sadjkl\node_modules\isexe\windows.js:<span style="color: #800080;">36</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at FSReqCallback.oncomplete (node:fs:<span style="color: #800080;">198</span>:<span style="color: #800080;">21</span><span style="color: #000000;">) {
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed   code: <span style="color: #800000;">'</span><span style="color: #800000;">ENOENT</span><span style="color: #800000;">'</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` failed }
+npm ERR</span>! gyp verb check python checking <span style="color: #0000ff;">for</span> Python executable <span style="color: #800000;">"</span><span style="color: #800000;">python</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;"> the PATH
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` succeeded python D:\anaconda3\python.EXE
+npm ERR</span>! gyp ERR!<span style="color: #000000;"> configure error
+npm ERR</span>! gyp ERR! stack Error: Command failed: D:\anaconda3\python.EXE -c import sys; print <span style="color: #800000;">"</span><span style="color: #800000;">%s.%s.%s</span><span style="color: #800000;">"</span> % sys.version_info[:<span style="color: #800080;">3</span><span style="color: #000000;">];
+npm ERR</span>! gyp ERR! stack   File <span style="color: #800000;">"</span><span style="color: #800000;">&lt;string&gt;</span><span style="color: #800000;">"</span>, line <span style="color: #800080;">1</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! stack     import sys; print <span style="color: #800000;">"</span><span style="color: #800000;">%s.%s.%s</span><span style="color: #800000;">"</span> % sys.version_info[:<span style="color: #800080;">3</span><span style="color: #000000;">];
+npm ERR</span>! gyp ERR! stack                       ^<span style="color: #000000;">
+npm ERR</span>! gyp ERR!<span style="color: #000000;"> stack SyntaxError: invalid syntax
+npm ERR</span>! gyp ERR!<span style="color: #000000;"> stack
+npm ERR</span>! gyp ERR! stack     at ChildProcess.exithandler (node:child_process:<span style="color: #800080;">397</span>:<span style="color: #800080;">12</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! stack     at ChildProcess.emit (node:events:<span style="color: #800080;">390</span>:<span style="color: #800080;">28</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! stack     at maybeClose (node:internal/child_process:<span style="color: #800080;">1064</span>:<span style="color: #800080;">16</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! stack     at Process.ChildProcess._handle.onexit (node:internal/child_process:<span style="color: #800080;">301</span>:<span style="color: #800080;">5</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! System Windows_NT <span style="color: #800080;">10.0</span>.<span style="color: #800080;">14393</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! command <span style="color: #800000;">"</span><span style="color: #800000;">D:\\Program Files\\nodejs\\node.exe</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">D:\\2022_2_11_clear\\sadjkl\\node_modules\\node-gyp\\bin\\node-gyp.js</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">rebuild</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--verbose</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_ext=</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_cflags=</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_ldflags=</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_library=</span><span style="color: #800000;">"</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! cwd D:\2022_2_11_clear\sadjkl\node_modules\node-<span style="color: #000000;">sass
+npm ERR</span>! gyp ERR! node -v v16.<span style="color: #800080;">13.0</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! node-gyp -v v3.<span style="color: #800080;">8.0</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR!<span style="color: #000000;"> not ok
+npm ERR</span>! Build failed with error code: <span style="color: #800080;">1</span><span style="color: #000000;">
+
+npm ERR</span>! A complete log of this run can be found <span style="color: #0000ff;">in</span><span style="color: #000000;">:
+npm ERR</span>!     C:\Users\mdzz\AppData\Local\npm-cache\_logs\<span style="color: #800080;">2022</span>-<span style="color: #800080;">03</span>-01T13_51_54_809Z-debug.log</pre>
+</div>
+<span class="cnblogs_code_collapse">文字版错误日志</span></div>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202203/1042431-20220301215318537-939697142.png" alt="" width="960" height="1374" loading="lazy" /></p>
+<p><a href="https://stackoverflow.com/questions/45801457/node-js-python-not-found-exception-due-to-node-sass-and-node-gyp" target="_blank">经过查找资料</a>，推测是NodeJS和node-sass版本不匹配的问题：</p>
+<div class="cnblogs_code">
+<pre>| NodeJS  | Supported node-sass version | Node Module |
+|---------|-----------------------------|-------------|
+<strong>| Node <span style="color: #800080;">16</span> | <span style="color: #800080;">6.0</span>+                        | <span style="color: #800080;">93</span>          |</strong>
+| Node <span style="color: #800080;">15</span> | <span style="color: #800080;">5.0</span>+                        | <span style="color: #800080;">88</span>          |
+<strong>| Node <span style="color: #800080;">14</span> | <span style="color: #800080;">4.14</span>+                       | <span style="color: #800080;">83</span>          |</strong>
+| Node <span style="color: #800080;">13</span> | <span style="color: #800080;">4.13</span>+, &lt;<span style="color: #800080;">5.0</span>                 | <span style="color: #800080;">79</span>          |
+| Node <span style="color: #800080;">12</span> | <span style="color: #800080;">4.12</span>+                       | <span style="color: #800080;">72</span>          |
+| Node <span style="color: #800080;">11</span> | <span style="color: #800080;">4.10</span>+, &lt;<span style="color: #800080;">5.0</span>                 | <span style="color: #800080;">67</span>          |
+| Node <span style="color: #800080;">10</span> | <span style="color: #800080;">4.9</span>+, &lt;<span style="color: #800080;">6.0</span>                  | <span style="color: #800080;">64</span>          |
+| Node <span style="color: #800080;">8</span>  | <span style="color: #800080;">4.5</span>.<span style="color: #800080;">3</span>+, &lt;<span style="color: #800080;">5.0</span>                | <span style="color: #800080;">57</span>          |
+| Node &lt;<span style="color: #800080;">8</span> | &lt;<span style="color: #800080;">5.0</span>                        | &lt;<span style="color: #800080;">57</span>         |</pre>
+</div>
+<p>执行node --version指令，本机node版本为v16.13.0</p>
+<p>查看项目的package.json，devDependencies中node-sass版本是4.12.0</p>
+<p>根据上面的表格，确实存在不匹配。</p>
+<h2>一些尝试，最后通过办法4解决</h2>
+<h3>尝试办法①&mdash;&mdash;修改node-sass的版本</h3>
+<p>根据上表，</p>
+<div class="cnblogs_code">
+<pre>npm i node-sass@<span style="color: #800080;">6.0</span>.<span style="color: #800080;">1</span></pre>
+</div>
+<p>执行该指令之后，devDependencies中的node-sass版本也被修改为相应版本，继续执行：</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span></pre>
+</div>
+<p>这次没有再报错，继续执行：</p>
+<div class="cnblogs_code">
+<pre>npm run serve</pre>
+</div>
+<p>结果报错：<strong><span style="color: #ff0000;">Syntax&nbsp;Error:&nbsp;Error:&nbsp;Node&nbsp;Sass&nbsp;version&nbsp;6.0.1&nbsp;is&nbsp;incompatible&nbsp;with&nbsp;^4.0.0.</span></strong></p>
+<p>详情如下：</p>
+<div class="cnblogs_code">
+<pre>D:\2022_2_11_clear\sadjkl&gt;<span style="color: #000000;">npm run serve
+
+</span>&gt; unclear@<span style="color: #800080;">0.1</span>.<span style="color: #800080;">0</span><span style="color: #000000;"> serve
+</span>&gt; vue-cli-<span style="color: #000000;">service serve
+
+<span style="background-color: #00ccff;"> INFO </span> Starting development server...
+</span><span style="color: #800080;">98</span>%<span style="color: #000000;"> after emitting CopyPlugin
+
+</span><strong><span style="color: #000000;"><span style="color: #ff0000;">Failed to compile with </span></span><span style="color: #ff0000;">1 error</span> </strong>                                                      下午10:<span style="color: #800080;">56</span>:<span style="color: #800080;">39</span><span style="color: #ffffff;"><span style="background-color: #ff0000;">
+ error </span> </span><span style="color: #0000ff;">in</span> ./src/App.vue?vue&amp;type=style&amp;index=<span style="color: #800080;">0</span>&amp;lang=scss&amp;<span style="color: #000000;">
+
+Syntax Error: Error: Node Sass version </span><span style="color: #800080;">6.0</span>.<span style="color: #800080;">1</span> is incompatible with ^<span style="color: #800080;">4.0</span>.<span style="color: #800080;">0</span><span style="color: #000000;">.
+
+
+ @ .</span>/node_modules/vue-style-loader??ref--<span style="color: #800080;">9</span>-oneOf-<span style="color: #800080;">1</span>-<span style="color: #800080;">0</span>!./node_modules/css-loader/dist/cjs.js??ref--<span style="color: #800080;">9</span>-oneOf-<span style="color: #800080;">1</span>-<span style="color: #800080;">1</span>!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--<span style="color: #800080;">9</span>-oneOf-<span style="color: #800080;">1</span>-<span style="color: #800080;">2</span>!./node_modules/sass-loader/dist/cjs.js??ref--<span style="color: #800080;">9</span>-oneOf-<span style="color: #800080;">1</span>-<span style="color: #800080;">3</span>!./node_modules/cache-loader/dist/cjs.js??ref--<span style="color: #800080;">1</span>-<span style="color: #800080;">0</span>!./node_modules/vue-loader/lib??vue-loader-options!./src/App.vue?vue&amp;type=style&amp;index=<span style="color: #800080;">0</span>&amp;lang=scss&amp; <span style="color: #800080;">4</span>:<span style="color: #800080;">14</span>-<span style="color: #800080;">416</span> <span style="color: #800080;">15</span>:<span style="color: #800080;">3</span>-<span style="color: #800080;">20</span>:<span style="color: #800080;">5</span> <span style="color: #800080;">16</span>:<span style="color: #800080;">22</span>-<span style="color: #800080;">424</span><span style="color: #000000;">
+ @ .</span>/src/App.vue?vue&amp;type=style&amp;index=<span style="color: #800080;">0</span>&amp;lang=scss&amp;<span style="color: #000000;">
+ @ .</span>/src/<span style="color: #000000;">App.vue
+ @ .</span>/src/<span style="color: #000000;">main.js
+ @ multi (webpack)</span>-dev-server/client?http:<span style="color: #008000;">//</span><span style="color: #008000;">172.27.2.205:8080&amp;sockPath=/sockjs-node (webpack)/hot/dev-server.js ./src/main.js</span></pre>
+</div>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202203/1042431-20220301234721155-450414140.png" alt="" width="997" height="530" loading="lazy" /></p>
+<h3>办法②&mdash;&mdash;npm install --global windows-build-tools</h3>
+<p>但是根据stackoverflow网友描述：</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> --global windows-build-tools installs Python <span style="color: #800080;">2.7</span>, and installs it globally</pre>
+</div>
+<p>也就是该办法本质上仍然是通过配置python2环境解决问题。执行指令后会全局安装python2.7，对于这种全局安装没有详细描述，这可能会产生一些后果，影响我本来搭建好的python3环境。因此考虑采用其它办法配置python2环境。</p>
+<h3>尝试③&mdash;&mdash;用conda配置python2环境</h3>
+<p>本地原始环境状况：已安装anaconda，默认python版本为3.9（详见<a class="postTitle2 vertical-middle" href="https://www.cnblogs.com/xkxf/p/15926219.html" target="_blank">win10按默认步骤安装Anaconda后各指令状况&amp;Anaconda配置环境变量</a>）</p>
+<p><strong>如何用conda配置、启用python2环境：</strong><a href="https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html#managing-environments" target="_blank">https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html#managing-environments</a></p>
+<p><strong>执行：</strong></p>
+<div class="cnblogs_code">
+<pre><strong>conda create --name py2env python=<span style="color: #800080;">2.7</span></strong></pre>
+</div>
+<p>报错：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('4a468b27-4c88-41d8-9cf2-68366d25ced8')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_4a468b27-4c88-41d8-9cf2-68366d25ced8" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_4a468b27-4c88-41d8-9cf2-68366d25ced8" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_4a468b27-4c88-41d8-9cf2-68366d25ced8" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">Collecting package metadata (current_repodata.json): failed
+
+CondaHTTPError: HTTP </span><span style="color: #800080;">000</span> CONNECTION FAILED <span style="color: #0000ff;">for</span> url &lt;https:<span style="color: #008000;">//</span><span style="color: #008000;">repo.anaconda.com/pkgs/main/win-64/current_repodata.json&gt;</span>
+Elapsed: -<span style="color: #000000;">
+
+An HTTP error occurred when trying to retrieve this URL.
+HTTP errors are often intermittent, and a simple retry will get you on your way.
+
+If your current network has https:</span><span style="color: #008000;">//</span><span style="color: #008000;">www.anaconda.com blocked, please file</span>
+<span style="color: #000000;">a support request with your network engineering team.
+
+</span><span style="color: #800000;">'</span><span style="color: #800000;">https://repo.anaconda.com/pkgs/main/win-64</span><span style="color: #800000;">'</span></pre>
+</div>
+<span class="cnblogs_code_collapse">log(http error)</span></div>
+<p>切换手机热点后有改善，但还是不行：</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202203/1042431-20220302172833282-1127071331.png" alt="" width="819" height="382" loading="lazy" /></p>
+<p>于是只能找镜像了，先用了清华镜像，卡死在开始，后面采用下面这个镜像（截至2022-03-02证明有效），才成功。</p>
+<p>采用<strong>编辑文件配置镜像</strong>的办法，编辑用户文件夹下的<strong>.condarc</strong>文件，把下面的内容替换进去，保存：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">channels:
+  </span>-<span style="color: #000000;"> defaults
+show_channel_urls: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">
+default_channels:
+  </span>- http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/pkgs/main</span>
+  - http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/pkgs/r</span>
+  - http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/pkgs/msys2</span>
+<span style="color: #000000;">custom_channels:
+  conda</span>-forge: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/cloud</span>
+  msys2: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/cloud</span>
+  bioconda: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/cloud</span>
+  menpo: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/cloud</span>
+  pytorch: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/cloud</span>
+  simpleitk: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/anaconda/cloud</span></pre>
+</div>
+<p>执行：</p>
+<div class="cnblogs_code">
+<pre>conda clean -i</pre>
+</div>
+<p>重新执行最开始的&ldquo;创建环境&rdquo;指令。</p>
+<p>测试新创建的环境：</p>
+<div class="cnblogs_code">
+<pre>C:\Users\mdzz&gt;<span style="color: #000000;"><span style="color: #0000ff;"><strong>conda activate py2env</strong></span>
+
+(py2env) C:\Users\mdzz</span>&gt;<span style="color: #0000ff;"><strong>python --</strong></span><span style="color: #000000;"><span style="color: #0000ff;"><strong>version</strong></span>
+Python </span><span style="color: #800080;">2.7</span>.<span style="color: #800080;">18</span><span style="color: #000000;"> :: Anaconda, Inc.
+
+(py2env) C:\Users\mdzz</span>&gt;<span style="color: #000000;"><span style="color: #0000ff;"><strong>where python</strong></span>
+D:\anaconda3\envs\py2env\python.exe
+D:\anaconda3\python.exe
+
+(py2env) C:\Users\mdzz</span>&gt;<strong><span style="color: #0000ff;">pip --</span></strong><span style="color: #000000;"><strong><span style="color: #0000ff;">version</span></strong>
+pip </span><span style="color: #800080;">19.3</span>.<span style="color: #800080;">1</span> from D:\anaconda3\envs\py2env\lib\site-packages\pip (python <span style="color: #800080;">2.7</span><span style="color: #000000;">)
+
+(py2env) C:\Users\mdzz</span>&gt;<span style="color: #000000;"><strong>pip list</strong>
+DEPRECATION: Python </span><span style="color: #800080;">2.7</span> will reach the end of its life on January 1st, <span style="color: #800080;">2020</span>. Please upgrade your Python as Python <span style="color: #800080;">2.7</span> won<span style="color: #800000;">'</span><span style="color: #800000;">t be maintained after that date. A future version of pip will drop support for Python 2.7. More details about Python 2 support in pip, can be found at https://pip.pypa.io/en/latest/development/release-process/#python-2-support</span>
+<span style="color: #000000;">Package      Version
+</span>------------ -------------------<span style="color: #000000;">
+certifi      </span><span style="color: #800080;">2020.6</span>.<span style="color: #800080;">20</span><span style="color: #000000;">
+pip          </span><span style="color: #800080;">19.3</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+setuptools   </span><span style="color: #800080;">44.0</span>.<span style="color: #800080;">0</span><span style="color: #000000;">.post20200106
+wheel        </span><span style="color: #800080;">0.37</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+wincertstore </span><span style="color: #800080;">0.2</span><span style="color: #000000;">
+
+(py2env) C:\Users\mdzz</span>&gt;<strong>conda deactivate</strong></pre>
+</div>
+<p>用该环境去执行npm install，仍然报错，还是node-sass，但和之前的不一样：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e8bd749a-fa47-444f-8ec0-c706b871a740')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_e8bd749a-fa47-444f-8ec0-c706b871a740" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_e8bd749a-fa47-444f-8ec0-c706b871a740" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_e8bd749a-fa47-444f-8ec0-c706b871a740" class="cnblogs_code_hide">
+<pre>npm ERR! code <span style="color: #800080;">1</span><span style="color: #000000;">
+npm ERR</span>! path D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass
+npm ERR</span>!<span style="color: #000000;"> command failed
+npm ERR</span>! command C:\WINDOWS\system32\cmd.exe /d /s /c node scripts/<span style="color: #000000;">build.js
+npm ERR</span>! Building: D:\Program Files\nodejs\node.exe D:\2022_2_11_clear\unclear-power\node_modules\node-gyp\bin\node-gyp.js rebuild --verbose --libsass_ext= --libsass_cflags= --libsass_ldflags= --libsass_library=<span style="color: #000000;">
+npm ERR</span>! �ڴ˽��������һ������һ����Ŀ����Ҫ���&ograve;������ɣ������ӡ�/<span style="color: #000000;">m�����ء�
+npm ERR</span>! ��������ʱ��Ϊ <span style="color: #800080;">2022</span>/<span style="color: #800080;">3</span>/<span style="color: #800080;">2</span> <span style="color: #800080;">19</span>:<span style="color: #800080;">11</span>:<span style="color: #800080;">03</span><span style="color: #000000;">��
+npm ERR</span>! �ڵ� <span style="color: #800080;">1</span> �ϵ���Ŀ��D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\build\binding.sln��(Ĭ��Ŀ��)��
+npm ERR</span>!<span style="color: #000000;"> ValidateSolutionConfiguration:
+npm ERR</span>!   �������ɽ���������&aacute;�Release|<span style="color: #000000;">x64����
+npm ERR</span>! MSBUILD : error MSB3428: &delta;�ܼ��� Visual C++ �����VCBuild.exe����Ҫ��������⣬<span style="color: #800080;">1</span>) ��װ .NET Framework <span style="color: #800080;">2.0</span> SDK��<span style="color: #800080;">2</span>) ��װ Microsoft Visual Studio <span style="color: #800080;">2005</span>���� <span style="color: #800080;">3</span>) �������� ����װ��������&lambda;�&atilde;��뽫��&lambda;�����ӵ�ϵͳ&middot;���С� [D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\build\binding.sln]
+npm ERR</span>! �����������Ŀ��D:\2022_2_11_clear\unclear-power\node_modules\node-sass\build\binding.sln��(Ĭ��Ŀ��)�Ĳ��� -<span style="color: #000000;"> ʧ�ܡ�
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>!<span style="color: #000000;"> ����ʧ�ܡ�
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>! ��D:\2022_2_11_clear\unclear-power\node_modules\node-sass\build\binding.sln��(Ĭ��Ŀ��) (<span style="color: #800080;">1</span>) -&gt;<span style="color: #000000;">
+npm ERR</span>! (_src_\libsass Ŀ��) -&gt;<span style="color: #000000;">
+npm ERR</span>!   MSBUILD : error MSB3428: &delta;�ܼ��� Visual C++ �����VCBuild.exe����Ҫ��������⣬<span style="color: #800080;">1</span>) ��װ .NET Framework <span style="color: #800080;">2.0</span> SDK��<span style="color: #800080;">2</span>) ��װ Microsoft Visual Studio <span style="color: #800080;">2005</span>���� <span style="color: #800080;">3</span>) ������� �����װ��������&lambda;�&atilde;��뽫��&lambda;�����ӵ�ϵͳ&middot;���С� [D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\build\binding.sln]
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>!     <span style="color: #800080;">0</span><span style="color: #000000;"> ������
+npm ERR</span>!     <span style="color: #800080;">1</span><span style="color: #000000;"> ������
+npm ERR</span>!<span style="color: #000000;">
+npm ERR</span>! ����ʱ�� <span style="color: #800080;">00</span>:<span style="color: #800080;">00</span>:<span style="color: #800080;">00.92</span><span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> it worked <span style="color: #0000ff;">if</span><span style="color: #000000;"> it ends with ok
+npm ERR</span>!<span style="color: #000000;"> gyp verb cli [
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\Program Files\\nodejs\\node.exe</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-gyp\\bin\\node-gyp.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">rebuild</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--verbose</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_ext=</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_cflags=</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_ldflags=</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp verb cli   <span style="color: #800000;">'</span><span style="color: #800000;">--libsass_library=</span><span style="color: #800000;">'</span><span style="color: #000000;">
+npm ERR</span>!<span style="color: #000000;"> gyp verb cli ]
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> using node-gyp@<span style="color: #800080;">3.8</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> using node@<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span> | win32 |<span style="color: #000000;"> x64
+npm ERR</span>!<span style="color: #000000;"> gyp verb command rebuild []
+npm ERR</span>!<span style="color: #000000;"> gyp verb command clean []
+npm ERR</span>! gyp verb clean removing <span style="color: #800000;">"</span><span style="color: #800000;">build</span><span style="color: #800000;">"</span><span style="color: #000000;"> directory
+npm ERR</span>!<span style="color: #000000;"> gyp verb command configure []
+npm ERR</span>! gyp verb check python checking <span style="color: #0000ff;">for</span> Python executable <span style="color: #800000;">"</span><span style="color: #800000;">python2</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;"> the PATH
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` failed Error: not found: python2
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at getNotFoundError (D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">13</span>:<span style="color: #800080;">12</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at F (D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">68</span>:<span style="color: #800080;">19</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at E (D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">80</span>:<span style="color: #800080;">29</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">89</span>:<span style="color: #800080;">16</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\unclear-power\node_modules\isexe\index.js:<span style="color: #800080;">42</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\unclear-power\node_modules\isexe\windows.js:<span style="color: #800080;">36</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at FSReqCallback.oncomplete (node:fs:<span style="color: #800080;">198</span>:<span style="color: #800080;">21</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` failed  python2 Error: not found: python2
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at getNotFoundError (D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">13</span>:<span style="color: #800080;">12</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at F (D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">68</span>:<span style="color: #800080;">19</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at E (D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">80</span>:<span style="color: #800080;">29</span><span style="color: #000000;">)
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\unclear-power\node_modules\<span style="color: #0000ff;">which</span>\<span style="color: #0000ff;">which</span>.js:<span style="color: #800080;">89</span>:<span style="color: #800080;">16</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\unclear-power\node_modules\isexe\index.js:<span style="color: #800080;">42</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at D:\2022_2_11_clear\unclear-power\node_modules\isexe\windows.js:<span style="color: #800080;">36</span>:<span style="color: #800080;">5</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed     at FSReqCallback.oncomplete (node:fs:<span style="color: #800080;">198</span>:<span style="color: #800080;">21</span><span style="color: #000000;">) {
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span>` failed   code: <span style="color: #800000;">'</span><span style="color: #800000;">ENOENT</span><span style="color: #800000;">'</span><span style="color: #000000;">
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` failed }
+npm ERR</span>! gyp verb check python checking <span style="color: #0000ff;">for</span> Python executable <span style="color: #800000;">"</span><span style="color: #800000;">python</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span><span style="color: #000000;"> the PATH
+npm ERR</span>! gyp verb `<span style="color: #0000ff;">which</span><span style="color: #000000;">` succeeded python D:\anaconda3\envs\py2env\python.EXE
+npm ERR</span>! gyp verb check python version `D:\anaconda3\envs\py2env\python.EXE -c <span style="color: #800000;">"</span><span style="color: #800000;">import sys; print </span><span style="color: #800000;">"</span><span style="color: #800080;">2.7</span>.<span style="color: #800080;">18</span><span style="color: #000000;">
+npm ERR</span>! gyp verb check python version .%s.%s<span style="color: #800000;">"</span><span style="color: #800000;"> % sys.version_info[:3];</span><span style="color: #800000;">"</span>` returned: %<span style="color: #000000;">j
+npm ERR</span>! gyp verb get node <span style="color: #0000ff;">dir</span> no --target version specified, falling back to host node version: <span style="color: #800080;">16.13</span>.0npm ERR! gyp verb command <span style="color: #0000ff;">install</span> [ <span style="color: #800000;">'</span><span style="color: #800000;">16.13.0</span><span style="color: #800000;">'</span><span style="color: #000000;"> ]
+npm ERR</span>! gyp verb <span style="color: #0000ff;">install</span> input version <span style="color: #0000ff;">string</span> <span style="color: #800000;">"</span><span style="color: #800000;">16.13.0</span><span style="color: #800000;">"</span><span style="color: #000000;">
+npm ERR</span>! gyp verb <span style="color: #0000ff;">install</span> installing version: <span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp verb <span style="color: #0000ff;">install</span> --ensure was passed, so won<span style="color: #800000;">'</span><span style="color: #800000;">t reinstall if already installed</span>
+npm ERR! gyp verb <span style="color: #0000ff;">install</span> version not already installed, continuing with <span style="color: #0000ff;">install</span> <span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp verb ensuring nodedir is created C:\Users\mdzz\.node-gyp\<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp verb created nodedir C:\Users\mdzz\.node-<span style="color: #000000;">gyp
+npm ERR</span>! gyp http GET https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/node-v16.13.0-headers.tar.gz</span>
+npm ERR! gyp http <span style="color: #800080;">200</span> https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/node-v16.13.0-headers.tar.gz</span>
+npm ERR! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\common.gypi
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\config.gypi
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\node.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\node_api.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\js_native_api.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\js_native_api_types.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\node_api_types.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\node_buffer.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\node_object_wrap.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\node_version.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\v8-<span style="color: #000000;">internal.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\v8-<span style="color: #000000;">platform.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\v8-<span style="color: #000000;">profiler.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\v8.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\v8config.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\v8-<span style="color: #000000;">version.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\libplatform\libplatform-<span style="color: #000000;">export.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\libplatform\libplatform.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\libplatform\v8-<span style="color: #000000;">tracing.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\cppgc\common.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\aix.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\uv\android-<span style="color: #000000;">ifaddrs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\bsd.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\darwin.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\linux.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\os390.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\posix.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\uv\stdint-<span style="color: #000000;">msvc2008.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\sunos.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\threadpool.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\unix.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\win.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\errno.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\tree.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\uv\version.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pem.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pem2.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pemerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pkcs12.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pkcs12err.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pkcs7.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\pkcs7err.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rand.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rand_drbg.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\randerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rc2.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rc4.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rc5.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ripemd.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rsa.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\rsaerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\safestack.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\seed.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\sha.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\srp.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\srtp.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ssl.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ssl2.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ssl3.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\sslerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\stack.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\store.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\storeerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\symhacks.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\tls1.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ts.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\tserr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\txt_db.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ui.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\uierr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\whrlpool.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\x509.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\x509_vfy.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\x509err.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\x509v3.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\x509v3err.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\asn1t.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\async.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\bioerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\blowfish.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\bnerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\cmac.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\cms.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\cmserr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\comp.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\comperr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\cryptoerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ct.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\cterr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\des.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dh.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dsa.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dsaerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dtls1.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ebcdic.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ocsp.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\aes.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\asn1.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\asn1_mac.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\asn1err.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ecdh.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ecdsa.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ecerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\err.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\evp.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\evperr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\hmac.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\idea.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\kdferr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\lhash.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\md4.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\objectserr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ocsperr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\conferr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\crypto.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\e_os2.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\engine.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\engineerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\kdf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\md2.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\md5.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\modes.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\asyncerr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\bio.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\bn.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\buffer.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\conf_api.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dherr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ec.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\obj_mac.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\ossl_typ.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\buffererr.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\camellia.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\cast.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\mdc2.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\objects.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\opensslv.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-<span style="color: #000000;">x86_64\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86_64\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86_64\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86_64\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86_64\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\BSD-x86_64\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN32\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN32\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN32\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN32\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN32\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN32\no-asm\include\progs.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64-ARM\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64-ARM\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64-ARM\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64-ARM\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64-ARM\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64A\asm\crypto\buildinf.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-<span style="color: #000000;">WIN64A\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64A\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64A\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64A\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64A\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\VC-WIN64A\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span>\asm\crypto\buildinf.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\aix64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin-i386-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-arm64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\darwin64-x86_64-<span style="color: #0000ff;">cc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">aarch64\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-aarch64\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-aarch64\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-aarch64\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-aarch64\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-aarch64\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-armv4\asm\include\progs.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">armv4\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-armv4\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-armv4\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-armv4\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-armv4\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-armv4\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-elf\asm\crypto\buildinf.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">elf\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-elf\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-elf\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-elf\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-elf\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-elf\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc\asm\crypto\buildinf.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64\asm\include\progs.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">ppc64le\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64le\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64le\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64le\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64le\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-ppc64le\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x32\asm\crypto\buildinf.hnpm ERR! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x32\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x32\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x32\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x32\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x32\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x32\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-<span style="color: #000000;">x86_64\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x86_64\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x86_64\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x86_64\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x86_64\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux-x86_64\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-<span style="color: #000000;">s390x\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-s390x\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-s390x\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-s390x\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-s390x\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux32-s390x\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">mips64\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-mips64\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-mips64\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-mips64\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-mips64\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-mips64\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-<span style="color: #000000;">s390x\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-s390x\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-s390x\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-s390x\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-s390x\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-s390x\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris-x86-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span><span style="color: #000000;">\asm_avx2\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\solaris64-x86_64-<span style="color: #0000ff;">gcc</span>\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-riscv64\no-<span style="color: #000000;">asm\crypto\include\internal\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-riscv64\no-<span style="color: #000000;">asm\crypto\include\internal\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-riscv64\no-<span style="color: #000000;">asm\crypto\buildinf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-riscv64\no-<span style="color: #000000;">asm\include\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\archs\linux64-riscv64\no-<span style="color: #000000;">asm\include\progs.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\bn_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dso_conf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\opensslconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\bn_conf_asm.h
+npm ERR</span>! gyp verb content checksum node-v16.<span style="color: #800080;">13.0</span>-headers.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz 9abfc6dcd32bce3b9a978b8c23b8bb48a562c94919feba489f9bb9d4bbeeae66
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\bn_conf_no-<span style="color: #000000;">asm.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\dso_conf_asm.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\dso_conf_no-<span style="color: #000000;">asm.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\openssl\opensslconf_asm.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span> from tarball include\node\openssl\opensslconf_no-<span style="color: #000000;">asm.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\zconf.h
+npm ERR</span>! gyp verb extracted <span style="color: #0000ff;">file</span><span style="color: #000000;"> from tarball include\node\zlib.h
+npm ERR</span>! gyp verb tarball <span style="color: #0000ff;">done</span><span style="color: #000000;"> parsing tarball
+npm ERR</span>!<span style="color: #000000;"> gyp verb on Windows; need to download `node.lib`...
+npm ERR</span>! gyp verb <span style="color: #800080;">32</span>-bit node.lib <span style="color: #0000ff;">dir</span> C:\Users\mdzz\.node-gyp\<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">\ia32
+npm ERR</span>! gyp verb <span style="color: #800080;">64</span>-bit node.lib <span style="color: #0000ff;">dir</span> C:\Users\mdzz\.node-gyp\<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">\x64
+npm ERR</span>! gyp verb `node.lib` <span style="color: #800080;">32</span>-bit url https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/win-x86/node.lib</span>
+npm ERR! gyp verb `node.lib` <span style="color: #800080;">64</span>-bit url https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/win-x64/node.lib</span>
+npm ERR!<span style="color: #000000;"> gyp verb check download content checksum, need to download `SHASUMS256.txt`...
+npm ERR</span>! gyp verb checksum url https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/SHASUMS256.txt</span>
+npm ERR! gyp http GET https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/SHASUMS256.txt</span>
+npm ERR! gyp verb streaming <span style="color: #800080;">64</span>-bit node.lib to: C:\Users\mdzz\.node-gyp\<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">\x64\node.lib
+npm ERR</span>! gyp http GET https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/win-x64/node.lib</span>
+npm ERR! gyp verb streaming <span style="color: #800080;">32</span>-bit node.lib to: C:\Users\mdzz\.node-gyp\<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">\ia32\node.lib
+npm ERR</span>! gyp http GET https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/win-x86/node.lib</span>
+npm ERR! gyp http <span style="color: #800080;">200</span> https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/win-x86/node.lib</span>
+npm ERR! gyp http <span style="color: #800080;">200</span> https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/SHASUMS256.txt</span>
+npm ERR! gyp verb checksum data {<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-aix-ppc64.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">eadf10e991a690c2af98b6df8a118336ded513d6b13a83721bb28bec290df908</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-darwin-arm64.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">46d83fc0bd971db5050ef1b15afc44a6665dee40bd6c1cbaec23e1b40fa49e6d</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-darwin-arm64.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">ca8d79ceecfa8b7d74651fba648c9034f6108070b7cd02437ecb2b7f103842d4</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-darwin-x64.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">37e09a8cf2352f340d1204c6154058d81362fef4ec488b0197b2ce36b3f0367a</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-darwin-x64.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">8dc70eb0965896a4d1755e719be2b5efeff7cb8a54e1f3b8dccc5a2864965504</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-headers.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">9abfc6dcd32bce3b9a978b8c23b8bb48a562c94919feba489f9bb9d4bbeeae66</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-headers.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">9f38e4e1702dde08937125d618c0de119bd77da4665e584aaffc332691af7ef1</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-arm64.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">46e3857f5552abd36d9548380d795b043a3ceec2504e69fe1a754fa76012daaf</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-arm64.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">93a0d03f9f802353cb7052bc97a02cd9642b49fa985671cdc16c99936c86d7d2</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-armv7l.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">3d22bc15b47c26129d56745cd587ead7e240a36968ceb3c4105bebc5c6a0be16</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-armv7l.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">c2c548387ec6b08291b746423bfdf6475948561884985cad16a95983e4913ee4</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-ppc64le.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">3ed1d82ecd6eee3549e9b7f4e65c8a42cbc77f1c6e4da35cf7e496d540fa1760</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-ppc64le.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">46ae5cd3b4c554a600d1b3df5ead1567f6f223a7d4d4667a2be92a67ae70aea7</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-s390x.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">8883af58d2e7c8f8c8311a9504ba1d6ce77c6badc7120165823a516049378042</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-s390x.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">49e972bf3e969d621157df4c8f2fa18ff748c167d5ebd0efc87e1b9f0c6541cc</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-x64.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">589b7e7eb22f8358797a2c14a0bd865459d0b44458b8f05d2721294dacc7f734</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-linux-x64.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">a876ce787133149abd1696afa54b0b5bc5ce3d5ae359081d407ff776e39b7ba8</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0.pkg</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">33c3b6eba6b7f82413545b3789b35bf9b9a187f92c984d6c5555934c773ce4fc</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">9c00e5b6024cfcbc9105f9c58cf160762e78659a345d100c5bd80a7fb38c684f</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0.tar.xz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">32114b3dc3945ed0f95f8bc33b42c68e0ef18c408cb56122572a163d907ecbcc</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-win-x64.7z</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">f4402bebb34339d9b6f1814df17eed278ec79ec6f0f7501203b2681b284c644d</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-win-x64.zip</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">5a39ec5d4786c2814a6c04488bebac6423c2aaa12832b24f0882456f2e4674e1</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-win-x86.7z</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">d93bceda06924a46c7035d74e99dd58802960f4ce9dc6c3aa8c55118612c4106</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-win-x86.zip</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">dd2e7fccf073ac356878e541dd4e165f05ff145fe9722feb52613f58f88ded7b</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-x64.msi</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">bf55b68293b163423ea4856c1d330be23158e78aea18a8756cfdff6fb6ffcd88</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-x86.msi</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">53443f9147d86d538ee24ef9897ae0ff0be740c18fd0e3c17058dbafe343364f</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x64/node.exe</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">7fca04f83b0e2169e41b2e1845e8da0f07d66cf9c3a1b4150767bf3ffddccf62</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x64/node.lib</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">7c94657df6918a77dc8edefaf3b5415dbfb9eb83a88c17d216a48c8c36fcc58d</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x64/node_pdb.7z</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">1009402493f1eba91c587486033fd46d8006cb7d9c41b84abc19fa3ba18b0d55</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x64/node_pdb.zip</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">72d08ea9e7a7b10d8d1da92a0261e60f71e1f0cf1e14443db8477cad9fcd511e</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x86/node.exe</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">0414fdd69004885755cb6782100970e62814d6f1f66ce1d6ba0d7bf89c2522f6</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x86/node.lib</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">8090f51a19ff2d5e765920262a4367203be2e69e64ac3725e4e14dd034c98443</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x86/node_pdb.7z</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">90759e7c7aa604f25ba3454618834d3a31a30bd8c500a8625d4dd270a8127614</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x86/node_pdb.zip</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">703b18c4ffcd5f082254a4885cd58f3924352dc7c2287749b0087cdfc1b7f2ce</span><span style="color: #800000;">"</span><span style="color: #000000;">}
+npm ERR</span>! gyp http <span style="color: #800080;">200</span> https:<span style="color: #008000;">//</span><span style="color: #008000;">nodejs.org/download/release/v16.13.0/win-x64/node.lib</span>
+npm ERR! gyp verb content checksum win-x64/<span style="color: #000000;">node.lib 7c94657df6918a77dc8edefaf3b5415dbfb9eb83a88c17d216a48c8c36fcc58d
+npm ERR</span>! gyp verb content checksum win-x86/<span style="color: #000000;">node.lib 8090f51a19ff2d5e765920262a4367203be2e69e64ac3725e4e14dd034c98443
+npm ERR</span>! gyp verb download contents checksum {<span style="color: #800000;">"</span><span style="color: #800000;">node-v16.13.0-headers.tar.gz</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">9abfc6dcd32bce3b9a978b8c23b8bb48a562c94919feba489f9bb9d4bbeeae66</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x64/node.lib</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">7c94657df6918a77dc8edefaf3b5415dbfb9eb83a88c17d216a48c8c36fcc58d</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">win-x86/node.lib</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">8090f51a19ff2d5e765920262a4367203be2e69e64ac3725e4e14dd034c98443</span><span style="color: #800000;">"</span><span style="color: #000000;">}
+npm ERR</span>! gyp verb validating download checksum <span style="color: #0000ff;">for</span> node-v16.<span style="color: #800080;">13.0</span>-headers.<span style="color: #0000ff;">tar</span>.gz (9abfc6dcd32bce3b9a978b8c23b8bb48a562c94919feba489f9bb9d4bbeeae66 ==<span style="color: #000000;"> 9abfc6dcd32bce3b9a978b8c23b8bb48a562c94919feba489f9bb9d4bbeeae66)
+npm ERR</span>! gyp verb validating download checksum <span style="color: #0000ff;">for</span> win-x64/node.lib (7c94657df6918a77dc8edefaf3b5415dbfb9eb83a88c17d216a48c8c36fcc58d ==<span style="color: #000000;"> 7c94657df6918a77dc8edefaf3b5415dbfb9eb83a88c17d216a48c8c36fcc58d)
+npm ERR</span>! gyp verb validating download checksum <span style="color: #0000ff;">for</span> win-x86/node.lib (8090f51a19ff2d5e765920262a4367203be2e69e64ac3725e4e14dd034c98443 ==<span style="color: #000000;"> 8090f51a19ff2d5e765920262a4367203be2e69e64ac3725e4e14dd034c98443)
+npm ERR</span>! gyp verb get node <span style="color: #0000ff;">dir</span> target node version installed: <span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp verb build <span style="color: #0000ff;">dir</span> attempting to create <span style="color: #800000;">"</span><span style="color: #800000;">build</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">dir</span>: D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\build
+npm ERR</span>! gyp verb build <span style="color: #0000ff;">dir</span> <span style="color: #800000;">"</span><span style="color: #800000;">build</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">dir</span> needed to be created? D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\build
+npm ERR</span>! gyp verb <span style="color: #0000ff;">find</span> vs2017 Found installation at: C:\Program Files (x86)\Microsoft Visual Studio\<span style="color: #800080;">2017</span><span style="color: #000000;">\Community
+npm ERR</span>! gyp verb <span style="color: #0000ff;">find</span> vs2017   - Found Microsoft.VisualStudio.Component.Windows10SDK.<span style="color: #800080;">17134</span><span style="color: #000000;">
+npm ERR</span>! gyp verb <span style="color: #0000ff;">find</span> vs2017   - Found Microsoft.VisualStudio.Component.Windows10SDK.<span style="color: #800080;">17763</span><span style="color: #000000;">
+npm ERR</span>! gyp verb <span style="color: #0000ff;">find</span> vs2017   -<span style="color: #000000;"> Found Microsoft.VisualStudio.VC.MSBuild.Base
+npm ERR</span>! gyp verb <span style="color: #0000ff;">find</span> vs2017   - Missing VC++ <span style="color: #800080;">2017</span><span style="color: #000000;"> v141 toolset (x86,x64) (Microsoft.VisualStudio.Component.VC.Tools.x86.x64)
+npm ERR</span>! gyp verb <span style="color: #0000ff;">find</span> vs2017   -<span style="color: #000000;"> Some required components are missing, not using this installation
+npm ERR</span>!<span style="color: #000000;"> gyp verb Not using VS2017: No usable installation of VS2017 found
+npm ERR</span>! gyp verb build/config.gypi creating config <span style="color: #0000ff;">file</span><span style="color: #000000;">
+npm ERR</span>! gyp verb build/config.gypi writing out config <span style="color: #0000ff;">file</span>: D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\build\config.gypi
+npm ERR</span>! (node:<span style="color: #800080;">12700</span>) [DEP0150] DeprecationWarning: Setting process.config is deprecated. In the future the property will be read-<span style="color: #000000;">only.
+npm ERR</span>! (Use `node --trace-<span style="color: #000000;">deprecation ...` to show where the warning was created)
+npm ERR</span>! gyp verb config.gypi checking <span style="color: #0000ff;">for</span> gypi <span style="color: #0000ff;">file</span>: D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\config.gypi
+npm ERR</span>! gyp verb common.gypi checking <span style="color: #0000ff;">for</span> gypi <span style="color: #0000ff;">file</span>: D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass\common.gypi
+npm ERR</span>! gyp verb gyp gyp format was not specified; forcing <span style="color: #800000;">"</span><span style="color: #800000;">msvs</span><span style="color: #800000;">"</span><span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span><span style="color: #000000;"> spawn D:\anaconda3\envs\py2env\python.EXE
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span><span style="color: #000000;"> spawn args [
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-gyp\\gyp\\gyp_main.py</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">binding.gyp</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-f</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">msvs</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-G</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">msvs_version=auto</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-I</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-sass\\build\\config.gypi</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-I</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-gyp\\addon.gypi</span><span style="color: #800000;">'</span>,npm ERR! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-I</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz\\.node-gyp\\16.13.0\\include\\node\\common.gypi</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dlibrary=shared_library</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dvisibility=default</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dnode_root_dir=C:\\Users\\mdzz\\.node-gyp\\16.13.0</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dnode_gyp_dir=D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-gyp</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dnode_lib_file=C:\\Users\\mdzz\\.node-gyp\\16.13.0\\&lt;(target_arch)\\node.lib</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dmodule_root_dir=D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-sass</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Dnode_engine=v8</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">--depth=.</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">--no-parallel</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">--generator-output</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-sass\\build</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">-Goutput_dir=.</span><span style="color: #800000;">'</span><span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span><span style="color: #000000;"> spawn args ]
+npm ERR</span>! Warning: unrecognized setting VCCLCompilerTool/<span style="color: #000000;">MultiProcessorCompilation
+npm ERR</span>! Warning: unrecognized setting VCCLCompilerTool/<span style="color: #000000;">MultiProcessorCompilation
+npm ERR</span>! Warning: unrecognized setting VCCLCompilerTool/<span style="color: #000000;">MultiProcessorCompilation
+npm ERR</span>! Warning: unrecognized setting VCCLCompilerTool/<span style="color: #000000;">MultiProcessorCompilation
+npm ERR</span>!<span style="color: #000000;"> gyp verb command build []
+npm ERR</span>!<span style="color: #000000;"> gyp verb build type Release
+npm ERR</span>!<span style="color: #000000;"> gyp verb architecture x64
+npm ERR</span>! gyp verb node dev <span style="color: #0000ff;">dir</span> C:\Users\mdzz\.node-gyp\<span style="color: #800080;">16.13</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+npm ERR</span>! gyp verb found first Solution <span style="color: #0000ff;">file</span> build/<span style="color: #000000;">binding.sln
+npm ERR</span>! gyp verb could not <span style="color: #0000ff;">find</span> <span style="color: #800000;">"</span><span style="color: #800000;">msbuild.exe</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">in</span> PATH - finding location <span style="color: #0000ff;">in</span><span style="color: #000000;"> registry
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn C:\Windows\Microsoft.NET\Framework\v4.<span style="color: #800080;">0.30319</span><span style="color: #000000;">\msbuild.exe
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span><span style="color: #000000;"> spawn args [
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">build/binding.sln</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">/nologo</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span> spawn args   <span style="color: #800000;">'</span><span style="color: #800000;">/p:Configuration=Release;Platform=x64</span><span style="color: #800000;">'</span><span style="color: #000000;">
+npm ERR</span>! gyp <span style="color: #0000ff;">info</span><span style="color: #000000;"> spawn args ]
+npm ERR</span>! gyp ERR!<span style="color: #000000;"> build error
+npm ERR</span>! gyp ERR! stack Error: `C:\Windows\Microsoft.NET\Framework\v4.<span style="color: #800080;">0.30319</span>\msbuild.exe` failed with exit code: <span style="color: #800080;">1</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! stack     at ChildProcess.onExit (D:\2022_2_11_clear\unclear-power\node_modules\node-gyp\lib\build.js:<span style="color: #800080;">262</span>:<span style="color: #800080;">23</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! stack     at ChildProcess.emit (node:events:<span style="color: #800080;">390</span>:<span style="color: #800080;">28</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! stack     at Process.ChildProcess._handle.onexit (node:internal/child_process:<span style="color: #800080;">290</span>:<span style="color: #800080;">12</span><span style="color: #000000;">)
+npm ERR</span>! gyp ERR! System Windows_NT <span style="color: #800080;">10.0</span>.<span style="color: #800080;">14393</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! command <span style="color: #800000;">"</span><span style="color: #800000;">D:\\Program Files\\nodejs\\node.exe</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">D:\\2022_2_11_clear\\unclear-power\\node_modules\\node-gyp\\bin\\node-gyp.js</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">rebuild</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--verbose</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_ext=</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_cflags=</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_ldflags=</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #800000;">--libsass_library=</span><span style="color: #800000;">"</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! cwd D:\2022_2_11_clear\unclear-power\node_modules\node-<span style="color: #000000;">sass
+npm ERR</span>! gyp ERR! node -v v16.<span style="color: #800080;">13.0</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR! node-gyp -v v3.<span style="color: #800080;">8.0</span><span style="color: #000000;">
+npm ERR</span>! gyp ERR!<span style="color: #000000;"> not ok
+npm ERR</span>! Build failed with error code: <span style="color: #800080;">1</span><span style="color: #000000;">
+
+npm ERR</span>! A complete log of this run can be found <span style="color: #0000ff;">in</span><span style="color: #000000;">:
+npm ERR</span>!     C:\Users\mdzz\AppData\Local\npm-cache\_logs\<span style="color: #800080;">2022</span>-<span style="color: #800080;">03</span>-02T11_11_19_326Z-debug.log</pre>
+</div>
+<span class="cnblogs_code_collapse">debug.log</span></div>
+<h3>尝试④&mdash;&mdash;用conda配置nodejs14环境</h3>
+<p>本来以为要把我电脑上的nodejs16卸载重装，自降版本去跑一个项目，所以就不太情愿，没有作为首选方案。突然想到conda似乎是可以配置node环境的，查阅资料证明确实可以。</p>
+<p>创建并激活一个新的环境，用来配置nodejs14：</p>
+<div class="cnblogs_code">
+<pre>conda create --<span style="color: #000000;">name node14env
+conda activate node14env</span></pre>
+</div>
+<p>补充个常用命令&mdash;&mdash;查看当前存在的环境：</p>
+<div class="cnblogs_code">
+<pre>conda <span style="color: #0000ff;">env</span> list</pre>
+</div>
+<p>查看可安装的nodejs包：</p>
+<div class="cnblogs_code">
+<pre>conda search nodejs</pre>
+</div>
+<p>安装相应版本：</p>
+<div class="cnblogs_code">
+<pre>conda <span style="color: #0000ff;">install</span> nodejs=<span style="color: #800080;">14.8</span>.<span style="color: #800080;">0</span></pre>
+</div>
+<p>检查安装情况（npm也会相应更改）：</p>
+<div class="cnblogs_code">
+<pre>node --version</pre>
+</div>
+<p>回到项目的根目录执行：</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span></pre>
+</div>
+<p>接着：</p>
+<div class="cnblogs_code">
+<pre>npm run serve</pre>
+</div>
+<p>一切顺利。</p>
+<p>该环境python还是3.9，也证明这个问题和本地的python版本没有关系，归根结底，还是nodejs和node-sass版本不匹配造成的。</p>

@@ -1,0 +1,138 @@
+<p>1、成绩统计。</p>
+<p>输入文件input.txt：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">张三 语文12 数学31 英语11
+李四 语文22 数学22 英语22
+王五 语文33 数学33 英语33</span></pre>
+</div>
+<p>期待输出output.txt：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">张三 语文12 数学31 英语11 总分54
+李四 语文22 数学22 英语22 总分66
+王五 语文33 数学33 英语33 总分99</span></pre>
+</div>
+<p>代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.test;
+
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.regex.Matcher;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.regex.Pattern;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> AnalysisResult {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> Pattern r = Pattern.compile("(\\d+)"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getTotal(String line) {
+        Matcher m </span>=<span style="color: #000000;"> r.matcher(line);
+        </span><span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (m.find()) {
+            total </span>+= Integer.valueOf(m.group(0<span style="color: #000000;">));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> total;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[]) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 读入TXT文件 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            File readFile </span>= <span style="color: #0000ff;">new</span> File("input.txt"<span style="color: #000000;">);
+            InputStreamReader inputStreamReader </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> InputStreamReader(
+                    </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(readFile));
+            BufferedReader bufferedReader </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BufferedReader(inputStreamReader);
+            String line;
+            List</span>&lt;String&gt; contents = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+            </span><span style="color: #0000ff;">while</span> ((line = bufferedReader.readLine()) != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                contents.add(line);
+            }
+            bufferedReader.close();
+
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 写入TXT文件 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            File writeFile </span>= <span style="color: #0000ff;">new</span> File("output.txt"<span style="color: #000000;">);
+            BufferedWriter bufferedWriter </span>= <span style="color: #0000ff;">new</span> BufferedWriter(<span style="color: #0000ff;">new</span> FileWriter(writeFile, <span style="color: #0000ff;">true</span><span style="color: #000000;">));
+            PrintWriter pw </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PrintWriter(bufferedWriter);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != contents.size(); ++<span style="color: #000000;">i) {
+                String temp </span>=<span style="color: #000000;"> contents.get(i);
+                pw.println(temp </span>+ " 总分" +<span style="color: #000000;"> getTotal(temp));
+            }
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>2、单词统计。</p>
+<p>输入文件input.txt：</p>
+<div class="cnblogs_code">
+<pre>Today, <span style="color: #0000ff;">when</span> I <span style="color: #0000ff;">go</span> home after school, I find that I lose my <span style="color: #0000ff;">key</span><span style="color: #000000;">.
+I feel so worried </span><span style="color: #808080;">and</span> try <span style="color: #0000ff;">to</span> remember <span style="color: #808080;">all</span> the places I have been <span style="color: #0000ff;">to</span><span style="color: #000000;">.
+</span><span style="color: #0000ff;">As</span> I walk <span style="color: #0000ff;">into</span> the shop, an old man stops me <span style="color: #808080;">and</span> asks <span style="color: #0000ff;">if</span> I lose the <span style="color: #0000ff;">key</span><span style="color: #000000;">.
+I feel so excited </span><span style="color: #808080;">and</span> say yes. At last, I find my <span style="color: #0000ff;">key</span> <span style="color: #808080;">and</span> <span style="color: #0000ff;">go</span><span style="color: #000000;"> home.
+Though I am lucky this time, I tell myself </span><span style="color: #808080;">not</span> <span style="color: #0000ff;">to</span> do it again.</pre>
+</div>
+<p>期待输出：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181229203011498-1108024362.png" alt="" width="281" height="182" /></p>
+<p>代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.test;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.BufferedReader;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.File;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.FileInputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.InputStreamReader;
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.regex.Matcher;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.regex.Pattern;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> WordStatistic {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> Pattern r = Pattern.compile("(\\b[a-zA-Z]+\\b)"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> Map&lt;String, Integer&gt; wordMap = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> countWords(String line) {
+        Matcher m </span>=<span style="color: #000000;"> r.matcher(line);
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (m.find()) {
+            total</span>++<span style="color: #000000;">;
+            String word </span>= m.group(0<span style="color: #000000;">);
+            Integer wordCount </span>=<span style="color: #000000;"> wordMap.get(word);
+            </span><span style="color: #0000ff;">if</span> (wordCount != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                wordMap.put(word, wordCount </span>+ 1<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                wordMap.put(word, </span>1<span style="color: #000000;">);
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> List sortByValue(Map&lt;String, Integer&gt;<span style="color: #000000;"> map) {
+        List</span>&lt;Map.Entry&lt;String, Integer&gt;&gt; result = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">(map.entrySet());
+        result.sort(Comparator.comparing(Map.Entry::getValue));
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 读入TXT文件 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            File readFile </span>= <span style="color: #0000ff;">new</span> File("input.txt"<span style="color: #000000;">);
+            InputStreamReader inputStreamReader </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> InputStreamReader(
+                    </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(readFile));
+            BufferedReader bufferedReader </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BufferedReader(inputStreamReader);
+            String line;
+            </span><span style="color: #0000ff;">while</span> ((line = bufferedReader.readLine()) != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                countWords(line);
+            }
+            bufferedReader.close();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(</span>"单词总数：" +<span style="color: #000000;"> total);
+        System.out.println(</span>"不同单词的个数：" +<span style="color: #000000;"> wordMap.size());
+        List list </span>=<span style="color: #000000;"> sortByValue(wordMap);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = list.size() - 1; i != 0; --<span style="color: #000000;">i) {
+            System.out.println(list.get(i));
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,99 @@
+<h2>题</h2>
+<p>例题6-12 油田。完整题目见参考<sup>[1]</sup>。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;cstdio&gt;<span style="color: #000000;">
+#include</span>&lt;cstring&gt;
+
+<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> MAXN = <span style="color: #800080;">100</span> + <span style="color: #800080;">5</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">char</span> pic[MAXN][MAXN]; <span style="color: #008000;">//</span><span style="color: #008000;"> 存原图 </span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> m, n, idx[MAXN][MAXN];
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> m 和 n 用来存行和列 
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> idx用来存 某点的连通分量编号。例如两个格子编号都是1，那么它们是连通的。 </span>
+
+<span style="color: #0000ff;">void</span> dfs(<span style="color: #0000ff;">int</span> r, <span style="color: #0000ff;">int</span> c, <span style="color: #0000ff;">int</span><span style="color: #000000;"> id);
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main() 
+{
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d%d</span><span style="color: #800000;">"</span>, &amp;m, &amp;n) == <span style="color: #800080;">2</span> &amp;&amp; m &amp;&amp;<span style="color: #000000;"> n) {
+        
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != m; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, pic[i]);
+        }
+        
+        memset(idx, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(idx));
+        
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 统计 + 编号， 一举两得。 </span>
+        
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != n; ++<span style="color: #000000;">j) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> idx[i][j] == 0 这个格子还没dfs过
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> pic[i][j] == '@' 这是一个可以dfs的格子 </span>
+                <span style="color: #0000ff;">if</span> (idx[i][j] == <span style="color: #800080;">0</span> &amp;&amp; pic[i][j] == <span style="color: #800000;">'</span><span style="color: #800000;">@</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                    dfs(i, j, </span>++<span style="color: #000000;">cnt);
+                }        
+            }                    
+        }
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">cnt: %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, cnt);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != m; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != n; ++<span style="color: #000000;">j) {
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span><span style="color: #000000;">, idx[i][j]);
+            }
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+    } 
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> dfs(<span style="color: #0000ff;">int</span> r, <span style="color: #0000ff;">int</span> c, <span style="color: #0000ff;">int</span><span style="color: #000000;"> id)
+{
+    </span><span style="color: #0000ff;">if</span> (r &lt; <span style="color: #800080;">0</span> || r &gt;= m || c &lt; <span style="color: #800080;">0</span> || c &gt;= n) <span style="color: #0000ff;">return</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 出界 </span>
+    <span style="color: #0000ff;">if</span> (idx[r][c] &gt; <span style="color: #800080;">0</span> || pic[r][c] != <span style="color: #800000;">'</span><span style="color: #800000;">@</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">return</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 已访问或不可访问 </span>
+<span style="color: #000000;">    
+    idx[r][c] </span>= id; <span style="color: #008000;">//</span><span style="color: #008000;"> 给格子编号
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 向 8 个方向 进军。
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> -1 -1, -1 0, -1 1, 0 -1, 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 0 1, 1 -1, 1 0, 1 1 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 0 0 排除掉了 但是感觉 不排除也无所谓。 </span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> dr = -<span style="color: #800080;">1</span>; dr &lt;= <span style="color: #800080;">1</span>; ++<span style="color: #000000;">dr) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> dc = -<span style="color: #800080;">1</span>; dc &lt;= <span style="color: #800080;">1</span>; ++<span style="color: #000000;">dc) {
+            </span><span style="color: #0000ff;">if</span> (dr != <span style="color: #800080;">0</span> || dc != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                dfs(r </span>+ dr, c +<span style="color: #000000;"> dc, id);    
+            }            
+        }        
+    }
+} 
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+Sample Input
+ 
+5 5
+****@
+*@@*@
+*@**@
+@@@*@
+@@**@
+
+Sample Output
+ 
+cnt: 2
+00001
+02201
+02001
+22201
+22001
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.baidu.com/link?url=zjkUCLa2QZ5T35sUP5aow6ite-N71vmJXoeQaB6AQMK3e9oYUEO6PMsVIQH1Xk1TImNMyWx4yL-ITkuaAXjTVq59p53y6TepaPUh5kIcuOq&amp;wd=&amp;eqid=d9edc6340000daf4000000055e7c965a" target="_blank" data-click="{
+			'F':'F78717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1585223259',
+						'y':'5FBBDBDF'
+												}">uva&nbsp;572&nbsp;Oil&nbsp;Deposits(DFS遍历图)&nbsp;- 不慌不忙、不急不躁 - CSDN博客</a></p>

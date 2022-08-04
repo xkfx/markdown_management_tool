@@ -1,0 +1,143 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">MAVLink的应用</a></li>
+<li><a href="#anchor1">MAVLink包结构</a>
+<ul>
+<li><a href="#anchor2">CRC字段</a></li>
+<li><a href="#anchor3">MAVLink消息<br /></a></li>
+<li><a href="#anchor4">MAVLink生态圈</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+<li><a href="#anchor5">参考</a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ol></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+<p><span class="md-line md-end-block md-focus"><span class="md-expand"><span class="md-expand">本文内容翻译自<span><a href="https://en.wikipedia.org/wiki/MAVLink"><span>维基百科</span></a><span>，仅供学习交流。</span></span></span></span></span></p>
+<p><span class="md-line md-end-block md-focus"><span class="md-expand">MAVLink（Micro Air Vehicle Link）是一种用于与小型无人机通信的协议。它被设计为一个header-only消息封送处理库。MAVLink由Lorenz Meier在LGPL许可下[2]于2009[1]年初发布。</span></span></p>
+<p><span class="md-line md-end-block" style="color: #888888;">PS. header-only库是一种&ldquo;无需编译，包含头文件就可以用&rdquo;的库。</span></p>
+<h2><a name="anchor0"></a>MAVLink的应用</h2>
+<p><span class="md-line md-end-block"><span>MAVLink主要用于地面控制站(GCS, Ground Control Station)与无人机之间的通信，以及载具内部子系统间的通信。它可以用来传输载具的方位、GPS位置以及速度。</span></span></p>
+<h2><a name="anchor1"></a>MAVLink包结构</h2>
+<p><span class="md-line md-end-block"><span>在1.0版本中包的结构如下：</span></span></p>
+<p><img src="https://img2018.cnblogs.com/i-beta/1042431/202002/1042431-20200201224347806-187942477.png" alt="" /></p>
+<p><span class="md-line md-end-block md-focus" style="color: #888888;"><span class="md-expand">PS. 0xFE = 254，即一个十进制值为254的字节标识着一个新的MAVLink消息包的开始。</span></span></p>
+<p><span class="md-line md-end-block"><span>版本2之后，包结构扩展为以下[3]：</span></span></p>
+<p><img src="https://img2018.cnblogs.com/i-beta/1042431/202002/1042431-20200201224511977-384864261.png" alt="" /></p>
+<p><img src="https://img2018.cnblogs.com/i-beta/1042431/202001/1042431-20200129211218884-938132296.png" alt="" /></p>
+<p><span style="color: #888888;">PS. 0xFD = 253</span></p>
+<h3><a name="anchor2"></a>CRC字段</h3>
+<p><span class="md-line md-end-block"><span>详见原文。[4]<span>[<span>5]<span>[<span>6]<span>[<span>7]<span>[<span>8]</span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="md-line md-end-block"><span>该字段主要用于确保消息包的完整性。MAVLink的循环冗余检查算法已经在Python和Java等多种语言中实现。</span></span></p>
+<h3><a name="anchor3"></a>MAVLink消息</h3>
+<p><span class="md-line md-end-block"><span>上述数据包中的<span><strong>有效</strong><span>负载就是MAVLink消息。每条消息都由包上的ID字段进行标识，有效负载包含来自消息的数据。MAVlink源码[9]中的XML文档定义了存储在此有效负载中的数据。</span></span></span></span></p>
+<p><span class="md-line md-end-block"><span>下面是从XML文档中提取的ID为24的消息。</span></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">message </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="24"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="GPS_RAW_INT"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>The global position, as returned by the Global Positioning System (GPS). This is NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. Coordinate frame is right-handed, Z-axis up (GPS frame).<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint64_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="time_usec"</span><span style="color: #0000ff;">&gt;</span>Timestamp (microseconds since UNIX epoch or microseconds since system boot)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint8_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="fix_type"</span><span style="color: #0000ff;">&gt;</span>0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="int32_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="lat"</span><span style="color: #0000ff;">&gt;</span>Latitude (WGS84), in degrees * 1E7<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="int32_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="lon"</span><span style="color: #0000ff;">&gt;</span>Longitude (WGS84), in degrees * 1E7<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="int32_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="alt"</span><span style="color: #0000ff;">&gt;</span>Altitude (WGS84), in meters * 1000 (positive for up)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint16_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="eph"</span><span style="color: #0000ff;">&gt;</span>GPS HDOP horizontal dilution of position in cm (m*100). If unknown, set to: UINT16_MAX<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint16_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="epv"</span><span style="color: #0000ff;">&gt;</span>GPS VDOP horizontal dilution of position in cm (m*100). If unknown, set to: UINT16_MAX<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint16_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="vel"</span><span style="color: #0000ff;">&gt;</span>GPS ground speed (m/s * 100). If unknown, set to: UINT16_MAX<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint16_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="cog"</span><span style="color: #0000ff;">&gt;</span>Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">field </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="uint8_t"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="satellites_visible"</span><span style="color: #0000ff;">&gt;</span>Number of satellites visible. If unknown, set to 255<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">field</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">message</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span class="md-line md-end-block md-focus"><span class="md-expand">注意：XML文档描述了协议字段的逻辑顺序。实际的连线格式（以及典型的内存表示）对字段重新排序[10]，以减少数据结构对齐问题。在阅读从消息定义生成的代码时，这可能会造成混淆。</span></span></p>
+<h3><a name="anchor4"></a>MAVLink生态圈</h3>
+<p><span class="md-line md-end-block"><span>MAVLink在很多项目中作为通信协议使用，这可能意味着它们之间存在一定的兼容性。有人已经编写了一个有趣的教程[11]来解释MAVLink的基础知识。</span></span></p>
+<h2><a name="anchor5"></a>参考</h2>
+<ol class="ol-list">
+<li>
+<p><span class="md-line md-end-block"><span>&nbsp;<span><a href="https://github.com/mavlink/mavlink/commit/a087528b8146ddad17e9f39c1dd0c1353e5991d5"><span>"Initial commit &middot; mavlink/mavlink@a087528"</span></a><span>.&nbsp;<span><em>GitHub</em><span>.</span></span></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="http://qgroundcontrol.org/mavlink/start"><span>http://qgroundcontrol.org/mavlink/start</span></a></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="https://mavlink.io/en/guide/serialization.html"><span>"Serialization &middot; MAVLink Developer Guide"</span></a><span>.&nbsp;<span><em>mavlink.io</em><span>. Retrieved&nbsp;2019-08-22.</span></span></span></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="http://qgroundcontrol.org/mavlink/crc_extra_calculation"><span>http://qgroundcontrol.org/mavlink/crc_extra_calculation</span></a></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="https://github.com/ArduPilot/pymavlink"><span>"GitHub - ArduPilot/pymavlink: python MAVLink interface and utilities"</span></a><span>. August 18, 2019 &ndash; via GitHub.</span></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="https://github.com/arthurbenemann/droidplanner"><span>"GitHub - arthurbenemann/droidplanner: Ground Control Station for Android Devices"</span></a><span>. July 2, 2019 &ndash; via GitHub.</span></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="https://github.com/ghelle/MAVLinkJava"><span>"A Java code generator and a Java library for MAVLink: ghelle/MAVLinkJava"</span></a><span>. August 4, 2019 &ndash; via GitHub.</span></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span>&nbsp;<span><a href="https://github.com/dronefleet/mavlink"><span>"GitHub - dronefleet/mavlink: A Java API for MAVLink communication"</span></a><span>. August 2, 2019 &ndash; via GitHub.</span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;<span><a href="https://github.com/mavlink/mavlink"><span>"GitHub - mavlink/mavlink: Marshalling / communication library for drones"</span></a><span>. August 20, 2019 &ndash; via GitHub.</span></span></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span><a href="http://qgroundcontrol.org/mavlink/crc_extra_calculation#field_reordering"><span>http://qgroundcontrol.org/mavlink/crc_extra_calculation#field_reordering</span></a></span></span></span></p>
+</li>
+<li>
+<p><span class="md-line md-end-block"><span><strong>^</strong><span>&nbsp;Posted by Shyam Balasubramanian on November 15, 2013 at 2:36pm in ArduCopter User Group; Discussions, Back to ArduCopter User Group.&nbsp;<span><a href="https://diydrones.com/forum/topics/mavlink-tutorial-for-absolute-dummies-part-i?groupUrl=arducopterusergroup"><span>"MAVLink Tutorial for Absolute Dummies (Part &ndash;I)"</span></a><span>.&nbsp;<span><em>diydrones.com</em><span>.</span></span></span></span></span></span></span></p>
+</li>
+</ol>

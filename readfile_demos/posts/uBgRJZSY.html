@@ -1,0 +1,122 @@
+<p>参考：</p>
+<p><a href="https://help.github.com/articles/connecting-to-github-with-ssh/" target="_blank">GitHub Help: Connecting to GitHub with SSH</a></p>
+<p><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137583770360579bc4b458f044ce7afed3df579123eca000" target="_blank">廖雪峰的官方网站:&nbsp;搭建Git服务器</a></p>
+<p><a href="http://www.runoob.com/git/git-server.html" target="_blank">菜鸟教程: Git 服务器搭建</a></p>
+<p>&nbsp;</p>
+<h4>1. 安装记录（可能有错。。。）</h4>
+<p><strong>本地（<span class=" text-muted " data-spm-anchor-id="5176.2020520101.122.i0.71474df5bWzj8N">&nbsp;<span data-spm-anchor-id="5176.2020520101.122.i1.71474df5bWzj8N">Debian 8.8</span></span>）：</strong></p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span></strong><span style="color: #000000;"><strong> git</strong>
+
+<strong>git version</strong> # 确保正确安装</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <strong>git config --global user.name <span style="color: #800000;">"</span><span style="color: #800000;">little fish</span><span style="color: #800000;">"</span></strong><span style="color: #000000;">
+root@xkfx:</span>~# <strong>git config --global user.email <span style="color: #800000;">"</span><span style="color: #800000;">little_fish@163.com</span></strong><span style="color: #800000;"><strong>"</strong><br /></span><span style="color: #000000;">
+# 初始设置，作为储存在本地的变量，会用在Git的提交日志中<br />
+root@xkfx:</span>~<span style="color: #000000;"># <strong>git config user.name</strong>
+little fish
+root@xkfx:</span>~<span style="color: #000000;"># <strong>git config user.email</strong> 
+little_fish@</span><span style="color: #800080;">163</span>.com</pre>
+</div>
+<p>&nbsp;生成 ssh key （这个不是 git 命令！），</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <strong><span style="color: #0000ff;">ssh-keygen</span> -t rsa -C <span style="color: #800000;">"</span><span style="color: #800000;">little_fish@163.com</span><span style="color: #800000;">"</span></strong><span style="color: #000000;">
+Generating public</span>/<span style="color: #000000;">private rsa key pair.
+Enter </span><span style="color: #0000ff;">file</span> <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">which</span> to save the key (/root/.<span style="color: #0000ff;">ssh</span>/<span style="color: #000000;">id_rsa): 
+Enter passphrase (empty </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved </span><span style="color: #0000ff;">in</span> /root/.<span style="color: #0000ff;">ssh</span>/<span style="color: #000000;">id_rsa.
+Your public key has been saved </span><span style="color: #0000ff;">in</span> /root/.<span style="color: #0000ff;">ssh</span>/<span style="color: #000000;">id_rsa.pub.
+The key fingerprint is:
+</span><span style="color: #800080;">53</span>:f3:c5:<span style="color: #800080;">06</span>:<span style="color: #800080;">28</span>:<span style="color: #800080;">61</span>:3f:<span style="color: #800080;">12</span>:<span style="color: #800080;">36</span>:fc:<span style="color: #800080;">54</span>:c7:<span style="color: #0000ff;">df</span>:4c:9c:<span style="color: #800080;">60</span><span style="color: #000000;"> little_fish_pubic@gmail.com <strong># 已改，仅作示范</strong>
+The key</span><span style="color: #800000;">'</span><span style="color: #800000;">s randomart image is:</span>
++---[RSA <span style="color: #800080;">2048</span>]----+
+|     .*..+o..E...|
+|     o.++  +o  .o|
+|      .oo + +. + |
+|       ..o =  . o|
+|        S   .    |
+|         .       |
+|                 |
+|                 |
+|                 |
++-----------------+</pre>
+</div>
+<p>总之本地持有私匙，远程持有对应公匙，这样双方才能安全通信。关于邮箱参数有啥用可以参考这个<a href="https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/" target="_blank">文档</a>（是作为 ssh key 的一个标签，这在仓库放在 github 上的时候会有用 ~）密码是给私匙配的。</p>
+<p>&nbsp;</p>
+<p><strong>VPS（Centos 6 x86 bbr&nbsp;）：</strong></p>
+<div class="cnblogs_code">
+<pre>[root@xkfx ~]#<strong> <span style="color: #0000ff;">yum</span> <span style="color: #0000ff;">install</span></strong><span style="color: #000000;"><strong> git</strong>
+[root@xkfx </span>~]#<strong> git version</strong></pre>
+</div>
+<p>&nbsp;把有权限访问的<strong>【终端的公匙】</strong>拷贝进去，一行一个，</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <strong><span style="color: #0000ff;">cat</span> /root/.<span style="color: #0000ff;">ssh</span>/<span style="color: #000000;">id_rsa.pub
+</span></strong><span style="color: #0000ff;">ssh</span>-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGetaJDc9kTMrRlw+++ve+w4gamJH2LfNC9qJa/LbvXUFkO1atJCQxn2DlaNvQxrMvSSAHRNo2MmNnxRp9Vi8sg6KawgVKx6n60maMxvMugkzV+BOm8ds+C5M+JAdRzjBzfdgWIMgdqZfyfG1sHnTg6JGvzCxJ9DigNb+2cho20CXhCv5JKsn2fHzyc75BguT8gxZ7e9vtQNWywLNNse8mCFmc28kmxXo14eDuZPbDGnEU12BO+UFVqYbeFVNLVcS8x2GiJg/Iy5pDCPScPI0iyZGor7AkI0SjfhQuc4uMDVIDWC5gp8cqudxP little_fish_pubic@gmail.com</pre>
+</div>
+<div class="cnblogs_code">
+<pre>[root@xkfx ~]# <strong>sudo</strong><span><strong> adduser git</strong></span></pre>
+<pre>[root@xkfx ~]# <strong>cd /home/</strong><span style="color: #000000;"><strong>git</strong>
+[root@xkfx git]# </span><strong><span style="color: #0000ff;">mkdir</span> .<span style="color: #0000ff;">ssh</span></strong><span style="color: #000000;">
+[root@xkfx git]# <strong>vim </strong></span><strong>/home/git/.<span style="color: #0000ff;">ssh</span>/authorized_keys</strong></pre>
+</div>
+<div class="cnblogs_code">
+<pre>[root@xkfx git]# <strong><span style="color: #0000ff;">sudo</span> git init --</strong><span style="color: #000000;"><strong>bare sample.git</strong>
+<strong>Initialized empty Git repository </strong></span><strong><span style="color: #0000ff;">in</span> /home/git/sample.git/</strong></pre>
+</div>
+<p>出于安全性考虑，</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">[root@xkfx git]# </span><strong><span style="color: #0000ff;">sudo</span> <span style="color: #0000ff;">chown</span> -</strong><span style="color: #000000;"><strong>R git:git sample.git</strong>
+[root@xkfx git]# <strong>vim </strong></span><strong>/etc/<span style="color: #0000ff;">passwd</span></strong></pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180305203052788-594160756.png" alt="" width="730" height="44" /></p>
+<p>&nbsp;</p>
+<h4>2.基本操作<span style="text-decoration: underline;">尝试</span></h4>
+<p>root@xkfx:~# git clone git@<span style="text-decoration: line-through;">your ip address</span>:/home/git/sample.git<br />Cloning into 'sample'...<br />ssh: connect to host<span style="text-decoration: line-through;">&nbsp;your ip address </span>port 22: Connection refused<br />fatal: Could not read from remote repository.</p>
+<p>Please make sure you have the correct access rights<br />and the repository exists.</p>
+<p>---------------------------------------------------------------------------------------&nbsp;</p>
+<p>root@xkfx:~# eval $(ssh-agent -s)<br />Agent pid 16083<br />root@xkfx:~# ssh-add ~/.ssh/id_rsa<br />Enter passphrase for /root/.ssh/id_rsa: <br />Bad passphrase, try again for /root/.ssh/id_rsa: <br />Identity added: /root/.ssh/id_rsa (/root/.ssh/id_rsa)</p>
+<p>root@xkfx:~# ssh -T git@<span style="text-decoration: line-through;">your ip address</span><br />ssh: connect to host&nbsp;<span style="text-decoration: line-through;">your ip address</span> port 22: Connection refused</p>
+<p>---------------------------------------------------------------------------------------&nbsp;</p>
+<p>root@xkfx:~# ssh -T git@github.com<br />The authenticity of host 'github.com (192.30.253.112)' can't be established.<br />RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.<br />Are you sure you want to continue connecting (yes/no)? yes<br />Warning: Permanently added 'github.com,192.30.253.112' (RSA) to the list of known hosts.<br />Permission denied (publickey).<br />---------------------------------------------------------------------------------------&nbsp;</p>
+<p>换菜鸟教程从头敲一遍 失败</p>
+<p>换了个 VPS 按照菜鸟教程重敲了一遍 就成功了。</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~<span style="color: #000000;"># groupadd git
+root@xkfx:</span>~# useradd git -<span style="color: #000000;">g git
+root@xkfx:</span>~# cd /home/git/<span style="color: #000000;">
+root@xkfx:</span>/home/git# <span style="color: #0000ff;">mkdir</span> .<span style="color: #0000ff;">ssh</span><span style="color: #000000;">
+root@xkfx:</span>/home/git# <span style="color: #0000ff;">chmod</span> <span style="color: #800080;">755</span> .<span style="color: #0000ff;">ssh</span><span style="color: #000000;">
+root@xkfx:</span>/home/git# <span style="color: #0000ff;">touch</span> .<span style="color: #0000ff;">ssh</span>/<span style="color: #000000;">authorized_keys
+root@xkfx:</span>/home/git# <span style="color: #0000ff;">chmod</span> <span style="color: #800080;">644</span> .<span style="color: #0000ff;">ssh</span>/<span style="color: #000000;">authorized_keys
+root@xkfx:</span>/home/git# cd /<span style="color: #000000;">home
+root@xkfx:</span>/home#  <span style="color: #0000ff;">mkdir</span><span style="color: #000000;"> gitrepo
+root@xkfx:</span>/home# <span style="color: #0000ff;">chown</span> git:git gitrepo/<span style="color: #000000;">
+root@xkfx:</span>/<span style="color: #000000;">home# cd gitrepo
+root@xkfx:</span>/home/gitrepo# <span style="color: #ff0000;"><strong>git init --</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>bare runoob.git</strong>
+<strong>Initialized empty Git repository </strong></span></span><span style="color: #ff0000;"><strong>in /home/gitrepo/runoob.git/</strong></span><span style="color: #000000;">
+root@xkfx:</span>/home/gitrepo# <span style="color: #ff0000;"><strong>chown -</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>R git:git runoob.git # 必要的！否则会因为权限不够无法 push</strong></span>
+root@xkfx:</span>/home/gitrepo# <strong>vim /home/git/.<span style="color: #0000ff;">ssh</span>/authorized_keys</strong></pre>
+</div>
+<p>mdzz@LAPTOP-QGECNCGO MINGW64 /d/labs</p>
+<p>$ git clone git@????????????:/home/gitrepo/runoob.git<br />Cloning into 'runoob'...<br />warning: You appear to have cloned an empty repository.</p>
+<p>&nbsp;</p>
+<h4>3. 应用</h4>
+<p>存放不愿公开的项目</p>
+<p>作为网盘方便地保存重要文件</p>
+<p>&nbsp;</p>
+<p>例如打算写个小项目：</p>
+<p>在 VPS 上建立仓库，无论你在本地是否已经开始写（写了就 移花接木 :D）</p>
+<p>&nbsp;VPS：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/home/gitrepo# git init --<span style="color: #000000;">bare mangast.git
+root@xkfx:</span>/home/gitrepo# <span style="color: #0000ff;">chown</span> -R git:git mangast.git</pre>
+</div>
+<p>本地：</p>
+<p>$ git clone git@????????????:/home/gitrepo/mangast.git</p>
+<p>&nbsp;--------- 移 花 接 木 ------&nbsp;</p>
+<p>$ git add sql/ src/ web/</p>
+<p>$ git commit -m "basis."</p>
+<p>$ git push origin master</p>
+<p>&nbsp;</p>

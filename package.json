@@ -21,6 +21,7 @@
     "electron": "^16.0.1"
   },
   "dependencies": {
+    "nanoid": "^3.3.4",
     "simplemde": "^1.11.2"
   }
 }

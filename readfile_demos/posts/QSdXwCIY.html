@@ -1,0 +1,39 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖</a>雪峰的官方网站。</p>
+<p>1、<strong>map的优点</strong>：省代码 + 提高可读性。</p>
+<p>&nbsp;</p>
+<p>2、map 运用示例：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">def</span><span style="color: #000000;"> f(x):
+...     </span><span style="color: #0000ff;">return</span> x *<span style="color: #000000;"> x
+...
+</span>&gt;&gt;&gt; L = [1, 2, 3, 4<span style="color: #000000;">]
+</span><strong>&gt;&gt;&gt; iterator =</strong><span style="color: #000000;"><strong> map(f , L)   </strong> 
+</span>&gt;&gt;&gt;<span style="color: #000000;"> iterator
+</span>&lt;map object at 0x000002B288BE62E8&gt;
+&gt;&gt;&gt;<span style="color: #000000;"> list(iterator)
+[</span>1, 4, 9, 16]</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、<strong>reduce</strong>：reduce(f, [x1, x2, x3, x4]) 的效果相当于 f(f(f(x1, x2), x3), x4)，注意：<strong>作为参数的函数必须接收两个参数！</strong></p>
+<p>&nbsp;</p>
+<p>4、reduce 运用示例：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> functools <span style="color: #0000ff;">import</span><span style="color: #000000;"> reduce
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">def</span><span style="color: #000000;"> add(x , y):
+...     </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y
+...
+</span>&gt;&gt;&gt; <strong>reduce(add , [1, 2, 3, 4<span style="color: #000000;">])
+</span></strong>10</pre>
+</div>
+<p>&nbsp;</p>
+<p>5、练习：利用<code>map()</code>函数，把用户输入的不规范的英文名字，变为首字母大写，其他小写的规范名字。</p>
+<p>输入：<code>['adam', 'LISA', 'barT']</code>，输出：<code>['Adam', 'Lisa', 'Bart']。</code></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> normalize(name):
+    </span><span style="color: #0000ff;">return</span> name.capitalize()</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; list(map(normalize , [<span style="color: #800000;">'</span><span style="color: #800000;">DADA</span><span style="color: #800000;">'</span> , <span style="color: #800000;">'</span><span style="color: #800000;">DSADXxx</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span><span style="color: #000000;">]))
+[</span><span style="color: #800000;">'</span><span style="color: #800000;">Dada</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">Dsadxxx</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">X</span><span style="color: #800000;">'</span>]</pre>
+</div>
+<p>直接使用<strong>&nbsp;capitalize()。</strong></p>

@@ -1,0 +1,89 @@
+<p>类似于 JSP-Servlet 中的 req.setAttribute 、 req.getSession().setAttribute ...&nbsp;</p>
+<p>--&gt; 最后在 JSP 用 EL 表达式取得这些数据对象，</p>
+<h3>STEP-1 传递模型数据的三种方式</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> spittr.web;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.web.bind.annotation.RequestMethod.GET;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.beans.factory.annotation.Autowired;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.stereotype.Controller;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.RequestMapping;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> spittr.Spittle;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> spittr.data.SpittleRepository;
+
+@Controller
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> SpittleController {
+    
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> SpittleRepository spittleRepository;
+    
+    @Autowired
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> SpittleController(SpittleRepository spittleRepository) {
+        </span><span style="color: #0000ff;">this</span>.spittleRepository =<span style="color: #000000;"> spittleRepository;
+    }
+    
+    @RequestMapping(value</span>="/spittles", method=<span style="color: #000000;">GET)    
+    </span><span style="color: #0000ff;">public</span> List&lt;Spittle&gt;<span style="color: #000000;"> spittles() {
+        </span><span style="color: #0000ff;">return</span> spittleRepository.findSpittles(Long.MAX_VALUE, 20<span style="color: #000000;">);
+    } </span><span style="color: #008000;">//</span><span style="color: #008000;"> 采用用无 String 的方式传递模型数据到视图 
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> --&gt; 属性名推断为 spittleList
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> --&gt; 视图名称推断为 spittles --&gt; 去掉了 /
+    
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    public String spittles(Model model) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        model.addAttribute(spittleRepository.findSpittles(Long.MAX_VALUE, 20));
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        return "spittles";
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    } 这是等价方法-1：半自定义 --&gt; 自定义视图名
+    
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    public String spittles(Model model) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        model.addAttribute("myList", spittleRepository.findSpittles(Long.MAX_VALUE, 20));
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        return "spittles";
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    } 这是等价方法-2：高度自定义。 --&gt; 自定义视图名以及属性名</span>
+}</pre>
+</div>
+<h3><span style="font-size: 1.17em;">STEP-2 在 JSP 页面中获取数据</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ taglib </span><span style="color: #ff0000;">prefix</span><span style="color: #0000ff;">="c"</span><span style="color: #ff0000;"> uri</span><span style="color: #0000ff;">="http://java.sun.com/jsp/jstl/core"</span><span style="color: #ff0000;">%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ taglib </span><span style="color: #ff0000;">prefix</span><span style="color: #0000ff;">="s"</span><span style="color: #ff0000;"> uri</span><span style="color: #0000ff;">="http://www.springframework.org/tags"</span><span style="color: #ff0000;">%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ taglib </span><span style="color: #ff0000;">prefix</span><span style="color: #0000ff;">="fn"</span><span style="color: #ff0000;"> uri</span><span style="color: #0000ff;">="http://java.sun.com/jsp/jstl/functions"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Spitter<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="&lt;c:url value="</span><span style="color: #ff0000;">/resources/style.css" </span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">" &gt;
+  </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="spittleForm"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Spit it out...<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="POST"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="spittleForm"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="hidden"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="latitude"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="hidden"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="longitude"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">textarea </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="message"</span><span style="color: #ff0000;"> cols</span><span style="color: #0000ff;">="80"</span><span style="color: #ff0000;"> rows</span><span style="color: #0000ff;">="5"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">textarea</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="Add"</span> <span style="color: #0000ff;">/&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="listTitle"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Recent Spittles<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="spittleList"</span><span style="color: #0000ff;">&gt;</span>
+        <strong><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:forEach </span><span style="color: #ff0000;">items</span><span style="color: #0000ff;">="${spittleList}"</span><span style="color: #ff0000;"> var</span><span style="color: #0000ff;">="spittle"</span> <span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="spittle_&lt;c:out value="</span><span style="color: #ff0000;">spittle.id"</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">"&gt;
+            </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="spittleMessage"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">c:out </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="${spittle.message}"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+              <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="spittleTime"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">c:out </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="${spittle.time}"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+              <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="spittleLocation"</span><span style="color: #0000ff;">&gt;</span>(<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:out </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="${spittle.latitude}"</span> <span style="color: #0000ff;">/&gt;</span>, <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:out </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="${spittle.longitude}"</span> <span style="color: #0000ff;">/&gt;</span>)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:forEach</span><span style="color: #0000ff;">&gt;</span></strong>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--       </span><span style="color: #ff0000;">&lt;c:if test</span><span style="color: #0000ff;">="${fn:length(spittleList) gt 20}"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr </span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">s:url </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="/spittles?count=${nextCount}"</span><span style="color: #ff0000;"> var</span><span style="color: #0000ff;">="more_url"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="${more_url}"</span><span style="color: #0000ff;">&gt;</span>Show more<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:if</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> --%&gt;
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

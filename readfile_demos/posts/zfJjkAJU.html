@@ -1,0 +1,238 @@
+<p>线性表就是字面上的意思，</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201709/1042431-20170924121629712-135844716.png" alt="" /></p>
+<p>顺序表是线性表基于数组的一种实现，</p>
+<p>&ldquo;顺序&rdquo;这个名字怎么来的并不清楚，可以勉强解释为&ldquo;存储地址是连续、顺序的&rdquo;。</p>
+<p>&nbsp;另外两种线性表实现分别是&ldquo;基于链表&rdquo;和&ldquo;散列存储&rdquo;。</p>
+<p>顺序表可以是动态的，也可以是静态的，</p>
+<p>&ldquo;静态&rdquo;就是一开始就知道表容量，并且这个容量在之后无法被更改；</p>
+<p>&ldquo;动态&rdquo;就是能够动态的改变表的容量，实现上基于动态内存分配。</p>
+<p>&nbsp;</p>
+<p>基于数组的静态版本：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #000000;">#ifndef SEQLIST_H
+</span><span style="color: #0000ff;">#define</span> SEQLIST_H
+
+<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> MAX_SIZE  = <span style="color: #800080;">512</span><span style="color: #000000;">;
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> SeqList {
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    T node[MAX_SIZE];
+    </span><span style="color: #0000ff;">int</span> size = <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">int</span> getSize() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> size; }
+    </span><span style="color: #0000ff;">bool</span> add(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> x);
+    </span><span style="color: #0000ff;">bool</span> insert(<span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> x);
+    </span><span style="color: #0000ff;">bool</span> remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i);
+    </span><span style="color: #0000ff;">int</span> search(T&amp;<span style="color: #000000;"> x);
+    T</span>&amp; getNode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i);
+};    
+
+</span><span style="color: #0000ff;">#endif</span><span style="color: #000000;">
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">bool</span> SeqList&lt;T&gt;::add(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> x) {
+    </span><span style="color: #0000ff;">if</span> (size &lt;=<span style="color: #000000;"> MAX_SIZE) {
+        </span>++<span style="color: #000000;">size;
+        node[size</span>-<span style="color: #800080;">1</span>] =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">bool</span> SeqList&lt;T&gt;::insert(<span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> x) {
+    </span><span style="color: #0000ff;">if</span> (size &lt;= MAX_SIZE &amp;&amp; i &gt;= <span style="color: #800080;">0</span> &amp;&amp; i &lt;=<span style="color: #000000;"> size) {
+        </span>++<span style="color: #000000;">size;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = size-<span style="color: #800080;">1</span>; k != i; --<span style="color: #000000;">k) {
+            node[k] </span>= node[k-<span style="color: #800080;">1</span><span style="color: #000000;">];
+        }
+        node[i] </span>=<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">bool</span> SeqList&lt;T&gt;::remove(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {
+    </span><span style="color: #0000ff;">if</span> (i &gt;= <span style="color: #800080;">0</span> &amp;&amp; i &lt;=<span style="color: #000000;"> size) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = i; k != size; ++<span style="color: #000000;">k) {
+            node[k] </span>= node[k+<span style="color: #800080;">1</span><span style="color: #000000;">];
+        }
+        </span>--<span style="color: #000000;">size;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">int</span> SeqList&lt;T&gt;::search(T&amp;<span style="color: #000000;"> x) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != size; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (node[i] == x) <span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;<span style="color: #000000;">
+T</span>&amp; SeqList&lt;T&gt;::getNode(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i){
+    </span><span style="color: #0000ff;">if</span> (i &gt;= <span style="color: #800080;">0</span> &amp;&amp; i &lt;<span style="color: #000000;"> size) {
+        </span><span style="color: #0000ff;">return</span></strong><span style="color: #000000;"><strong> node[i];
+    }
+};
+</strong>
+#ifndef STUDENT_H
+</span><span style="color: #0000ff;">#define</span> STUDENT_H<span style="color: #000000;">
+
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Student {
+    </span><span style="color: #0000ff;">int</span> no = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    std::</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    std::</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> grade;
+    </span><span style="color: #0000ff;">double</span> goal = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    Student() </span>= <span style="color: #0000ff;">default</span><span style="color: #000000;">;
+    Student(</span><span style="color: #0000ff;">int</span> arg1, <span style="color: #0000ff;">const</span> std::<span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> arg2, 
+        </span><span style="color: #0000ff;">const</span> std::<span style="color: #0000ff;">string</span>&amp; arg3, <span style="color: #0000ff;">double</span><span style="color: #000000;"> arg4): no(arg1), name(arg2), grade(arg3), goal(arg4) {}
+    </span><span style="color: #0000ff;">void</span> display() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %s %s %.2f\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, no, name.c_str(), grade.c_str(), goal);
+    }
+    </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>==(<span style="color: #0000ff;">const</span> Student &amp;<span style="color: #000000;">c1) {
+        </span><span style="color: #0000ff;">if</span> (c1.name == <span style="color: #0000ff;">this</span>-&gt;name || c1.no == <span style="color: #0000ff;">this</span>-&gt;no &amp;&amp; c1.grade == <span style="color: #0000ff;">this</span>-&gt;grade) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};
+
+</span><span style="color: #0000ff;">#endif</span><span style="color: #000000;">
+
+#include </span>&lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    SeqList</span>&lt;Student&gt;<span style="color: #000000;"> list;
+    
+    Student s1(</span><span style="color: #800080;">1</span>, <span style="color: #800000;">"</span><span style="color: #800000;">张三</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">2005</span><span style="color: #800000;">"</span>, <span style="color: #800080;">70</span><span style="color: #000000;">);
+    Student s2(</span><span style="color: #800080;">2</span>, <span style="color: #800000;">"</span><span style="color: #800000;">李四</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">2004</span><span style="color: #800000;">"</span>, <span style="color: #800080;">65</span><span style="color: #000000;">);
+    Student s3(</span><span style="color: #800080;">3</span>, <span style="color: #800000;">"</span><span style="color: #800000;">王五</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">2005</span><span style="color: #800000;">"</span>, <span style="color: #800080;">80</span><span style="color: #000000;">);
+    Student s4(</span><span style="color: #800080;">4</span>, <span style="color: #800000;">"</span><span style="color: #800000;">马六</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">2006</span><span style="color: #800000;">"</span>, <span style="color: #800080;">90</span><span style="color: #000000;">);
+    Student s5(</span><span style="color: #800080;">5</span>, <span style="color: #800000;">"</span><span style="color: #800000;">黄荣</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">2004</span><span style="color: #800000;">"</span>, <span style="color: #800080;">85</span><span style="color: #000000;">);
+    
+    list.add(s1);
+    list.add(s2);
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">step-a\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != list.getSize(); ++<span style="color: #000000;">i) {
+        list.getNode(i).display();
+    }
+    
+    list.insert(</span><span style="color: #800080;">0</span><span style="color: #000000;">, s3);
+    list.insert(</span><span style="color: #800080;">2</span><span style="color: #000000;">, s4);
+    list.insert(</span><span style="color: #800080;">4</span><span style="color: #000000;">, s5);
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">step-b\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != list.getSize(); ++<span style="color: #000000;">i) {
+        list.getNode(i).display();
+    }
+    
+    list.remove(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    list.remove(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">step-c\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != list.getSize(); ++<span style="color: #000000;">i) {
+        list.getNode(i).display();
+    }    
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">step-d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span> (list.search(s5) == -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">不存在\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        s5.display();
+    }    
+    Student s6(</span><span style="color: #800080;">6</span>, <span style="color: #800000;">"</span><span style="color: #800000;">郭靖</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">2004</span><span style="color: #800000;">"</span>, <span style="color: #800080;">85</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span> (list.search(s6) == -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">不存在\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        s6.display();
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">step-e\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != list.getSize(); ++<span style="color: #000000;">i) {
+        list.getNode(i).display();
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">step-f\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    system(</span><span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+        system(</span><span style="color: #800000;">"</span><span style="color: #800000;">cls</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">#####WINDOWS##EDITION#####################</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != list.getSize(); ++<span style="color: #000000;">i) {
+            list.getNode(i).display();
+        }
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">########################MAXSIZE=512#########</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请选择您的操作1增2删3改4查:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">int</span> order = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        cin </span>&gt;&gt;<span style="color: #000000;"> order;
+        </span><span style="color: #0000ff;">if</span> (order &lt; <span style="color: #800080;">1</span> || order &gt; <span style="color: #800080;">4</span><span style="color: #000000;">) {
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">无效命令!\n</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (order) {
+                </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">1</span><span style="color: #000000;">: {
+                    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入学生的学号和姓名:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    </span><span style="color: #0000ff;">int</span> no = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+                    cin </span>&gt;&gt; no &gt;&gt;<span style="color: #000000;"> name;
+                    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入学生的学级和分数:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> grade;
+                    </span><span style="color: #0000ff;">double</span> goal = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+                    cin </span>&gt;&gt; grade &gt;&gt;<span style="color: #000000;"> goal;
+                    Student s(no, name, grade, goal);
+                    list.add(s);
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">2</span><span style="color: #000000;">: {
+                    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入学生座号:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+                    cin </span>&gt;&gt;<span style="color: #000000;"> num;
+                    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">list.remove(num)) {
+                        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">不好意思，这个学生不存在</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    }
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">3</span><span style="color: #000000;">: {
+                    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入需要修改的学生的座号:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+                    cin </span>&gt;&gt;<span style="color: #000000;"> num;
+                    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">您要修改的是</span><span style="color: #800000;">"</span> &lt;&lt; list.getNode(num).name &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">...,请输入新数据以覆盖原始数据:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    cin </span>&gt;&gt;<span style="color: #000000;"> list.getNode(num).no
+                        </span>&gt;&gt;<span style="color: #000000;"> list.getNode(num).name
+                        </span>&gt;&gt;<span style="color: #000000;"> list.getNode(num).grade
+                        </span>&gt;&gt;<span style="color: #000000;"> list.getNode(num).goal;
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">case</span> <span style="color: #800080;">4</span><span style="color: #000000;">: {
+                    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入需要查找的学生姓名:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+                    cin </span>&gt;&gt;<span style="color: #000000;"> name;
+                    Student s;
+                    s.name </span>=<span style="color: #000000;"> name;
+                    </span><span style="color: #0000ff;">if</span> (list.search(s) == -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">抱歉，没找到这名同学。</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">该同学信息如下：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+                        list.getNode((list.search(s))).display();
+                    }
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+        system(</span><span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>常量成员函数的设置有些小问题待修改。。</p>

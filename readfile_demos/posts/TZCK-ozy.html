@@ -1,0 +1,119 @@
+<p>参考：</p>
+<p>orm：http://www.imooc.com/video/7702</p>
+<p>java:http://www.imooc.com/course/programdetail/pid/31</p>
+<p>jdbc:http://www.imooc.com/learn/421</p>
+<p>junit:http://www.imooc.com/learn/356</p>
+<p>dao层编写到测试的完整例子：http://www.2cto.com/kf/201703/614939.html</p>
+<p>orm(Object Relational Mapping)和dao层(data access layer)的区别？dao层的设计目的是使得企业更换数据库的时候(只要不修改dao层接口)，不影响上层的代码。orm更像是一种工具，Object Relational Mapping：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170419203708462-1041770587.png" alt="" width="282" height="213" /></p>
+<p>&nbsp;</p>
+<div class="para">MYBATIS、<a href="http://baike.baidu.com/item/HIBERNATE" target="_blank">HIBERNATE</a>都是orm，设计目的是使得程序员不用重复编写代码，只要提供一个持久类和一张数据表，由orm自动生成crud代码。</div>
+<p>1、http://www.360doc.com/content/12/1130/23/820209_251298059.shtml</p>
+<p>尝试(完全按照个人理解)：</p>
+<p>1、实现表</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170419204440962-572725828.png" alt="" width="496" height="139" /></p>
+<p>2、创建持久化类</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170419204603915-1653338230.png" alt="" width="270" height="121" /></p>
+<p>方便测试可以添加一个toString()方法。</p>
+<p>Java数据类型和MySql数据类型对应表http://blog.csdn.net/yangyinbo/article/details/6212394</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Student {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">long</span><span style="color: #000000;"> create_at;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">long</span><span style="color: #000000;"> update_at;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String qq;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String category;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String watchwords;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Student() {
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Student(String name, String qq, String category, String watchwords) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+        </span><span style="color: #0000ff;">this</span>.qq =<span style="color: #000000;"> qq;
+        </span><span style="color: #0000ff;">this</span>.category =<span style="color: #000000;"> category;
+        </span><span style="color: #0000ff;">this</span>.watchwords =<span style="color: #000000;"> watchwords;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getId() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> id;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setId(<span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {
+        </span><span style="color: #0000ff;">this</span>.id =<span style="color: #000000;"> id;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">long</span><span style="color: #000000;"> getCreate_at() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> create_at;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setCreate_at(<span style="color: #0000ff;">long</span><span style="color: #000000;"> create_at) {
+        </span><span style="color: #0000ff;">this</span>.create_at =<span style="color: #000000;"> create_at;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">long</span><span style="color: #000000;"> getUpdate_at() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> update_at;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setUpdate_at(<span style="color: #0000ff;">long</span><span style="color: #000000;"> update_at) {
+        </span><span style="color: #0000ff;">this</span>.update_at =<span style="color: #000000;"> update_at;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setName(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getQq() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> qq;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setQq(String qq) {
+        </span><span style="color: #0000ff;">this</span>.qq =<span style="color: #000000;"> qq;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getCategory() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> category;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setCategory(String category) {
+        </span><span style="color: #0000ff;">this</span>.category =<span style="color: #000000;"> category;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getWatchwords() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> watchwords;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setWatchwords(String watchwords) {
+        </span><span style="color: #0000ff;">this</span>.watchwords =<span style="color: #000000;"> watchwords;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "Student{" +
+                "id=" + id +
+                ", create_at=" + create_at +
+                ", update_at=" + update_at +
+                ", name='" + name + '\'' +
+                ", qq='" + qq + '\'' +
+                ", category='" + category + '\'' +
+                ", watchwords='" + watchwords + '\'' +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、编写dao层(dao层接口-&gt;dao层实现)</p>
+<p>考虑手动JDBC还是Mybatis：http://www.cnblogs.com/jerrylz/p/5814460.html</p>
+<p>dao层接口：http://blog.sina.com.cn/s/blog_4adc4b090101kvek.html</p>
+<p>&nbsp;决定Hibernate.</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170420182543290-1114408449.png" alt="" width="404" height="210" /></p>
+<p>intellij 导入jar包：http://blog.csdn.net/a153375250/article/details/50851049</p>
+<p>jar包下载：maven，参考《maven实战》</p>
+<p>&nbsp;</p>
+<p>4、测试</p>
+<p><a href="http://www.cnblogs.com/xkxf/p/6736176.html" target="_blank">转到Hibernate</a></p>

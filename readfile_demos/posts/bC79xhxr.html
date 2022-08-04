@@ -1,0 +1,47 @@
+<p>源:&nbsp;<a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" target="_blank">线性代数的本质</a>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><strong>1、线性组合（linear combination）</strong></h3>
+<div class="cnblogs_code">
+<pre>So any time that you're scaling two vectors and adding them like this, it's called a <strong>linear combination</strong> of those two vectors.</pre>
+</div>
+<p>&nbsp;</p>
+<h3>2、张成空间（span）</h3>
+<h4><span style="text-decoration: underline;"><strong>&ldquo;缩放向量并且相加&rdquo;这一概念至关重要</strong></span></h4>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">所有可以表示为给定向量线性组合的向量的集合
+
+被称为<strong>给定向量</strong>张成的空间（span）
+
+两个向量张成的空间实际上是问
+
+仅通过向量加法与向量数乘这两种基础运算
+
+你能获得的所有可能向量的集合是什么</span></pre>
+</div>
+<h4><span style="text-decoration: underline;">如何进行几何想象</span></h4>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">当你只考虑一个向量时，就把它看作箭头
+
+当你考虑多个向量时，就把它们都看作点（将每个向量抽象为它的终点）<br /></span></pre>
+</div>
+<p>&nbsp;两个不共线向量张成二维空间，三个不共面向量张成三维空间。</p>
+<p>&nbsp;</p>
+<h3>3、线性无关（linearly independent）</h3>
+<p><strong>不论是张成空间还是线性相关、线性无关都是基于<span style="text-decoration: underline;">一组向量</span>而言的！</strong></p>
+<p>我们说一组向量线性相关，意思就是这组向量中存在<strong>多余的向量</strong>，</p>
+<p>什么是多余的向量呢？就是&ldquo;对张成空间没有贡献的向量&rdquo;，</p>
+<p>所谓的没有贡献是指不论有没有&ldquo;你（那个向量）&rdquo;，张成的集合都不会变。</p>
+<p>&nbsp;</p>
+<h3>4、基（basis vectors）</h3>
+<div class="cnblogs_code">
+<pre>What <span style="color: #000000;">this</span> means, basically, is that when you think about coordinates as scalars, <strong>the basis vectors are what those scalars actually, you know, scale.</strong></pre>
+</div>
+<p>空间的一组基的严格定义是这样的：张成该空间的一个线性无关向量的集合。</p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1042431/201712/1042431-20171230163342007-302423113.png" alt="" width="364" height="215" /></p>
+<p>i-hat 和 j-hat 、k-hat （x. y. z 方向上的单位向量）是我们最熟悉的一个基。</p>
+<p>&nbsp;</p>
+<h3>5、在数字与向量之间转化</h3>
+<div class="cnblogs_code">
+<pre>每当我们用数字描述向量时，它都依赖于我们正在使用的基</pre>
+</div>
+<p>例如说对于向量 (3, 5) 它并不能直接映射成一个确切的向量，它具体长什么样取决于我们所建立的基。</p>

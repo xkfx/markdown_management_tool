@@ -1,0 +1,179 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">一、概述</a></li>
+<li><a href="#anchor1">二、关于gcov的安装</a></li>
+<li><a href="#anchor2">三、代码覆盖率测试（以GCOV为例）</a>
+<ul>
+<li><a href="#anchor3">1、编译源代码</a></li>
+<li><a href="#anchor4">2、运行可执行程序</a></li>
+<li><a href="#anchor5">3、通过gcov指令生成代码覆盖率报告</a></li>
+</ul>
+</li>
+<li><a href="#anchor6">四、生成更全面、直观的代码覆盖率报告</a>
+<ul>
+<li><a href="#anchor7">1、LCOV</a></li>
+<li><a href="#anchor8">2、GCOVR</a></li>
+</ul>
+</li>
+<li><a href="#anchor9">&nbsp;五、参考</a></li>
+</ol></ul>
+</div>
+<h2><a name="anchor0"></a>一、概述</h2>
+<p>代码覆盖率（Code coverage）是衡量软件测试质量的一个重要指标。</p>
+<p>它描述了当一个特定的测试套件（test suite）运行时，程序源代码被执行的程度。例如，一些更具体的覆盖率指标有：</p>
+<ol>
+<li>Statement Coverage：描述源代码中有哪些代码行被执行，各自被执行了多少次</li>
+<li>Branch coverage：一般用于描述if语句/或其它条件语句的各分支的执行情况</li>
+<li>Function coverage：顾名思义，描述源代码中有哪些函数被执行了</li>
+<li>&middot;&middot;&middot;&middot;&middot;&middot;</li>
+</ol>
+<p><strong>代码覆盖率测试工具</strong>可以帮助我们发现代码中未被测试的部分，</p>
+<p>而gcov则是一款和GCC配套发布的[经典]代码覆盖率分析工具（仅仅是对覆盖率信息文件进行分析）。</p>
+<p>同为代码覆盖率分析工具，GCOV&amp;LCOV&amp;GCOVR之间的差异：</p>
+<ul>
+<li>GCOV：与GCC配套，不需要安装，生成纯文本文件</li>
+<li>LCOV：需要安装，跨平台麻烦，生成HTML页面</li>
+<li>GCOVR：需要安装，跨平台容易，且指令比LCOV少，生成HTML页面</li>
+</ul>
+<p>PS. 不仅仅是C或者C++，<a href="https://gcc.gnu.org/onlinedocs/gcc/index.html#SEC_Contents" target="_blank">GCC</a>所支持的语言它们应该都是支持的，例如说<a href="http://www.softeng.rl.ac.uk/st/archive/SoftEng/SESP/html/SoftwareTools/gcov.html" target="_blank">Fortran&nbsp;</a></p>
+<h2><a name="anchor1"></a>二、关于gcov的安装</h2>
+<p>gcov是随gcc一起发布的，并不需要独立安装，设法装上gcc就OK了。对于WINDOWS系统，通过<a href="http://www.mingw.org/" target="_blank">MinGW</a>安装gcc相关的组件即可使用gcov。而对于Linux系统而言，通常会默认安装gcc，因此一般不需要自己安装。</p>
+<h2><a name="anchor2"></a>三、代码覆盖率测试（以GCOV为例）</h2>
+<p>首先，我们需要通过gcc的编译选项获取覆盖率信息文件（例如每行代码被执行了多少次啊），</p>
+<p>这里的&ldquo;生成覆盖率信息&rdquo;的步骤对任何一个覆盖率分析工具都是完全一样的，</p>
+<p>然后，用gcov收集、分析覆盖率信息文件并生成代码覆盖率报告。</p>
+<p>用于演示的C程序源代码（包含一个计算阶乘的函数）：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('534578af-5fa7-46a1-8d46-8074369e9ba5')"><img id="code_img_closed_534578af-5fa7-46a1-8d46-8074369e9ba5" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_534578af-5fa7-46a1-8d46-8074369e9ba5" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('534578af-5fa7-46a1-8d46-8074369e9ba5',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_534578af-5fa7-46a1-8d46-8074369e9ba5" class="cnblogs_code_hide">
+<pre>#include &lt;stdio.h&gt;
+
+<span style="color: #0000ff;">int</span> factorial(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n);
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> result0 = factorial(<span style="color: #800080;">0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">int</span> result1 = factorial(<span style="color: #800080;">1</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">int</span> result2 = factorial(<span style="color: #800080;">10</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">if</span> (result0 != <span style="color: #800080;">1</span>) printf(<span style="color: #800000;">"</span><span style="color: #800000;">test0 failed, actual=%d.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result0);
+    </span><span style="color: #0000ff;">if</span> (result1 != <span style="color: #800080;">1</span>) printf(<span style="color: #800000;">"</span><span style="color: #800000;">test1 failed, actual=%d.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result1);
+    </span><span style="color: #0000ff;">if</span> (result2 != <span style="color: #800080;">3628800</span>) printf(<span style="color: #800000;">"</span><span style="color: #800000;">test2 failed, actual=%d.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result2);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span> factorial(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+{
+    </span><span style="color: #0000ff;">if</span> (n &lt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Factorial is defined only for non-negative integer numbers.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+        
+    </span><span style="color: #0000ff;">if</span> (n &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span> n * factorial(n - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">factorial.c</span></div>
+<h3><a name="anchor3"></a>1、编译源代码</h3>
+<p>要生成覆盖率信息文件，必须添加以下编译选项：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">gcc</span> -f<strong>profile-arcs</strong> -f<strong>test-coverage</strong> factorial.c</pre>
+</div>
+<p>将factorial.c编译之后，我们将得到一个被<strong>&ldquo;改造&rdquo;</strong>过的可执行程序a.exe，该程序中包含了一些<strong>额外的指令</strong>，用于记录程序中每一行被执行的次数。以及一个<strong>后缀为.gcno</strong>的factorial.gcno文件，它是即将被gcov引用的关键数据文件。</p>
+<p>编译选项说明：</p>
+<ul>
+<li>-ftest-coverage选项：添加<strong>记录单行代码执行次数</strong>的指令</li>
+<li>-fprofile-arc选项：添加程序每个分支的检测代码（if或者其它条件语句）</li>
+</ul>
+<h3><a name="anchor4"></a>2、运行可执行程序</h3>
+<div class="cnblogs_code">
+<pre>./a.exe</pre>
+</div>
+<p>运行可执行程序之后，我们会得到一个<strong>factorial.gcda</strong>的文件，它和<strong>factorial.gcno</strong>一样是即将被gcov引用的数据文件（代码覆盖率信息文件）。</p>
+<h3><a name="anchor5"></a>3、通过gcov命令生成代码覆盖率报告</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;"><strong>gcov factorial.c</strong>
+File </span><span style="color: #800000;">'</span><span style="color: #800000;">factorial.c</span><span style="color: #800000;">'</span><span style="color: #000000;">
+Lines executed:</span><span style="color: #800080;">86.67</span>% of <span style="color: #800080;">15</span><span style="color: #000000;">
+Creating </span><span style="color: #800000;">'</span><span style="color: #800000;">factorial.c.gcov</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>执行指令后，gcov会引用之前的数据文件生成一个代码覆盖率报告<strong>factorial.c.gcov</strong>：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ cat factorial.c.gcov
+        </span>-:    <span style="color: #800080;">0</span><span style="color: #000000;">:Source:factorial.c
+        </span>-:    <span style="color: #800080;">0</span><span style="color: #000000;">:Graph:factorial.gcno
+        </span>-:    <span style="color: #800080;">0</span><span style="color: #000000;">:Data:factorial.gcda
+        </span>-:    <span style="color: #800080;">0</span>:Runs:<span style="color: #800080;">1</span>
+        -:    <span style="color: #800080;">0</span>:Programs:<span style="color: #800080;">1</span>
+        -:    <span style="color: #800080;">1</span>:#include &lt;stdio.h&gt;
+        -:    <span style="color: #800080;">2</span><span style="color: #000000;">:
+        </span>-:    <span style="color: #800080;">3</span>:<span style="color: #0000ff;">int</span> factorial(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n);
+        </span>-:    <span style="color: #800080;">4</span><span style="color: #000000;">:
+        </span><span style="color: #800080;">1</span>:    <span style="color: #800080;">5</span>:<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+        </span>-:    <span style="color: #800080;">6</span><span style="color: #000000;">:{
+        </span><span style="color: #800080;">1</span>:    <span style="color: #800080;">7</span>:        <span style="color: #0000ff;">int</span> result0 = factorial(<span style="color: #800080;">0</span><span style="color: #000000;">);
+        </span><span style="color: #800080;">1</span>:    <span style="color: #800080;">8</span>:        <span style="color: #0000ff;">int</span> result1 = factorial(<span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #800080;">1</span>:    <span style="color: #800080;">9</span>:    <span style="color: #0000ff;">int</span> result2 = factorial(<span style="color: #800080;">10</span><span style="color: #000000;">);
+        </span>-:   <span style="color: #800080;">10</span><span style="color: #000000;">:
+        </span><span style="color: #800080;">1</span>:   <span style="color: #800080;">11</span>:        <span style="color: #0000ff;">if</span> (result0 != <span style="color: #800080;">1</span>) printf(<span style="color: #800000;">"</span><span style="color: #800000;">test0 failed, actual=%d.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result0);
+        </span><span style="color: #800080;">1</span>:   <span style="color: #800080;">12</span>:        <span style="color: #0000ff;">if</span> (result1 != <span style="color: #800080;">1</span>) printf(<span style="color: #800000;">"</span><span style="color: #800000;">test1 failed, actual=%d.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result1);
+        </span><span style="color: #800080;">1</span>:   <span style="color: #800080;">13</span>:        <span style="color: #0000ff;">if</span> (result2 != <span style="color: #800080;">3628800</span>) printf(<span style="color: #800000;">"</span><span style="color: #800000;">test2 failed, actual=%d.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result2);
+        </span>-:   <span style="color: #800080;">14</span><span style="color: #000000;">:
+        </span><span style="color: #800080;">1</span>:   <span style="color: #800080;">15</span>:    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span>-:   <span style="color: #800080;">16</span><span style="color: #000000;">:}
+        </span>-:   <span style="color: #800080;">17</span><span style="color: #000000;">:
+       </span><span style="color: #800080;">12</span>:   <span style="color: #800080;">18</span>:<span style="color: #0000ff;">int</span> factorial(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+        </span>-:   <span style="color: #800080;">19</span><span style="color: #000000;">:{
+       </span><span style="color: #800080;">12</span>:   <span style="color: #800080;">20</span>:        <span style="color: #0000ff;">if</span> (n &lt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+<span style="color: #ff0000; background-color: #ffff99;">    #####:   </span></span><span style="color: #ff0000; background-color: #ffff99;">21:                printf("Factorial is defined only for non-negative integer numbers.");
+    #####:   22:                return -1;
+        </span>-:   <span style="color: #800080;">23</span><span style="color: #000000;">:        }
+        </span>-:   <span style="color: #800080;">24</span><span style="color: #000000;">:
+       </span><span style="color: #800080;">12</span>:   <span style="color: #800080;">25</span>:    <span style="color: #0000ff;">if</span> (n &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        </span><span style="color: #800080;">9</span>:   <span style="color: #800080;">26</span>:                <span style="color: #0000ff;">return</span> n * factorial(n - <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span>-:   <span style="color: #800080;">27</span>:        } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #800080;">3</span>:   <span style="color: #800080;">28</span>:                <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span>-:   <span style="color: #800080;">29</span><span style="color: #000000;">:        }
+        </span>-:   <span style="color: #800080;">30</span>:}</pre>
+</div>
+<p>&ldquo;#####&rdquo;所标记的是未被执行的语句。</p>
+<h2><a name="anchor6"></a>四、生成更全面、直观的代码覆盖率报告</h2>
+<p>直接用gcov生成的代码覆盖率报告并不是很直观，因此一般应该都是用以下两款。</p>
+<h3><a name="anchor7"></a>1、LCOV</h3>
+<p>Lcov是gcov的图形化前端，它和GCOV做的工作是差不多的，只不过最后输出的是HTML页面形式的代码覆盖率报告。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201903/1042431-20190331190220533-2021750494.png" alt="" /></p>
+<p>Ubuntu系统下安装LCOV：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> lcov</pre>
+</div>
+<p>依然用之前的factorial.c演示。首先，按之前的步骤生成相关<strong>数据文件</strong>，例如xxx.gcda、xxx.gcno（PS. 不需要用gcov生成xxx.c.gcov文件）。然后，用LCOV收集相关数据并生成一个.info文件（方便起见直接在当前目录执行该命令）：</p>
+<div class="cnblogs_code">
+<pre><strong>lcov</strong> --capture --directory . --output-<span style="color: #0000ff;">file</span> coverage.<span style="color: #0000ff;">info</span></pre>
+</div>
+<p>最后，通过genhtml将coverage.info转化为HTML文件（genhtml是lcov自带的工具）：</p>
+<div class="cnblogs_code">
+<pre><strong>genhtml</strong> coverage.<span style="color: #0000ff;">info</span> --output-directory out</pre>
+</div>
+<p>生成的OUT目录里包含了HTML版的代码覆盖率报告。</p>
+<p>在WINDOWS上安装LCOV比较繁琐，有人专门写了Windows上可运行的LCOV脚本<a href="http://macqueen.us/lcov.html" target="_blank">[LCOV for Windows]</a>，但是我下载下来后没弄懂怎么用。</p>
+<h3><a name="anchor8"></a>2、GCOVR</h3>
+<p>相比于LCOV，gcovr可能更方便一点。LCOV有的功能gcovr都有，并且gcovr也是开源的：<a href="https://github.com/gcovr/gcovr" target="_blank">https://github.com/gcovr/gcovr</a>。它是用Python写的，这意味着只要有Python环境都可以使用gcovr，无论是WINDOWS还是LINUX。直接通过pip（Python的包管理工具）安装GCOVR：</p>
+<div class="cnblogs_code">
+<pre>pip <span style="color: #0000ff;">install</span> gcovr</pre>
+</div>
+<p>还是和之前一样的步骤生成相关的代码覆盖率信息文件，然后直接用gcovr生成HTML代码覆盖率报告就行了：</p>
+<div class="cnblogs_code">
+<pre><strong>gcovr</strong> -r . --html --html-details -o coverage.html</pre>
+</div>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201903/1042431-20190331190149483-1305316954.png" alt="" /></p>
+<h2><a name="anchor9"></a>&nbsp;五、参考</h2>
+<ul>
+<li><a href="https://www.cnblogs.com/bugutian/p/5929530.html">代码覆盖工具(gcov、lcov)的使用 - 步孤天 - 博客园</a></li>
+<li><a href="https://www.cnblogs.com/turtle-fly/archive/2013/01/09/2851474.html">[整理] gcov lcov 覆盖c/c++项目入门 - turtle_fly - 博客园</a></li>
+<li><a href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html#Gcov">Using the GNU Compiler Collection (GCC): Gcov</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Gcov#Example">Gcov - Wikipedia</a></li>
+</ul>

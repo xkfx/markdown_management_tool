@@ -1,0 +1,615 @@
+<p>留着参考</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170705174127769-1864980441.png" alt="" width="415" height="183" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170705174309425-1557910866.png" alt="" width="802" height="545" /></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170705174442175-1156327355.png" alt="" /></p>
+<h3>beans</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.bean;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.Serializable;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> EncryptedFile <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Serializable {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String filePath;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String keyFullName;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> EncryptedFile() {
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getFilePath() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> filePath;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setFilePath(String filePath) {
+        </span><span style="color: #0000ff;">this</span>.filePath =<span style="color: #000000;"> filePath;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getKeyFullName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> keyFullName;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setKeyFullName(String keyFullName) {
+        </span><span style="color: #0000ff;">this</span>.keyFullName =<span style="color: #000000;"> keyFullName;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "EncryptedFile{" +
+                "filePath='" + filePath + '\'' +
+                ", keyFullName='" + keyFullName + '\'' +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.bean;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.Serializable;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> User <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Serializable {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String username;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String password;
+    </span><span style="color: #0000ff;">private</span> List&lt;EncryptedFile&gt; encryptedFileList = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> User() {
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getUsername() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setUsername(String username) {
+        </span><span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getPassword() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> password;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setPassword(String password) {
+        </span><span style="color: #0000ff;">this</span>.password =<span style="color: #000000;"> password;
+    }
+
+    </span><span style="color: #0000ff;">public</span> List&lt;EncryptedFile&gt;<span style="color: #000000;"> getEncryptedFileList() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> encryptedFileList;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setEncryptedFileList(List&lt;EncryptedFile&gt;<span style="color: #000000;"> encryptedFileList) {
+        </span><span style="color: #0000ff;">this</span>.encryptedFileList =<span style="color: #000000;"> encryptedFileList;
+    }
+}</span></pre>
+</div>
+<h3>service</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.service;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.bean.User;
+
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> EncryptService {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String username;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String DEFAULT_KEY_URL = ".//user//"<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> key[] = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[128<span style="color: #000000;">];
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> EncryptService(User user) {
+        username </span>=<span style="color: #000000;"> user.getUsername();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> readKey(String keyFullName) {
+        File keyFile </span>= <span style="color: #0000ff;">new</span> File(DEFAULT_KEY_URL + username + "//" +<span style="color: #000000;"> keyFullName);
+        FileInputStream localKey </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            localKey </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(keyFile);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 128; ++<span style="color: #000000;">i) {
+                key[i] </span>=<span style="color: #000000;"> localKey.read();
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (localKey != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    localKey.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> makeKey(String keyName) {
+        FileOutputStream fos </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            File keyFile </span>= <span style="color: #0000ff;">new</span> File(DEFAULT_KEY_URL + username + "//" + keyName + ".key"<span style="color: #000000;">);
+            fos </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileOutputStream(keyFile);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 128; ++<span style="color: #000000;">i) {
+                fos.write((</span><span style="color: #0000ff;">int</span>) (Math.random() * 128<span style="color: #000000;">));
+            }
+            readKey(keyName </span>+ ".key"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (fos != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    fos.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> encryptFile(String filePath, String keyFullName) {
+        readKey(keyFullName);
+        FileInputStream in </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        FileOutputStream out </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        File inFile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> File(filePath);
+        File outFile </span>= <span style="color: #0000ff;">new</span> File(inFile.getParent() + "//TEMP_FILE"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            in </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(inFile);
+            out </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileOutputStream(outFile);
+
+            </span><span style="color: #0000ff;">int</span> length =<span style="color: #000000;"> in.available();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; length; ++<span style="color: #000000;">i) {
+                out.write(in.read() </span>+ key[i % 128<span style="color: #000000;">]);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (in != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    in.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (out != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    out.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        inFile.delete();
+        outFile.renameTo(inFile);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> decryptFile(String filePath, String keyFullName) {
+        readKey(keyFullName);
+        FileInputStream in </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        FileOutputStream out </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        File inFile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> File(filePath);
+        File outFile </span>= <span style="color: #0000ff;">new</span> File(inFile.getParent() + "//TEMP_FILE"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            in </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(inFile);
+            out </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileOutputStream(outFile);
+
+            </span><span style="color: #0000ff;">int</span> length =<span style="color: #000000;"> in.available();
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; length; ++<span style="color: #000000;">i) {
+                out.write(in.read() </span>- key[i % 128<span style="color: #000000;">]);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (in != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    in.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            </span><span style="color: #0000ff;">if</span> (out != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    out.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        inFile.delete();
+        outFile.renameTo(inFile);
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> EncryptServiceTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 在完整程序中用户信息由Main界面提供</span>
+        User user = <span style="color: #0000ff;">new</span><span style="color: #000000;"> User();
+        user.setUsername(</span>"xkfx"<span style="color: #000000;">);
+        EncryptService encryptService </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> EncryptService(user);
+        encryptService.encryptFile(</span>".//hi.txt", "main.key"<span style="color: #000000;">);
+        encryptService.decryptFile(</span>".//hi.txt", "main.key"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.service;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.bean.EncryptedFile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.bean.User;
+
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> PersistenceService {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> String DEFAULT_DATA_URL = ".//conf//"<span style="color: #000000;">;
+    String username;
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> PersistenceService(String username) {
+        </span><span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> loadData(User user) {
+        BufferedReader br;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            br </span>= <span style="color: #0000ff;">new</span> BufferedReader(<span style="color: #0000ff;">new</span> FileReader(<span style="color: #0000ff;">new</span> File(DEFAULT_DATA_URL + username + ".user"<span style="color: #000000;">)));
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (br.ready()) {
+                EncryptedFile file </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> EncryptedFile();
+                file.setFilePath(br.readLine());
+                file.setKeyFullName(br.readLine());
+                user.getEncryptedFileList().add(file);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> saveData(User user) {
+        PrintWriter pw </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            pw </span>= <span style="color: #0000ff;">new</span> PrintWriter(<span style="color: #0000ff;">new</span> FileWriter(<span style="color: #0000ff;">new</span> File(DEFAULT_DATA_URL + username + ".user"<span style="color: #000000;">)));
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (EncryptedFile file : user.getEncryptedFileList()) {
+                pw.println(file.getFilePath());
+                pw.println(file.getKeyFullName());
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                pw.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> PersistenceServiceTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        User user </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> User();
+        user.setUsername(</span>"zzz"<span style="color: #000000;">);
+        EncryptedFile file1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> EncryptedFile();
+        file1.setFilePath(</span>"aaaa"<span style="color: #000000;">);
+        file1.setKeyFullName(</span>"bbbbbbbbbb"<span style="color: #000000;">);
+        EncryptedFile file2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> EncryptedFile();
+        file2.setFilePath(</span>"xxxx"<span style="color: #000000;">);
+        file2.setKeyFullName(</span>"qqqqqqq"<span style="color: #000000;">);
+        user.getEncryptedFileList().add(file1);
+        user.getEncryptedFileList().add(file2);
+
+        PersistenceService persistenceService </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PersistenceService(user.getUsername());
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 存进文件，默认为 conf/username.user</span>
+<span style="color: #000000;">        persistenceService.saveData(user);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 取出来并输出</span>
+<span style="color: #000000;">        persistenceService.loadData(user);
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (EncryptedFile file : user.getEncryptedFileList()) {
+            System.out.println(file);
+        }
+    }
+}</span></pre>
+</div>
+<h3>UI</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.ui;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.bean.EncryptedFile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.bean.User;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> EncryptedFileManagement <span style="color: #0000ff;">extends</span><span style="color: #000000;"> JFrame {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> User user;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Main mainFrame;
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> EncryptedFileManagement(User user) {
+        </span><span style="color: #0000ff;">this</span>.user =<span style="color: #000000;"> user;
+        setTitle(</span>"加密文件管理"<span style="color: #000000;">);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(</span><span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        setResizable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        setLayout(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+        updateFrame();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setMainFrame(Main mainFrame) {
+        </span><span style="color: #0000ff;">this</span>.mainFrame =<span style="color: #000000;"> mainFrame;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 传递主界面的一个引用，以便监控子窗口的Action</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> addEncryptedFile(String filePath, String keyFullName) {
+        EncryptedFile encryptedFile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> EncryptedFile();
+        user.getEncryptedFileList().add(encryptedFile);
+        encryptedFile.setFilePath(filePath);
+        encryptedFile.setKeyFullName(keyFullName);
+
+        updateFrame();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> removeEncryptedFile(String filePath, String keyFullName) {
+        </span><span style="color: #0000ff;">int</span> listSize =<span style="color: #000000;"> user.getEncryptedFileList().size();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != listSize; ++<span style="color: #000000;">i) {
+            EncryptedFile file </span>=<span style="color: #000000;"> user.getEncryptedFileList().get(i);
+            </span><span style="color: #0000ff;">if</span> (file.getFilePath().equals(filePath) &amp;&amp;<span style="color: #000000;"> file.getKeyFullName().equals(keyFullName)) {
+                user.getEncryptedFileList().remove(i);
+                updateFrame();
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+    JPanel listPanel </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> updateFrame() {
+        listPanel.removeAll(); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 必须调用这个方法，否则视图显示将和真实情况不匹配</span>
+        listPanel.setLayout(<span style="color: #0000ff;">new</span> GridLayout(user.getEncryptedFileList().size(), 2<span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (EncryptedFile file : user.getEncryptedFileList()) {
+            JButton buttonFilePath </span>= <span style="color: #0000ff;">new</span> JButton("■" +<span style="color: #000000;"> file.getFilePath());
+            JButton buttonKeyFullPath </span>= <span style="color: #0000ff;">new</span> JButton("▲" +<span style="color: #000000;"> file.getKeyFullName());
+            listPanel.add(buttonFilePath);
+            listPanel.add(buttonKeyFullPath);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注册事件监听</span>
+<span style="color: #000000;">            buttonFilePath.addActionListener(mainFrame);
+            buttonKeyFullPath.addActionListener(mainFrame);
+            buttonFilePath.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+            buttonKeyFullPath.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        };
+        setSize(</span>482, user.getEncryptedFileList().size()*44 + 57<span style="color: #000000;">);
+        add(listPanel, BorderLayout.CENTER);
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> EncryptedFileManagementTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 实际中是代理Main中的User</span>
+        User user = <span style="color: #0000ff;">new</span><span style="color: #000000;"> User();
+        user.setUsername(</span>"xkfx"<span style="color: #000000;">);
+
+        EncryptedFileManagement frame </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> EncryptedFileManagement(user);
+        Main main </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Main(user);
+        main.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        frame.setMainFrame(main);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 5; ++<span style="color: #000000;">i) {
+            frame.addEncryptedFile(</span>"D:\\workspace\\untitled1\\hi.txt", i + "main.key"<span style="color: #000000;">);
+        }
+        frame.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.ui;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.bean.User;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.service.EncryptService;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.service.PersistenceService;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.my.util.Iconst;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionListener;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.File;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Main <span style="color: #0000ff;">extends</span> JFrame <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ActionListener {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保存服务对象</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> User user;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> EncryptService encryptService;
+    PersistenceService persistenceService;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> EncryptedFileManagement encryptedFileManagement;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 窗体默认大小</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> DEFAULT_WIDTH = 416<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> DEFAULT_HEIGHT = 145<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 全局组件</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> JFileChooser fileChooser;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JButton buttonEncrypt;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JButton buttonDecrypt;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JButton buttonMakeNewKey;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JButton buttonEncryptedFileManagement;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JButton buttonExit;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JTextField textFilePath;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> JTextField textKeyName;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保存当前文件、密匙路径</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> String filePath;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String keyPath;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setFilePath(String filePath) {
+        </span><span style="color: #0000ff;">this</span>.filePath =<span style="color: #000000;"> filePath;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setKeyPath(String keyPath) {
+        </span><span style="color: #0000ff;">this</span>.keyPath =<span style="color: #000000;"> keyPath;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 窗体初始化</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Main(User user) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化用户和服务</span>
+        <span style="color: #0000ff;">this</span>.user =<span style="color: #000000;"> user;
+        encryptService </span>= <span style="color: #0000ff;">new</span> EncryptService(<span style="color: #0000ff;">this</span><span style="color: #000000;">.user);
+        persistenceService </span>= <span style="color: #0000ff;">new</span> PersistenceService(<span style="color: #0000ff;">this</span><span style="color: #000000;">.user.getUsername());
+        persistenceService.loadData(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.user);
+        encryptedFileManagement </span>= <span style="color: #0000ff;">new</span> EncryptedFileManagement(<span style="color: #0000ff;">this</span><span style="color: #000000;">.user);
+        encryptedFileManagement.setMainFrame(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化界面</span>
+        setTitle("用户ID：" +<span style="color: #000000;"> user.getUsername());
+        setDefaultCloseOperation(</span>0<span style="color: #000000;">);
+        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setResizable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        setLocationRelativeTo(</span><span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+        JPanel bigPanel </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 布置主要界面</span>
+        textFilePath = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+        textKeyName </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+        JButton buttonChooseFile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.CHOOSE_FILE);
+        JButton buttonChooseKey </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.CHOOSE_KEY);
+
+        textFilePath.setEditable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        textKeyName.setEditable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        buttonChooseKey.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        buttonChooseFile.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+        bigPanel.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(2, 3<span style="color: #000000;">));
+        bigPanel.add(</span><span style="color: #0000ff;">new</span> JLabel("文件路径"<span style="color: #000000;">));
+        bigPanel.add(textFilePath);
+        bigPanel.add(buttonChooseFile);
+        bigPanel.add(</span><span style="color: #0000ff;">new</span> JLabel("密匙名称"<span style="color: #000000;">));
+        bigPanel.add(textKeyName);
+        bigPanel.add(buttonChooseKey);
+
+        JPanel buttonPanel </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 布置按钮界面</span>
+        buttonEncrypt = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.ENCRYPT);
+        buttonDecrypt </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.DECRYPT);
+        buttonMakeNewKey </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.CREATE_NEW_KEY);
+        buttonEncryptedFileManagement </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.ENCRYPTED_FILE_MANAGEMENT);
+        buttonExit </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JButton(Iconst.EXIT);
+
+        buttonEncrypt.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        buttonDecrypt.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        buttonMakeNewKey.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        buttonEncryptedFileManagement.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        buttonExit.setFocusPainted(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+        buttonPanel.setLayout(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> FlowLayout());
+        buttonPanel.add(buttonEncrypt);
+        buttonPanel.add(buttonDecrypt);
+        buttonPanel.add(buttonMakeNewKey);
+        buttonPanel.add(buttonEncryptedFileManagement);
+        buttonPanel.add(buttonExit);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 布置窗体</span>
+        setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+        add(bigPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注册事件监听</span>
+        buttonChooseFile.addActionListener(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        buttonChooseKey.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        buttonMakeNewKey.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        buttonEncrypt.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        buttonDecrypt.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        buttonEncryptedFileManagement.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        buttonExit.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建文件选择器</span>
+        fileChooser = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JFileChooser();
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent e) {
+        </span><span style="color: #0000ff;">if</span> (e.getActionCommand().charAt(0) == "■".charAt(0<span style="color: #000000;">)) {
+            String filePath </span>= e.getActionCommand().substring(1<span style="color: #000000;">, e.getActionCommand().length());
+            setFilePath(filePath);
+            textFilePath.setText(filePath);
+        }
+        </span><span style="color: #0000ff;">if</span> (e.getActionCommand().charAt(0) == "▲".charAt(0<span style="color: #000000;">)) {
+            String keyFullName </span>= e.getActionCommand().substring(1<span style="color: #000000;">, e.getActionCommand().length());
+            setKeyPath(</span>".//user//" + user.getUsername() + "//" +<span style="color: #000000;"> keyFullName);
+            textKeyName.setText(keyFullName);
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.CHOOSE_FILE)) {
+            fileChooser.setCurrentDirectory(</span><span style="color: #0000ff;">new</span> File("."<span style="color: #000000;">));
+            </span><span style="color: #0000ff;">int</span> result = fileChooser.showOpenDialog(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (result ==<span style="color: #000000;"> JFileChooser.APPROVE_OPTION) {
+                filePath </span>=<span style="color: #000000;"> fileChooser.getSelectedFile().getPath();
+                textFilePath.setText(filePath);
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.CHOOSE_KEY)) {
+            fileChooser.setCurrentDirectory(</span><span style="color: #0000ff;">new</span> File(".//user//" +<span style="color: #000000;"> user.getUsername()));
+            </span><span style="color: #0000ff;">int</span> result = fileChooser.showOpenDialog(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (result ==<span style="color: #000000;"> JFileChooser.APPROVE_OPTION) {
+                keyPath </span>=<span style="color: #000000;"> fileChooser.getSelectedFile().getPath();
+                textKeyName.setText(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> File(keyPath).getName());
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.ENCRYPT)) {
+            </span><span style="color: #0000ff;">if</span> (filePath != <span style="color: #0000ff;">null</span> &amp;&amp; !"".equals(filePath) &amp;&amp; textKeyName.getText() != <span style="color: #0000ff;">null</span> &amp;&amp; !""<span style="color: #000000;">.equals(textKeyName.getText())) {
+                encryptService.encryptFile(filePath, textKeyName.getText());
+                encryptedFileManagement.addEncryptedFile(filePath, textKeyName.getText());
+                JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "加密成功"<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "文件路径、密匙名称不能为空！"<span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.DECRYPT)) {
+            </span><span style="color: #0000ff;">if</span> (filePath != <span style="color: #0000ff;">null</span> &amp;&amp; !"".equals(filePath) &amp;&amp; textKeyName.getText() != <span style="color: #0000ff;">null</span> &amp;&amp; !""<span style="color: #000000;">.equals(textKeyName.getText()) ) {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (encryptedFileManagement.removeEncryptedFile(filePath, textKeyName.getText())) {
+                    encryptService.decryptFile(filePath, textKeyName.getText());
+                    JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "还原成功"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "该文件未被加密或密匙不匹配"<span style="color: #000000;">);
+                }
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "文件路径、密匙名称不能为空！"<span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.CREATE_NEW_KEY)) {
+            String keyName </span>= JOptionPane.showInputDialog(<span style="color: #0000ff;">this</span>, "请输入新密匙的名称："<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (keyName != <span style="color: #0000ff;">null</span> &amp;&amp; !""<span style="color: #000000;">.equals(keyName)) {
+                encryptService.makeKey(keyName);
+                JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "成功创建新的密匙"<span style="color: #000000;">);
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 更新当前密匙路径</span>
+            setKeyPath(".//user//" + user.getUsername() + "//" + keyName + ".key"<span style="color: #000000;">);
+            textKeyName.setText(keyName </span>+ ".key"<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.ENCRYPTED_FILE_MANAGEMENT)) {
+            </span><span style="color: #0000ff;">if</span> (user.getEncryptedFileList().size() == 0<span style="color: #000000;">) {
+                JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "加密文件为空"<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                encryptedFileManagement.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            }
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (e.getActionCommand().equals(Iconst.EXIT)) {
+            </span><span style="color: #0000ff;">if</span> (JOptionPane.showConfirmDialog(<span style="color: #0000ff;">this</span>,"确定退出？") == 0<span style="color: #000000;">) {
+                persistenceService.saveData(user);
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.dispose();
+                System.exit(</span>0<span style="color: #000000;">);
+            }
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> MainTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        User user </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> User();
+        user.setUsername(</span>"xkfx"<span style="color: #000000;">);
+        EventQueue.invokeLater(() </span>-&gt;<span style="color: #000000;"> {
+            JFrame frame </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Main(user);
+            frame.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        });
+    }
+}</span></pre>
+</div>
+<h3>工具类</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.util;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 常量定义
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> Iconst {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String LOGIN = "登陆"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String REGISTER = "注册"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String CHOOSE_FILE = "选择文件"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String CHOOSE_KEY = "选择密匙"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String ENCRYPT = "加密"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String DECRYPT = "还原"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String CREATE_NEW_KEY = "生成新的密匙"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String ENCRYPTED_FILE_MANAGEMENT = "管理文件"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String EXIT = "退出"<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;由于电脑原因，源代码的编码可能会有一些问题：http://pan.baidu.com/s/1o8hsWd0</p>

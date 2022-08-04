@@ -1,0 +1,174 @@
+<p><strong>饮水思源：<a href="https://www.bilibili.com/video/av12296198" target="_blank">https://www.bilibili.com/video/av12296198</a></strong></p>
+<p>1、画背景</p>
+<div class="cnblogs_code">
+<pre>    game.draw = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> draw background</span>
+        game.context.fillStyle = "lightcoral"<span style="color: #000000;">;
+        game.context.fillRect(</span>0, 0, 400, 300<span style="color: #000000;">);
+        </span></strong><span style="color: #008000;">//</span><span style="color: #008000;"> draw</span>
+<span style="color: #000000;">        game.drawImage(paddle);
+        game.drawImage(ball);
+        </span><span style="color: #0000ff;">for</span> (let i = 0; i != bricks.length; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (bricks[i].alive) {
+                game.drawImage(bricks[i]);
+            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 显示分数</span>
+        game.context.fillStyle = "white"<span style="color: #000000;">;
+        game.context.font </span>= "28px serif"<span style="color: #000000;">;
+        game.context.fillText(</span>"你的分数：" + game.score, 30, 100<span style="color: #000000;">);
+    };</span></pre>
+</div>
+<p>2、添加一个拖动小球的功能（用于测试）顺便把makeBall()改为class Ball</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('05b903c1-8023-48c0-9182-052239f51613')"><img id="code_img_closed_05b903c1-8023-48c0-9182-052239f51613" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_05b903c1-8023-48c0-9182-052239f51613" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('05b903c1-8023-48c0-9182-052239f51613',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_05b903c1-8023-48c0-9182-052239f51613" class="cnblogs_code_hide">
+<pre>let pause = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+let enableDebugMode </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(game, enable) {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">enable) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+    window.addEventListener(</span>"keydown", event =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (event.key == 'p'<span style="color: #000000;">) {
+            pause </span>= !<span style="color: #000000;">pause;
+        }
+    });
+    document.querySelector(</span>"#id-input-speed").addEventListener("input", event =&gt;<span style="color: #000000;"> {
+        let newFps </span>=<span style="color: #000000;"> Number(event.target.value);
+        game.fps </span>= newFps + 1; <span style="color: #008000;">//</span><span style="color: #008000;"> 防止为0</span>
+<span style="color: #000000;">    });
+    
+    
+};
+
+let __main </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    let game </span>=<span style="color: #000000;"> makeGuaGame();
+    enableDebugMode(game, </span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+
+    let paddle </span>=<span style="color: #000000;"> makePaddle();
+    let ball </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Ball();
+    let bricks </span>= loadLevel(1<span style="color: #000000;">);
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * 手动更新数据
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    game.registerAction(</span>'a', <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        paddle.moveLeft();
+    });
+    game.registerAction(</span>'d', <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        paddle.moveRight();
+    });
+    game.registerAction(</span>'f', <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        ball.fire();
+    });
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 鼠标拖动小球功能实现</span>
+    let pressTheBall = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    game.canvas.addEventListener(</span>"mousedown", event =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (ball.inBall(event.offsetX, event.offsetY)) {
+            pressTheBall </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+    });
+
+    game.canvas.addEventListener(</span>"mouseup", event =&gt;<span style="color: #000000;"> {
+        pressTheBall </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    });
+    
+    game.canvas.addEventListener(</span>"mousemove", event =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (pressTheBall) {
+            ball.x </span>=<span style="color: #000000;"> event.offsetX;
+            ball.y </span>=<span style="color: #000000;"> event.offsetY;
+        }
+    });
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * 自动更新数据
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    game.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">if</span> (pause) { <span style="color: #008000;">//</span><span style="color: #008000;"> 暂停球的移动</span>
+            <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+
+        ball.move();
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (paddle.collide(ball)) {
+            ball.反弹();
+        }
+        
+        </span><span style="color: #0000ff;">for</span> (let i = 0; i != bricks.length; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (bricks[i].collide(ball)) {
+                bricks[i].hit();
+                ball.反弹();
+                game.score</span>++<span style="color: #000000;">;
+            }
+        }
+    };
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * 渲染数据
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    game.draw </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> draw background</span>
+        game.context.fillStyle = "lightcoral"<span style="color: #000000;">;
+        game.context.fillRect(</span>0, 0, 400, 300<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> draw</span>
+<span style="color: #000000;">        game.drawImage(paddle);
+        game.drawImage(ball);
+        </span><span style="color: #0000ff;">for</span> (let i = 0; i != bricks.length; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (bricks[i].alive) {
+                game.drawImage(bricks[i]);
+            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 显示分数</span>
+        game.context.fillStyle = "white"<span style="color: #000000;">;
+        game.context.font </span>= "28px serif"<span style="color: #000000;">;
+        game.context.fillText(</span>"你的分数：" + game.score, 30, 100<span style="color: #000000;">);
+    };
+
+    loadImgs().then(() </span>=&gt;<span style="color: #000000;"> {
+        game.begin();        
+    });
+};</span></pre>
+</div>
+<span class="cnblogs_code_collapse">main.js</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('dca57cb1-64a1-4edd-bf43-0fa678197618')"><img id="code_img_closed_dca57cb1-64a1-4edd-bf43-0fa678197618" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_dca57cb1-64a1-4edd-bf43-0fa678197618" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('dca57cb1-64a1-4edd-bf43-0fa678197618',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_dca57cb1-64a1-4edd-bf43-0fa678197618" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">class Ball {
+    constructor() {
+        </span><span style="color: #0000ff;">this</span>.img =<span style="color: #000000;"> imgFromPath(imgPaths.ball);
+        </span><span style="color: #0000ff;">this</span>.x = 200<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.y = 200<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.speedX = 10<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.speedY = -10<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.fired = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    
+    fire() {
+        </span><span style="color: #0000ff;">this</span>.fired = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    
+    move() {
+        </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">.fired) {
+            </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.x &gt; 400 || <span style="color: #0000ff;">this</span>.x &lt; 0<span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">this</span>.speedX *= -1<span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.y &gt; 300 || <span style="color: #0000ff;">this</span>.y &lt; 0<span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">this</span>.speedY *= -1<span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">this</span>.x += <span style="color: #0000ff;">this</span><span style="color: #000000;">.speedX;
+            </span><span style="color: #0000ff;">this</span>.y += <span style="color: #0000ff;">this</span><span style="color: #000000;">.speedY;
+        }        
+        log(</span><span style="color: #0000ff;">this</span>.x, <span style="color: #0000ff;">this</span><span style="color: #000000;">.y);
+    }
+    
+    反弹() {
+        </span><span style="color: #0000ff;">this</span>.speedY *= -1<span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判定某个坐标是否在球里面</span>
+<span style="color: #000000;">    inBall() {
+        let ballW </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.img.naturalWidth;
+        let ballH </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.img.naturalHeight;
+        </span><span style="color: #0000ff;">return</span> x &gt;= <span style="color: #0000ff;">this</span>.x &amp;&amp; x &lt;= <span style="color: #0000ff;">this</span>.x + ballW &amp;&amp;<span style="color: #000000;">
+            y </span>&gt;= <span style="color: #0000ff;">this</span>.y &amp;&amp; y &lt;= <span style="color: #0000ff;">this</span>.y +<span style="color: #000000;"> ballH;        
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">ball.js</span></div>
+<p>3、改进碰撞函数：暂时不填</p>

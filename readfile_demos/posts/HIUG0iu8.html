@@ -1,0 +1,72 @@
+<p><span style="color: #ff0000;"><strong>转自：http://www.journaldev.com/1854/java-web-application-tutorial-for-beginners#web-server-client</strong></span></p>
+<p>&nbsp;</p>
+<p><a href="#a1">Web Server and Client</a></p>
+<p><a href="#a2">HTML and HTTP</a></p>
+<p><a href="#a3">Understanding URL</a></p>
+<p>Why we need Servlet and JSPs?</p>
+<p>First Web Application with Servlet and JSP</p>
+<p>Web Container</p>
+<p>Web Application Directory Structure</p>
+<p>Deployment Descriptor</p>
+<p>&nbsp;</p>
+<p><strong><a name="a1"></a>Web Server and Client</strong></p>
+<p><span>Web服务器是一种可以处理客户端请求（request）并将响应（response）发送回客户端的软件。</span>例如，Apache是​​最广泛使用的Web服务器之一。Web服务器在某些物理机器上运行，并在特定端口上侦听客户端请求。</p>
+<p><span class="goog-text-highlight">Web客户端是一种有助于与服务器通信的软件。</span><span>一些最广泛使用的Web客户端是Firefox，Google Chrome，Safari等。当我们从服务器（通过URL）请求某些东西时，Web客户端将负责创建请求并将其发送到服务器，然后解析服务器响应并显示给用户。</span></p>
+<p>&nbsp;</p>
+<p><strong><a name="a2"></a>HTML and HTTP</strong></p>
+<p><span><span>Web服务器和Web客户端是两个独立的软件，所以应该有一些通用的通用语言。</span><span class="goog-text-highlight">HTML是服务器和客户端之间的通用语言，即</span></span><span><span class="goog-text-highlight">H</span></span><span><span class="goog-text-highlight">yper&nbsp;</span></span><span><span class="goog-text-highlight">T</span></span><span><span class="goog-text-highlight">ext&nbsp;</span></span><span><span class="goog-text-highlight">M</span></span><span><span class="goog-text-highlight">arkup&nbsp;</span></span><span><span class="goog-text-highlight">L</span></span><span><span class="goog-text-highlight">anguage（超文本标记语言）。</span></span></p>
+<p><span><span class="goog-text-highlight"><span><span>Web服务器和客户端都需要一个公共通信协议，超文本传输协议（HTTP，HyperText Transfer Protocol)</span></span><span><span>是服务器和客户端之间的通信协议。</span><span>HTTP运行在TCP/IP通信协议之上。</span></span></span></span></p>
+<p><span><span class="goog-text-highlight"><span><span>1、HTTP请求的一些重要部分是</span></span></span></span>:</p>
+<ul>
+<li>HTTP Method&nbsp;&ndash;&nbsp;要执行的操作，通常是GET，POST，PUT等</li>
+<li>URL&nbsp;&ndash; 要访问的页面</li>
+<li>Form Parameters&nbsp;&ndash; 类似于函数的参数，例如用于登陆的户名、密码等详细信息</li>
+</ul>
+<p><span><span class="goog-text-highlight">HTTP请求示例：</span></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">GET /FirstServletProject/jsps/hello.jsp HTTP/1.1
+Host: localhost:8080
+Cache-Control: no-cache</span></pre>
+</div>
+<p>2、HTTP响应的一些重要部分是:</p>
+<ul>
+<li>Status Code&nbsp;&ndash; <span class="goog-text-highlight">指示请求是否成功的整数。</span><span>一些众所周知的状态码：&ldquo;<strong>success</strong>&rdquo;为200，&ldquo;<strong>Not Found</strong>&rdquo;为404，&ldquo;<strong>Access Forbidden</strong>&rdquo;为403</span></li>
+<li>Content Type&nbsp;&ndash; 文本，HTML，图像，pdf等，也被称为MIME类型</li>
+<li>Content&nbsp;&ndash;&nbsp;由客户端呈现并向用户显示的实际数据</li>
+</ul>
+<p>HTTP响应示例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">200 OK
+Date: Wed, 07 Aug 2013 19:55:50 GMT
+Server: Apache-Coyote/1.1
+Content-Length: 309
+Content-Type: text/html;charset=US-ASCII
+
+</span><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=US-ASCII"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Hello<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>Hi There!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Date=Wed Aug 07 12:57:55 PDT 2013
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span><span>MIME Type&nbsp;或 Content Type</span></span><span><span>：上面HTTP响应的头部，包含&ldquo;Content-Type&rdquo;标签。</span><span>它也被叫做MIME类型，服务器将其发送给客户端，让他们知道它发送的数据种类。</span><span>它帮助客户端呈现用户数据。</span><span>一些主要使用的MIME类型是text/html，text/xml，application/xml等。</span></span></p>
+<p>&nbsp;</p>
+<p><strong><a name="a3"></a>Understanding URL</strong></p>
+<p><span><span>URL是Universal Resource Locator（通用资源定位器）的缩写，它用于查找服务器和资源。</span><span>网络上的每个资源都有自己独一无二的地址。</span><span>我们通过一个例子来看一下URL的组成。</span></span></p>
+<p><span style="color: #3366ff;"><strong>http://localhost:8080/FirstServletProject/jsps/hello.jsp</strong></span></p>
+<p><span>http://&nbsp;- 这是URL的第一部分，提供了在服务器-客户端通信中所使用的通信协议。</span></p>
+<p>localhost<span><span>&nbsp;-&nbsp;</span></span></p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>Why we need Servlet and JSPs?</p>
+<p><a name="a5"></a>First Web Application with Servlet and JSP</p>
+<p><a name="a6"></a>Web Container</p>
+<p><a name="a7"></a>Web Application Directory Structure</p>
+<p><a name="a8"></a>Deployment Descriptor</p>
+<p>&nbsp;</p>

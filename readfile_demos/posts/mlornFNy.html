@@ -1,0 +1,263 @@
+<h4><span style="font-family: 楷体;">问题描述</span></h4>
+<p><span style="font-family: 楷体;"><img src="http://images2017.cnblogs.com/blog/1042431/201710/1042431-20171022120303474-82538933.png" alt="" width="592" height="221" /></span></p>
+<p><span style="font-family: 楷体;">用二维数组表示地图，若值为 1 则表示有障碍物，若值为 0 则表示可以通行。</span></p>
+<p><span style="font-family: 楷体;">输入： m*n 的二维数组，布线起点坐标，布线终点坐标。</span></p>
+<p><span style="font-family: 楷体;">输出： 最短布线距离以及对应的布线路径。</span></p>
+<p><span style="font-family: 楷体;">&nbsp;</span></p>
+<h4><span style="font-family: 楷体;">问题分析</span></h4>
+<p><span style="font-family: 楷体;">从起点开始布线，将起点标记为 0 ，把四周可布线的位置标记为 起点标记值&nbsp;+ 1 ，同时将这些点插进队列 Q （插到队尾）。</span></p>
+<p><span style="font-family: 楷体;">从 Q 中取出一个点（队首元素）重复布线动作，将可布线位置标记为 取出点标记值&nbsp;+ 1 ，并插进 Q 。不断重复上一个动作，直到找到终点，此时终点的标记值即最短布线距离。</span></p>
+<p><span style="font-family: 楷体;">为什么终点的标记值会等于<strong>最短</strong>布线距离呢？</span></p>
+<p><span style="font-family: 楷体;">事实上对于每一点这个结论都是成立的（某点的标记值=该点到起点的<strong>最短</strong>距离）。</span></p>
+<p><span style="font-family: 楷体;"><img src="http://images2017.cnblogs.com/blog/1042431/201710/1042431-20171022141804787-1189644792.png" alt="" /></span></p>
+<p><span style="font-family: 楷体;">（方块表示起点，椭圆表示终点）</span></p>
+<p><span style="font-family: 楷体;">在布线的过程中，始终遵循的规则是：<strong>标记值越小的越先布线。（越先入队的越先布线）</strong></span></p>
+<p><span style="font-family: 楷体;">我们假设对于标记值为 n 的点该结论成立，我们只需要证明从标记值为 n 的点出发，找到的标记值为 n+1 的点<strong>确实最短</strong>就可以了。</span></p>
+<p><span style="font-family: 楷体;">我们考察标记值 n 周围的可布线点，可以分为两类：已布线点和未布线点。</span></p>
+<p><span style="font-family: 楷体;">对于未布线的点：<strong>由布线规则可知</strong>，所有标记值 &lt; n 点都已经布线完毕，点未被布线的唯一原因是任何一个标记值 &lt; n 的点都无法与它相邻（到不了或者需要付出更大的代价才能到），所以该点只能通过点 n 或者相邻的标记值同样为 n 的点与起点联通，从而取得最小值，故对标记值为 n+1 的点结论同样成立。</span></p>
+<p><span style="font-family: 楷体;">因此该结论对于任意标记值的点都成立。</span></p>
+<p><span style="font-family: 楷体;">或者，一句话说就是迷宫格子形成了一颗BFS树，事实上我们已经把所有更短的路径都search出来了。所以不可能有更短的。</span></p>
+<p><span style="font-family: 楷体;"><img src="https://img2020.cnblogs.com/blog/1042431/202003/1042431-20200327193317641-2111582934.png" alt="" width="429" height="405" /></span></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><span style="font-family: 楷体;">C++ 代码</span></span></h4>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;<span style="color: #000000;">
+#include </span>&lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;queue&gt;
+  
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">#define</span> MAX 6
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Point {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> len;
+    Point</span>*<span style="color: #000000;"> pre;
+
+    Point(): len(</span><span style="color: #800080;">0</span>), pre(<span style="color: #800080;">0</span><span style="color: #000000;">) {}
+    Point(</span><span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> y): x(x), y(y), len(<span style="color: #800080;">0</span>), pre(<span style="color: #800080;">0</span><span style="color: #000000;">) {}
+    </span><span style="color: #0000ff;">void</span> setPoint(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">this</span>-&gt;x =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">this</span>-&gt;y =<span style="color: #000000;"> y;
+    }
+};
+
+
+queue</span>&lt;Point&gt;<span style="color: #000000;"> mark;
+</span><span style="color: #0000ff;">void</span> test(Point (*<span style="color: #000000;">p)[MAX]);
+
+</span><span style="color: #0000ff;">bool</span> work(Point&amp; q, Point&amp; e, <span style="color: #0000ff;">int</span> (*map)[MAX], Point (*<span style="color: #000000;">p)[MAX]) {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> x, y;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> up </span>
+    <span style="color: #0000ff;">if</span> ((x=q.x-<span style="color: #800080;">1</span>) &gt;= <span style="color: #800080;">0</span> &amp;&amp; map[x][y=q.y] != <span style="color: #800080;">1</span> &amp;&amp; p[x][y].len == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        p[x][y].len </span>= q.len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        p[x][y].pre </span>= &amp;<span style="color: #000000;">q;
+        </span><span style="color: #0000ff;">if</span> (x == e.x &amp;&amp; y ==<span style="color: #000000;"> e.y) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            mark.push(p[x][y]);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> down </span>
+    <span style="color: #0000ff;">if</span> ((x=q.x+<span style="color: #800080;">1</span>) &lt; MAX &amp;&amp; map[x][y=q.y] != <span style="color: #800080;">1</span> &amp;&amp; p[x][y].len == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        p[x][y].len </span>= q.len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        p[x][y].pre </span>= &amp;<span style="color: #000000;">q;
+        </span><span style="color: #0000ff;">if</span> (x == e.x &amp;&amp; y ==<span style="color: #000000;"> e.y) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            mark.push(p[x][y]);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> left </span>
+    <span style="color: #0000ff;">if</span> ((y=q.y-<span style="color: #800080;">1</span>) &gt;= <span style="color: #800080;">0</span> &amp;&amp; map[x=q.x][y] != <span style="color: #800080;">1</span> &amp;&amp; p[x][y].len == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        p[x][y].len </span>= q.len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        p[x][y].pre </span>= &amp;<span style="color: #000000;">q;
+        </span><span style="color: #0000ff;">if</span> (x == e.x &amp;&amp; y ==<span style="color: #000000;"> e.y) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            mark.push(p[x][y]);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> right </span>
+    <span style="color: #0000ff;">if</span> ((y=q.y+<span style="color: #800080;">1</span>) &lt; MAX &amp;&amp; map[x=q.x][y] != <span style="color: #800080;">1</span> &amp;&amp; p[x][y].len == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        p[x][y].len </span>= q.len + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        p[x][y].pre </span>= &amp;<span style="color: #000000;">q;
+        </span><span style="color: #0000ff;">if</span> (x == e.x &amp;&amp; y ==<span style="color: #000000;"> e.y) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            mark.push(p[x][y]);
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> f(<span style="color: #0000ff;">int</span> (*map)[MAX], Point&amp; s, Point&amp; e, <span style="color: #0000ff;">bool</span>&amp; k, Point (*<span style="color: #000000;">p)[MAX]) {
+    mark.push(s);
+    </span><span style="color: #0000ff;">int</span> flag = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (mark.size() != <span style="color: #800080;">0</span> &amp;&amp; !flag) { <span style="color: #008000;">//</span><span style="color: #008000;"> 终止条件：找遍所有点都没找到终点&amp;找到终点</span>
+        flag =<span style="color: #000000;"> work(mark.front(), e, map, p);
+        mark.pop();
+        test(p); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出布线情况</span>
+<span style="color: #000000;">    }
+    k </span>=<span style="color: #000000;"> flag;
+}
+
+</span><span style="color: #0000ff;">void</span> test(Point (*p)[MAX]) { <span style="color: #008000;">//</span><span style="color: #008000;"> 输出布线情况</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != MAX; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != MAX; ++<span style="color: #000000;">j) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, p[i][j].len);
+        }
+        cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+    }    
+    cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+}
+
+</span><span style="color: #0000ff;">void</span> printPath(Point&amp;<span style="color: #000000;"> end) {
+    </span><span style="color: #0000ff;">if</span> (end.pre == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, end.x, end.y);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        printPath(</span>*<span style="color: #000000;">(end.pre));
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, end.x, end.y);
+    }
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> map[MAX][MAX] = { <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;"> };
+
+    Point s(</span><span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+    Point e(</span><span style="color: #800080;">4</span>, <span style="color: #800080;">4</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">bool</span> k = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    Point p[MAX][MAX];
+    p[s.x][s.y].len </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != MAX; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != MAX; ++<span style="color: #000000;">j) {
+            p[i][j].setPoint(i, j);
+        }
+    } </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+<span style="color: #000000;">    
+    f(map, s, e, k, p);
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (k) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MIN=%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, p[e.x][e.y].len);
+        printPath(p[e.x][e.y]);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">ERROR\n</span><span style="color: #800000;">"</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 起点与终点不连通</span>
+<span style="color: #000000;">    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="font-family: 楷体;">附件：迷宫问题</span></h4>
+<p><span style="font-family: 楷体;"><img src="http://images2017.cnblogs.com/blog/1042431/201710/1042431-20171030182443136-3438909.png" alt="" width="413" height="292" /></span></p>
+<p><span style="font-family: 楷体;">上面那道题用队列，这道用栈。</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> MAX 7
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Point {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> mark;
+    Point(): x(</span><span style="color: #800080;">0</span>), y(<span style="color: #800080;">0</span>), mark(<span style="color: #0000ff;">false</span><span style="color: #000000;">) {}
+    Point(</span><span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y): x(x), y(y) {}
+    </span><span style="color: #0000ff;">void</span> setPosition(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">this</span>-&gt;x =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">this</span>-&gt;y =<span style="color: #000000;"> y;
+    }
+};
+
+Point p[MAX][MAX];
+</span><span style="color: #0000ff;">bool</span> seekPath(<span style="color: #0000ff;">int</span> (*map)[MAX], Point&amp; s, Point&amp;<span style="color: #000000;"> e) {
+    p[s.x][s.y].mark </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (s.x == e.x &amp;&amp; s.y ==<span style="color: #000000;"> e.y) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, e.x, e.y);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:1\n");</span>
+    <span style="color: #0000ff;">if</span> (s.x+<span style="color: #800080;">1</span> &lt; MAX &amp;&amp; map[s.x+<span style="color: #800080;">1</span>][s.y] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x+<span style="color: #800080;">1</span>][s.y].mark &amp;&amp; seekPath(map, p[s.x+<span style="color: #800080;">1</span><span style="color: #000000;">][s.y], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:2\n");</span>
+    <span style="color: #0000ff;">if</span> (s.x-<span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; map[s.x-<span style="color: #800080;">1</span>][s.y] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x-<span style="color: #800080;">1</span>][s.y].mark &amp;&amp; seekPath(map, p[s.x-<span style="color: #800080;">1</span><span style="color: #000000;">][s.y], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:3\n");</span>
+    <span style="color: #0000ff;">if</span> (s.y+<span style="color: #800080;">1</span> &lt; MAX &amp;&amp; map[s.x][s.y+<span style="color: #800080;">1</span>] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x][s.y+<span style="color: #800080;">1</span>].mark &amp;&amp; seekPath(map, p[s.x][s.y+<span style="color: #800080;">1</span><span style="color: #000000;">], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:4\n");</span>
+    <span style="color: #0000ff;">if</span> (s.y-<span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; map[s.x][s.y-<span style="color: #800080;">1</span>] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x][s.y-<span style="color: #800080;">1</span>].mark &amp;&amp; seekPath(map, p[s.x][s.y-<span style="color: #800080;">1</span><span style="color: #000000;">], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:5\n");</span>
+    <span style="color: #0000ff;">if</span> (s.x+<span style="color: #800080;">1</span> &lt; MAX &amp;&amp; s.y+<span style="color: #800080;">1</span> &lt; MAX &amp;&amp; map[s.x+<span style="color: #800080;">1</span>][s.y+<span style="color: #800080;">1</span>] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x+<span style="color: #800080;">1</span>][s.y+<span style="color: #800080;">1</span>].mark &amp;&amp; seekPath(map, p[s.x+<span style="color: #800080;">1</span>][s.y+<span style="color: #800080;">1</span><span style="color: #000000;">], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:6\n");</span>
+    <span style="color: #0000ff;">if</span> (s.x+<span style="color: #800080;">1</span> &lt; MAX &amp;&amp; s.y-<span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; map[s.x+<span style="color: #800080;">1</span>][s.y-<span style="color: #800080;">1</span>] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x+<span style="color: #800080;">1</span>][s.y-<span style="color: #800080;">1</span>].mark &amp;&amp; seekPath(map, p[s.x+<span style="color: #800080;">1</span>][s.y-<span style="color: #800080;">1</span><span style="color: #000000;">], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:7\n");</span>
+    <span style="color: #0000ff;">if</span> (s.x-<span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; s.y+<span style="color: #800080;">1</span> &lt; MAX &amp;&amp; map[s.x-<span style="color: #800080;">1</span>][s.y+<span style="color: #800080;">1</span>] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x-<span style="color: #800080;">1</span>][s.y+<span style="color: #800080;">1</span>].mark &amp;&amp; seekPath(map, p[s.x-<span style="color: #800080;">1</span>][s.y+<span style="color: #800080;">1</span><span style="color: #000000;">], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("seekPath:8\n");</span>
+    <span style="color: #0000ff;">if</span> (s.x-<span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; s.y-<span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; map[s.x-<span style="color: #800080;">1</span>][s.y-<span style="color: #800080;">1</span>] != <span style="color: #800080;">1</span> &amp;&amp; !p[s.x-<span style="color: #800080;">1</span>][s.y-<span style="color: #800080;">1</span>].mark &amp;&amp; seekPath(map, p[s.x-<span style="color: #800080;">1</span>][s.y-<span style="color: #800080;">1</span><span style="color: #000000;">], e)) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">MAP[%d][%d]\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, s.x, s.y);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> f(<span style="color: #0000ff;">int</span> (*map)[MAX], Point&amp; s, Point&amp;<span style="color: #000000;"> e) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> chushihua</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != MAX; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != MAX; ++<span style="color: #000000;">j) {
+            p[i][j].setPosition(i, j);
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> work</span>
+    <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">seekPath(map, s, e)) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">ERROR!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("f:runnable\n");</span>
+<span style="color: #000000;">}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> map[MAX][MAX] = { <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>,    <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>,    <span style="color: #800080;">0</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">,
+                          </span><span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;"> };
+    Point s(</span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    Point e(</span><span style="color: #800080;">2</span>, <span style="color: #800080;">6</span><span style="color: #000000;">);    
+    f(map, s, e);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("main:runnable\n");</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p><span style="font-family: 楷体;">留着备用。</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-family: 楷体;">&nbsp;</span></p>

@@ -1,0 +1,34 @@
+<h2>INDEX</h2>
+<ul>
+<li><a href="#a1">How do we know if we have a good line</a></li>
+<li class="devsite-page-title"><a href="#a2">Linear Regression</a></li>
+<li class="devsite-page-title"><a href="#a3">Training and Loss&nbsp; &nbsp;</a></li>
+</ul>
+<h2><a name="a1"></a>How do we know if we have a good line</h2>
+<p>So as we said before, our model is something that we learned from data.<br />And there are lots  of complicated model types&nbsp;and lots of interesting ways  we can learn from data.<br />But we're gonna start with  something very simple and familiar.<br />This will open the gateway  to more sophisticated methods.<br />Let's train a first  little model from data.<br />So here we've got a small data set.<br />On the X axis,  we've got our input feature,&nbsp;which is showing housing square footage.<br />On our Y axis, we've got the target value&nbsp;that we're trying to predict  of housing price.<br />So we're gonna try  and create a model that takes in&nbsp;housing square footage  as an input feature&nbsp;and predicts housing price  as an output feature.<br />Here we've got lots of little labeled examples in our data set.<br />And I'm go ahead and channel our inner ninth grader to fit a line.<br />It can maybe take a look at our data set and&nbsp;fit a line that looks about right here. Maybe something like this.<br />And this line is now a model that predicts housing price given an input.<br />We can recall from algebra one that we can define this thing&nbsp;as Y = WX + B.<br />Now in high school algebra  we would have said MX,&nbsp;here we say W  because it's machine learning.<br />And this is referring  to our weight vectors.<br />Now you'll notice that we've got a little subscript here&nbsp;because we might be  in more than one dimension.<br />This B is a bias.<br />and the W gives us our slope.<br /><strong>How do we know if we have a good line?</strong><br />Well, we might wanna think of some notion of loss here.<br />Loss is showing basically  how well our line&nbsp;is doing at predicting  any given example.<br />So we can define this loss&nbsp;by looking at the difference between the prediction for a given X value<br />and the true value for that example.<br />So this guy has some moderate size loss.<br />This guy has near-zero loss.<br />Here we've got exactly zero loss.<br />Here we probably have some positive loss.<br />Loss is always on a zero  through positive scale.<br />How might we define loss?&nbsp;Well, that's something that we'll need to think about in a slightly more formal way.<br />So let's think about one convenient way to define loss for regression problems.<br />Not the only loss function, but one useful one to start out with.<br />We call this L2 loss, which is also known as <strong>squared error</strong>.<br />And it's a loss that's defined for an individual example&nbsp;by <strong>taking the square of the difference between our model's prediction and the true value.</strong><br />Now obviously as we get further and further away from the true value,&nbsp;the loss that we suffer  increases with a square.<br />Now, when we're training a model <strong>we don't care about minimizing loss on just one example,&nbsp;we care about minimizing loss across our entire data set.</strong></p>
+<h2 class="devsite-page-title"><a name="a2"></a>Linear Regression</h2>
+<p class="devsite-page-title">如何由 labeled examples 得到一个线性关系？（model）</p>
+<p class="devsite-page-title">假设我们要给温度（y）和蟋蟀每分钟的叫声（x）建立模型。可以这么做：</p>
+<ol>
+<li class="devsite-page-title">利用已有的数据作出散点图</li>
+<li class="devsite-page-title">画一条简单的直线近似两者的关系</li>
+<li class="devsite-page-title">利用直线的方程，写出线性表达式，例如 y = wx + b</li>
+
+
+
+
+
+
+</ol>
+<p>这里的 y 就是我们试图预测的东西，w 是直线的坡度， b 是 y 轴的截距， x 是特征（feature）</p>
+<p>如果想要预测一个尚未发生的情况，只需要把 feature 代入模型就可以了。一个复杂的模型依赖更多的 feature ，每个 feature 都有独立的权重：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180420231809976-512603163.png" alt="" width="432" height="68" /></p>
+<h2 class="devsite-page-title"><a name="a3"></a>Training and Loss&nbsp; &nbsp;</h2>
+<p>训练一个模型仅仅意味着得到一条好的直线（这需要好的权重 w 和偏差 b）。</p>
+<p>在监督学习中，机器学习算法检查很多的 example 并找到一个具有最小 loss 的模型，这个过程叫做&nbsp;empirical risk minimization</p>
+<p>loss 是一个数字，表明模型的预测在单个&nbsp;example 上有多糟糕，如果模型的预测是完美的，那么 loss 为零; 否则，loss 更大。</p>
+<p>训练模型的目标是找到一组对于整体数据而言、具有低 loss 的权重 w 和偏差 b 。</p>
+<p>&nbsp;一种<strong>比较流行</strong>的计算 loss 的方式就是&nbsp;<strong>squared loss （也被叫做<strong>L<sub>2</sub> loss</strong>）：</strong></p>
+<p>Mean square error (MSE)&nbsp;是每个 example&nbsp;的平均<strong>&nbsp;squared loss</strong></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180420233210793-427064652.png" alt="" width="469" height="95" /></p>
+<p>现在我们知道训练模型的目标了：找到具有低 loss 的直线，怎样才算低 loss 呢？平均方差最小的就是了，接下来的问题是，我们如何逼近这条直线？</p>

@@ -1,0 +1,137 @@
+<p>1、关于 使用传统标签还是 c- p- 命名空间定义的标签，</p>
+<p>我的观点是能用<strong>&nbsp;&nbsp;c- p- 命名空间定义的标签</strong> 就不用 <strong>传统标签</strong>（这样会比较简洁。。。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170711132754978-1802828139.png" alt="" width="370" height="255" /></p>
+<p>&nbsp;</p>
+<p>2、<strong>强依赖</strong>使用构造器注入，<strong>可选性依赖</strong>使用属性注入。</p>
+<p>&nbsp;</p>
+<h3>【 bean 的初始化】</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;beans&nbsp;xmlns="http://www.springframework.org/schema/beans"       <br />xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;"> xmlns:c</span><span style="color: #0000ff;">="http://www.springframework.org/schema/c"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schem</span><span style="color: #0000ff;">a/beans
+</span><span style="color: #0000ff;">       http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span style="color: #0000ff;">&gt;</span><em id="__mceDel"><em id="__mceDel"><span style="color: #0000ff;"><br /></span></em></em><span style="color: #0000ff;"><strong><span style="font-size: 14pt;"><br />【声明简单的 bean 】</span></strong></span><em id="__mceDel"><em id="__mceDel"><span style="color: #0000ff;"><br /></span>
+</em></em>    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 创建一个简单的 bean（默认构造器），自动化命名 ID 默认为 soundsystem.SgtPeppers#0 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="soundsystem.SgtPeppers"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 自定义 ID 非必要不使用 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="soundsystem.SgtPeppers"</span> <span style="color: #0000ff;">/&gt;</span>
+<br /><br /><span style="color: #0000ff;"><strong><span style="font-size: 14pt;">【借助构造器注入初始化 bean</span></strong><strong><span style="font-size: 14pt;"> 】</span></strong></span><strong><span style="font-size: 14pt;"><br /><br /></span></strong>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 构造器注入 bean 引用 方案一：&lt;constructor-arg&gt;元素 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cdPlayer"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="soundsystem.CDPlayer"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="compactDisc"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 构造器注入 bean 引用 方案二：Spring 3.0 引入的 c-命名空间 需要额外加 XML 顶部声明 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cdPlayer#0"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="soundsystem.CDPlayer"</span><span style="color: #ff0000;"> c:cd-ref</span><span style="color: #0000ff;">="compactDisc"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cdPlayer#1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="soundsystem.CDPlayer"</span><span style="color: #ff0000;"> c:_0-ref</span><span style="color: #0000ff;">="compactDisc"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 构造器注入字面值 方案一 &lt;constructor-arg&gt;元素 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc#0"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="The Beatles"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 构造器注入字面值 方案二 c-命名空间 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc#1"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #ff0000;">
+          c:_0</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span><span style="color: #ff0000;">
+          c:_1</span><span style="color: #0000ff;">="The Beatles"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 装配集合 List Set 数组都可以使用 &lt;list&gt;和&lt;set&gt;标签  </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc#2"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="The Beatles"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">null</span><span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc#3"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="The Beatles"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>Sgt. Pepper's Lonely Hearts Club Band<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>With a Little help from My Friends<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>Lucy in the Sky with Diamonds<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="NameOfASong"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="java.lang.String"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc#4"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="The Beatles"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ref </span><span style="color: #ff0000;">bean</span><span style="color: #0000ff;">="NameOfASong"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>【设置 bean 属性】</h3>
+<p>类似于初始化 bean&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;"> xmlns:p</span><span style="color: #0000ff;">="http://www.springframework.org/schema/p"</span><span style="color: #ff0000;">
+       xmlns:util</span><span style="color: #0000ff;">="http://www.springframework.org/schema/util"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 属性注入 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 强依赖使用构造器注入，可选性依赖使用属性注入 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="soundsystem.SgtPeppers"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cdPlayer#0"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.CDPlayer"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="compactDisc"</span><span style="color: #ff0000;"> ref</span><span style="color: #0000ff;">="compactDisc"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 需要强调，上面的属性必须要有 Setter方法 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 等价的 p 命名空间 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cdPlayer#1"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.CDPlayer"</span><span style="color: #ff0000;">
+          p:compactDisc-ref</span><span style="color: #0000ff;">="compactDisc"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 注入字面量到属性 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="reallyBlankDisc"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="title"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="artist"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="The Beatles"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="tracks"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>...<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>....<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">property</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 等价的 p 命名空间, 无 法 用 它 来 装配 集合 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="reallyBlankDisc#0"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #ff0000;">
+          p:title</span><span style="color: #0000ff;">="Sgt. Pepper's Lonely Hearts Club Band"</span><span style="color: #ff0000;">
+          p:artist</span><span style="color: #0000ff;">="The Beatles"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="tracks"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>...<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>....<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">property</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 可取的方案 util-命令空间中的 &lt;util:list&gt;标签 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">util:list </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="trackList"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>...<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>....<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">util:list</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="reallyBlankDisc#2"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.BlankDisc"</span><span style="color: #ff0000;">
+          p:title</span><span style="color: #0000ff;">="..."</span><span style="color: #ff0000;">
+          p:artist</span><span style="color: #0000ff;">="..."</span><span style="color: #ff0000;">
+          p:tracks-ref</span><span style="color: #0000ff;">="trackList"</span> <span style="color: #0000ff;">/&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

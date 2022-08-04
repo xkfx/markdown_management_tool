@@ -1,0 +1,114 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">DAO层依赖关系草图</a></li>
+<li><a href="#anchor1">应用示例</a></li>
+</ul>
+</div>
+<p>接<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_0" class="entrylistItemTitle" href="https://www.cnblogs.com/xkxf/p/10198620.html">Java连接数据库#05#</a>，对代码进行改进。</p>
+<h2><a name="anchor0"></a>DAO层依赖关系草图</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190122101736999-185457765.png" alt="" width="854" height="330" /></p>
+<h2><a name="anchor1"></a>应用示例（只需3步！）</h2>
+<p>1、首先定义接口类：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.shop.common.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.entity.Cart;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.entity.Order;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> CartDAO {
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> addItem(Long uid, Long itemId);
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> removeItem(Long id);
+
+    </span><span style="color: #0000ff;">int</span> removeAll(Long uid); <span style="color: #008000;">//</span><span style="color: #008000;"> 清空购物车</span>
+<span style="color: #000000;">
+    List</span>&lt;Cart&gt;<span style="color: #000000;"> listByUid(Long uid);
+
+    Order getPreOrder(Long uid);
+}</span></pre>
+</div>
+<p>2、然后书写相应的SQL以及返回类型（id的默认格式是&ldquo;文件名_方法名&rdquo;）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sql </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart_addItem"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    INSERT INTO cart(user_id, item_id)
+    VALUES (?, ?)
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sql</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sql </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart_removeAll"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    DELETE FROM cart WHERE user_id=?
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sql</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sql </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart_removeItem"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    DELETE FROM cart WHERE id=?
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sql</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sql </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart_getByUid"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="org.sample.shop.common.entity.Cart"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    SELECT id, user_id AS userId, item_id AS itemId FROM cart WHERE user_id=?
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sql</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sql </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart_getPreOrder"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="org.sample.shop.common.entity.OrderDetail"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    SELECT cart.id, item_id AS itemId, item.user_id AS userId, price
+    FROM cart
+    LEFT JOIN item ON cart.item_id = item.id
+    WHERE cart.user_id=?
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sql</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sql </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart_getSum"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="java.lang.Number"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    SELECT SUM(price) AS sum
+    FROM cart
+    LEFT JOIN item ON cart.item_id = item.id
+    WHERE cart.user_id=?
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sql</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>3、最后，通过QueryRunnerProxy执行SQL并拿到所需对象。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.shop.common.dao.impl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.dao.CartDAO;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.db.QueryRunnerProxy;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.entity.Cart;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.entity.Order;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.common.entity.OrderDetail;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Map;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> CartDAOImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> CartDAO {
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> addItem(Long uid, Long itemId) {
+        </span><span style="color: #0000ff;">return</span> QueryRunnerProxy.update("cart_addItem"<span style="color: #000000;">, uid, itemId);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> removeItem(Long id) {
+        </span><span style="color: #0000ff;">return</span> QueryRunnerProxy.update("cart_removeItem"<span style="color: #000000;">, id);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> removeAll(Long uid) {
+        </span><span style="color: #0000ff;">return</span> QueryRunnerProxy.update("cart_removeAll"<span style="color: #000000;">, uid);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> List&lt;Cart&gt;<span style="color: #000000;"> listByUid(Long uid) {
+        </span><span style="color: #0000ff;">return</span> QueryRunnerProxy.query("cart_getByUid"<span style="color: #000000;">, uid);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Order getPreOrder(Long uid) {
+        Order order </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Order();
+        order.setUserId(uid); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置买家id
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 查总价</span>
+        List&lt;Map&gt; mapList = QueryRunnerProxy.query("cart_getSum"<span style="color: #000000;">, uid);
+        Double total </span>= Double.parseDouble(mapList.get(0).get("sum"<span style="color: #000000;">).toString());
+        order.setTotal(total);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 查对应的物品清单</span>
+        List&lt;OrderDetail&gt; details = QueryRunnerProxy.query("cart_getPreOrder"<span style="color: #000000;">, uid);
+        order.setDetails(details);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> order;
+    }
+}</span></pre>
+</div>
+<p>具体实现代码参考github：<a href="https://github.com/xkfx/simple-shop" target="_blank">https://github.com/xkfx/simple-shop</a></p>
+<p>不过还有一些线程安全方面的隐患待解决。。。。。。。。。。。。。</p>
+<p>&nbsp;</p>

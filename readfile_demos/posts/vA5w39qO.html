@@ -1,0 +1,19 @@
+<p class="title">原文：<a href="https://docs.oracle.com/javase/specs/jvms/se10/html/jvms-2.html#jvms-2.5" target="_blank">https://docs.oracle.com/javase/specs/jvms/se10/html/jvms-2.html#jvms-2.5</a></p>
+<p class="title">参考谷歌翻译。</p>
+<p class="title">&nbsp;</p>
+<h2 class="title">2.5.&nbsp;Run-Time Data Areas</h2>
+<p>（略）</p>
+<h3 class="title">2.5.1.&nbsp;The&nbsp;<code class="literal">pc</code>&nbsp;Register</h3>
+<p>JVM 支持同时运行多个线程（JLS &sect;17）。每个 JVM 线程都具备自己的 pc （program counter，程序计数器）寄存器。在任何时候，每一个 JVM 线程都在执行一个单一方法的代码，也就是该线程的当前方法 （<a class="xref" title="2.6.&nbsp;Frames" href="https://docs.oracle.com/javase/specs/jvms/se10/html/jvms-2.html#jvms-2.6">&sect;2.6</a>）&nbsp;。如果那个方法不是本地方法，则 pc 寄存器的值就是当前正在执行的 JVM 指令的地址。如果线程正在执行的方法是本地方法，那么 JVM 的 pc 寄存器的值是未定义的。JVM 的 pc 寄存器足够宽，以保存特定平台的<a href="https://www.zhihu.com/question/29056872" target="_blank"> returnAddress</a>&nbsp;或者本地指针。</p>
+<h3 class="title">2.5.2.&nbsp;Java Virtual Machine Stacks</h3>
+<p>每个 JVM 线程都具备一个私有的 JVM 栈，与该线程同时创建。JVM 栈存储着帧（<a class="xref" title="2.6.&nbsp;Frames" href="https://docs.oracle.com/javase/specs/jvms/se10/html/jvms-2.html#jvms-2.6">&sect;2.6</a>）。JVM 栈和传统语言（例如 C 语言）的栈类似：保存局部变量和部分结果，在方法的调用和返回中起作用。（略）。JVM 栈的内存不需要是连续的。</p>
+<p><span style="color: #888888;"><em>在 Java&reg;虚拟机规范的第一版中，JVM 栈被称为 Java 栈。</em></span></p>
+<p>该规范允许 JVM 栈具有固定的大小，或者根据计算的需要动态扩展和收缩。如果 JVM 栈的大小是固定的，则每个 JVM 栈的大小可以在创建栈时独立选择。</p>
+<p><span style="color: #888888;"><em>JVM 实现可以让程序员或者用户<a href="http://www.cnblogs.com/redcreen/archive/2011/05/04/2037057.html" target="_blank">控制 JVM 栈的初始大小</a>，并且在允许动态扩展或者收缩 JVM 栈的情况下，控制最大值和最小值。</em></span></p>
+<p>以下异常与 JVM 栈相关：</p>
+<ul>
+<li><strong>如果某个线程所请求的 JVM 栈超出了 JVM 允许的最大值，那么 JVM 将抛出 StackOverflowError 异常</strong></li>
+<li><strong>在 JVM 栈可以被动态扩展的情况下，在它尝试扩展时，没有足够的内存可用于扩展，或者当没有足够的内存为新线程创建 JVM 栈时，JVM 将抛出 OutOfMemoryError 异常。</strong></li>
+</ul>
+<h3 class="title">2.5.3.&nbsp;Heap</h3>
+<p>&nbsp;</p>

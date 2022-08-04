@@ -1,0 +1,12 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖</a>雪峰的官方网站。</p>
+<p>1、杨辉三角generator：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> triangles():
+    L </span>= [1<span style="color: #000000;">]
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+        </span><span style="color: #0000ff;">yield</span><span style="color: #000000;"> L
+        L.append(0)
+        L </span>= [L[i-1] + L[i] <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(len(L))]<br /></span></pre>
+</div>
+<p>在python中L[-1]表示的是倒数第一个元素。</p>
+<p>&nbsp;</p>

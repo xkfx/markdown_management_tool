@@ -1,0 +1,43 @@
+<p><span style="background-color: #ffff99;">p143~p151：</span><br /><span style="background-color: #ffff99;">其他隐式类型转换</span><br />1、数组转换成指针，大多数表达式自动转换成指向数组首元素的指针。</p>
+<p>&nbsp;</p>
+<p>2、指针的转换。</p>
+<p>&nbsp;</p>
+<p>3、转换成布尔类型，例如在if (<em>condition</em>) 中。</p>
+<p>&nbsp;</p>
+<p>4、转换成常量。</p>
+<p>&nbsp;</p>
+<p>5、类类型定义的转换。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">显式转换</span><br />1、尽量避免强制类型转换，但有时候不得不使用强制类型转换。</p>
+<p>&nbsp;</p>
+<p>2、格式：</p>
+<div class="cnblogs_code">
+<pre>cast-name&lt;type&gt;<span style="color: #000000;">(expression)
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> type是转换的目标类型，expression是要转换的值。</span></pre>
+</div>
+<p>cast-name决定了执行的是哪一种转换。</p>
+<p>&nbsp;</p>
+<p>3、各种转换类型的简述。<br />1）凡是不包含底层const都可以使用<strong>static_cast</strong>。<br />2）转换掉const性质用<strong>const_cast</strong>。<br />3）<strong>reinterpret_cast</strong>：危险的一种转换类型。</p>
+<p><br />4、旧式的强制类型转换（C风格）。熟悉的(int)i。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">p147：</span><br /><span style="background-color: #ffff99;">运算符优先级表</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.36</span></p>
+<div class="cnblogs_code">
+<pre>i *= static_cast&lt;<span style="color: #0000ff;">int</span>&gt;d</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.37</span></p>
+<p>几种转换类型分不太清楚。<strong>(((&phi;(◎ロ◎;)&phi;)))。。。</strong></p>
+<div class="cnblogs_code">
+<pre>a： pv = static_cast&lt;<span style="color: #0000ff;">void</span>*&gt;<span style="color: #000000;">ps;
+b： i </span>= static_cast&lt;<span style="color: #0000ff;">int</span>&gt;*<span style="color: #000000;">pc;
+c:    pv </span>= .....</pre>
+</div>
+<p>估计用的场景也不是很多</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.38</span></p>
+<p>把i/j的结果强制转换为double型后赋给slope。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">&nbsp;</span></p>
+<p>&nbsp;</p>

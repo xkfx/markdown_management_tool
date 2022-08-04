@@ -1,0 +1,95 @@
+<p>1、stack 模板、动态内存分配、析构</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800080;">1</span><span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">stack2.cpp</span><span style="color: #800000;">"</span><span style="color: #000000;">
+
+#include </span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试int型</span>
+    Stack&lt;<span style="color: #0000ff;">int</span>&gt; s1(<span style="color: #800080;">5</span><span style="color: #000000;">);
+    s1.push(</span><span style="color: #800080;">1</span><span style="color: #000000;">);
+    s1.push(</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+    s1.push(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+    s1.push(</span><span style="color: #800080;">4</span><span style="color: #000000;">);
+    s1.push(</span><span style="color: #800080;">5</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span>(!s1.isEmpty()) cout &lt;&lt; s1.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s1.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s1.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s1.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s1.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试char型</span>
+    Stack&lt;<span style="color: #0000ff;">char</span>&gt; s2(<span style="color: #800080;">6</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span>(!s2.isFull()) s2.push(<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    s2.push(</span><span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    s2.push(</span><span style="color: #800000;">'</span><span style="color: #800000;">c</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    s2.push(</span><span style="color: #800000;">'</span><span style="color: #800000;">d</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    s2.push(</span><span style="color: #800000;">'</span><span style="color: #800000;">e</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    s2.push(</span><span style="color: #800000;">'</span><span style="color: #800000;">f</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    cout </span>&lt;&lt; s2.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s2.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s2.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s2.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; s2.pop() &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">cout &lt;&lt; s2.pop() &lt;&lt; endl;</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #800080;">2</span><span style="color: #000000;">
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Stack {
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    T </span>*<span style="color: #000000;">sptr;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> size;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> Top;
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 构造器</span>
+<span style="color: #000000;">    Stack()
+    {
+        sptr </span>= <span style="color: #0000ff;">new</span> T[<span style="color: #800080;">10</span><span style="color: #000000;">];
+        size </span>= <span style="color: #800080;">10</span><span style="color: #000000;">;
+        Top </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    Stack(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+    {
+        sptr </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> T[n];
+        size </span>=<span style="color: #000000;"> n;
+        Top </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 析构函数</span>
+    ~<span style="color: #000000;">Stack()
+    {
+        </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> []sptr;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> push</span>
+    <span style="color: #0000ff;">void</span><span style="color: #000000;"> push(T i)
+    {
+        </span>*(sptr++) =<span style="color: #000000;"> i;
+        </span>++<span style="color: #000000;">Top;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> pop</span>
+<span style="color: #000000;">    T pop()
+    {
+        </span><span style="color: #0000ff;">return</span> *(--<span style="color: #000000;">sptr);
+        </span>--<span style="color: #000000;">Top;
+    }
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty()
+    {
+        </span><span style="color: #0000ff;">if</span> (Top == <span style="color: #800080;">0</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isFull()
+    {
+        </span><span style="color: #0000ff;">if</span> (Top &lt;<span style="color: #000000;"> size)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>

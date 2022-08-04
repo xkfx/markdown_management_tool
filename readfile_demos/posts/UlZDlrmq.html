@@ -1,0 +1,82 @@
+<p>留着备用。</p>
+<p>js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">            class MergeSort {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> merge two sorted sequences: arr[start:mid] and arr[mid:end]</span>
+<span style="color: #000000;">                static merge(arr, start, mid, end) {
+                    let leftArr </span>= arr.slice(start, mid); <span style="color: #008000;">//</span><span style="color: #008000;"> arr[mid] is excluded</span>
+                    let rightArr = arr.slice(mid, end); <span style="color: #008000;">//</span><span style="color: #008000;"> arr[end] is excluded</span>
+                    
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> put on the buttom of each pile a sentinel </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> card, which contains a special value that</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> we use to simplify our codes</span>
+                    let sentinel =<span style="color: #000000;"> Infinity;
+                    leftArr.push(sentinel);
+                    rightArr.push(sentinel);
+                    
+                    let i </span>= 0, j = 0; <span style="color: #008000;">//</span><span style="color: #008000;"> index of leftArr and rightArr</span>
+                    <span style="color: #0000ff;">for</span> (let k = start; k &lt; end; ++<span style="color: #000000;">k) {
+                        arr[k] </span>= leftArr[i] &lt; rightArr[j] ? leftArr[i++] : rightArr[j++<span style="color: #000000;">];
+                    }
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> sort arr[start:end], arr[end] is excluded</span>
+<span style="color: #000000;">                static sort(arr, start, end) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> calling sort(arr, 0, 1) doesn't make </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> sense for there's only one element,</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> so just stop dividing/recursive and merge directly.</span>
+                    <span style="color: #0000ff;">if</span> (start + 1 &lt;<span style="color: #000000;"> end) { 
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> divide the problem into two subproblems</span>
+                        let mid = Math.floor((start + end) / 2<span style="color: #000000;">); 
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> recursively solve subproblems</span>
+<span style="color: #000000;">                        MergeSort.sort(arr, start, mid);
+                        MergeSort.sort(arr, mid, end);
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> combine the solutions to the subproblems into</span>
+                        <span style="color: #008000;">//</span><span style="color: #008000;"> the solution for the original problem.</span>
+<span style="color: #000000;">                        MergeSort.merge(arr, start, mid, end);
+                    }
+                }
+                
+                
+                static run(data) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> convert a string to a numeric array</span>
+                    data =<span style="color: #000000;"> CommonUtil.handleData(data); 
+                    
+                    MergeSort.sort(data, </span>0<span style="color: #000000;">, data.length);
+                    console.log(data);
+                }
+            }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Python代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> merge(arr, start, mid, end):
+    left </span>=<span style="color: #000000;"> arr[start:mid]
+    right </span>=<span style="color: #000000;"> arr[mid:end]
+    
+    sentinel </span>= float(<span style="color: #800000;">'</span><span style="color: #800000;">inf</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    left.append(sentinel)
+    right.append(sentinel)
+    
+    i </span>= j =<span style="color: #000000;"> 0
+    </span><span style="color: #0000ff;">for</span> k <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(start, end):
+        </span><span style="color: #0000ff;">if</span> left[i] &lt;<span style="color: #000000;"> right[j]:
+            arr[k] </span>=<span style="color: #000000;"> left[i]
+            i </span>+= 1
+        <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            arr[k] </span>=<span style="color: #000000;"> right[j]
+            j </span>+= 1
+            
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> sort(arr, start, end):
+    </span><span style="color: #0000ff;">if</span> start + 1 &lt;<span style="color: #000000;"> end:
+        mid </span>= int((start + end) / 2<span style="color: #000000;">)
+        sort(arr, start, mid)
+        sort(arr, mid, end)
+        merge(arr, start, mid, end)
+
+arr </span>= [1, 3, 5, 2, 12, 3, 22, 88, 23<span style="color: #000000;">]
+sort(arr, 0, len(arr))
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(arr)
+            </span></pre>
+</div>
+<p>&nbsp;</p>

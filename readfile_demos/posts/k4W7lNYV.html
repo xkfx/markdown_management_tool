@@ -1,0 +1,31 @@
+<p>①全局安装</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> -g @vue/cli</pre>
+</div>
+<p>②创建一个项目</p>
+<div class="cnblogs_code">
+<pre>vue create hello-world</pre>
+</div>
+<p>③错误采用vue serve命令，结果出现下面这个</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">  Command vue serve requires a global addon to be installed.
+  Please run npm i </span>-g @vue/cli-service-global and try again.</pre>
+</div>
+<p>④继续执行了</p>
+<div class="cnblogs_code">
+<pre>npm i -g @vue/cli-service-global</pre>
+</div>
+<p>⑤重新npm run serve，输出末尾是</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">  App running at:
+  </span>- Local:   http:<span style="color: #008000;">//</span><span style="color: #008000;">localhost:8080/</span>
+  - Network: http:<span style="color: #008000;">//</span><span style="color: #008000;">192.168.0.101:8080/</span>
+<span style="color: #000000;">
+  Note that the development build is not optimized.
+  To create a production build, run npm run build.</span></pre>
+</div>
+<p>⑥访问http://192.168.0.101:8080/，显示如下</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220130152144689-1612053112.png" alt="" width="704" height="334" loading="lazy" /></p>
+<p>⑦按代码执行顺序分析脚手架结构（<a href="https://www.bilibili.com/video/BV1Zy4y1K7SH?p=62" target="_blank">https://www.bilibili.com/video/BV1Zy4y1K7SH?p=62</a>）</p>
+<p>即执行了npm run serve之后从哪个文件开始运行的。</p>
+<p>&nbsp;</p>

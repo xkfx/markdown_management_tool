@@ -1,0 +1,323 @@
+<ul>
+<li>
+<p><a href="#a2">可以建立多态的bean引用吗</a></p>
+</li>
+<li>
+<p><a href="#a3">使用type，但没有class</a></p>
+</li>
+<li>
+<p><a href="#a4">scope属性默认为&ldquo;page&rdquo;</a></p>
+</li>
+</ul>
+<h2>从有脚本到无脚本</h2>
+<p><span style="background-color: #888888; color: #ffffff;">1、快速搭建一个测试环境：输入用户名，返回&ldquo;Hello, 用户名&rdquo;</span></p>
+<p><strong>index.html</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        body </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-family</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">'comic sans ms',sans-serif</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="checking"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Name:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="name"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="admin"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Comments: <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">textarea </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="comments"</span><span style="color: #ff0000;"> rows</span><span style="color: #0000ff;">="7"</span><span style="color: #ff0000;"> cols</span><span style="color: #0000ff;">="30"</span><span style="color: #0000ff;">&gt;</span>Your comments<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">textarea</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong>web.xml</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="3.1"</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>checking<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>com.demo.checking<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>checking<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/checking<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong>com.demo.checking</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.RequestDispatcher;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> checking <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        String name </span>= req.getParameter("name"<span style="color: #000000;">);
+        req.setAttribute(</span>"name"<span style="color: #000000;">, name);
+
+        RequestDispatcher view </span>= req.getRequestDispatcher("/index.jsp"<span style="color: #000000;">);
+        view.forward(req, resp);
+    }
+}</span></pre>
+</div>
+<p><strong>index.jsp</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+      body {
+        font-family:'comic sans ms',sans-serif;
+      }
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Hello, <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=request.getAttribute</span><span style="color: #ff0000;">("name")%</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #888888;">  &lt;%--&lt;p&gt;Hello, &lt;%=request.getParameter("name")%&gt;&lt;/p&gt;--%&gt;
+  </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #888888; color: #ffffff;">2、把传递&ldquo;值&rdquo;改为传递&ldquo;对象&rdquo;</span></p>
+<p><strong>com.demo.Person</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Person <span style="color: #0000ff;">implements</span><span style="color: #000000;"> java.io.Serializable {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Person() {
+
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setName(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+}</span></pre>
+</div>
+<p><strong>com.demo.checking</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> checking <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+<strong><span style="color: #ff0000;">        Person person </span></strong></span><strong><span style="color: #ff0000;">= new Person();
+        person.setName(req.getParameter("name"));
+        req.setAttribute("person"</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;">, person);</span></strong>
+
+        RequestDispatcher view </span>= req.getRequestDispatcher("/index.jsp"<span style="color: #000000;">);
+        view.forward(req, resp);
+    }
+}</span></pre>
+</div>
+<p><strong>index.jsp</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">import</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+      body {
+        font-family:'comic sans ms',sans-serif;
+      }
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<strong><span style="color: #ff0000;">    &lt;p&gt;Hello, &lt;%=((Person)request.getAttribute("person")).getName()%&gt;&lt;/p&gt;</span></strong>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #888888; color: #ffffff;">3、不过，还记得那个备忘录吗？可以用一句话来总结：&ldquo;使用脚本则死&rdquo;。所以我们需要另一种方法。</span></p>
+<p>Person是一个JavaBean，所以我们使用与bean相关的标准动作</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">import</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+      body {
+        font-family:'comic sans ms',sans-serif;
+      }
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #ff0000;"><strong>    &lt;jsp:useBean id="person" class="com.demo.Person" scope="request" /&gt;</strong></span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Person created by servlet: <span style="color: #ff0000;"><strong>&lt;jsp:getProperty name="person" property="name" </strong></span><span style="color: #0000ff;"><span style="color: #ff0000;"><strong>/&gt;</strong></span>&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="background-color: #888888; color: #ffffff;">&lt;jsp:useBean&gt;与&lt;jsp:getProperty&gt;的关系</span></p>
+<p>&lt;jsp:useBean&gt;可以用来<strong>声明和初始化</strong>你在&lt;jsp:getProperty&gt;中使用的具体bean对象。</p>
+<p>&lt;jsp:getProperty&gt;中的&ldquo;name&rdquo;值与&lt;jsp:useBean&gt;中的&ldquo;id&rdquo;值相对应；&lt;jsp:useBean&gt;中的&ldquo;id&rdquo;值与requst中的person属性对应。<span style="color: #999999;">//&nbsp;req.setAttribute("person", person);</span></p>
+<p><span style="color: #000000;">事实上，上述代码在_jspService()中将会变成这样</span></p>
+<div class="cnblogs_code">
+<pre>      com.demo.Person person = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+      person </span>= (com.demo.Person) _jspx_page_context.getAttribute("person"<span style="color: #000000;">, javax.servlet.jsp.PageContext.REQUEST_SCOPE);
+      </span><span style="color: #0000ff;">if</span> (person == <span style="color: #0000ff;">null</span><span style="color: #000000;">){
+        person </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> com.demo.Person();
+        _jspx_page_context.setAttribute(</span>"person"<span style="color: #000000;">, person, javax.servlet.jsp.PageContext.REQUEST_SCOPE);
+      }</span></pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619122642913-1645886118.png" alt="" width="876" height="487" /></p>
+<p>&nbsp;关于PageContext可以参考<a href="http://www.cnblogs.com/xkxf/p/7018360.html" target="_blank">这里</a>。</p>
+<p>&nbsp;</p>
+<p>4、使用JavaBean标准动作设置对象的成员值。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">import</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+      body {
+
+        font-family:'comic sans ms',sans-serif;
+      }
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #c0c0c0;">    &lt;%-- id值对应request的实例域中的person --%&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> scope</span><span style="color: #0000ff;">="request"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #ff0000;"><strong>    &lt;jsp:setProperty name="person" property="name" value="fuck_admin" /&gt;</strong></span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Person created by servlet: <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:getProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、但是，上述代码有一个问题：覆盖了用户输入的name。而我们只想在查找不到用户输入的时候，自行创建bean并设置实例域的值。</p>
+<p>也就是说，我们希望_jspService()中是这样的：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619124755710-1351927534.png" alt="" width="816" height="391" /></p>
+<p>对应的JavaBean标准动作就是：</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #888888;">    &lt;%-- id值对应request的实例域中的person成员 --%&gt;</span>
+<strong><span style="color: #ff0000;">    &lt;jsp:useBean id="person" class="com.demo.Person" scope="request"&gt;
+     <span style="color: #c0c0c0;"> &lt;jsp:setProperty name="person" property="name" value="fuck_admin" /&gt;</span>
+    &lt;/jsp:useBean&gt;</span></strong>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Person created by servlet: <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:getProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="a2"></a>可以建立多态的bean引用吗？&mdash;&mdash;为&lt;jsp:useBean&gt;增加一个type属性</h2>
+<p>也就是说，我们希望用一个父类引用持有子类对象。类似于：</p>
+<div class="cnblogs_code">
+<pre>        Person p = <span style="color: #0000ff;">new</span> Employee();</pre>
+</div>
+<p>首先，我们把<strong>Person改为抽象类（这样就无法创建Person类对象了）</strong>，然后实现一个Employee类：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Employee <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Person {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> empID;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getEmpID() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> empID;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setEmpID(<span style="color: #0000ff;">int</span><span style="color: #000000;"> empID) {
+        </span><span style="color: #0000ff;">this</span>.empID =<span style="color: #000000;"> empID;
+    }
+}</span></pre>
+</div>
+<p>接着修改servlet和JSP，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        Person person </span>= <strong><span style="color: #0000ff;">new</span></strong><span style="color: #000000;"><strong> Employee();</strong>
+        person.setName(req.getParameter(</span>"name"<span style="color: #000000;">));
+        req.setAttribute(</span>"person"<span style="color: #000000;">, person);
+
+        RequestDispatcher view </span>= req.getRequestDispatcher("/index.jsp"<span style="color: #000000;">);
+        view.forward(req, resp);
+    }</span></pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619141916960-642109220.png" alt="" width="609" height="54" />&lt;&lt;&lt;&lt;&mdash;&mdash;IDE报错，修改：</p>
+<div class="cnblogs_code">
+<pre>  &lt;body&gt;
+    &lt;%-- id值对应request的实例域中的person成员 --%&gt;
+    <span style="color: #ff0000;"><strong>&lt;jsp:useBean id="person" type="com.demo.Person" class="com.demo.Employee" scope="request"&gt;</strong></span>
+      &lt;jsp:setProperty name="person" property="name" value="fuck_admin" /&gt;
+    &lt;/jsp:useBean&gt;
+    &lt;p&gt;Person created by servlet: &lt;jsp:getProperty name="person" property="name" /&gt;&lt;/p&gt;
+  &lt;/body&gt;</pre>
+</div>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619141744132-695775681.png" alt="" width="874" height="307" /></p>
+<p>type不仅可以是抽象类，也可以是接口类型、普通类。（共同点是都可以作为实现类or子类的持有者）</p>
+<h2>&nbsp;</h2>
+<h2><a name="a3"></a>使用type，但没有class</h2>
+<p>试一下就知道了，修改一下JSP;</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #888888;">    &lt;%-- id值对应request的实例域中的person成员 --%&gt;</span>
+    <span style="color: #ff0000;"><strong>&lt;jsp:useBean id="person" type="com.demo.Person" scope="request"&gt;</strong></span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="fuck_admin"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #888888;">      &lt;%-- 通过这个体内语句我们可以判断bean是不是新创建的 --%&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">jsp:useBean</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Person created by servlet: <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:getProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>完全修改servlet；</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        Employee employee </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Employee();
+        employee.setName(req.getParameter(</span>"name"<span style="color: #000000;">));
+        req.setAttribute(</span>"person"<span style="color: #000000;">, employee);
+
+        RequestDispatcher view </span>= req.getRequestDispatcher("/index.jsp"<span style="color: #000000;">);
+        view.forward(req, resp);
+    }</span></pre>
+</div>
+<p>重新部署，输出结果仍是admin，证明Person引用正确持有了Employee对象<strong>。<span style="color: #ff0000;">因此&ldquo;使用type，但没有class&rdquo;是可行的</span>。</strong>这个时候如果我把</p>
+<p>上面的一句代码注释掉；</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #008000;">//</span><span style="color: #008000;"> req.setAttribute("person", employee);</span></pre>
+</div>
+<p>将无法正常运行（并不会输出fuck_admin），所以，只有type的<span style="color: #ff0000;"><strong>前提是bean已经在指定作用域存在。</strong></span></p>
+<p><span style="color: #ff0000;"><strong><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619144122632-1909111360.png" alt="" width="429" height="226" /></strong></span></p>
+<p>&nbsp;</p>
+<h2><span style="color: #000000;"><strong><a name="a4"></a>scope属性默认为page</strong></span></h2>
+<p><span style="color: #000000;"><strong><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619144435491-1472690165.png" alt="" width="852" height="198" /></strong></span></p>
+<p>&nbsp;</p>

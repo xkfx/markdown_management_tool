@@ -1,0 +1,123 @@
+<h2>题</h2>
+<p>例题5-2 木块问题。要区分onto和over，onto是要a与b直接接触，over则不需要。以及，move某木块时，要把它上面的木块全部归位，而pile某木块则不需要。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> maxn = <span style="color: #800080;">20</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; pile[maxn]; <span style="color: #008000;">//</span><span style="color: #008000;"> 每个pile[i]是一个vector
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 找木块a（就是一个序号罢了）所在的pile和height以引用形式返回调用者 </span>
+<span style="color: #0000ff;">void</span> find_block(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span> &amp;p, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">h)
+{
+    </span><span style="color: #0000ff;">for</span> (p = <span style="color: #800080;">0</span>; p != n; ++<span style="color: #000000;">p) {
+        </span><span style="color: #0000ff;">for</span> (h = <span style="color: #800080;">0</span>; h != pile[p].size(); ++<span style="color: #000000;">h) {
+            </span><span style="color: #0000ff;">if</span> (pile[p][h] == a) <span style="color: #0000ff;">return</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> vector也可以用数组的形式访问！ </span>
+<span style="color: #000000;">        }
+    }
+} 
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 把第p堆高度为h的木块上方的所有木块移回原位 </span>
+<span style="color: #0000ff;">void</span> clear_above(<span style="color: #0000ff;">int</span> p, <span style="color: #0000ff;">int</span><span style="color: #000000;"> h)
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = h + <span style="color: #800080;">1</span>; i != pile[p].size(); ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">int</span> b =<span style="color: #000000;"> pile[p][i];
+        pile[b].push_back(b);     
+    }
+    pile[p].resize(h </span>+ <span style="color: #800080;">1</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 只保留 0~ h的位置。不包括h+1！h+1以上的都被移走了 </span>
+<span style="color: #000000;">}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 把 第 p堆高度为h及其上方的木块整体移动到p2堆的顶部</span>
+<span style="color: #0000ff;">void</span> pile_onto(<span style="color: #0000ff;">int</span> p, <span style="color: #0000ff;">int</span> h, <span style="color: #0000ff;">int</span><span style="color: #000000;"> p2)
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = h; i != pile[p].size(); ++<span style="color: #000000;">i) {
+        pile[p2].push_back(pile[p][i]);
+    }
+    pile[p].resize(h); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只保留0~ h-1的位置。 </span>
+<span style="color: #000000;">} 
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> print()
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d:</span><span style="color: #800000;">"</span><span style="color: #000000;">, i);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != pile[i].size(); ++<span style="color: #000000;">j) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> %d</span><span style="color: #800000;">"</span><span style="color: #000000;">, pile[i][j]);
+        }    
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a, b;
+    cin </span>&gt;&gt; n; <span style="color: #008000;">//</span><span style="color: #008000;"> 有n 个木块 </span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> s1, s2;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n ; ++<span style="color: #000000;">i) {
+        pile[i].push_back(i);
+    }
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt; s1 &gt;&gt; a &gt;&gt; s2 &gt;&gt;<span style="color: #000000;"> b) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 例如读入 move 1 onto 2 </span>
+        <span style="color: #0000ff;">int</span><span style="color: #000000;"> pa, pb, ha, hb;
+        find_block(a, pa, ha);
+        find_block(b, pb, hb);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 此时 pa ha 存储着 a所在堆的编号 以及高度 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 同理 pb hb 存储着 b所在堆的编号 以及高度  </span>
+        <span style="color: #0000ff;">if</span> (pa == pb) <span style="color: #0000ff;">continue</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> a 与 b 在同一堆的指令是非法指令 </span>
+        <span style="color: #0000ff;">if</span> (s2 == <span style="color: #800000;">"</span><span style="color: #800000;">onto</span><span style="color: #800000;">"</span>) clear_above(pb, hb); <span style="color: #008000;">//</span><span style="color: #008000;"> onto要把 b 上的木块归位 </span>
+        <span style="color: #0000ff;">if</span> (s1 == <span style="color: #800000;">"</span><span style="color: #800000;">move</span><span style="color: #800000;">"</span>) clear_above(pa, ha); <span style="color: #008000;">//</span><span style="color: #008000;"> move 要把 a 上的木块归位 </span>
+<span style="color: #000000;">        pile_onto(pa, ha, pb);
+    }
+    print();
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+Sample Input
+
+10
+move 9 onto 1
+move 8 over 1
+move 7 over 1
+move 6 over 1
+pile 8 over 6
+pile 8 over 5
+move 2 over 1
+move 4 over 9
+quit
+^Z
+
+Sample Output
+
+0: 0
+1: 1 9 2 4
+2:
+3: 3
+4:
+5: 5 8 7 6
+6:
+7:
+8:
+9:
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.baidu.com/link?url=T4meJ7Vo_bW9G5ONqWeUo8Eya3Pi_cU1ZkGtO8O-zNYdweuu34MAVv9oJ0pvmYUhfn5wWaLSjhAbptdLu2u9W_&amp;wd=&amp;eqid=f7771c37001bc0f5000000055e8be3e5" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586226150',
+						'y':'FDDBEBFF'
+												}">The&nbsp;Blocks&nbsp;Problem(vector) - 若流芳千古 - 博客园</a></p>
+<p>[2]&nbsp;<a href="http://www.baidu.com/link?url=U1gJl3hobanVbXICA6pC7unvwLIeJnhioDwnJQZbH4iC_1F87g1vEsZ43YvsEirYCadyoelcH1g_3Qcr9wYT-BbG5H-WeXIhL7nf02AZZQO" target="_blank" data-click="{
+			'F':'778717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586226827',
+						'y':'FF6679D6'
+												}">C++&nbsp;vector&nbsp;容器浅析&nbsp;| 菜鸟教程</a></p>
+<p>&nbsp;</p>

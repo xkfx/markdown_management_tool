@@ -1,0 +1,124 @@
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">7.6 &amp; 7.7</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data.h</span>
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> public部分，对象看起来是怎么样的。</span>
+    std::<span style="color: #0000ff;">string</span> isbn() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span> bookNo; } <span style="color: #008000;">//</span><span style="color: #008000;"> inline function</span>
+    Sales_data&amp; combine(<span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">double</span> avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> private部分，数据成员。</span>
+    std::<span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data的非成员接口函数</span>
+Sales_data add(<span style="color: #0000ff;">const</span> Sales_data&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::ostream </span>&amp;print(std::ostream&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::istream </span>&amp;read(std::istream&amp;, Sales_data&amp;<span style="color: #000000;">);
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data.cpp</span>
+Sales_data&amp; Sales_data::combine(<span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">rhs)
+{
+    units_sold </span>+=<span style="color: #000000;"> rhs.units_sold;
+    revenue </span>+=<span style="color: #000000;"> rhs.revenue;
+    </span><span style="color: #0000ff;">return</span> *<span style="color: #0000ff;">this</span><span style="color: #000000;">;
+}
+istream </span>&amp;read(istream &amp;<span style="color: #0000ff;">is</span>, Sales_data &amp;<span style="color: #000000;">item)
+{
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">is</span> &gt;&gt; item.bookNo &gt;&gt; item.units_sold &gt;&gt;<span style="color: #000000;"> price;
+    item.revenue </span>= price *<span style="color: #000000;"> item.units_sold;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">is</span><span style="color: #000000;">;
+}
+ostream </span>&amp;print(ostream &amp;os, <span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">item)
+{
+    os </span>&lt;&lt; item.isbn() &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; item.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; item.revenue &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> item.avg_price();
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> os;
+}
+</span><span style="color: #0000ff;">double</span> Sales_data::avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (units_sold)
+        </span><span style="color: #0000ff;">return</span> revenue/<span style="color: #000000;">units_sold;
+    </span><span style="color: #0000ff;">else</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+Sales_data add(</span><span style="color: #0000ff;">const</span> Sales_data &amp;lhs, <span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">rhs)
+{
+    Sales_data sum </span>=<span style="color: #000000;"> lhs;
+    sum.combine(rhs);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> main.cpp</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data total;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (read(cin, total)) {
+        Sales_data trans;
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (read(cin, trans)) {
+            </span><span style="color: #0000ff;">if</span> (total.isbn() ==<span style="color: #000000;"> trans.isbn())
+                total.combine(trans);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                print(cout, total) </span>&lt;&lt;<span style="color: #000000;"> endl;
+                total </span>=<span style="color: #000000;"> trans;
+            }
+        }
+        print(cout, total) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?!</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl; 
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.8</span></p>
+<p>read操作会改变对象的数据成员，而print操作仅仅是&ldquo;访问&rdquo;而不改变对象的数据成员。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.9</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Person.h</span>
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Person {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> public</span>
+    <span style="color: #0000ff;">string</span> getName() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> name; }
+    </span><span style="color: #0000ff;">string</span> getAddress() <span style="color: #0000ff;">const</span>  { <span style="color: #0000ff;">return</span><span style="color: #000000;"> address; }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> private</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> address;
+};
+istream </span>&amp;read(istream&amp;, Person&amp;<span style="color: #000000;">);
+ostream </span>&amp;print(ostream&amp;, <span style="color: #0000ff;">const</span> Person&amp;<span style="color: #000000;">);
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Person.cpp</span>
+istream &amp;read(istream &amp;<span style="color: #0000ff;">is</span>, Person &amp;<span style="color: #000000;">p)
+{
+    </span><span style="color: #0000ff;">is</span> &gt;&gt; p.name &gt;&gt;<span style="color: #000000;"> p.address;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">is</span><span style="color: #000000;">;
+}
+ostream </span>&amp;print(ostream &amp;os, <span style="color: #0000ff;">const</span> Person &amp;<span style="color: #000000;">p)
+{
+    os </span>&lt;&lt; p.getName() &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> p.getAddress();
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> os;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> main.cpp</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Person p;
+    read(cin, p);
+    print(cout, p) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.10</span></p>
+<p>读入两条数据。</p>

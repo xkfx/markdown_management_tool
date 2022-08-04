@@ -1,0 +1,35 @@
+<p><span style="color: #ff0000;">原始内容：https://www.tutorialspoint.com/struts_2/basic_mvc_architecture.htm</span></p>
+<p>&nbsp;</p>
+<p><span><span>Apache Struts 2是用来创建企业级Java Web应用的一个优雅的、可拓展的框架，它最初被称作WebWork 2。</span></span></p>
+<p><span><span>这个框架的目的在于&mdash;&mdash;<strong>简化整个Web应用的开发周期，从构建到部署，以及后续的维护工作。</strong></span></span></p>
+<p><span><span>下面的教程将通过简单的步骤来教会你&mdash;&mdash;如何使用Apache Struts创建企业级别的Java Web应用程序。</span></span></p>
+<h2>听众</h2>
+<p>这个教程是为想要理解<strong>Struts 2.x框架</strong>以及它的<strong>应用程序</strong>的Java程序员而设计的，它将为你带来中等水平的实验。</p>
+<h2>先决条件</h2>
+<p>在进行本教程之前，你需要对Java编程语言有一个比较好的理解。</p>
+<p>对于MVC框架和JSP或者Servlet的基本了解将有助于你的学习。</p>
+<h1>基础MVC架构</h1>
+<p>MVC是一个用于<strong>开发Web应用的设计模式</strong>。这个模式由下面三个部分组成：</p>
+<ul class="list">
+<li>
+<p><strong>Model</strong>&nbsp;- 模式的最低级别，负责数据维护。</p>
+</li>
+<li>
+<p><strong>View</strong>&nbsp;- 负责向用户显示数据。</p>
+</li>
+<li>
+<p><strong>Controller</strong>&nbsp;- 负责模型和视图之间的交互。</p>
+</li>
+</ul>
+<p><span>MVC很受欢迎，因为它将&ldquo;用户界面&rdquo;和&ldquo;程序逻辑&rdquo;独立出来，并支持分离。&mdash;&mdash;Controller接受用户请求，配合Model准备View所需要的数据，最后由View生成可视化的响应。</span></p>
+<center><img title="Struts MVC" src="https://www.tutorialspoint.com/struts_2/images/struts-mvc.jpg" alt="Struts MVC" /></center>
+<h2>model</h2>
+<p>模型负责管理应用的数据，它响应来自视图的请求、控制器的指令，并以此为依据更新自身。</p>
+<h2>view</h2>
+<p><span class="goog-text-highlight">以特定的格式呈现数据，需要控制器触发；</span></p>
+<p><span>是基于脚本的模板系统，常见的视图有<strong>JSP，ASP，PHP</strong>等，</span></p>
+<p><span>非常易于与<strong>AJAX</strong>技术集成。</span></p>
+<h2>controller</h2>
+<p>控制器负责响应用户输入、与数据模型对象交互。它接受输入、验证输入、然后执行修改数据模型状态的业务操作。</p>
+<p><span style="color: #ff0000;">Struts2是一个基于MVC的框架。</span>在接下来的章节中，让我们来看看&mdash;&mdash;如何在Struts2中使用MVC方法。</p>
+<p>&nbsp;</p>

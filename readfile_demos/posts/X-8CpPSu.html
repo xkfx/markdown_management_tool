@@ -1,0 +1,52 @@
+<p>&nbsp;</p>
+<p>《c++ primer, 5E》第38页到第47页</p>
+<p>1、列表初始化。 例如：int i{3.14};</p>
+<p>2、分离式编译以及关键字extern</p>
+<p>3、显示访问全局变量。 例如：::reused</p>
+<p>&nbsp;</p>
+<p>练习 2.16</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>, &amp;r1 =<span style="color: #000000;"> i;
+    </span><span style="color: #0000ff;">double</span> d = <span style="color: #800080;">0</span>, &amp;r2 =<span style="color: #000000;"> d;
+    
+    
+    r2 </span>= <span style="color: #800080;">3.14159</span><span style="color: #000000;">;
+    std::cout </span>&lt;&lt; d &lt;&lt; std::endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 3.14</span>
+<span style="color: #000000;">    
+    r2 </span>=<span style="color: #000000;"> r1;
+    std::cout </span>&lt;&lt; d &lt;&lt; std::endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 0</span>
+<span style="color: #000000;">    
+    i </span>=<span style="color: #000000;"> r2;
+    std::cout </span>&lt;&lt; i &lt;&lt; std::endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 0</span>
+<span style="color: #000000;">    
+    r1 </span>=<span style="color: #000000;"> d;
+    std::cout </span>&lt;&lt; r1 &lt;&lt; std::endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 0</span>
+    
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 这些赋值不都是合法的吗？？！</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>练习 2.17</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 10 10 </span>
+<span style="color: #000000;">
+#include</span>&lt;iostream&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> i, &amp;ri =<span style="color: #000000;"> i;
+    i </span>= <span style="color: #800080;">5</span>; ri = <span style="color: #800080;">10</span><span style="color: #000000;">;
+    std::cout </span>&lt;&lt; i &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; ri &lt;&lt;<span style="color: #000000;"> std::endl; 
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>收获：</p>
+<p>1、总是显示初始化变量(初始化和赋值是不同的)。</p>
+<p>2、在对象第一次使用的地方附近定义它。</p>
+<p>&nbsp;</p>

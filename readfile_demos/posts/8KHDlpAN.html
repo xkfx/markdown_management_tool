@@ -1,0 +1,15 @@
+<div>背景：WEB项目迁移到Electron，原WEB项目中用了JQuery，迁移后运行，抛出Uncaught ReferenceError: $ is not defined</div>
+<div>Electron版本是15.3.0，参考了<a href="https://stackoverflow.com/questions/32621988/electron-jquery-is-not-defined" target="_blank">https://stackoverflow.com/questions/32621988/electron-jquery-is-not-defined</a></div>
+<p>发现是这个原因：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">    webPreferences: {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> preload: path.join(__dirname, 'preload.js'),</span>
+      nodeIntegration: <span style="color: #0000ff;">true</span><span style="color: #000000;">,
+      contextIsolation: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+    }</span></pre>
+</div>
+<p>把nodeIntegration和contextIsolation恢复默认值即可解决。</p>
+<p>原因是渲染器进程集成了Node.js运行环境，必须以Node.js的方式去运行$函数，也就是需要let $ =&nbsp;require等方式去使用外部函数。</p>
+<p>新手的思考：</p>
+<p>为了便于项目迁移，始终将渲染器进程和Node.js环境保持隔离，renderer.js中完全不放Node.js相关的东西，Node.js相关的需求全部在预加载脚本preload.js中实现，这样就可以方便地在WEB应用程序和桌面应用程序间进行切换。对开发人员来说，做Electron页面时可以完全不用考虑怎么和Electron集成，先在熟悉的浏览器环境下开发，最后再迁到Electron环境下做后续开发。</p>
+<p>&nbsp;</p>

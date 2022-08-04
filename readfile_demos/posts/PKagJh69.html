@@ -1,0 +1,42 @@
+<h3>Ⅰ、类成员函数的隐式参数 T *const this 。</h3>
+<p>就是说对于某个类的成员函数 returnType function() 的真实面目其实是这样的 returnType function(T *const this) 。</p>
+<p>如果调用 obj.function() ，可以认为编译器将该调用重写成了 function(&amp;obj) 。</p>
+<p>&nbsp;</p>
+<p>Ⅱ、常量成员函数。</p>
+<p>他看上去是这样的 returnType function() const ，真实面目这个样 returnType function(const T *const this) 。</p>
+<p>从使用者的角度来说，什么时候考虑加 const 呢？一般来说是在该方法中对象&ldquo;只读&rdquo;的时候。</p>
+<p>在我的印象中， Java 中似乎是不存在这种考虑的，所有对象都默认为非常量，所以 C++ 为什么要有这个玩意儿？！！！对于这个问题我思考了很久，虽然在设计类的时候总是会考虑加不加 const 的问题，但是在实际创建对象的时候真的很少会写类似于 const Person p; 这样的东西。一个比较勉强的解释是，现实生活中总存在一些不变的东西，常量对象用于抽象表达这类事物。</p>
+<p>网上的解释：<a id="cb_post_title_url" href="http://www.cnblogs.com/likwo/archive/2010/12/20/1911036.html" target="_blank">C++ const解析（转）</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Const 作用
+
+</span><span style="color: #800080;">1</span><span style="color: #000000;">.   const类型定义：指明变量或对象的值是不能被更新,引入目的是为了取代预编译指令
+
+</span><span style="color: #800080;">2</span><span style="color: #000000;">.   可以保护被修饰的东西，防止意外的修改，增强程序的健壮性。
+
+</span><span style="color: #800080;">3</span><span style="color: #000000;">.   编译器通常不为普通const常量分配存储空间，而是将它们保存在符号表中，这使得它成为一个编译期间的常量，没有了存储与读内存的操作，使得它的效率也很高。
+
+</span><span style="color: #800080;">4</span>.    可以节省空间，避免不必要的内存分配。</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅲ、编译器分两步处理类：首先编译成员的声明，然后才轮到成员函数体（就是指花括号{}里的东西）。</p>
+<p>因此，成员函数体可以随意使用类中的其他成员而无需在意这些成员的出现次序，不论这个成员函数体是在类里面还是类外面，是在成员变量前，还是在成员变量后。</p>
+<p>&nbsp;</p>
+<p>Ⅳ、返回引用类型，形如 returnType&amp; function() 。</p>
+<p>回忆一下 C++ 的引用：</p>
+<ul>
+<li><strong>引用即别名</strong></li>
+<li>引用必须初始化，引用形参绑定初始化它的对象</li>
+<li>使用引用避免拷贝</li>
+<li>使用引用形参返回额外信息（有时会比返回一个自定义数据类型方便）</li>
+<li>尽量使用常量引用（相对于普通引用，常量引用能够绑定的对象范围更广，例如 const string &amp;s 作为形参还可以绑定字面值）</li>
+</ul>
+<p>返回一个值的方式和初始化一个变量或者形参的方式完全一样：返回的值用于初始化调用点的一个<strong>临时量</strong>，该临时量就是函数调用的结果。</p>
+<p>因此调用 function() 的时候，相当于对 returnType&amp; temp 做了一次初始化，temp 是一个别名，不会产生拷贝！需要注意的是不要返回局部变量的引用，可返回的有 *this 、形参的引用（这个形参也必须是别名！而非临时的变量）。</p>
+<p>&nbsp;</p>
+<p>相关阅读：</p>
+<ul>
+<li>
+<p id="page-title" class="asset-name entry-title"><a href="http://www.ruanyifeng.com/blog/2014/11/compiler.html" target="_blank">编译器的工作过程</a></p>
+</li>
+</ul>

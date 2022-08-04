@@ -1,0 +1,48 @@
+<p>参考：</p>
+<p>1、http://www.w3school.com.cn/tags/canvas_filltext.asp</p>
+<p>2、产生随机数：http://www.cnblogs.com/banbu/archive/2012/07/25/2607880.html</p>
+<p>效果图：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170421221302102-376706058.png" alt="" width="507" height="547" /></p>
+<p>&nbsp;</p>
+<p>思路：</p>
+<p>1、创建一个画布。（背景为黑色）</p>
+<p>2、绘制1个&ldquo;星星&rdquo;，设法变成n个。</p>
+<p>3、把画布放入HTML页面中。</p>
+<p>代码：</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"/&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type="text/css"&gt;<span style="color: #000000;">
+        canvas {
+            background</span>-<span style="color: #000000;">color: black;
+        }
+    </span>&lt;/style&gt;
+&lt;/head&gt;
+    &lt;body&gt;
+        &lt;canvas id="myCanvas" width="1024" height="768" style="border:1px solid #d3d3d3;"&gt;
+         &lt;/canvas&gt;
+        &lt;script&gt;
+            <span style="color: #0000ff;">var</span> c = document.getElementById("myCanvas"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">var</span> ctx = c.getContext("2d"<span style="color: #000000;">);
+
+            ctx.font </span>= "30px Verdana"<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Create gradient</span>
+            <span style="color: #0000ff;">var</span> gradient = ctx.createLinearGradient(0, 0, c.width, 0<span style="color: #000000;">);
+            gradient.addColorStop(</span>"0", "magenta"<span style="color: #000000;">);
+            gradient.addColorStop(</span>"0.5", "blue"<span style="color: #000000;">);
+            gradient.addColorStop(</span>"1.0", "red"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Fill with gradient</span>
+            ctx.fillStyle =<span style="color: #000000;"> gradient;
+            </span><span style="color: #0000ff;">for</span> (i = 1; i &lt; 300; ++<span style="color: #000000;">i) {
+                ctx.fillText(</span>"*", Math.random()*1024, Math.random()*768<span style="color: #000000;">);
+            }
+        </span>&lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+</div>
+<p>重用w3school代码。</p>
+<p>&nbsp;</p>

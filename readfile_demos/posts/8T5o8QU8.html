@@ -1,0 +1,57 @@
+<p>快速教程：<a href="https://www.runoob.com/nodejs/nodejs-http-server.html" target="_blank">https://www.runoob.com/nodejs/nodejs-http-server.html</a></p>
+<p class="t">以下内容摘自《nodejs真的是单线程吗? 》<a href="https://segmentfault.com/a/1190000014926921" target="_blank">https://segmentfault.com/a/1190000014926921</a></p>
+<ul>
+<li class="t">其实只有js执行是单线程，I/O显然是其它线程。 js执行线程是单线程，把需要做的I/O交给libuv，自己马上返回做别的事情，然后libuv在指定的时刻回调就行了。</li>
+<li class="t">Node.js 通过 libuv 来处理与操作系统的交互，并且因此具备了异步、非阻塞、事件驱动的能力。因此，NodeJS能响应大量的并发请求。<span style="background-color: #ffff00; color: #ff0000;"><strong>所以，NodeJS适合运用在高并发、I/O密集、少量业务逻辑的场景。</strong></span></li>
+<li class="t">如果操作系统本身就是单核，那也就算了，但现在大部分服务器都是多 CPU 或多核的，而 Node.js 只有一个 EventLoop，也就是只占用一个 CPU 内核，当 Node.js 被CPU 密集型任务占用，导致其他任务被阻塞时，却还有 CPU 内核处于闲置状态，造成资源浪费。 其实虽然Node.js可以处理数以千记的并发，但是一个Node.js进程在某一时刻其实只是在处理一个请求。 因此，Node.js 并不适合 CPU 密集型任务。</li>
+</ul>
+<h2 id="taobaonpm">使用淘宝 NPM 镜像</h2>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> -g cnpm --registry=https:<span style="color: #008000;">//</span><span style="color: #008000;">registry.npmmirror.com</span></pre>
+</div>
+<p>之后用cnpm取代npm，例如cnpm init等。</p>
+<p>或者直接设置淘宝镜像</p>
+<div class="cnblogs_code">
+<pre>npm config set registry https:<span style="color: #008000;">//</span><span style="color: #008000;">registry.npm.taobao.org</span></pre>
+</div>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220130151027780-1530393154.png" alt="" loading="lazy" /></p>
+<h2>Node.js创建第一个应用</h2>
+<p>创建hello.js如下：</p>
+<div class="cnblogs_code">
+<pre>let http = require("http"<span style="color: #000000;">); 
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 第一行请求（require）Node.js 自带的 http 模块，并且把它赋值给 http 变量。</span>
+<span style="color: #000000;">
+http.createServer((req, resp) </span>=&gt;<span style="color: #000000;"> {
+    resp.writeHead(</span>200, {'Content-Type': 'text/plain'<span style="color: #000000;">});
+    resp.end(</span>'Hello World\n'<span style="color: #000000;">);
+}).listen(</span>8888<span style="color: #000000;">);
+
+console.log(</span>'Server running at http://127.0.0.1:8888/');</pre>
+</div>
+<p>执行：node hello.js</p>
+<p>打开浏览器访问 http://127.0.0.1:8888/，你会看到一个写着 "Hello World"的网页。</p>
+<h2>Node.js 回调函数</h2>
+<p>用非阻塞代码读文件</p>
+<div class="cnblogs_code">
+<pre>let fs = require("fs"<span style="color: #000000;">);
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 回调函数一般作为函数的最后一个参数出现</span>
+fs.readFile('input.txt', (err, data) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (err) <span style="color: #0000ff;">return</span><span style="color: #000000;"> console.error(err);
+    console.log(data.toString());
+});
+
+console.log(</span>"程序执行结束! // 这条会先输出，然后才是文件内容");</pre>
+</div>
+<h2>Node.js简易HTTP服务器</h2>
+<p><a href="https://www.npmjs.com/package/http-server" target="_blank">https://www.npmjs.com/package/http-server</a></p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: #0000ff;">install</span> --global http-server</pre>
+</div>
+<p>如果是在项目里面使用，则采用局部安装</p>
+<p>按照好后在对应的html页面下执行：</p>
+<div class="cnblogs_code">
+<pre>http-server</pre>
+</div>
+<p>既可运行一个简易的HTTP服务器，通过http://localhost:8080/访问页面。</p>
+<p>&nbsp;</p>

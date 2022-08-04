@@ -1,0 +1,50 @@
+<p><span style="color: #ff00ff;">【函数重载】</span></p>
+<p>Java中的重载一般是指重载构造器，或是子类覆写父类的方法；C++中的重载稍微复杂一些。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">定义重载函数</span></p>
+<p>典型的数据库应用。</p>
+<div class="cnblogs_code">
+<pre>Record lookup(<span style="color: #0000ff;">const</span> Account&amp;<span style="color: #000000;">);
+Record lookup(</span><span style="color: #0000ff;">const</span> Phone&amp;<span style="color: #000000;">);
+Record lookup(</span><span style="color: #0000ff;">const</span> Name&amp;);</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">判断两个形参类型是否相异</span></p>
+<p>1、声明的时候省略形参和没省略是等价的。</p>
+<p>2、起了类型别名也改变不了本质。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="background-color: #ff0000;">重</span>载和const形参</span></p>
+<p>1、一个拥有顶层const的形参无法和另一个没有顶层const的形参区分开来。例如：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Record lookup(Phone x1);
+Record lookup(</span><span style="color: #0000ff;">const</span> Phone x2);</pre>
+</div>
+<p>在上面的例子中，x1和x2都作为&ldquo;<span style="color: #ff0000;">对象的持有者</span>&rdquo;，并且可以持有的对象相同：两者都可以&rdquo;持有&ldquo;常量和变量，所以无法区分。</p>
+<p>再如：</p>
+<div class="cnblogs_code">
+<pre>Record lookup(Phone*<span style="color: #000000;"> y1);
+Record lookup(Phone</span>* <span style="color: #0000ff;">const</span> y2);</pre>
+</div>
+<p>不论是常量指针y2，还是普通指针y1，都是&rdquo;既可以指向变量，也可以指向常量&ldquo;。</p>
+<p>&nbsp;</p>
+<p>2、但是，底层const形参和非const的同名形参是可以区分的，例如Name&amp;和const Name&amp;、Name*和const Name*。虽然const Name&amp;既可以接收const对象也可以接收非const对象，但是当发生上述重载、调用的时候，编译器会<span style="color: #ff0000;"><strong>优先</strong></span>选用非cosnt版本的函数。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="background-color: #ff0000;">c</span>onst_cast和重载</span></p>
+<p>1、<a href="http://blog.csdn.net/randyjiawenjie/article/details/6727196" target="_blank">C++函数返回引用</a></p>
+<p>所以，返回引用的好处在于：不用创建副本变量。</p>
+<p>&nbsp;</p>
+<p>2、重载函数可以调用另一个重载函数。</p>
+<p>&nbsp;</p>
+<p>3、const_cast只能去掉本来就不是const变量的变量的const属性。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">调用重载函数</span></p>
+<p>可能会有三种结果：最佳匹配、无匹配、二义性调用。（后两者都会发生错误）</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.39</span></p>
+<p>a 非法</p>
+<p>b 非法</p>
+<p>c 合法</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【重载与作用域】</span></p>
+<p>&nbsp;内层声明的与外层函数同名的变量、函数都会屏蔽外层函数，而不是重载！</p>
+<p>&nbsp;</p>

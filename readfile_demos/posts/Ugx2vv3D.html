@@ -1,0 +1,539 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor1">1、树的同构</a></li>
+<li><a href="#anchor2">2、List Leaves</a></li>
+<li><a href="#anchor3">3、Tree Traversals Again&nbsp;</a></li>
+<li><a href="#anchor4" target="_blank">用堆栈实现后序遍历的非递归程序</a></li>
+</ul>
+</div>
+<h2><a name="anchor0"></a>第三周编程作业</h2>
+<h3><a name="anchor1"></a>1、树的同构</h3>
+<p>利用结构数组表示二叉树。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt; <span style="color: #008000;">//</span><span style="color: #008000;"> bool true false</span>
+<span style="color: #0000ff;">#define</span> MAX 10 + 1
+<span style="color: #0000ff;">#define</span> SIZE 26 + 1
+<span style="color: #0000ff;">#define</span> NONE -1
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> RawData {
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> left;
+    </span><span style="color: #0000ff;">int</span> right; <span style="color: #008000;">//</span><span style="color: #008000;"> 用 -1 表示不存在 </span>
+<span style="color: #000000;">};
+typedef </span><span style="color: #0000ff;">struct</span> RawData*<span style="color: #000000;"> MyRawData;
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Tree {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> b;
+};
+typedef </span><span style="color: #0000ff;">struct</span> Tree*<span style="color: #000000;"> MyTree;
+
+MyRawData mrds1[MAX];
+MyRawData mrds2[MAX];
+MyTree tr1[SIZE] </span>=<span style="color: #000000;"> {NULL};
+MyTree tr2[SIZE] </span>=<span style="color: #000000;"> {NULL};
+
+</span><span style="color: #0000ff;">void</span> rawData2tree(<span style="color: #0000ff;">int</span><span style="color: #000000;"> N, MyRawData mrds[], MyTree tr[])
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> k, temp;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 计算字母所对应的下标 </span>
+        k = mrds[i]-&gt;ch - <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">;    
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 初始化结点 </span>
+        tr[k] = (MyTree) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Tree));
+        tr[k]</span>-&gt;a =<span style="color: #000000;"> NONE;
+        tr[k]</span>-&gt;b =<span style="color: #000000;"> NONE;    
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 将子结点信息保存到当前下标的结点 </span>
+        <span style="color: #0000ff;">if</span> (mrds[i]-&gt;left !=<span style="color: #000000;"> NONE) {
+            tr[k]</span>-&gt;a = mrds[mrds[i]-&gt;left]-&gt;<span style="color: #000000;">ch;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将 结点值 直接保存到 a b </span>
+<span style="color: #000000;">        }
+        </span><span style="color: #0000ff;">if</span> (mrds[i]-&gt;right !=<span style="color: #000000;"> NONE) {
+            tr[k]</span>-&gt;b = mrds[mrds[i]-&gt;right]-&gt;<span style="color: #000000;">ch;
+        }        
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 4. 排序便于比较</span>
+        <span style="color: #0000ff;">if</span> (tr[k]-&gt;a &lt; tr[k]-&gt;<span style="color: #000000;">b) {
+            temp </span>= tr[k]-&gt;<span style="color: #000000;">a;
+            tr[k]</span>-&gt;a = tr[k]-&gt;<span style="color: #000000;">b;
+            tr[k]</span>-&gt;b =<span style="color: #000000;"> temp;
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> check(MyTree tr1[], MyTree tr2[])
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != SIZE; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (tr1[i]) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 相同结点是否存在? </span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (tr2[i]) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 其子结点是否一致</span>
+                <span style="color: #0000ff;">if</span> (tr1[i]-&gt;a == tr2[i]-&gt;a &amp;&amp; tr1[i]-&gt;b == tr2[i]-&gt;<span style="color: #000000;">b) { 
+                    </span><span style="color: #008000;">//</span> 
+                } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N;
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, &amp;N); <span style="color: #008000;">//</span><span style="color: #008000;"> \n不能漏！！！否则会被下面的scanf("%c", &amp;c)读走！ 
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 保存原始数据 </span>
+    <span style="color: #0000ff;">char</span><span style="color: #000000;"> c1, c2, c3;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        mrds1[i] </span>= (MyRawData) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> RawData));
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c %c %c\n</span><span style="color: #800000;">"</span>, &amp;c1, &amp;c2, &amp;<span style="color: #000000;">c3);
+        mrds1[i]</span>-&gt;ch =<span style="color: #000000;"> c1;
+        mrds1[i]</span>-&gt;left = c2 == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> ? NONE : c2 - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">; 
+        mrds1[i]</span>-&gt;right = c3 == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> ? NONE : c3 - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N2;
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">N2);
+    </span><span style="color: #0000ff;">if</span> (N !=<span style="color: #000000;"> N2) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">No</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N2; ++<span style="color: #000000;">i) {
+        mrds2[i] </span>= (MyRawData) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> RawData));
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c %c %c\n</span><span style="color: #800000;">"</span>, &amp;c1, &amp;c2, &amp;<span style="color: #000000;">c3);
+        mrds2[i]</span>-&gt;ch =<span style="color: #000000;"> c1;
+        mrds2[i]</span>-&gt;left = c2 == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> ? NONE : c2 - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">; 
+        mrds2[i]</span>-&gt;right = c3 == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> ? NONE : c3 - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    }    
+    
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 将树映射到以 结点值 为下标的数组中 </span>
+<span style="color: #000000;">    rawData2tree(N, mrds1, tr1);
+    rawData2tree(N, mrds2, tr2);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 同一 下标的结点应该具有相同的子结点</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, check(tr1, tr2) ? <span style="color: #800000;">"</span><span style="color: #800000;">Yes</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">No</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor2"></a>2、List Leaves</h3>
+<p>层序遍历</p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt; <span style="color: #008000;">//</span><span style="color: #008000;"> bool true false</span>
+#include &lt;memory.h&gt; <span style="color: #008000;">//</span><span style="color: #008000;"> memset 或者 &lt;string.h&gt; </span>
+<span style="color: #0000ff;">#define</span> MAX_SIZE 10 + 1
+
+
+<span style="color: #0000ff;">int</span> L[MAX_SIZE] = {-<span style="color: #800080;">1</span>}, R[MAX_SIZE] = {-<span style="color: #800080;">1</span><span style="color: #000000;">};
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> R[MAX_SIZE] = {-1} 只有首个元素被初始化为 -1  </span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> buildTree()
+{
+    memset(L, </span>-<span style="color: #800080;">1</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(L));
+    memset(R, </span>-<span style="color: #800080;">1</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(R));
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N, tmpL, tmpR;
+            
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">N);        
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) { 
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c %c\n</span><span style="color: #800000;">"</span>, &amp;tmpL, &amp;<span style="color: #000000;">tmpR);
+        
+        </span><span style="color: #0000ff;">if</span> (tmpL != <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            L[i] </span>= tmpL - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">; 
+        }
+        
+        </span><span style="color: #0000ff;">if</span> (tmpR != <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            R[i] </span>= tmpR - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> root;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> flag[MAX_SIZE];
+    memset(flag, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(flag));
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (L[i] != -<span style="color: #800080;">1</span>) flag[L[i]] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (R[i] != -<span style="color: #800080;">1</span>) flag[R[i]] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (flag[i] == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            root </span>=<span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;    
+}
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Queue {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> data[MAX_SIZE];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> front, rear;
+};
+typedef </span><span style="color: #0000ff;">struct</span> _Queue*<span style="color: #000000;"> Queue;
+
+Queue buildQueue()
+{
+    Queue q </span>= (Queue) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Queue));
+    q</span>-&gt;front = q-&gt;rear = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> q;
+}
+
+</span><span style="color: #0000ff;">void</span> push(Queue q, <span style="color: #0000ff;">int</span><span style="color: #000000;"> x)
+{
+    q</span>-&gt;rear++<span style="color: #000000;">;
+    q</span>-&gt;data[q-&gt;rear] =<span style="color: #000000;"> x;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> pop(Queue q)
+{
+    </span><span style="color: #0000ff;">if</span> (q-&gt;front + <span style="color: #800080;">1</span> &gt; q-&gt;rear) <span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    q</span>-&gt;front++<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> q-&gt;data[q-&gt;<span style="color: #000000;">front];
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> ans[MAX_SIZE];
+</span><span style="color: #0000ff;">void</span> levelOrderTraversal(<span style="color: #0000ff;">int</span><span style="color: #000000;"> root)
+{
+    memset(ans, </span>-<span style="color: #800080;">1</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(ans));
+    
+    Queue q </span>=<span style="color: #000000;"> buildQueue();
+    push(q, root);
+    </span><span style="color: #0000ff;">int</span> x , i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> ((x = pop(q)) != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span> (L[x] != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+            push(q, L[x]);
+        }
+        </span><span style="color: #0000ff;">if</span> (R[x] != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+            push(q, R[x]);
+        }
+        </span><span style="color: #0000ff;">if</span> (L[x] == -<span style="color: #800080;">1</span> &amp;&amp; R[x] == -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+            ans[i</span>++] =<span style="color: #000000;"> x;
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> printAns()
+{
+    </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, ans[<span style="color: #800080;">0</span><span style="color: #000000;">]);
+    </span><span style="color: #0000ff;">while</span> (ans[++k] != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> %d</span><span style="color: #800000;">"</span><span style="color: #000000;">, ans[k]);
+    }    
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> root =<span style="color: #000000;"> buildTree();
+    levelOrderTraversal(root);
+    printAns();    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor3"></a>3、Tree Traversals Again&nbsp;</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt;<span style="color: #000000;"> 
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt; 
+<span style="color: #0000ff;">#define</span> MAX 100<span style="color: #000000;">
+
+typedef </span><span style="color: #0000ff;">struct</span> _BinTree*<span style="color: #000000;"> BinTree;
+typedef BinTree Node;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> data;
+    BinTree left;
+    BinTree right;
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> visited;
+};
+
+Node buildNode(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> data)
+{
+    Node node </span>= (Node) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree));
+    node</span>-&gt;data =<span style="color: #000000;"> data;
+    node</span>-&gt;left =<span style="color: #000000;"> NULL;
+    node</span>-&gt;right =<span style="color: #000000;"> NULL;    
+    node</span>-&gt;visited = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> node;
+}
+
+typedef </span><span style="color: #0000ff;">struct</span> _Stack*<span style="color: #000000;"> Stack;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Stack {
+    Node nodes[MAX];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> top;
+};
+
+Stack buildStack()
+{
+    Stack s </span>= (Stack) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Stack));
+    s</span>-&gt;top = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> push(Stack s, Node node)
+{
+    </span><span style="color: #0000ff;">if</span> (s-&gt;top == MAX - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    s</span>-&gt;nodes[++(s-&gt;top)] =<span style="color: #000000;"> node;
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty(Stack s)
+{
+    </span><span style="color: #0000ff;">return</span> s-&gt;top == -<span style="color: #800080;">1</span><span style="color: #000000;">;
+}
+
+Node getTop(Stack s)
+{
+    </span><span style="color: #0000ff;">if</span> (isEmpty(s)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+    </span><span style="color: #0000ff;">return</span> s-&gt;nodes[s-&gt;<span style="color: #000000;">top];
+}
+
+Node pop(Stack s)
+{
+    </span><span style="color: #0000ff;">if</span> (isEmpty(s)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+    </span><span style="color: #0000ff;">return</span> s-&gt;nodes[(s-&gt;top)--<span style="color: #000000;">];
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> ans[MAX];
+</span><span style="color: #0000ff;">int</span> ans_i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> postTraversal(Node root)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (root) {
+        postTraversal(root</span>-&gt;<span style="color: #000000;">left);
+        postTraversal(root</span>-&gt;<span style="color: #000000;">right);
+        ans[ans_i</span>++] = root-&gt;<span style="color: #000000;">data;
+    }
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    BinTree root, tempNode, lastPop </span>=<span style="color: #000000;"> NULL;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, tempData;
+    </span><span style="color: #0000ff;">char</span> ch[<span style="color: #800080;">5</span><span style="color: #000000;">];
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s %d</span><span style="color: #800000;">"</span>, ch, &amp;<span style="color: #000000;">tempData);
+    root </span>=<span style="color: #000000;"> buildNode(tempData);
+    
+    Stack s </span>=<span style="color: #000000;"> buildStack();
+    push(s, root);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 边模拟入栈出栈边构造树。</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i != <span style="color: #800080;">2</span>*n; ++<span style="color: #000000;">i) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, ch);
+        </span><span style="color: #0000ff;">if</span> (ch[<span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">u</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">tempData);
+            tempNode </span>=<span style="color: #000000;"> buildNode(tempData);            
+            </span><span style="color: #0000ff;">if</span> (lastPop !=<span style="color: #000000;"> NULL) {
+                lastPop</span>-&gt;right =<span style="color: #000000;"> tempNode;
+                lastPop </span>=<span style="color: #000000;"> NULL;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                getTop(s)</span>-&gt;left =<span style="color: #000000;"> tempNode;
+            }
+            push(s, tempNode);
+        }
+        </span><span style="color: #0000ff;">if</span> (ch[<span style="color: #800080;">1</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">o</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            lastPop </span>=<span style="color: #000000;"> pop(s);
+        }
+    }
+    
+    postTraversal(root);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, ans[i]);
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, ans[n - <span style="color: #800080;">1</span><span style="color: #000000;">]);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="j-title title f-fl"><a name="anchor4"></a>用堆栈实现后序遍历的非递归程序</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt;<span style="color: #000000;"> 
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt; 
+<span style="color: #0000ff;">#define</span> MAX 100<span style="color: #000000;">
+
+typedef </span><span style="color: #0000ff;">struct</span> _BinTree*<span style="color: #000000;"> BinTree;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> data;
+    BinTree left;
+    BinTree right;
+};
+
+typedef </span><span style="color: #0000ff;">struct</span> _Block*<span style="color: #000000;"> Block;  
+</span><span style="color: #0000ff;">struct</span> _Block { <span style="color: #008000;">//</span><span style="color: #008000;"> 代码块</span>
+<span style="color: #000000;">    BinTree node;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> statement; 
+};
+
+typedef </span><span style="color: #0000ff;">struct</span> _Stack*<span style="color: #000000;"> Stack;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Stack {
+    Block blocks[MAX];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> top;
+};
+
+BinTree buildNode(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> data)
+{
+    BinTree node </span>= (BinTree) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree));
+    node</span>-&gt;data =<span style="color: #000000;"> data;
+    node</span>-&gt;left =<span style="color: #000000;"> NULL;
+    node</span>-&gt;right =<span style="color: #000000;"> NULL;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> node;
+}
+
+Stack buildStack()
+{
+    Stack s </span>= (Stack) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Stack));
+    s</span>-&gt;top = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> s;
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> push(Stack s, Block b)
+{
+    </span><span style="color: #0000ff;">if</span> (s-&gt;top == MAX - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    s</span>-&gt;blocks[++(s-&gt;top)] =<span style="color: #000000;"> b;
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty(Stack s)
+{
+    </span><span style="color: #0000ff;">return</span> s-&gt;top == -<span style="color: #800080;">1</span><span style="color: #000000;">;
+}
+
+Block getTop(Stack s)
+{
+    </span><span style="color: #0000ff;">if</span> (isEmpty(s)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+    </span><span style="color: #0000ff;">return</span> s-&gt;blocks[s-&gt;<span style="color: #000000;">top];
+}
+
+Block pop(Stack s)
+{
+    </span><span style="color: #0000ff;">if</span> (isEmpty(s)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+    </span><span style="color: #0000ff;">return</span> s-&gt;blocks[(s-&gt;top)--<span style="color: #000000;">];
+}
+
+Block buildBlock(BinTree node)
+{
+    Block b </span>= (Block) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Block));
+    b</span>-&gt;node =<span style="color: #000000;"> node;
+    b</span>-&gt;statement = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> b;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> inorderTraversal(BinTree root)
+{
+    Block first </span>=<span style="color: #000000;"> buildBlock(root);
+    
+    Stack s </span>=<span style="color: #000000;"> buildStack();
+    push(s, first);
+    
+    Block curBlock;
+    BinTree curNode;
+    </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">isEmpty(s)) {
+        curBlock </span>=<span style="color: #000000;"> getTop(s);
+        curNode </span>= curBlock-&gt;<span style="color: #000000;">node;
+        </span><span style="color: #0000ff;">if</span> (curBlock-&gt;statement == <span style="color: #800080;">0</span><span style="color: #000000;">) {    
+            curBlock</span>-&gt;statement++<span style="color: #000000;">;        
+            </span><span style="color: #0000ff;">if</span> (curNode-&gt;left !=<span style="color: #000000;"> NULL) {
+                push(s, buildBlock(curNode</span>-&gt;<span style="color: #000000;">left));                
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">; 
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将当前代码块暂时压入栈底，执行新的代码块 </span>
+<span style="color: #000000;">            }
+        }
+        </span><span style="color: #0000ff;">if</span> (curBlock-&gt;statement == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            curBlock</span>-&gt;statement++<span style="color: #000000;">;
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span>, curNode-&gt;<span style="color: #000000;">data);            
+        }
+        </span><span style="color: #0000ff;">if</span> (curBlock-&gt;statement == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            curBlock</span>-&gt;statement++<span style="color: #000000;">;    
+            </span><span style="color: #0000ff;">if</span> (curNode-&gt;right !=<span style="color: #000000;"> NULL) {                
+                push(s, buildBlock(curNode</span>-&gt;<span style="color: #000000;">right));
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }        
+        }
+        pop(s); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前代码块相当于执行完了 </span>
+<span style="color: #000000;">    }    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">(inorderTraversal)\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+} 
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> postorderTraversal(BinTree root)
+{
+    Block first </span>=<span style="color: #000000;"> buildBlock(root);
+    
+    Stack s </span>=<span style="color: #000000;"> buildStack();
+    push(s, first);
+    
+    Block curBlock;
+    BinTree curNode;
+    </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">isEmpty(s)) {
+        curBlock </span>=<span style="color: #000000;"> getTop(s);
+        curNode </span>= curBlock-&gt;<span style="color: #000000;">node;
+        </span><span style="color: #0000ff;">if</span> (curBlock-&gt;statement == <span style="color: #800080;">0</span><span style="color: #000000;">) {    
+            curBlock</span>-&gt;statement++<span style="color: #000000;">;        
+            </span><span style="color: #0000ff;">if</span> (curNode-&gt;left !=<span style="color: #000000;"> NULL) {
+                push(s, buildBlock(curNode</span>-&gt;<span style="color: #000000;">left));                
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">; 
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将当前代码块暂时压入栈底，执行新的代码块 </span>
+<span style="color: #000000;">            }
+        }
+        </span><span style="color: #0000ff;">if</span> (curBlock-&gt;statement == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            curBlock</span>-&gt;statement++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (curNode-&gt;right !=<span style="color: #000000;"> NULL) {                
+                push(s, buildBlock(curNode</span>-&gt;<span style="color: #000000;">right));
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }    
+        
+        }
+        </span><span style="color: #0000ff;">if</span> (curBlock-&gt;statement == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            curBlock</span>-&gt;statement++<span style="color: #000000;">;
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span>, curNode-&gt;<span style="color: #000000;">data);        
+        }
+        pop(s); 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 压入栈底是因为没有执行完，而弹出则表示代码块执行完了。 </span>
+<span style="color: #000000;">    }    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">(postorderTraversal)\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+} 
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    BinTree root </span>= buildNode(<span style="color: #800080;">1</span><span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 手动创建一棵树</span>
+    BinTree node2 = buildNode(<span style="color: #800080;">2</span><span style="color: #000000;">);
+    BinTree node3 </span>= buildNode(<span style="color: #800080;">3</span><span style="color: #000000;">);
+    BinTree node4 </span>= buildNode(<span style="color: #800080;">4</span><span style="color: #000000;">);
+    BinTree node5 </span>= buildNode(<span style="color: #800080;">5</span><span style="color: #000000;">);
+    BinTree node6 </span>= buildNode(<span style="color: #800080;">6</span><span style="color: #000000;">);
+    root</span>-&gt;left =<span style="color: #000000;"> node2;
+    root</span>-&gt;right =<span style="color: #000000;"> node5;
+    node2</span>-&gt;left =<span style="color: #000000;"> node3;
+    node2</span>-&gt;right =<span style="color: #000000;"> node4;    
+    node5</span>-&gt;left =<span style="color: #000000;"> node6;
+         
+    inorderTraversal(root);
+    postorderTraversal(root);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

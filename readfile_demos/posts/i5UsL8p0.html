@@ -1,0 +1,71 @@
+<p>Ⅰ、有时不得不用到&ldquo;构造函数初始值列表&rdquo;，原因是有些编译器不支持类内初始值，这样做可以避免在函数体内初始化。</p>
+<p>需要注意的是：被初始化列表忽略的数据成员将被<strong>默认初始化（结果取决于位置，可能产生可怕后果）</strong>。下面是构造器的 N 种情况：</p>
+<ol>
+<li>程序员直接忽略构造器 --&gt; 产生默认合成的构造函数 --&gt; 成员被默认初始化 --&gt; 不确定的结果。</li>
+<li>给数据成员提供初始值（Java 中所谓的属性初始化），不写构造函数 --&gt; 默认合成的构造函数使用提供的初始值初始化对应的成员 --&gt; 被忽略的成员被默认初始化。</li>
+<li>不使用类内初始值，而采用构造函数初始值列表 --&gt; 被忽略的成员被默认初始化。、</li>
+<li>&middot;&middot;&middot;&middot;&middot;</li>
+</ol>
+<p>记一下比较好的实践：提供类内初始值 + 显示地初始化没有类内初始值的每个成员。</p>
+<p>总结起来就是：<span style="background-color: #ffff99; color: #ff0000;">确保每个成员在创建后都有一个确定的值，但是又不要重复初始化（重复初始化：类内初始值与构造函数赋值相同）。</span></p>
+<p>&nbsp;</p>
+<p>Ⅱ、拷贝、赋值、析构也是有合成版本的！</p>
+<p>如果没写的话，编译器都会替我们做，但是某些情形我们不能依赖合成的版本：</p>
+<p>那就是<strong> - 管 - 理 - 动 - &nbsp;态 - 内 - 存</strong> 的类！！！（ 包含 string 和 vector 的类除外）</p>
+<p>方法论总结：</p>
+<ol>
+<li>通常情况下都<span style="background-color: #ffff99; color: #ff0000;"><strong>不需要手动</strong></span>去写。</li>
+<li>在合适的情况下，<span style="background-color: #ffff99; color: #ff0000;"><strong>尽可能用 string 和 vector</strong> </span>来动态分配内存！</li>
+</ol>
+<p>&nbsp;</p>
+<p>Ⅲ、友元函数需要在类外部再专门进行一次声明。举例：</p>
+<p><span style="text-decoration: underline;"><strong>class.h</strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">#ifndef CLASS_H_INCLUDED
+</span><span style="color: #0000ff;">#define</span> CLASS_H_INCLUDED
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Person {
+friend </span><span style="color: #0000ff;">int</span> getNo(<span style="color: #0000ff;">const</span> Person&amp;<span style="color: #000000;">);
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+        </span><span style="color: #0000ff;">int</span> no = <span style="color: #800080;">48</span><span style="color: #000000;">;
+};
+
+</span><strong><span style="color: #0000ff;">int</span> getNo(<span style="color: #0000ff;">const</span> Person&amp;); <span style="color: #008000;">//</span><span style="color: #008000;"> necessary</span></strong>
+
+<span style="color: #0000ff;">#endif</span></pre>
+</div>
+<p><span style="text-decoration: underline;"><strong>class.cpp</strong></span></p>
+<div class="cnblogs_code">
+<pre>#include <span style="color: #800000;">"</span><span style="color: #800000;">class.h</span><span style="color: #800000;">"</span>
+
+<span style="color: #0000ff;">int</span> getNo(<span style="color: #0000ff;">const</span> Person&amp;<span style="color: #000000;"> x) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x.no;
+}</span></pre>
+</div>
+<p><span style="text-decoration: underline;"><strong>main.cpp</strong></span></p>
+<div class="cnblogs_code">
+<pre>#include <span style="color: #800000;">"</span><span style="color: #800000;">class.h</span><span style="color: #800000;">"</span><span style="color: #000000;">
+#include </span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Person p;
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, getNo(p));
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>运行结果：</p>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:~/cprg# g++ -std=c++<span style="color: #800080;">11</span> main.<span style="color: #0000ff;">cpp</span> class.<span style="color: #0000ff;">cpp</span><span style="color: #000000;"> 
+root@iZwz9f8i2ttdoht64eezprZ:</span>~/cprg# ./<span style="color: #000000;">a.out 
+</span><span style="color: #800080;">48</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>相关阅读：</p>
+<ul>
+<li><a href="http://www.yiibai.com/cplusplus/cpp-linux-gnu-compiler-collection.html" target="_blank">C ++ 分步编译</a></li>
+<li><a href="http://blog.csdn.net/liuwei271551048/article/details/23599471" target="_blank">C ++ 多文件组织</a></li>
+<li>
+<p class="QuestionHeader-title"><a href="https://www.zhihu.com/question/19832401" target="_blank">C++ 头文件和其实现文件 cpp 之间有什么关系？</a></p>
+</li>
+</ul>

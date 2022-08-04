@@ -1,0 +1,119 @@
+<p>// 实验存档&nbsp;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201904/1042431-20190406194513032-1383500321.png" alt="" /></p>
+<p>ServiceForTesting.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> ex3;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ServiceForTestingImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ServiceForTesting {
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 手机配件销售佣金结算函数
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> headphones 耳机
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> shells 外壳
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> protectors 保护膜
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 佣金
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">float</span> getCommission(<span style="color: #0000ff;">int</span> headphones, <span style="color: #0000ff;">int</span> shells, <span style="color: #0000ff;">int</span><span style="color: #000000;"> protectors) {
+        </span><span style="color: #0000ff;">float</span><span style="color: #000000;"> salary;
+        </span><span style="color: #0000ff;">float</span><span style="color: #000000;"> total;
+        </span><span style="color: #0000ff;">if</span> (headphones &lt;= 0 || shells &lt; 0 || protectors &lt; 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span> (<span style="color: #0000ff;">float</span>) -1<span style="color: #000000;">;
+        }
+        total </span>= headphones * 80 + shells * 10 + protectors * 8<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (total &lt; 1000<span style="color: #000000;">) {
+            salary </span>= total * (<span style="color: #0000ff;">float</span>) 0.1<span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (total &lt; 1800<span style="color: #000000;">){
+            salary </span>= 1000 * (<span style="color: #0000ff;">float</span>) 0.1 + (total - 1000) * (<span style="color: #0000ff;">float</span>) 0.15<span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            salary </span>= 1000 * (<span style="color: #0000ff;">float</span>) 0.1 + 800 * (<span style="color: #0000ff;">float</span>) 0.15 + (total - 1800) * (<span style="color: #0000ff;">float</span>) 0.2<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> salary;
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>Test.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> ex3;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span> org.junit.Assert.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> WhiteBoxUnitTestCases {
+
+    </span><span style="color: #0000ff;">private</span> ServiceForTesting service = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ServiceForTestingImpl();
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> statementCoverage() {
+        decisionCoverageOrBranchCoverage();
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> decisionCoverageOrBranchCoverage() {
+        </span><span style="color: #0000ff;">float</span> output1 = service.getCommission(0, 1, 1); <span style="color: #008000;">//</span><span style="color: #008000;"> 数量不合法</span>
+        <span style="color: #0000ff;">float</span> output2 = service.getCommission(1, 2, 3); <span style="color: #008000;">//</span><span style="color: #008000;"> &lt; 1000</span>
+        <span style="color: #0000ff;">float</span> output3 = service.getCommission(10, 20, 20); <span style="color: #008000;">//</span><span style="color: #008000;"> &lt; 1800</span>
+        <span style="color: #0000ff;">float</span> output4 = service.getCommission(20, 40, 40); <span style="color: #008000;">//</span><span style="color: #008000;"> &gt;= 1800</span>
+        assertEquals(-1, output1, 0.01<span style="color: #000000;">);
+        assertEquals(</span>12.4, output2, 0.01); <span style="color: #008000;">//</span><span style="color: #008000;"> actual：12.400001</span>
+        assertEquals(124.0, output3, 0.01<span style="color: #000000;">);
+        assertEquals(</span>324.0, output4, 0.01<span style="color: #000000;">);
+    }
+
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> conditionCoverage() {
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+          确保每个判定中的每个条件都获得可能的取值，
+          即每个条件至少有一次真值、有一次假值。
+        </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+        decisionConditionCoverage();
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> decisionConditionCoverage() { <span style="color: #008000;">//</span><span style="color: #008000;"> Decision/Condition Coverage</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">
+          Decision/Condition Coverage
+          保证每个Decision取一次真假，并且每个Condition也取一次真和假
+         </span><span style="color: #008000;">*/</span>
+
+        <span style="color: #008000;">/*</span><span style="color: #008000;">
+         条件（共5个）：①headphones &lt;= 0 ②shells &lt; 0
+         ③protectors &lt; 0 ④total &lt; 1000 ⑤total &lt; 1800
+         取值1：1 （后续判定不会执行）
+         取值2：0 1 （后续判定不会执行）
+         取值3：0 0 1（后续判定不会执行）
+         取值4：0 0 0 1（最后一个判定不会执行）
+         取值5：0 0 0 0 1
+         取值6：0 0 0 0 0
+         </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+        assertEquals(</span>-1, service.getCommission(-1, 1, 1), 0.01<span style="color: #000000;">);
+        assertEquals(</span>-1, service.getCommission(1, -1, 1), 0.01<span style="color: #000000;">);
+        assertEquals(</span>-1, service.getCommission(1, 1, -1), 0.01<span style="color: #000000;">);
+        assertEquals(</span>81.8, service.getCommission(10, 1, 1), 0.01); <span style="color: #008000;">//</span><span style="color: #008000;"> total=818.0</span>
+        assertEquals(192.7, service.getCommission(20, 1, 1), 0.01); <span style="color: #008000;">//</span><span style="color: #008000;"> total=1618.0</span>
+        assertEquals(343.6, service.getCommission(30, 1, 1), 0.01); <span style="color: #008000;">//</span><span style="color: #008000;"> total=2418.0</span>
+<span style="color: #000000;">    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> multipleConditionCoverage() { <span style="color: #008000;">//</span><span style="color: #008000;"> Branch Condition Combination Coverage
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 略。由 0 0 0 0 0 列举到 1 1 1 1 1 共 2^5 组测试用例</span>
+<span style="color: #000000;">    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> MC_DC() { <span style="color: #008000;">//</span><span style="color: #008000;"> Modified Condition/Decision Coverage
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> multipleConditionCoverage的子集
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 核心意思是每个条件都要独立影响判定结果。
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 对于一般企业来说，建议用MC/DC作为统一的覆盖标准。</span>
+<span style="color: #000000;">        decisionConditionCoverage();
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> pathCoverage() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 覆盖从开始到结束的所有路径</span>
+<span style="color: #000000;">        decisionConditionCoverage();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

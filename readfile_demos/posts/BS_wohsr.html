@@ -1,0 +1,57 @@
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">6.49</span></p>
+<p>候选函数：与所调用的函数的名字相同的函数的集合。</p>
+<p>可行函数：给候选函数加上参数数量、参数类型的约束所得到的函数的集合。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.50</span></p>
+<p>a 3、4可行，二义匹配</p>
+<p>b 2、4可行，2是最佳匹配</p>
+<p>c 3、4可行，3是最佳匹配</p>
+<p>d 3、4可行，4是最佳匹配</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.51</span></p>
+<p>测试代码：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> f()
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">f1</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+}
+</span><span style="color: #0000ff;">void</span> f(<span style="color: #0000ff;">int</span><span style="color: #000000;">)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">f2</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+}
+</span><span style="color: #0000ff;">void</span> f(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">f3</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+}
+</span><span style="color: #0000ff;">void</span> f(<span style="color: #0000ff;">double</span>, <span style="color: #0000ff;">double</span> = <span style="color: #800080;">3.14</span><span style="color: #000000;">)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">f4</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> f(2.56, 42);  error: call of overloaded 'f(double, int)' is ambiguous</span>
+    f(<span style="color: #800080;">42</span><span style="color: #000000;">);
+    f(</span><span style="color: #800080;">42</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    f(</span><span style="color: #800080;">2.56</span>, <span style="color: #800080;">3.14</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>输出结果：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ a
+f2
+f3
+f4</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【实参类型转换】</span></p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">6.52</span></p>
+<p>a 3</p>
+<p>b 4</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.53</span></p>
+<p>c 是不合法的，详细参考p208。</p>

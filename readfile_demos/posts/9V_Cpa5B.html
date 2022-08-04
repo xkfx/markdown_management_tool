@@ -1,0 +1,162 @@
+<p>imooc视频学习笔记 ----&gt; URL：<a href="http://www.imooc.com/learn/154" target="_blank">http://www.imooc.com/learn/154</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170626192521571-2086192073.png" alt="" /></p>
+<h3>ListServlet.java</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.servlet;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.DriverManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.service.ListService;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 列表页面初始化控制
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+@SuppressWarnings(</span>"serial"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ListServlet <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置编码</span>
+        req.setCharacterEncoding("UTF-8"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 接受页面的值</span>
+        String command = req.getParameter("command"<span style="color: #000000;">);
+        String description </span>= req.getParameter("description"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 向页面传值</span>
+        req.setAttribute("command"<span style="color: #000000;">, command);
+        req.setAttribute(</span>"description"<span style="color: #000000;">, description);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 查询消息列表并传给页面</span>
+        ListService listService = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ListService();
+        req.setAttribute(</span>"messageList"<span style="color: #000000;">, listService.queryMessageList(command, description));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 页面跳转</span>
+        req.getRequestDispatcher("/WEB-INF/jsp/back/list.jsp"<span style="color: #000000;">).forward(req, resp);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated method stub</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.doGet(req, resp);
+    }
+}</span></pre>
+</div>
+<h3>MessageDao.java</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.DriverManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.PreparedStatement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.bean.Message;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MessageDao {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 数据库驱动</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_DRIVER = "org.gjt.mm.mysql.Driver"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 数据库地址</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String DB_URL = "jdbc:mysql://localhost:3306/miro_message"<span style="color: #000000;">;
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 用户名与密码</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String USER = "root"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String PASS = "pass"<span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> Connection conn = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 加载数据库驱动</span>
+    <span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Class.forName(JDBC_DRIVER);
+            conn </span>=<span style="color: #000000;"> DriverManager.getConnection(DB_URL, USER, PASS);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClassNotFoundException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取消息列表</span>
+    <span style="color: #0000ff;">public</span> List&lt;Message&gt;<span style="color: #000000;"> queryMessageList(String command, String description) {
+        List</span>&lt;Message&gt; messageList = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> SQL拼接</span>
+        StringBuilder sqlBuilder = <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuilder();
+        sqlBuilder.append(</span>"select ID, COMMAND, DESCRIPTION, CONTENT from MESSAGE where 1=1"<span style="color: #000000;">);
+        
+        List</span>&lt;String&gt; paramList = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断指令是否为空</span>
+        <span style="color: #0000ff;">if</span> (command != <span style="color: #0000ff;">null</span> &amp;&amp; !""<span style="color: #000000;">.equals(command.trim())) {
+            sqlBuilder.append(</span>" and COMMAND=?"<span style="color: #000000;">);
+            paramList.add(command);
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断描述是否为空</span>
+        <span style="color: #0000ff;">if</span> (description != <span style="color: #0000ff;">null</span> &amp;&amp; !""<span style="color: #000000;">.equals(description.trim())) {
+            sqlBuilder.append(</span>" and DESCRIPTION like '%' ? '%'"<span style="color: #000000;">);
+            paramList.add(description);
+        }
+        
+        String sql </span>=<span style="color: #000000;"> sqlBuilder.toString();
+        
+        PreparedStatement prep </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ResultSet result </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            prep </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置SQL参数</span>
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != paramList.size(); ++<span style="color: #000000;">i) {
+                prep.setString(i</span>+1<span style="color: #000000;">, paramList.get(i)); 
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行查找操作</span>
+            result =<span style="color: #000000;"> prep.executeQuery();
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (result.next()) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 把查找结果放进List里</span>
+                Message message = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Message();
+                messageList.add(message);
+                
+                message.setId(result.getString(</span>"ID"<span style="color: #000000;">));
+                message.setCommand(result.getString(</span>"COMMAND"<span style="color: #000000;">));
+                message.setDescription(result.getString(</span>"DESCRIPTION"<span style="color: #000000;">));
+                message.setContent(result.getString(</span>"CONTENT"<span style="color: #000000;">));
+            }
+
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果出现异常就返回一个空的List</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> messageList;
+    }
+}</span></pre>
+</div>
+<h3>ListService.java</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.service;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.bean.Message;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.dao.MessageDao;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 
+ * 列表相关的业务功能
+ *
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ListService {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 获取消息列表
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> List&lt;Message&gt;<span style="color: #000000;"> queryMessageList(String command, String description) {
+        MessageDao dao </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> MessageDao();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dao.queryMessageList(command, description);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

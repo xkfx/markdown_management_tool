@@ -1,0 +1,112 @@
+<p>某次操作系统实验存档。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201711/1042431-20171124151549906-566991837.png" alt="" width="712" height="83" /></p>
+<p>哲学家.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.entity.philosophyeating;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.method.Semaphore;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Date;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Philosophy <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 统计哲学家数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 哲学家的 id
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Semaphore leftChopsticks;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Semaphore rightChopsticks;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 记住睡眠时间
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Long sleepTime;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Philosophy(Semaphore leftChopsticks, Semaphore rightChopsticks) {
+        id </span>= total++<span style="color: #000000;">;
+        sleepTime </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date().getTime();
+        </span><span style="color: #0000ff;">this</span>.leftChopsticks =<span style="color: #000000;"> leftChopsticks;
+        </span><span style="color: #0000ff;">this</span>.rightChopsticks =<span style="color: #000000;"> rightChopsticks;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span>(<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span>(id % 2 == 0<span style="color: #000000;">) {
+                leftChopsticks.p();
+                rightChopsticks.p();
+
+                System.out.println(</span>"number " + id + " philosophy is eating, yummy..." + "睡眠 " + endSleep() + "秒。"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    Thread.sleep(</span>1000<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                beginSleep();
+
+                rightChopsticks.v();
+                leftChopsticks.v();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                rightChopsticks.p();
+                leftChopsticks.p();
+
+                System.out.println(</span>"number " + id + " philosophy is eating, yummy..." + "睡眠 " + endSleep() + "秒。"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    Thread.sleep(</span>1000<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                beginSleep();
+
+                leftChopsticks.v();
+                rightChopsticks.v();
+            }
+        }
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 开始睡眠
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> beginSleep() {
+        sleepTime </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date().getTime();
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 结束睡眠，返回睡眠时间，单位是秒。
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Long endSleep() {
+        </span><span style="color: #0000ff;">return</span> (<span style="color: #0000ff;">new</span> Date().getTime() - sleepTime)/1000<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>测试.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> operating.test;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.entity.philosophyeating.Philosophy;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> operating.method.Semaphore;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> PhilosophyTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建六支筷子</span>
+        Semaphore[] chopsticks = <span style="color: #0000ff;">new</span> Semaphore[6<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 6; ++<span style="color: #000000;">i) {
+            chopsticks[i] </span>= <span style="color: #0000ff;">new</span> Semaphore(1<span style="color: #000000;">);
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建六个哲学家</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 6; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (i == 5<span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> Philosophy(chopsticks[i], chopsticks[0<span style="color: #000000;">])).start();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span> Philosophy(chopsticks[i], chopsticks[i+1<span style="color: #000000;">])).start();
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p><a href="http://www.cnblogs.com/xkxf/p/7866956.html#x2" target="_blank">Semaphore.java</a></p>

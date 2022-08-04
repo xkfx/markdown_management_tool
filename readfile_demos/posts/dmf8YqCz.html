@@ -1,0 +1,148 @@
+<h2>题</h2>
+<p>二叉树两个结点之间的最短路径长度。完整题目见参考<sup>[1]</sup>。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+
+<span style="color: #0000ff;">#define</span> MAXN 20
+
+<span style="color: #0000ff;">int</span> pre[MAXN]; <span style="color: #008000;">//</span><span style="color: #008000;"> 存每个结点的父结点</span>
+<span style="color: #0000ff;">int</span> floor[MAXN]; <span style="color: #008000;">//</span><span style="color: #008000;"> 存每个结点所在的层数，根结点在第1层</span>
+<span style="color: #0000ff;">int</span> d[MAXN][MAXN]; <span style="color: #008000;">//</span><span style="color: #008000;"> 保存两个结点之间的最短路径长度</span>
+
+<span style="color: #0000ff;">int</span> getTheNearestCommonFather(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span> b); <span style="color: #008000;">//</span><span style="color: #008000;"> 找最近的公共祖先结点的id </span>
+
+<span style="color: #0000ff;">int</span> getAns(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b)
+{
+    </span><span style="color: #0000ff;">if</span> (d[a][b]) <span style="color: #0000ff;">return</span><span style="color: #000000;"> d[a][b];
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 若未计就计算，并保存计算过程中的结果</span>
+    
+    <span style="color: #0000ff;">int</span> f_id =<span style="color: #000000;"> getTheNearestCommonFather(a, b);
+     
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">d[a][f_id]) {  
+        d[a][f_id] </span>= d[f_id][a] = floor[a] -<span style="color: #000000;"> floor[f_id];        
+    }
+    
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">d[f_id][b]) {
+        d[f_id][b] </span>= d[b][f_id] = floor[b] -<span style="color: #000000;"> floor[f_id];
+    }
+    
+    d[a][b] </span>= d[b][a] = d[a][f_id] +<span style="color: #000000;"> d[f_id][b];
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> d[a][b];       
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> T, n, m; <span style="color: #008000;">//</span><span style="color: #008000;"> T数据组数 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> n某组数据的结点数量
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> m某组数据的查询次数    </span>
+<span style="color: #000000;">    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">T);
+    
+    </span><span style="color: #0000ff;">int</span> left, right; <span style="color: #008000;">//</span><span style="color: #008000;"> 临时存储某结点的左右子结点 </span>
+    <span style="color: #0000ff;">int</span> a, b; <span style="color: #008000;">//</span><span style="color: #008000;"> 临时存储待查询的两个结点</span>
+    <span style="color: #0000ff;">while</span> (T--<span style="color: #000000;">) { 
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;n, &amp;<span style="color: #000000;">m);
+        
+        memset(pre, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(pre));        
+        memset(floor, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(floor));
+        memset(d, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(d));
+        
+        pre[</span><span style="color: #800080;">1</span>] = <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 根结点的祖先还是1 该初始化似乎多余 </span>
+        floor[<span style="color: #800080;">1</span>] = <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 根结点在第1层</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= n ; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;left, &amp;<span style="color: #000000;">right);    
+            </span><span style="color: #0000ff;">if</span> (left != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                pre[left] </span>=<span style="color: #000000;"> i;
+                floor[left] </span>= floor[i] + <span style="color: #800080;">1</span><span style="color: #000000;">;        
+            }
+            </span><span style="color: #0000ff;">if</span> (right != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                pre[right] </span>=<span style="color: #000000;"> i;    
+                floor[right] </span>= floor[i] + <span style="color: #800080;">1</span><span style="color: #000000;">;        
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果数据给出顺序不规则，这里的floor初始化会有逻辑错误，需要特别处理。 </span>
+<span style="color: #000000;">            }            
+        }
+
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != m; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;a, &amp;<span style="color: #000000;">b);
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">ans: %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, getAns(a, b));
+        }        
+    } 
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 找最近的公共祖先结点的id </span>
+<span style="color: #0000ff;">int</span> getTheNearestCommonFather(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b)
+{    
+    </span><span style="color: #0000ff;">if</span> (a == <span style="color: #800080;">1</span> || b == <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">int</span> d; <span style="color: #008000;">//</span><span style="color: #008000;"> 保存两结点的层数差 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 两结点不在同一层，转化为同一层 </span>
+    <span style="color: #0000ff;">if</span> (floor[a] &gt;<span style="color: #000000;"> floor[b]) {
+        d </span>= floor[a] -<span style="color: #000000;"> floor[b];
+        </span><span style="color: #0000ff;">while</span> (d--) a =<span style="color: #000000;"> pre[a];
+    } 
+    
+    </span><span style="color: #0000ff;">if</span> (floor[b] &gt;<span style="color: #000000;"> floor[a]) {
+        d </span>= floor[b] -<span style="color: #000000;"> floor[a];
+        </span><span style="color: #0000ff;">while</span> (d--) b =<span style="color: #000000;"> pre[b];
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 同一层的结点找最近的公共祖先结点id</span>
+    <span style="color: #0000ff;">while</span> (a !=<span style="color: #000000;"> b) {
+        a </span>=<span style="color: #000000;"> pre[a];
+        b </span>=<span style="color: #000000;"> pre[b];
+    } 
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> a;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例题6-6 小球下落 - 直接模拟最后一个小球下落</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> D, I; <span style="color: #008000;">//</span><span style="color: #008000;"> D叶子深度 I小球个数</span>
+    
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> k;
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d%d</span><span style="color: #800000;">"</span>, &amp;D, &amp;I) == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+        k </span>= <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 依然用 k 来标识小球的当前位置 </span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt; D; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (I % <span style="color: #800080;">2</span> != <span style="color: #800080;">0</span>) { <span style="color: #008000;">//</span><span style="color: #008000;"> 奇数球往左走 </span>
+                k = k * <span style="color: #800080;">2</span><span style="color: #000000;">; 
+                I </span>= (I + <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 相对左树，是第几个球 </span>
+            } <span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> 偶数球往右走 </span>
+                k = k * <span style="color: #800080;">2</span> + <span style="color: #800080;">1</span><span style="color: #000000;">; 
+                I </span>= I / <span style="color: #800080;">2</span><span style="color: #000000;">; 
+            }            
+        }
+
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, k);
+    }   
+     
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.baidu.com/link?url=SKclWch_-we4-f8N8etkSQx4WBQOJ1D79EW_QfqzLOi1igIH-6LF8EVNLdzSkV0TWvTA6CXBbJhn4Y7gVFktoP7AkNajILn_f7ZNmFF5tia&amp;wd=&amp;eqid=a1551ff200007ca3000000055e79cd57" target="_blank" data-click="{
+			'F':'778717EA',
+			'F1':'9D73E1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1585040728',
+						'y':'17C7F73B'
+												}">Problem B 二叉树(2019计算机)_算法,二叉树_Closure-CSDN博客</a></p>
+<p>[2]&nbsp;<a href="http://www.baidu.com/link?url=q8xstsMaXRlJtNT9pOusfCzyaxpcia5drKIJv7qAyEfnnpE6iqkN90En0xSsaHhojElB3l3brHJ8McAywVrLG6mDLklHAGOuKVGRlNrvAnK" target="_blank" data-click="{
+			'F':'778717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1585041043',
+						'y':'ED9F5B4F'
+												}">并查集详解(超级简单有趣~~就学会了)_短发-CSDN博客</a></p>

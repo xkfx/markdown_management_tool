@@ -1,0 +1,93 @@
+<h3>【简单的微信公众平台开发】</h3>
+<p>或许是最容易的方式：</p>
+<p><strong>1-</strong> 做好<strong>能够适应手机屏幕的 H5 网页</strong>，放在自家的服务器上（用户、支付什么的完全和微信分离</p>
+<p><strong>2-</strong> 把网址直接填入 <strong>自定义菜单</strong> -&nbsp;<span class="lbl_content"><strong>跳转网页</strong>&nbsp;</span></p>
+<p><span class="lbl_content"><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170714225425822-1050856851.png" alt="" width="466" height="157" /></span></p>
+<p><strong>3-</strong> 没认证的话可以把网址添加到<strong>自动回复</strong>中去，别人一样可以看到</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170714225716806-2047837412.png" alt="" width="527" height="191" /></p>
+<h3><span style="text-decoration: line-through;">【短信验证码的简单实现】错误 &darr; 。。明显的线程不安全</span></h3>
+<p>请求短信的 URL 为 webapp/reg.do?method=sendSMS</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.service;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.PrintWriter;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Random;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.annotation.WebServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.yuke.bean.User;
+
+@SuppressWarnings(</span>"serial"<span style="color: #000000;">)
+@WebServlet(</span>"/reg.do"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> DoRegisterService <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    
+    String code </span>= <span style="color: #0000ff;">null</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 保存验证码
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 生成随机字符串</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> String getRandomString(<span style="color: #0000ff;">int</span> length) { <span style="color: #008000;">//</span><span style="color: #008000;"> length 表示生成字符串的长度</span>
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789"<span style="color: #000000;">;   
+        Random random </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Random();   
+        StringBuffer sb </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuffer();   
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; length; i++<span style="color: #000000;">) {   
+            </span><span style="color: #0000ff;">int</span> number =<span style="color: #000000;"> random.nextInt(base.length());   
+            sb.append(base.charAt(number));   
+        }   
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sb.toString();   
+    }  
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        req.setCharacterEncoding(</span>"UTF-8"<span style="color: #000000;">);
+        resp.setCharacterEncoding(</span>"UTF-8"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 处理 AJAX 请求</span>
+        String txtMobile = req.getParameter("txtMobile"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (req.getParameter("method") != <span style="color: #0000ff;">null</span> 
+                &amp;&amp; req.getParameter("method").equals("sendSMS"<span style="color: #000000;">)) {
+            sendSMS(txtMobile, resp); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 生成随机验证码并发送到客户手机</span>
+            <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        String txtPassword </span>= req.getParameter("txtPassword"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">boolean</span> flag = (code != <span style="color: #0000ff;">null</span>) &amp;&amp;<span style="color: #000000;"> 
+                code.equals(req.getParameter(</span>"txtCode"<span style="color: #000000;">))
+                </span>&amp;&amp; txtMobile.equals(req.getParameter("txtMobile"<span style="color: #000000;">))
+                </span>&amp;&amp; txtPassword != <span style="color: #0000ff;">null</span> &amp;&amp; !""<span style="color: #000000;">.equals(txtPassword);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (flag) {
+            UserService userService </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> UserService();
+            User user </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> User();
+            user.setUsername(txtMobile);
+            user.setPassword(txtPassword);
+            flag </span>= userService.register(user); <span style="color: #008000;">//</span><span style="color: #008000;"> 判断用户是否已经注册</span>
+            <span style="color: #0000ff;">if</span> (flag) req.getSession().setAttribute("user", user); <span style="color: #008000;">//</span><span style="color: #008000;"> 维护用户信息</span>
+<span style="color: #000000;">        }
+        code </span>= <span style="color: #0000ff;">null</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 重置验证码
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回 JSON</span>
+        PrintWriter pw =<span style="color: #000000;"> resp.getWriter();
+        pw.println(</span>"{\"status\": " + (flag ? 1 : 0<span style="color: #000000;">)
+                </span>+ ", \"msg\": \"验证码错误或该账号已经注册\"" + ", \"url\": \"/wxapp/user\"}"<span style="color: #000000;">);
+        pw.close();
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> sendSMS(String txtMobile, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException {
+        code </span>= getRandomString(4); <span style="color: #008000;">//</span><span style="color: #008000;"> 生成随机验证码</span>
+       <strong> System.out.println(txtMobile); <span style="color: #008000;">//</span><span style="color: #008000;"> 发送验证码到客户手机</span></strong>
+        PrintWriter pw =<span style="color: #000000;"> resp.getWriter();
+        pw.println(</span>"{\"status\": " + 1
+                + ", \"msg\": \"手机验证码获取成功\"" + ", \"url\": \"/wxapp/user\"}"<span style="color: #000000;">);
+        pw.close();
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        doGet(req, resp);
+    }
+    
+}</span></pre>
+</div>
+<p>把&nbsp;System.out.println(txtMobile); 改成调用一个发短信的函数，把手机号，验证码作为参数传进去就 OK 了，例如 sendSMS("12223232", code);&nbsp;当然这个发短信的函数需要到提供该服务的平台下载，使用方法也很简单，就 Java 而言，一般会有如下步骤：</p>
+<p>添加必要的 JAR 包 --&gt; 添加一些加密解密（或者其它）的类 --&gt; 把示例代码 COPY 进来 --&gt; 修改成需要的函数</p>
+<p>&nbsp;</p>

@@ -1,0 +1,36 @@
+<p>参考文档：<a href="https://github.com/FasterXML/jackson-databind" target="_blank">https://github.com/FasterXML/jackson-databind</a></p>
+<h2>关于ObjectMapper的线程安全</h2>
+<p>截自官方文档：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181213180406390-1995054411.png" alt="" width="845" height="112" /></p>
+<h2>组合多个对象的属性构成JSON（以及添加自定义属性）</h2>
+<p>Code：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.fasterxml.jackson.core.JsonProcessingException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.fasterxml.jackson.databind.ObjectMapper;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.fasterxml.jackson.databind.node.ObjectNode;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestJackson {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ObjectMapper MAPPER = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ObjectMapper();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Foo foo </span>= <span style="color: #0000ff;">new</span> Foo("value1", "value2"<span style="color: #000000;">);
+        Bar bar </span>= <span style="color: #0000ff;">new</span> Bar("value3", "value4"<span style="color: #000000;">);
+        ObjectNode root </span>=<span style="color: #000000;"> MAPPER.valueToTree(foo);
+        ObjectNode node </span>=<span style="color: #000000;"> MAPPER.valueToTree(bar);
+        root.setAll(node);
+        root.put(</span>"extraFiled", "value5"<span style="color: #000000;">);
+        String jsonString </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            jsonString </span>=<span style="color: #000000;"> MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jsonString);
+    }
+}</span></pre>
+</div>
+<p>Output：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181213182320137-1688028152.png" alt="" width="271" height="168" /></p>
+<p><span style="color: #ff0000;">PS. 单词打错：filed =&gt; field</span></p>
+<p>&nbsp;</p>

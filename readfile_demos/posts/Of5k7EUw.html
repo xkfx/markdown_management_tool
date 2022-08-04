@@ -1,0 +1,100 @@
+<p>原文链接：<a href="https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html" target="_blank">https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html</a></p>
+<h2>安装</h2>
+<h2>创建一个项目</h2>
+<p>我采用和原文不同的办法，我通过<a href="https://start.spring.io/" target="_blank">https://start.spring.io/</a>创建了一个基础项目，解压后，命令行转到有pom.xml的目录下。删除多余的文件，例如mvnw等。项目结构如下：</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220125173856293-431936140.png" alt="" width="337" height="262" loading="lazy" /></p>
+<p>&nbsp;src/main/java目录包含项目源代码，src/test/java目录包含测试源代码，而POM.xml文件是项目的项目对象模型（project Object Model，简称POM）。</p>
+<h3>项目对象模型（the POM）</h3>
+<p>pom.xml文件是Maven中项目配置的核心。它是一个单独的配置文件，包含以您想要的方式构建项目所需的大部分信息。POM非常庞大，其复杂性可能令人生畏，但要有效地使用它，并不需要理解所有的复杂性。本项目的POM为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;"> xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+    xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">parent</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-starter-parent<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.6.3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">relativePath</span><span style="color: #0000ff;">/&gt;</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> lookup parent from repository </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">parent</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.example<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>demo<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>0.0.1-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>demo<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>Demo project for Spring Boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">java.version</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">java.version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-starter-web<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-starter-test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">build</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugins</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-maven-plugin<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugins</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">build</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3>构建项目（Build the Project）</h3>
+<div class="cnblogs_code">
+<pre>mvn package</pre>
+</div>
+<p>命令行将打印出各种操作，并以以下命令结束:</p>
+<div class="cnblogs_code">
+<pre>[INFO] ------------------------------------------------------------------------<span style="color: #000000;">
+[INFO] BUILD SUCCESS
+[INFO] </span>------------------------------------------------------------------------<span style="color: #000000;">
+[INFO] Total </span><span style="color: #0000ff;">time</span>:  <span style="color: #800080;">23.963</span><span style="color: #000000;"> s
+[INFO] Finished at: </span><span style="color: #800080;">2022</span>-<span style="color: #800080;">01</span>-25T17:<span style="color: #800080;">55</span>:<span style="color: #800080;">32</span>+<span style="color: #800080;">08</span>:<span style="color: #800080;">00</span><span style="color: #000000;">
+[INFO] </span>------------------------------------------------------------------------</pre>
+</div>
+<p>与执行的第一个命令（archetype:generate）不同，第二个命令只是一个单词&mdash;&mdash;<em>package</em>。这不是一个目标（<em>goal</em>），而是一个阶段（<em>phase</em>）。阶段是构建生命周期（<a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">build lifecycle</a>）中的一个步骤，它是阶段的有序序列。当给定一个阶段时，Maven将执行序列中的每个阶段，直到并包括所定义的阶段。例如，如果你执行编译（<em>compile</em>）阶段，实际执行的阶段是：①validate；②generate-sources；③process-sources；④generate-resources；⑤process-resources；⑥compile</p>
+<p>你可以用下面的命令测试新编译和打包的JAR：</p>
+<div class="cnblogs_code">
+<pre>java -jar target/demo-<span style="color: #800080;">0.0</span>.<span style="color: #800080;">1</span>-SNAPSHOT.jar</pre>
+</div>
+<h2>运行Maven工具</h2>
+<h3>Maven阶段（Maven Phases）</h3>
+<p>虽然这不是一个全面的列表，但这些是最常见的默认（<em>default</em>）执行的生命周期阶段。</p>
+<ul>
+<li>验证（<strong>validate</strong>）：验证项目是正确的，所有必要的信息都是可用的</li>
+<li><strong>compile</strong>：编译项目的源代码（PS. 当我们编译项目时，我们将看到Maven为我们下载相关依赖项）</li>
+<li>测试（<strong>test</strong>）：使用合适的单元测试框架测试编译后的源代码。这些测试不应该要求打包或部署代码</li>
+<li><span style="text-decoration: underline;"><strong>package</strong>：将编译后的代码以其可分发的格式打包，比如JAR。</span></li>
+<li>集成测试（<strong>integration-test</strong>）：在必要时将包处理并部署到可以运行集成测试的环境中</li>
+<li>验证（<strong>verify</strong>）：运行任何检查，以验证包是有效的，并满足质量标准</li>
+<li>安装（<strong>install</strong>）：将包安装到本地存储库中，作为本地其他项目的依赖项使用</li>
+<li>部署（<strong>deploy</strong>）：在集成或发布环境中完成，将最终的包复制到远程存储库，以便与其他开发人员和项目共享。</li>
+</ul>
+<p>除了上面的默认列表之外，还有另外两个Maven生命周期需要注意。他们是</p>
+<ul>
+<li>清理（clean）：清理之前构建（builds）创建的构件（artifacts）</li>
+<li>Site：为该项目生成站点文档</li>
+</ul>
+<p>阶段（phases）实际上映射到潜在的目标（goals）。每个阶段执行的具体目标取决于项目的打包类型（packaging type）。例如，如果项目类型是JAR，则<em>package</em>执行<em>jar:jar</em>，如果项目类型是-你猜对了- WAR，则执行<em>war:war</em>。</p>
+<p>值得注意的一件有趣的事情是，阶段（phases&nbsp;）和目标（goals&nbsp;）可以按顺序执行。</p>
+<div class="cnblogs_code">
+<pre>mvn clean dependency:copy-dependencies package</pre>
+</div>
+<p>这个命令将清除项目，复制依赖项，并打包项目（当然，执行到打包的所有阶段）。</p>
+<h3 id="generating-the-site">生成网站（Generating the Site）</h3>
+<div class="cnblogs_code">
+<pre>mvn site</pre>
+</div>
+<p>此阶段基于项目POM的信息生成一个站点。您可以查看target/site下生成的文档。</p>
+<h2>结论</h2>
+<p>我们希望这篇简短的概述已经激起了您对Maven的多功能性的兴趣。请注意，这是一个删节了的快速入门指南。现在，您已经准备好了解关于刚才执行的操作的更全面的细节了。查看<a href="https://maven.apache.org/guides/getting-started/index.html" target="_blank">Maven入门指南</a>。</p>

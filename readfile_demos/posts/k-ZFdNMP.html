@@ -1,0 +1,322 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">Configuration in logback</a>
+<ul>
+<li><a href="#anchor1">Automatically configuring logback</a></li>
+<li><a href="#anchor2">Automatic configuration with&nbsp;logback-test.xml&nbsp;or&nbsp;logback.xml</a>
+<ul>
+<li><a href="#anchor3">Automatic printing of status messages in case of warning or errors</a></li>
+</ul>
+</li>
+<li><a href="#anchor4">Automatically reloading configuration file upon modification</a>
+<ul>
+<li><a href="#anchor5">Enabling packaging data in stack traces</a></li>
+</ul>
+</li>
+<li><a href="#anchor6">Viewing status messages</a></li>
+<li><a href="#anchor7">Listening to status messages</a></li>
+<li><a href="#anchor8">"logback.statusListenerClass" system property</a></li>
+</ul>
+</li>
+<li><a href="#anchor9">Stopping logback-classic</a></li>
+<li><a href="#anchor10">Configuration file syntax</a></li>
+</ol></ul>
+</div>
+<p>（粗糙选译。。）</p>
+<p>Joran是logback所依赖的配置框架。</p>
+<h2><a name="anchor0"></a>Configuration in logback</h2>
+<p>观察表明，在一个应用程序中，日志代码大概占4%左右。</p>
+<p>所以即便是一个几千行。。几万行的程序也有成百上千的日志语句，鉴于它们的数量，我们需要工具来管理这些日志语句。logback既可以通过编程方式配置，也可以通过脚本配置（XML或Groovy&nbsp;格式）。顺便说一下，现有的log4j用户可以使用<a href="http://logback.qos.ch/translator/">PropertiesTranslator</a>&nbsp;应用程序将<em>log4j.properties</em>转换为<em>logback.xml</em>。</p>
+<p>让我们从讨论logback尝试配置自身的初始化步骤开始：</p>
+<ol>
+<li>Logback尝试在classpath中查找一个名为logback-test.xml的文件。</li>
+<li>如果没找到，logback将尝试在classpath中检查有没有<em>logback.groovy</em></li>
+<li>如果还是没有找到，logback继续在classpath中找logback.xml</li>
+<li>如果依然没找到，则使用<a href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">service-provider loading facility</a>(JDK 1.6中引入的)通过查找类路径中的文件META-INF\services\ch.qos.logback.classic.spi.<em>Configurator</em>来解析<code><a href="https://logback.qos.ch/xref/ch/qos/logback/classic/spi/Configurator.html">com.qos.logback.classic.spi.Configurator</a>接口</code>的实现。它的内容应该指定所需Configurator实现的完全限定类名。</li>
+<li>如果以上方法都不成功，logback将使用<a href="https://logback.qos.ch/xref/ch/qos/logback/classic/BasicConfigurator.html"><code>BasicConfigurator</code></a>自动配置自己，这将导致日志输出定向到控制台。</li>
+</ol>
+<h3><a name="anchor1"></a>Automatically configuring logback</h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show('2880a4ab-739a-4022-8d59-f77f1da6c728')"><img id="code_img_closed_2880a4ab-739a-4022-8d59-f77f1da6c728" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_2880a4ab-739a-4022-8d59-f77f1da6c728" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('2880a4ab-739a-4022-8d59-f77f1da6c728',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_2880a4ab-739a-4022-8d59-f77f1da6c728" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.sample.logback<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>test-logback<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.0-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project.build.sourceEncoding</span><span style="color: #0000ff;">&gt;</span>UTF-8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project.build.sourceEncoding</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> -source 1.5 中不支持 try-with-resources</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">maven.compiler.source</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">maven.compiler.source</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">maven.compiler.target</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">maven.compiler.target</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/junit/junit </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.12<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.slf4j/slf4j-api </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.slf4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>slf4j-api<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.7.25<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/ch.qos.logback/logback-classic </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>ch.qos.logback<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>logback-classic<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/ch.qos.logback/logback-core </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>ch.qos.logback<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>logback-core<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">Failed to load class "org.slf4j.impl.StaticLoggerBinder".</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.slf4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>slf4j-simple<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.7.21<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">pom.xml</span></div>
+<p><code><a href="https://logback.qos.ch/xref/ch/qos/logback/classic/BasicConfigurator.html">BasicConfigurator</a>是logback默认的一个最小可用的配置。试了下文档里的例子程序，在main函数里跑，debug信息莫名奇妙输不出来（只输出info的），但在junit里跑却又可以。。</code></p>
+<h3><a name="anchor2"></a>Automatic configuration with&nbsp;logback-test.xml&nbsp;or&nbsp;logback.xml</h3>
+<p>和没有xml文件时的默认配置等价的最小可用xml配置：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.ConsoleAppender"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">root</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h4><a name="anchor3"></a>Automatic printing of status messages in case of warning or errors</h4>
+<p>启用&ldquo;观察logback内部状态模式&rdquo;（如果logback出现内部错误则不启用也会自动输出到控制台）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">        // assume SLF4J is bound to logback in the current environment
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        // print logback's internal status
+        StatusPrinter.print(lc);</span></pre>
+</div>
+<h4 class="doAnchor">Status data</h4>
+<p>启用&ldquo;观察logback内部状态模式&rdquo;通常对诊断logback问题大有帮助。因此，强烈建议将其视为第一求助办法。（一般情况都是推荐启用的。）xml启用&ldquo;观察logback内部状态模式&rdquo;：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration </span><span style="background-color: #ffff99;"><strong><span style="color: #ff0000;">debug</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span> </strong></span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.ConsoleAppender"</span><span style="color: #0000ff;">&gt;</span> 
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> encoders are  by default assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">root</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>等价写法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+  <span style="background-color: #ffff99;"><strong><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">statusListener </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="ch.qos.logback.core.status.OnConsoleStatusListener"</span> <span style="color: #0000ff;">/&gt;</span></strong></span><span style="color: #000000;">  
+
+  ... the rest of the configuration file  
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3><a name="anchor4"></a>Automatically reloading configuration file upon modification</h3>
+<p>30秒（默认单位是毫秒）扫描一次，如果文件改变就自动重新配置：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration </span><span style="color: #ff0000;">scan</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> scanPeriod</span><span style="color: #0000ff;">="30 seconds"</span> <span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> 
+  ...
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span> </pre>
+</div>
+<p>在编辑xml的时候很容易出错，所以感觉不是很好用。</p>
+<h4><a name="anchor5"></a>Enabling packaging data in stack traces</h4>
+<p>略</p>
+<h3><a name="anchor6"></a>Viewing status messages</h3>
+<p>通过网页来查看logback的内部状态信息。</p>
+<h3><a name="anchor7"></a>Listening to status messages</h3>
+<p>略</p>
+<h3><a name="anchor8"></a>"logback.statusListenerClass" system property</h3>
+<p>略</p>
+<h2><a name="anchor9"></a>Stopping logback-classic</h2>
+<p>略</p>
+<h2><a name="anchor10"></a>Configuration file syntax</h2>
+<p><strong><span style="background-color: #ffff99; color: #ff0000;">Example1- 关于logger、root、appender元素的一些基本知识</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration </span><span style="color: #ff0000;">debug</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">一个可选的元素，便于区分不同程序的输出</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">contextName</span><span style="color: #0000ff;">&gt;</span>myapp<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">contextName</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">配置appender元素：
+        1、name和class是必要的
+        2、一个appender可以包含零到多个layout元素
+        3、一个appender可以包含零到多个encoder元素
+        4、一个appender可以包含零到多个filter元素
+        5、除了这三个公共元素之外，&lt;appender&gt;元素可以包含与appender类的JavaBean属性相对应的任意数量的元素。
+        </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.ConsoleAppender"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="FILE"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.FileAppender"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>myApp.log<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%date %level [%thread] %logger{10} [%file:%line] %msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 配置logger元素：
+        1、name是必要的
+        2、level是可选的，没有就继承最近的，具有&ldquo;赋予等级&rdquo;的祖先的&ldquo;赋予等级&rdquo;。
+        TRACE, DEBUG, INFO, WARN, ERROR, ALL, OFF, INHERITED, NULL（填最后两个
+        等价于省略level，并且最后两个效果等价）
+        3、additivity是可选的，默认是true
+        4、一个logger可以包含零到多个appender-ref元素
+        </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">logger </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="org.sample.logback.Foo"</span><span style="color: #ff0000;"> level</span><span style="color: #0000ff;">="OFF"</span><span style="color: #ff0000;"> additivity</span><span style="color: #0000ff;">="true"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">logger </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="org.sample.logback.LogbackTest"</span><span style="color: #ff0000;"> level</span><span style="color: #0000ff;">="INFO"</span><span style="color: #ff0000;"> additivity</span><span style="color: #0000ff;">="false"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="FILE"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">logger</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 配置root元素：
+        1、它不支持除了level外的任何其它属性
+        2、appender-ref元素和普通logger一样
+        </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">root</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="color: #ff0000; background-color: #ffff99;">Example2- 变量定义初步</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration </span><span style="color: #ff0000;">debug</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+
+<strong>    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 方法一，简单变量替换 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="USER_HOME"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="log_files"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 方法二，采用系统属性（System property）达到同样效果</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> java -DUSER_HOME="log_files" MyApp2 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">方法三杠一，通过文件导入变量，当变量多的时候这样比较方便</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">file</span><span style="color: #0000ff;">="src/main/java/variables1.properties"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">文件内容USER_HOME=log_files</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 方法三杠二，等效三杆一，不过这个时候资源在类路径里 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">resource</span><span style="color: #0000ff;">="resource1.properties"</span> <span style="color: #0000ff;">/&gt;</span></strong>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="FILE"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.FileAppender"</span><span style="color: #0000ff;">&gt;</span>
+<strong>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>${USER_HOME}/myApp.log<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span></strong>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%date %level [%thread] %logger{10} [%file:%line] %msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="STDOUT"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.ConsoleAppender"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">logger </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="org.sample.logback.LogbackTest"</span><span style="color: #ff0000;"> level</span><span style="color: #0000ff;">="INFO"</span><span style="color: #ff0000;"> additivity</span><span style="color: #0000ff;">="false"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="FILE"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">logger</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="STDOUT"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">root</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>logback完全支持变量嵌套。变量的名称、默认值和值定义都可以引用其他变量：</p>
+<div class="cnblogs_code">
+<pre><span>USER_HOME=/home/sebastien
+fileName=myApp.log
+destination=${USER_HOME}/${fileName}</span></pre>
+</div>
+<p>再比如${${userid}.password}、${id<strong>:-</strong>${userid}}。。</p>
+<p><strong><span style="color: #ff0000; background-color: #ffff99;">Example3- 变量作用域</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">
+    LOCAL SCOPE
+    默认的作用域。变量生命周期：在配置文件中定
+    义的位置开始直到配置文件被解析/执行完成。意味
+    着每次解析配置文件都将创建一个新的这个变量。
+
+    CONTEXT SCOPE
+    插入到上下文（context），直到context被清除。
+    一旦定义，CONTEXT SCOPE中的属性就是context的
+    一部分。因此，它在所有日志事件中都可用，包括
+    通过序列化发送到远程主机的日志事件。
+
+    SYSTEM SCOPE
+    带有SYSTEM作用域的属性被插入到JVM的系统属性中，
+    并且持续到JVM清除为止。
+    </span><span style="color: #008000;">--&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 在替换配置文件中的变量时，变量的查找
+        顺序是LOCAL&gt;CONTEXT&gt;SYSTEM，最后是操作
+         系统环境变量 </span><span style="color: #008000;">--&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">scope</span><span style="color: #0000ff;">="context"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="nodeId"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="firstNode"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="FILE"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.FileAppender"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 用":-"定义默认值 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>log_files/${nodeId:-secondNode}/myApp.log<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="FILE"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">root</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="background-color: #ffff99; color: #ff0000;">Example4-&nbsp;HOSTNAME和CONTEXT_NAME是默认的两个变量（好像是惰性初始化的）</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">scope</span><span style="color: #0000ff;">="context"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="nodeId"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="firstNode"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="FILE"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="ch.qos.logback.core.FileAppender"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>log_files/${HOSTNAME}/${CONTEXT_NAME}/myApp.log<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">file</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">C:\Users\mdzz\Desktop\test-mvn\testlogback\log_files\LAPTOP-QGECNCGO\default\myApp.log</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>%msg%n<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">pattern</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">encoder</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">appender</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">root </span><span style="color: #ff0000;">level</span><span style="color: #0000ff;">="debug"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">appender-ref </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="FILE"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">root</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Generate</p>

@@ -1,0 +1,83 @@
+<p>Hibernate Validator是Spring Boot默认附带的标准校验API（javax.validation）实现。</p>
+<h2>应用实例（配合切面）</h2>
+<p>采用注解定义切面.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Aspect
+@Configuration
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ParameterValidator {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> ExecutableValidator executableValidator;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ParameterValidator() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 开启快速失败返回模式（顾名思义...）</span>
+        ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.<span style="color: #0000ff;">class</span><span style="color: #000000;">).
+                configure().addProperty(</span>"hibernate.validator.fail_fast", "true"<span style="color: #000000;"> ).
+                buildValidatorFactory();
+        executableValidator </span>=<span style="color: #000000;"> validatorFactory.getValidator().forExecutables();
+    }
+
+    @Pointcut(</span>"execution(public * org.sample.website.service.impl.*.*(..))"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> serviceMethod() {}
+
+    @Around(</span>"serviceMethod()"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span> Object validate(ProceedingJoinPoint jp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Throwable {
+        Method method </span>=<span style="color: #000000;"> ((MethodSignature) jp.getSignature()).getMethod();
+        Set</span>&lt;ConstraintViolation&lt;Object&gt;&gt; violations =<span style="color: #000000;"> executableValidator.validateParameters(jp.getThis(), method, jp.getArgs());
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">violations.isEmpty()) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> ValidationException(violations.iterator().next().getMessage());
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> jp.proceed();
+    }
+}</span></pre>
+</div>
+<p>PS.&nbsp;&nbsp;ValidationException是标准API中定义的运行时异常</p>
+<p>/</p>
+<p>接口.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> MessageService {
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 单独校验参数</span>
+    Message leaveMessage(<strong>@NotNull</strong>(message = "昵称不能为空"<span style="color: #000000;">) String nickname,
+                         <strong>@NotNull</strong>(message </span>= "内容不能为空"<span style="color: #000000;">) String content);
+
+    Message leaveMessage(<strong>@Valid</strong> Message message); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 校验实体</span>
+<span style="color: #000000;">
+    List</span>&lt;Message&gt; listMessage(<span style="color: #0000ff;">int</span> offset, <span style="color: #0000ff;">int</span><span style="color: #000000;"> limit);
+}</span></pre>
+</div>
+<p>/</p>
+<p>参数中的实体只有在<strong>@Valid（递归校验符）</strong>标注后才会被校验：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Message {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Long id;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String nickname;
+<strong>    @NotNull(message </strong></span><strong>= "内容不能为空！"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String content;
+
+    </span></strong><span style="color: #0000ff;">public</span><span style="color: #000000;"> Message() {
+    }</span></pre>
+</div>
+<p>/</p>
+<p>测试代码片段（Spring环境）：</p>
+<div class="cnblogs_code">
+<pre>        String nickname = "test" + (<span style="color: #0000ff;">int</span>) (Math.random() * 10<span style="color: #000000;">);
+        messageService.leaveMessage(</span><span style="color: #0000ff;">new</span> Message(nickname, <strong><span style="color: #0000ff;">null</span></strong>));</pre>
+</div>
+<p>运行结果：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #993300;">javax.validation.ValidationException: 内容不能为空！
+
+    at org.sample.website.aspect.ParameterValidator.validate(ParameterValidator.java:39)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)</span></pre>
+</div>
+<h2>参考资料</h2>
+<ul>
+<li><a href="http://ifeve.com/use-bean-validation/" target="_blank">在系统中使用Bean Validation验证参数</a></li>
+<li><a href="https://www.cnblogs.com/mr-yang-localhost/p/7812038.html">springboot使用hibernate validator校验</a></li>
+<li><a href="https://blog.csdn.net/u012881904/article/details/77193487" target="_blank">Hibernate Validator 校验方法的参数，返回值，构造函数</a></li>
+<li><a href="http://hibernate.org/validator/documentation/" target="_blank">http://hibernate.org/validator/documentation/</a></li>
+</ul>

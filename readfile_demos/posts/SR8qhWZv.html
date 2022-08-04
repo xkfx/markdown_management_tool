@@ -1,0 +1,102 @@
+<p><span style="text-decoration: underline;">p182~p185：</span></p>
+<p><span style="text-decoration: underline;">函数</span><br />1、在调用函数和执行return语句的同时，也发生了<span style="background-color: #ffff99;">控制权</span>的转移。</p>
+<p>&nbsp;</p>
+<p>2、函数返回值不能是一个数组。（但是可以返回一个包含数组的对象，或者指向数组的指针）</p>
+<p>&nbsp;</p>
+<p>3、重要概念：<span style="background-color: #ffff99;">名字的作用域</span>和<span style="background-color: #ffff99;">对象的生命周期</span>。</p>
+<p>&nbsp;</p>
+<p>4、对象的生命周期分两种情况：一种是对象定义在函数体外部（包括main函数1），则对象将存在于程序的整个执行过程，第二种是对象定义在函数体内部，被称为<span style="background-color: #ffff99;">自动变量</span>（包括形参和普通局部变量），在块的末尾将被自动销毁。</p>
+<p>&nbsp;</p>
+<p>5、<span style="background-color: #ffff99;">局部静态对象</span>的生命周期是程序的整个执行过程。</p>
+<p>&nbsp;</p>
+<p>6、局部静态变量的默认初始化结果不是未定义的！！！并且，即使程序执行的路径将多次经过初始化语句，局部静态变量也只会被初始化一次（仅第一次）。</p>
+<p>&nbsp;</p>
+<p>7、<span style="background-color: #ffff99;">函数原型</span>=函数声明&asymp;函数签名。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.1</span><br />实参是形参的初始值，形参是函数内部执行时要用到的变量。</p>
+<p><br /><span style="text-decoration: underline;">6.2</span><br />a - 返回类型不匹配<br />b - 正确<br />c - 花括号漏了一边。。。<br />d - 正确</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.3</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">int</span> fact(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    </span><span style="color: #0000ff;">if</span> (val == <span style="color: #800080;">1</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> val * fact(val - <span style="color: #800080;">1</span><span style="color: #000000;">);
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+     std::cout </span>&lt;&lt; fact(<span style="color: #800080;">4</span>) &lt;&lt; std::endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 24</span>
+     <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.4</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> fact(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    </span><span style="color: #0000ff;">if</span> (val == <span style="color: #800080;">1</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> val * fact(val - <span style="color: #800080;">1</span><span style="color: #000000;">);
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> getFact()
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Enter a number:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> x;
+    cin </span>&gt;&gt;<span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> fact(x);
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+     cout </span>&lt;&lt; getFact() &lt;&lt;<span style="color: #000000;"> endl; 
+     </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> abs(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x)
+{
+    </span><span style="color: #0000ff;">if</span> (x &lt; <span style="color: #800080;">0</span><span style="color: #000000;">) 
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #000000;">x;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+}</span></pre>
+</div>
+<p><span style="text-decoration: underline;">&nbsp;</span><br /><span style="text-decoration: underline;">6.6</span><br />形参和局部变量多属于自动对象，生命周期仅限于所在块的范围。<br />局部静态变量将存在于程序的整个执行过程。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> test(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">==========</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">int</span> i; <span style="color: #008000;">//</span><span style="color: #008000;"> 默认初始化是未定义的！</span>
+    i +=<span style="color: #000000;"> x;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">parameter val x=</span><span style="color: #800000;">"</span> &lt;&lt; x &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">local var i=</span><span style="color: #800000;">"</span> &lt;&lt; i &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> k; <span style="color: #008000;">//</span><span style="color: #008000;"> 默认初始化为0！！！</span>
+    ++<span style="color: #000000;">k;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">local static var k=</span><span style="color: #800000;">"</span> &lt;&lt; k &lt;&lt;<span style="color: #000000;"> endl;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+     </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">4</span>; ++<span style="color: #000000;">i) {
+         test(i);
+     }
+     </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>调用结果：</p>
+<p>==========<br />parameter val x=0<br />local var i=6422476<br />local static var k=1<br />==========<br />parameter val x=1<br />local var i=6422477<br />local static var k=2<br />==========<br />parameter val x=2<br />local var i=6422479<br />local static var k=3<br />==========<br />parameter val x=3<br />local var i=6422482<br />local static var k=4</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.7</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span><span style="color: #000000;"> test()
+{
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> k;
+    </span><span style="color: #0000ff;">return</span> k++<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

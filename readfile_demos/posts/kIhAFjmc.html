@@ -1,0 +1,117 @@
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 练习 1.20</span>
+#include&lt;iostream&gt;<span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">Sales_item.h</span><span style="color: #800000;">"</span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_item item_temp;
+    
+    </span><span style="color: #0000ff;">while</span>(std::cin &gt;&gt;<span style="color: #000000;"> item_temp)
+        std::cout </span>&lt;&lt; item_temp &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 练习 1.21</span>
+#include&lt;iostream&gt;<span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">Sales_item.h</span><span style="color: #800000;">"</span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_item item1, item2;
+    
+    std::cin </span>&gt;&gt; item1 &gt;&gt;<span style="color: #000000;"> item2;
+    std::cout </span>&lt;&lt; item1 + item2 &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 练习 1.22</span>
+#include&lt;iostream&gt;<span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">Sales_item.h</span><span style="color: #800000;">"</span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> currItem是我们正在统计的销售记录； 我们将读入的记录存入item</span>
+<span style="color: #000000;">    Sales_item currItem, item;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 读取第一条记录， 并确保有记录可以处理</span>
+    <span style="color: #0000ff;">if</span>(std::cin &gt;&gt;<span style="color: #000000;"> currItem){
+        Sales_item sum_item </span>= currItem;        <span style="color: #008000;">//</span><span style="color: #008000;"> 保存已经统计的销售记录</span>
+        
+        <span style="color: #0000ff;">while</span>(std::cin &gt;&gt; item)                <span style="color: #008000;">//</span><span style="color: #008000;"> 读取剩余记录</span>
+            <span style="color: #0000ff;">if</span>(item.isbn == currItem.isbn)    <span style="color: #008000;">//</span><span style="color: #008000;"> 如果书的isbn相同</span>
+                sum_item += item;            <span style="color: #008000;">//</span><span style="color: #008000;"> 将销售记录统计到sum_item</span>
+        std::cout &lt;&lt; sum_item &lt;&lt; std::endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 打印销售记录</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 练习 1.23 
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 练习 1.24</span>
+#include&lt;iostream&gt;<span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">Sales_item.h</span><span style="color: #800000;">"</span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_item currItem, item;
+    
+    </span><span style="color: #0000ff;">if</span>(std::cin &gt;&gt;<span style="color: #000000;"> currItem){
+        </span><span style="color: #0000ff;">int</span> cnt = <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span>(std::cin &gt;&gt;<span style="color: #000000;"> item)
+            </span><span style="color: #0000ff;">if</span>(item.isbn ==<span style="color: #000000;"> currItem.isbn)
+                </span>++<span style="color: #000000;">cnt;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                std::cout </span>&lt;&lt; currItem.isbn &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; cnt &lt;&lt;<span style="color: #000000;"> std::endl;
+                currItem </span>=<span style="color: #000000;"> item;
+                cnt </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            }
+        std::cout </span>&lt;&lt; currItem.isbn &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; cnt &lt;&lt;<span style="color: #000000;"> std::endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试数据:
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-201-78345-X 4 25.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-201-78345-X 1 25.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-201-78345-X 2 25.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-201-78345-X 9 25.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-207-78345-X 9 31.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-207-78345-X 3 31.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-202-78345-X 3 20.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-202-78345-X 3 20.0
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 运行结果:
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-201-78345-X 4
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-207-78345-X 2
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 0-202-78345-X 2</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 练习 1.25</span>
+#include&lt;iostream&gt;<span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">Sales_item.h</span><span style="color: #800000;">"</span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_item total;
+    
+    </span><span style="color: #0000ff;">if</span>(std::cin &gt;&gt;<span style="color: #000000;"> total){
+        Sales_item trans;
+        
+        </span><span style="color: #0000ff;">while</span>(std::cin &gt;&gt;<span style="color: #000000;"> trans){
+            </span><span style="color: #0000ff;">if</span>(total.isbn ==<span style="color: #000000;"> trans.isbn)
+                total </span>+=<span style="color: #000000;"> trans;
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                std::cout </span>&lt;&lt; total &lt;&lt;<span style="color: #000000;"> std::endl;
+                total </span>=<span style="color: #000000;"> trans;
+            }
+        }
+        std::cout </span>&lt;&lt; total &lt;&lt;<span style="color: #000000;"> std::endl;
+    }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+        std::cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?!</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> std::endl;
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>

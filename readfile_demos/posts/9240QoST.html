@@ -1,0 +1,144 @@
+<p>概述：</p>
+<p>1、input和output是相对于内存而言的。输入（input）就是写入到内存里，输出（output）就是把内存里的东西写到外面。</p>
+<p>2、操作内存里的东西非常便利，要么声明变量，要么new对象，而对于内存外的东西就没那么方便了。</p>
+<p><span style="background-color: #ffff99; color: #ff0000;">3、写入写出（io流）骨子里一定要清楚的&ldquo;三步操作&rdquo;：a、定位。从哪里input（哪个文件、哪个端口）、output到哪里（端口or文件or数据库...）。b、建立管道。c、操作管道。</span></p>
+<p>例如，向端口8000写东西，首先需要知道是往端口8000output，其次需要建立从端口8000到内存的input管道，最后，需要读多少数据呢？以什么形式读呢？叫做操作管道。</p>
+<p>4、需要注意的是：1所有离开内存的操作都是有风险的，一定要用try catch保护风险代码。2用指针理解stream的概念，例如，每read一次指针就往沿着文本往下移动，前面的数据就&ldquo;流走&rdquo;了。</p>
+<p>补充：</p>
+<p>1、java byte类型，8位二进制为一个字节，一个英文字母占1byte，一个汉字占2byte。</p>
+<p>文件读写的read有多个重载函数，既可以一个字节一个字节的读，无参read();也可以多个字节的读到一个byte型数组中read(new byte[size]);</p>
+<p>2、io流的加密偶尔会涉及到&ldquo;数据的溢出&rdquo;。</p>
+<p>3、使用io流通常需要分段捕获各个类型的异常：filenotfound、ioexception...</p>
+<p><span style="background-color: #ffff99; color: #ff0000;">4、一定要记住的：</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">a、最底层的、最基本io流方法是读写字节而不是字符:InputsStream...is.read()、is.read(byte[])</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">b、为了处理方便有了字符流：Reader....read(char[])</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">c、为了提高性能，例如一次读一行，就有了BufferReader等高级流，但是BufferReader是建立在基础reader之上的！</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">d、常常用PrintWriter代替BufferWriter，理由是增强在各个平台的兼容性。</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">e、再往上走就有专门读写object的流了。</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">f、不考虑性能的情况下，哪个方便就用哪一个。</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">g、无法通过socket直接获得字符流（文件可以直接获得），必须通过字节流--InputStreamReader--&gt;字符流----&gt;高级流</span></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170428163258897-1411233120.png" alt="" width="484" height="538" /></p>
+<p>参考：</p>
+<p>1、java io最详解：http://blog.csdn.net/yczz/article/details/38761237</p>
+<p>2、<span class="ico ico_type_Repost"><span class="ico ico_type_Repost">&nbsp;</span></span><span class="link_title">java 字节流与字符流的区别：http://blog.csdn.net/cynhafa/article/details/6882061</span></p>
+<p><span class="link_title">3、为什么一定要关闭流？：http://www.iteye.com/problems/25486 个人认为一个两个iosteam不关闭也没什么问题。。但是量一多就会出问题。。另外如果不调用close，flush()一定是要调用的。。这样才能确保&ldquo;效果正确&rdquo;。</span></p>
+<p><span class="link_title">4、Socket与ServerSocket：http://www.cnblogs.com/rond/p/3565113.html（有些东西可能不需要了解细节。。但是随手查查心里比较有底。。。）</span></p>
+<p>参考代码：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170428180215428-938935291.png" alt="" width="293" height="94" /></p>
+<p>ObjectOutputStream需要的参数是OutputStream，所以传入的参数只要是OutputStream或者OutputStream的子类都可以。。。</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170428180435319-524789448.png" alt="" width="627" height="49" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170428180510522-1132953029.png" alt="" width="713" height="48" /></p>
+<p>按照需要传入就可以了。</p>
+<p>文件io：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.io;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.xkfx.qq.tools.transmit.User;
+
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> FileIOTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ObjectOutputStream os </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ObjectInputStream is </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定位与建立管道</span>
+            os = <span style="color: #0000ff;">new</span> ObjectOutputStream(<span style="color: #0000ff;">new</span> FileOutputStream("d:/labs/test.txt"<span style="color: #000000;">));
+            is </span>= <span style="color: #0000ff;">new</span> ObjectInputStream(<span style="color: #0000ff;">new</span> FileInputStream("d:/labs/test.txt"<span style="color: #000000;">));
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 操作管道</span>
+            os.writeObject(<span style="color: #0000ff;">new</span> User("xkfx", "a123456"<span style="color: #000000;">));
+            User user </span>= (User)is.readObject();<span style="color: #008000;">//</span><span style="color: #008000;"> 读到的是Obj类对象，需要强制转换</span>
+<span style="color: #000000;">
+            System.out.println(user);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                os.close();
+                is.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>网络io：</p>
+<p>&nbsp;server：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.server;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.xkfx.qq.tools.transmit.User;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.ObjectInputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.net.ServerSocket;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.net.Socket;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Server {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> main(String[] args) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException{
+        ServerSocket server </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        server </span>= <span style="color: #0000ff;">new</span> ServerSocket(8000); <span style="color: #008000;">//</span><span style="color: #008000;"> 向操作系统注册服务</span>
+        Socket socket = server.accept(); <span style="color: #008000;">//</span><span style="color: #008000;"> 从连接队列中取出一个连接，如果没有则等待</span>
+        ObjectInputStream is = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            is </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ObjectInputStream(socket.getInputStream());
+            User user </span>=<span style="color: #000000;"> (User)is.readObject();
+            System.out.println(user);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClassNotFoundException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                is.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                socket.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>client：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.io;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.xkfx.qq.tools.transmit.User;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.ObjectOutputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.net.Socket;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> SocketTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Socket socket </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ObjectOutputStream os </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            socket </span>= <span style="color: #0000ff;">new</span> Socket("localhost", 8000<span style="color: #000000;">);
+
+            os </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ObjectOutputStream(socket.getOutputStream());
+            os.writeObject(</span><span style="color: #0000ff;">new</span> User("qjlsd", "a123456"<span style="color: #000000;">));
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                socket.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                os.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</span></pre>
+</div>

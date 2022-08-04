@@ -1,0 +1,114 @@
+<p>参考：</p>
+<p>1、image onload事件：http://www.runoob.com/jsref/event-img-onload.html（赞）</p>
+<p>2、canvas的drawImage无法显示图像：https://segmentfault.com/q/1010000002877796</p>
+<p>(尝试setInterval(render, 10);就会发现图片显示出来了。)</p>
+<p>3、addeventlistener的捕获与冒泡：https://my.oschina.net/u/867090/blog/387380</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170426101305819-1798955133.png" alt="" width="305" height="89" /></p>
+<p>4、取整方案：http://www.cnblogs.com/pigtail/archive/2012/03/28/2421614.html</p>
+<p>5、二维数组：http://www.cnblogs.com/ymwangel/p/5875081.html</p>
+<p>5、发现网上已经有很多人写了：http://www.qdfuns.com/notes/13275/a66ea9c091c5cc4d0007abaf83d223ca:storey-21</p>
+<p>6、随机迷宫算法：<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/msxh/p/5540133.html">随机迷宫算法 </a>、<a class="postTitle2" href="http://bbs.9ria.com/thread-156150-1-1.html">http://bbs.9ria.com/thread-156150-1-1.html</a></p>
+<p>mytest.js</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Create the canvas</span>
+<span style="color: #0000ff;">var</span> canvas = document.createElement("canvas"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+canvas.width </span>= 800<span style="color: #000000;">;
+canvas.height </span>= 550<span style="color: #000000;">;
+
+canvas.style.position </span>= "absolute"<span style="color: #000000;">;
+canvas.style.left </span>= "calc(50% - 350px)"<span style="color: #000000;">;
+canvas.style.top </span>= "calc(50% - 275px)"<span style="color: #000000;">;
+
+document.body.appendChild(canvas);
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> load images</span>
+<span style="color: #0000ff;">var</span> bgImage = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+bgImage.src </span>= "images/background.png"<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">var</span> heroImage = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+heroImage.src </span>= "images/hero.png"<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">var</span> wallImage = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+wallImage.src </span>= "images/wall.png"<span style="color: #000000;">;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Game data</span>
+<span style="color: #0000ff;">var</span> hero =<span style="color: #000000;"> {
+    x: </span>0<span style="color: #000000;">,
+    y: </span>0<span style="color: #000000;">
+};
+
+
+</span><span style="color: #0000ff;">var</span> aa = <span style="color: #0000ff;">new</span> Array(); <span style="color: #008000;">//</span><span style="color: #008000;">定义一维数组 </span>
+<span style="color: #0000ff;">for</span>(i = -1; i &lt;= 14; i++<span style="color: #000000;">) { 
+    aa[i] </span>= <span style="color: #0000ff;">new</span> Array(); <span style="color: #008000;">//</span><span style="color: #008000;">将每一个子元素又定义为数组 </span>
+    <span style="color: #0000ff;">for</span>(j = -1; j &lt;= 13; j++<span style="color: #000000;">) { 
+        aa[i][j] </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">; 
+    } 
+} 
+
+</span><span style="color: #0000ff;">var</span> x2 = 0<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> y2 = 0<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> notWall = <span style="color: #0000ff;">function</span><span style="color: #000000;">(x , y) {
+    </span><span style="color: #0000ff;">return</span> !<span style="color: #000000;">aa[x][y];
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> random labyrinth</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> Game data init</span>
+<span style="color: #0000ff;">var</span> reset = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> hero init</span>
+    hero.x = 100<span style="color: #000000;">;
+    hero.y </span>= 100<span style="color: #000000;">;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> wall init</span>
+    <span style="color: #0000ff;">for</span>(i = 0; i &lt;= 13; i++<span style="color: #000000;">) { 
+        </span><span style="color: #0000ff;">for</span>(j = 0; j &lt;= 12; j++<span style="color: #000000;">) { 
+            aa[i][j] </span>= Math.random() &gt; 0.5 ? <span style="color: #0000ff;">true</span> : <span style="color: #0000ff;">false</span><span style="color: #000000;">; 
+        } 
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Game expression</span>
+<span style="color: #0000ff;">var</span> render = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> draw background</span>
+    ctx.drawImage(bgImage, 0, 0, 800, 550<span style="color: #000000;">);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> draw hero</span>
+<span style="color: #000000;">    ctx.drawImage(heroImage, hero.x, hero.y);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> draw wall</span>
+    <span style="color: #0000ff;">for</span> (m = 0; m &lt;= 13; ++<span style="color: #000000;">m)
+        </span><span style="color: #0000ff;">for</span> (n = 0; n &lt;=  12; ++<span style="color: #000000;">n)
+            </span><span style="color: #0000ff;">if</span> (aa[m][n]) ctx.drawImage(wallImage, 50*m+60, 36.5*n+40<span style="color: #000000;">);
+    ctx.fillText(</span>"hero positon: x=" + hero.x + ",y=" + hero.y, 100, 100<span style="color: #000000;">);
+}
+
+
+</span><span style="color: #0000ff;">var</span> speed = 4<span style="color: #000000;">;
+addEventListener(</span>"keydown", <span style="color: #0000ff;">function</span><span style="color: #000000;"> (e) {
+    x2 </span>= Math.floor((hero.x-44)/50);
+    y2 = Math.floor((hero.y-32)/34.9);
+    <span style="color: #0000ff;">if</span> (e.key == "ArrowUp" &amp;&amp; hero.y &gt; 32 &amp;&amp; notWall(x2 , y2-1<span style="color: #000000;">)) {
+        hero.y </span>-=<span style="color: #000000;"> speed;
+    }
+    </span><span style="color: #0000ff;">if</span> (e.key == "ArrowDown" &amp;&amp; hero.y &lt; canvas.height - 73 &amp;&amp; notWall(x2 , y2+1<span style="color: #000000;">)) {
+        hero.y </span>+=<span style="color: #000000;"> speed;
+    }
+    </span><span style="color: #0000ff;">if</span> (e.key == "ArrowLeft" &amp;&amp; hero.x &gt; 44 &amp;&amp; notWall(x2-1<span style="color: #000000;"> , y2)) {
+        hero.x </span>-=<span style="color: #000000;"> speed;
+    }
+    </span><span style="color: #0000ff;">if</span> (e.key == "ArrowRight" &amp;&amp; hero.x &lt; canvas.width - 73 &amp;&amp; notWall(x2+1<span style="color: #000000;"> , y2)) {
+        hero.x </span>+=<span style="color: #000000;"> speed;
+    }
+}, </span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+
+</span><span style="color: #0000ff;">var</span> testGame = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    reset();
+      setInterval(render, </span>13<span style="color: #000000;">);
+}
+
+testGame();</span></pre>
+</div>
+<p>&nbsp;</p>

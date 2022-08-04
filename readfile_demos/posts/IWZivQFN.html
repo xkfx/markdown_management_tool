@@ -1,0 +1,196 @@
+<h3><span style="color: #ff00ff;">&nbsp;include指令与include动作</span></h3>
+<p>1、样例代码</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622135535366-1478349668.png" alt="" width="760" height="432" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">import </span><span style="color: #0000ff;">= "java.io.*,java.util.*"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Auto Refresh Header Example<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #888888;">&lt;%-- 在这里插入页眉文件 --%&gt;</span>
+<strong><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ include </span><span style="color: #ff0000;">file</span><span style="color: #0000ff;">="Header.jsp"</span><span style="color: #ff0000;">%</span><span style="color: #0000ff;">&gt;</span></strong>
+
+<span style="color: #888888;">&lt;center&gt;
+  &lt;h2&gt;Auto Refresh Header Example&lt;/h2&gt;
+  &lt;%
+    // Set refresh, autoload time as 5 seconds
+    response.setIntHeader("Refresh", 60);
+
+    // Get current time
+    Calendar calendar = new GregorianCalendar();
+    String am_pm;
+
+    int hour = calendar.get(Calendar.HOUR);
+    int minute = calendar.get(Calendar.MINUTE);
+    int second = calendar.get(Calendar.SECOND);
+
+    if(calendar.get(Calendar.AM_PM) == 0)
+      am_pm = "AM";
+    else
+      am_pm = "PM";
+    String CT = hour+":"+ minute +":"+ second +" "+ am_pm;
+    out.println("Crrent Time: " + CT + "\n");
+  %&gt;
+&lt;/center&gt;
+
+&lt;%-- 在这里插入页脚文件 --%&gt;</span>
+<strong><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:include </span><span style="color: #ff0000;">page</span><span style="color: #0000ff;">="Footer.jsp"</span> <span style="color: #0000ff;">/&gt;</span></strong>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/header.jpg"</span><span style="color: #ff0000;">  alt</span><span style="color: #0000ff;">="上海鲜花港 - 郁金香"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是页眉<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/header.jpg"</span><span style="color: #ff0000;">  alt</span><span style="color: #0000ff;">="上海鲜花港 - 郁金香"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是页眉<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、源码分析</p>
+<p>web项目结构</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622140304710-465842906.png" alt="" /></p>
+<p>把这些文件打包成war，部署到本地tomcat的webapps下，启动tomcat。</p>
+<p>在第一次访问index.jsp之后，将生成如下文件</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622140509445-223702814.png" alt="" width="688" height="154" /></p>
+<p>我们观察到，并没生成Header_jsp，原因可想而知，因为使用了include指令而不是include动作。</p>
+<p>接着查看index_jsp源码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #888888;">try</span><span style="color: #000000;"><span style="color: #888888;"> {</span>
+<span style="color: #888888;">      response.setContentType(</span></span><span style="color: #888888;">"text/html;charset=UTF-8");
+      pageContext = _jspxFactory.getPageContext(this, request, response,
+                  null, true, 8192, true);
+      _jspx_page_context = pageContext;
+      application = pageContext.getServletContext();
+      config = pageContext.getServletConfig();
+      session = pageContext.getSession();
+      out = pageContext.getOut();
+      _jspx_out =</span><span style="color: #000000;"><span style="color: #888888;"> out;</span>
+
+<span style="color: #888888;">      out.write(</span></span><span style="color: #888888;">"\n");
+      out.write("\n");
+      out.write("\n");
+      out.write("&lt;html&gt;\n");
+      out.write("&lt;head&gt;\n");
+      out.write("  &lt;title&gt;Auto Refresh Header Example&lt;/title&gt;\n");
+      out.write("&lt;/head&gt;\n");
+      out.write("\n");
+      out.write("&lt;body&gt;\n");
+      out.write('\n');
+      out.write("\r\n");
+      out.write("\r\n"</span><span style="color: #000000;"><span style="color: #888888;">);</span></span><strong><span style="color: #000000;">
+      out.write(</span>"&lt;img src=\"images/header.jpg\"  alt=\"上海鲜花港 - 郁金香\" /&gt;\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;p&gt;我是页眉&lt;/p&gt;\r\n"<span style="color: #000000;">);
+</span></strong><span style="color: #000000;"><span style="color: #888888;">      out.write(</span></span><span style="color: #888888;">"\r\n");
+      out.write("\n");
+      out.write("\n");
+      out.write("&lt;center&gt;\n");
+      out.write("  &lt;h2&gt;Auto Refresh Header Example&lt;/h2&gt;\n");
+      out.write("  ");
+
+    </span><span style="color: #888888;">// Set refresh, autoload time as 5 seconds
+    response.setIntHeader("Refresh", 60);
+
+    // Get current time
+    Calendar calendar = new GregorianCalendar();
+    String am_pm;
+
+    int hour = calendar.get(Calendar.HOUR);
+    int minute = calendar.get(Calendar.MINUTE);
+    int second = calendar.get(Calendar.SECOND);
+
+    if(calendar.get(Calendar.AM_PM) == 0)
+      am_pm = "AM";
+    else
+      am_pm = "PM";
+    String CT = hour+":"+ minute +":"+ second +" "+ am_pm;
+    out.println("Crrent Time: " + CT + "\n");
+  
+      out.write("\n");
+      out.write("&lt;/center&gt;\n");
+      out.write("\n");
+      out.write('\n'</span><span style="color: #000000;"><span style="color: #888888;">);</span>
+      <strong>org.apache.jasper.runtime.JspRuntimeLibrary.include(request, response, </strong></span><strong>"Footer.jsp", out, <span style="color: #0000ff;">false</span></strong><span style="color: #000000;"><strong>);</strong>
+ <span style="color: #888888;">     out.write(</span></span><span style="color: #888888;">"\n");
+      out.write("\n");
+      out.write("&lt;/body&gt;\n");
+      out.write("&lt;/html&gt;");
+    } catch (java.lang.Throwable t) {
+      if (!(t instanceof javax.servlet.jsp.SkipPageException)){
+        out = _jspx_out;
+        if (out != null &amp;&amp; out.getBufferSize() != 0)
+          try {
+            if (response.isCommitted()) {
+              out.flush();
+            } else {
+              out.clearBuffer();
+            }
+          } catch (java.io.IOException e) {}
+        if (_jspx_page_context != null) _jspx_page_context.handlePageException(t);
+        else throw new ServletException(t);
+      }
+    } finally {
+      _jspxFactory.releasePageContext(_jspx_page_context);
+    }</span></pre>
+</div>
+<p>加粗的分别是include指令和include动作的转换代码。</p>
+<p>&nbsp;</p>
+<h3><span style="color: #ff00ff;">&nbsp;param动作</span></h3>
+<p>修改上面的index.jsp代码：</p>
+<div class="cnblogs_code">
+<pre>&lt;%-- 在这里插入页脚文件 --%&gt;
+&lt;jsp:include page="Footer.jsp"&gt;
+  &lt;jsp:param name="subTitle" value="we take the string out of SOAP." /&gt;
+&lt;/jsp:include&gt;</pre>
+</div>
+<p>修改Footer.jsp</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+
+&lt;a href="index.jsp"&gt;home page 我是页脚！&lt;/a&gt;
+&lt;h3&gt;${param.subTitle}&lt;/h3&gt;</pre>
+</div>
+<p>效果截图</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622143729148-792979119.png" alt="" width="453" height="115" /></p>
+<h3><span style="color: #ff00ff;">foward动作</span></h3>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622150013382-154419324.png" alt="" width="356" height="139" /></p>
+<p>乱码问题没解决，只能输入中文。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622150050023-1672852427.png" alt="" width="246" height="72" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #888888;">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;html&gt;
+&lt;body&gt;
+    &lt;p&gt;欢迎来到我的页面！&lt;/p&gt;</span>
+ <strong>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">% if </span><span style="color: #ff0000;">(request.getParameter("userName")</span><span style="color: #0000ff;">== </span><span style="color: #ff0000;">null) { %</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:forward </span><span style="color: #ff0000;">page</span><span style="color: #0000ff;">="HandleIt.jsp"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">% } %</span><span style="color: #0000ff;">&gt;</span></strong>
+<span style="color: #888888;">    &lt;p&gt;你好！${param.userName}&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span></pre>
+</div>
+<p>HandleIt.jsp</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%
+        request.setCharacterEncoding</span><span style="color: #ff0000;">("utf-8");
+    %</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>很抱歉，你需要重新登陆。<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="Hello.jsp"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>用户名：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="userName"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

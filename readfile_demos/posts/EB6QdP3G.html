@@ -1,0 +1,320 @@
+<h4>相关资料：</h4>
+<ul>
+<li><a class="question-hyperlink" href="https://stackoverflow.com/questions/39761924/understanding-roles-of-cmake-make-and-gcc" target="_blank">Understanding roles of CMake, make and GCC</a></li>
+<li>
+<p><a href="https://www3.ntu.edu.sg/home/ehchua/programming/cpp/gcc_make.html" target="_blank">GCC and Make ( A simple tutorial, teaches u how to use gcc and make.)</a></p>
+</li>
+<li>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/768373/what-is-the-difference-between-make-and-gcc" target="_blank">What is the difference between make and gcc?</a></p>
+</li>
+<li>
+<p><a href="http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/" target="_blank">A Simple Makefile Tutorial</a></p>
+</li>
+<li>
+<p><a href="https://www.tutorialspoint.com/makefile/index.htm" target="_blank">Unix Makefile Tutorial ( tutorialspoint.com)</a></p>
+</li>
+<li>
+<p><a href="https://www.gnu.org/software/make/manual/make.html" target="_blank">GNU&nbsp;<code>make</code></a></p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<h4>实践记录：</h4>
+<p>1、查看 g++ / gcc 的版本：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <span style="color: #0000ff;">gcc</span> --<span style="color: #000000;">version 
+</span><span style="color: #0000ff;">gcc</span> (Debian <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span>-<span style="color: #800080;">10</span>) <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span><span style="color: #000000;">
+Copyright (C) </span><span style="color: #800080;">2014</span><span style="color: #000000;"> Free Software Foundation, Inc.
+This is </span><span style="color: #0000ff;">free</span> software; see the source <span style="color: #0000ff;">for</span><span style="color: #000000;"> copying conditions.  There is NO
+warranty; not even </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+root@xkfx:</span>~# <span style="color: #0000ff;">gcc</span> -v <span style="color: #0000ff;"># 详细版本</span></pre>
+</div>
+<p>&nbsp;2、You can get the help manual via the&nbsp;<code>--help</code>&nbsp;option.&nbsp;</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('2ceaff86-b927-4aff-ae73-7705bb9adfc3')"><img id="code_img_closed_2ceaff86-b927-4aff-ae73-7705bb9adfc3" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_2ceaff86-b927-4aff-ae73-7705bb9adfc3" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('2ceaff86-b927-4aff-ae73-7705bb9adfc3',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_2ceaff86-b927-4aff-ae73-7705bb9adfc3" class="cnblogs_code_hide">
+<pre>root@xkfx:~# <span style="color: #0000ff;">gcc</span> --<span style="color: #000000;">help
+Usage: </span><span style="color: #0000ff;">gcc</span> [options] <span style="color: #0000ff;">file</span><span style="color: #000000;">...
+Options:
+  </span>-pass-exit-<span style="color: #000000;">codes         Exit with highest error code from a phase
+  </span>--<span style="color: #000000;">help                   Display this information
+  </span>--target-<span style="color: #000000;">help            Display target specific command line options
+  </span>--help={common|optimizers|params|target|warnings|[^]{joined|separate|<span style="color: #000000;">undocumented}}[,...]
+                           Display specific types of command line options
+  (Use </span><span style="color: #800000;">'</span><span style="color: #800000;">-v --help</span><span style="color: #800000;">'</span> to display command line options of sub-<span style="color: #000000;">processes)
+  </span>--<span style="color: #000000;">version                Display compiler version information
+  </span>-dumpspecs               Display all of the built <span style="color: #0000ff;">in</span><span style="color: #000000;"> spec strings
+  </span>-<span style="color: #000000;">dumpversion             Display the version of the compiler
+  </span>-dumpmachine             Display the compiler<span style="color: #800000;">'</span><span style="color: #800000;">s target processor</span>
+  -print-search-dirs       Display the directories <span style="color: #0000ff;">in</span> the compiler<span style="color: #800000;">'</span><span style="color: #800000;">s search path</span>
+  -print-libgcc-<span style="color: #0000ff;">file</span>-name  Display the name of the compiler<span style="color: #800000;">'</span><span style="color: #800000;">s companion library</span>
+  -print-<span style="color: #0000ff;">file</span>-name=&lt;lib&gt;   Display the full path to library &lt;lib&gt;
+  -print-prog-name=&lt;prog&gt;  Display the full path to compiler component &lt;prog&gt;
+  -print-multiarch         Display the target<span style="color: #800000;">'</span><span style="color: #800000;">s normalized GNU triplet, used as</span>
+                           a component <span style="color: #0000ff;">in</span><span style="color: #000000;"> the library path
+  </span>-print-multi-directory   Display the root directory <span style="color: #0000ff;">for</span><span style="color: #000000;"> versions of libgcc
+  </span>-print-multi-<span style="color: #000000;">lib         Display the mapping between command line options and
+                           multiple library search directories
+  </span>-print-multi-os-<span style="color: #000000;">directory Display the relative path to OS libraries
+  </span>-print-<span style="color: #000000;">sysroot           Display the target libraries directory
+  </span>-print-sysroot-headers-suffix Display the sysroot suffix used to <span style="color: #0000ff;">find</span><span style="color: #000000;"> headers
+  </span>-Wa,&lt;options&gt;            Pass comma-separated &lt;options&gt;<span style="color: #000000;"> on to the assembler
+  </span>-Wp,&lt;options&gt;            Pass comma-separated &lt;options&gt;<span style="color: #000000;"> on to the preprocessor
+  </span>-Wl,&lt;options&gt;            Pass comma-separated &lt;options&gt;<span style="color: #000000;"> on to the linker
+  </span>-Xassembler &lt;arg&gt;        Pass &lt;arg&gt;<span style="color: #000000;"> on to the assembler
+  </span>-Xpreprocessor &lt;arg&gt;     Pass &lt;arg&gt;<span style="color: #000000;"> on to the preprocessor
+  </span>-Xlinker &lt;arg&gt;           Pass &lt;arg&gt;<span style="color: #000000;"> on to the linker
+  </span>-save-<span style="color: #000000;">temps              Do not delete intermediate files
+  </span>-save-temps=&lt;arg&gt;<span style="color: #000000;">        Do not delete intermediate files
+  </span>-no-canonical-<span style="color: #000000;">prefixes   Do not canonicalize paths when building relative
+                           prefixes to other </span><span style="color: #0000ff;">gcc</span><span style="color: #000000;"> components
+  </span>-<span style="color: #000000;">pipe                    Use pipes rather than intermediate files
+  </span>-<span style="color: #0000ff;">time</span><span style="color: #000000;">                    Time the execution of each subprocess
+  </span>-specs=&lt;<span style="color: #0000ff;">file</span>&gt;            Override built-<span style="color: #0000ff;">in</span> specs with the contents of &lt;<span style="color: #0000ff;">file</span>&gt;
+  -std=&lt;standard&gt;          Assume that the input sources are <span style="color: #0000ff;">for</span> &lt;standard&gt;
+  --sysroot=&lt;directory&gt;    Use &lt;directory&gt; as the root directory <span style="color: #0000ff;">for</span><span style="color: #000000;"> headers
+                           and libraries
+  </span>-B &lt;directory&gt;           Add &lt;directory&gt; to the compiler<span style="color: #800000;">'</span><span style="color: #800000;">s search paths</span>
+  -<span style="color: #000000;">v                       Display the programs invoked by the compiler
+  </span>-###                     Like -<span style="color: #000000;">v but options quoted and commands not executed
+  </span>-E                       Preprocess only; <span style="color: #0000ff;">do</span><span style="color: #000000;"> not compile, assemble or link
+  </span>-S                       Compile only; <span style="color: #0000ff;">do</span><span style="color: #000000;"> not assemble or link
+  </span>-c                       Compile and assemble, but <span style="color: #0000ff;">do</span><span style="color: #000000;"> not link
+  </span>-o &lt;<span style="color: #0000ff;">file</span>&gt;                Place the output into &lt;<span style="color: #0000ff;">file</span>&gt;
+  -<span style="color: #000000;">pie                     Create a position independent executable
+  </span>-<span style="color: #000000;">shared                  Create a shared library
+  </span>-x &lt;language&gt;<span style="color: #000000;">            Specify the language of the following input files
+                           Permissible languages include: c c</span>++<span style="color: #000000;"> assembler none
+                           </span><span style="color: #800000;">'</span><span style="color: #800000;">none</span><span style="color: #800000;">'</span><span style="color: #000000;"> means revert to the default behavior of
+                           guessing the language based on the </span><span style="color: #0000ff;">file</span><span style="color: #800000;">'</span><span style="color: #800000;">s extension</span>
+<span style="color: #000000;">
+Options starting with </span>-g, -f, -m, -O, -W, or --<span style="color: #000000;">param are automatically
+ passed on to the various sub</span>-processes invoked by <span style="color: #0000ff;">gcc</span><span style="color: #000000;">.  In order to pass
+ other options on to these processes the </span>-W&lt;letter&gt;<span style="color: #000000;"> options must be used.
+
+For bug reporting instructions, please see:
+</span>&lt;<span style="color: #0000ff;">file</span>:<span style="color: #808080;">///</span><span style="color: #008000;">usr/share/doc/gcc-4.9/README.Bugs&gt;.</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>3、You can read the GCC manual pages (or&nbsp;<em>man pages</em>) via the&nbsp;<code>man</code>&nbsp;utility:</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <span style="color: #0000ff;">man</span> <span style="color: #0000ff;">gcc</span><span style="color: #000000;">
+No manual entry </span><span style="color: #0000ff;">for</span> <span style="color: #0000ff;">gcc</span><span style="color: #000000;">
+See </span><span style="color: #800000;">'</span><span style="color: #800000;">man 7 undocumented</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span> help when manual pages are not available.</pre>
+</div>
+<p>4、More GCC Compiler Options</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# g++ hello.<span style="color: #0000ff;">cpp</span> -Wall -g</pre>
+</div>
+<p><code>-Wall</code>: prints "<code>all</code>"&nbsp;<span class="underline">warning messages.&nbsp;</span></p>
+<p><code>-g</code>: generates additional symbolic debug<span class="underline">gging information for use with&nbsp;<code>gdb</code>&nbsp;debugger.</span></p>
+<p>5、Compile and Link Separately</p>
+<p>The above command&nbsp;<em>compile</em>&nbsp;the source file into object file and&nbsp;<code>link</code>&nbsp;with other object files (system library) into executable in one step. You may separate compile and link in two steps as follows:</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+hello.</span><span style="color: #0000ff;">cpp</span><span style="color: #000000;">
+
+root@xkfx:</span>~/labs# <strong>g++ hello.<span style="color: #0000ff;">cpp</span> <span style="color: #ff0000;">-c </span>-Wall -</strong><span style="color: #000000;"><strong>g</strong> </span><span class="color-comment" style="color: #888888;">// Compile-only with -c option</span></pre>
+<pre><span style="color: #000000;"><br />root@xkfx:</span>~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;"> <br />hello.</span><span style="color: #0000ff;">cpp</span> hello.o</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# g++ hello.o -o hello.exe -g <span style="color: #008000;">//</span><span style="color: #008000;"> Link object file(s) into an executable</span>
+root@xkfx:~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+hello.</span><span style="color: #0000ff;">cpp</span><span style="color: #000000;">  hello.exe  hello.o
+
+root@xkfx:</span>~/labs# ./<span style="color: #000000;">hello.exe 
+hello,</span></pre>
+</div>
+<p>&nbsp;6、对于多个源文件编译成一个可执行文件，比较好的实践是，分开编译再链接，这样修改一个源文件就不必再编译所有别的源文件：</p>
+<div class="cnblogs_code">
+<pre><strong>root@xkfx:~/labs# g++ hello.<span style="color: #0000ff;">cpp</span> hello2.<span style="color: #0000ff;">cpp</span> -o hello -<span style="color: #000000;">g
+</span></strong>/tmp/ccGNmFaS.o: In <span style="color: #0000ff;">function</span> `main<span style="color: #800000;">'</span><span style="color: #800000;">:</span>
+<strong>/root/labs/hello2.<span style="color: #0000ff;">cpp</span>:<span style="color: #800080;">5</span>:</strong> multiple definition of `main<span style="color: #800000;">'
+</span>/tmp/ccsm0AxM.o:/root/labs/hello.<span style="color: #0000ff;">cpp</span><strong>:<span style="color: #800080;">5</span></strong><span style="color: #000000;">: first defined here
+collect2: error: </span><span style="color: #0000ff;">ld</span> returned <span style="color: #800080;">1</span><span style="color: #000000;"> exit status
+<strong>root@xkfx:</strong></span><strong>~/labs# g++ hello.<span style="color: #0000ff;">cpp</span> hello2.<span style="color: #0000ff;">cpp</span> -<span style="color: #000000;">o hello
+</span></strong>/tmp/cc1ASkoC.o: In <span style="color: #0000ff;">function</span> `main<span style="color: #800000;">'</span><span style="color: #800000;">:</span>
+<strong>hello2.<span style="color: #0000ff;">cpp</span>:(.text+<span style="color: #800080;">0x0</span>):</strong> multiple definition of `main<span style="color: #800000;">'
+</span>/tmp/cc4ImNYi.o:hello.<span style="color: #0000ff;">cpp</span>:(.text+<span style="color: #800080;">0x0</span><span style="color: #000000;">): first defined here
+collect2: error: </span><span style="color: #0000ff;">ld</span> returned <span style="color: #800080;">1</span> exit status</pre>
+</div>
+<p>上面是错误的示范，顺便可以看到有 -g 和没 -g 的区别，正确姿势：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# g++ hello.<span style="color: #0000ff;">cpp</span> -<span style="color: #000000;">c
+root@xkfx:</span>~/labs# g++ hello2.<span style="color: #0000ff;">cpp</span> -<span style="color: #000000;">c
+<strong>root@xkfx:</strong></span><strong>~/labs# g++ hello.o hello2.o -</strong><span style="color: #000000;"><strong>o hello</strong>
+hello2.o: In </span><span style="color: #0000ff;">function</span> `main<span style="color: #800000;">'</span><span style="color: #800000;">:</span>
+hello2.<span style="color: #0000ff;">cpp</span>:(.text+<span style="color: #800080;">0x0</span>): multiple definition of `main<span style="color: #800000;">'
+</span>hello.o:hello.<span style="color: #0000ff;">cpp</span>:(.text+<span style="color: #800080;">0x0</span><span style="color: #000000;">): first defined here
+collect2: error: </span><span style="color: #0000ff;">ld</span> returned <span style="color: #800080;">1</span> exit status</pre>
+</div>
+<p>这样一旦修改了 hello.cpp 就只需要再次编译 hello.cpp 然后重新链接就可以了。</p>
+<p>7、To compile and link C/C++ program into<strong> a shared library</strong> (<code>".dll"</code>&nbsp;in Windows,&nbsp;<code>".so"</code>&nbsp;in Unixes), use&nbsp;<code>-shared</code>&nbsp;option. Read "<a href="https://www3.ntu.edu.sg/home/ehchua/programming/java/JavaNativeInterface.html">Java Native Interface</a>" for example.</p>
+<p>于是顺手查了下 JNI 是怎么回事：</p>
+<p><strong>jNi就是java调用本地方法的技术</strong>，最简单的来说，java运行一个程序需要要和不同的系统平台打交道，在windows里就是和windows平台底层打交道，mac就是要和mac打交道，jvm就是通过大量的jni技术使得java能够在不同平台上运行。而使用了这技术的一个标志就是native,<strong>如果一个类里的一个方法被native修饰，那就说明这个方法是jni来实现的，他是通过本地系统api里的方法来实现的。</strong>当然这个本地方法可能是c或者C++，当然也可能是别的语言。jni是java跨平台的基础，jvm通过在不同系统上调用不同的本地方法使得jvm可以在不同平台间移植。<br />当前你自己也可以用jni来写一些程序，这种基本上是你以前使用了其他语言完成了一些功能，但是你有要用java来重复这些功能的时候，就可以使用jni来完成了。不过带来的问题就是，如果你的那个本地方法是依托于本地操作系统的话，那就意味着你的java程序也只能在这一个系统上运行了。所以jni就使得java很容易限定在了一个系统平台上，<strong>而jdk的作用在于他提供一个规范</strong>，这个规范就是包含了很多native方法，这些方法都是要本地操作系统来实现的，而实现了这些本地方法的操作系统就可以移植java平台了。<span style="color: #ff00ff;"> ------ 来自 baidu&nbsp;<a class="user-name" href="http://zhidao.baidu.com/usercenter?uid=cabd4069236f25705e79d100" rel="nofollow" target="_blank"><span style="color: #ff00ff;">daay1986</span></a></span></p>
+<p><span style="color: #000000;">8、GCC Compilation Process 图片来自相关资料之二：</span></p>
+<p><span style="color: #ff00ff;"><span style="color: #ff00ff;"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180318140534325-1003771786.png" alt="" /></span></span></p>
+<p><strong>assembly code&nbsp; 汇编代码</strong></p>
+<p>9、You can see the detailed compilation process by enabling&nbsp;<code>-v</code>&nbsp;(<strong>verbose</strong>) option.&nbsp; 详细；啰嗦</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('1a3a0928-0aeb-4d69-9cb3-d5f2f20e475a')"><img id="code_img_closed_1a3a0928-0aeb-4d69-9cb3-d5f2f20e475a" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_1a3a0928-0aeb-4d69-9cb3-d5f2f20e475a" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('1a3a0928-0aeb-4d69-9cb3-d5f2f20e475a',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_1a3a0928-0aeb-4d69-9cb3-d5f2f20e475a" class="cnblogs_code_hide">
+<pre>root@xkfx:~/labs# g++ hello.<span style="color: #0000ff;">cpp</span> -<span style="color: #000000;">v
+Using built</span>-<span style="color: #0000ff;">in</span><span style="color: #000000;"> specs.
+COLLECT_GCC</span>=g++<span style="color: #000000;">
+COLLECT_LTO_WRAPPER</span>=/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/lto-<span style="color: #000000;">wrapper
+Target: x86_64</span>-linux-<span style="color: #000000;">gnu
+Configured with: ..</span>/src/configure -v --with-pkgversion=<span style="color: #800000;">'</span><span style="color: #800000;">Debian 4.9.2-10</span><span style="color: #800000;">'</span> --with-bugurl=<span style="color: #0000ff;">file</span>:<span style="color: #808080;">///</span><span style="color: #008000;">usr/share/doc/gcc-4.9/README.Bugs --enable-languages=c,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.9 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.9 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --disable-vtable-verify --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-4.9-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-4.9-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-4.9-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --with-arch-32=i586 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu</span>
+<span style="color: #000000;">Thread model: posix
+</span><span style="color: #0000ff;">gcc</span> version <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span> (Debian <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span>-<span style="color: #800080;">10</span><span style="color: #000000;">) 
+COLLECT_GCC_OPTIONS</span>=<span style="color: #800000;">'</span><span style="color: #800000;">-v</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-shared-libgcc</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-mtune=generic</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-march=x86-64</span><span style="color: #800000;">'</span>
+ /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE hello.<span style="color: #0000ff;">cpp</span> -quiet -dumpbase hello.<span style="color: #0000ff;">cpp</span> -mtune=generic -march=x86-<span style="color: #800080;">64</span> -auxbase hello -version -o /tmp/<span style="color: #000000;">ccqPyWpO.s
+GNU C</span>++ (Debian <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span>-<span style="color: #800080;">10</span>) version <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span> (x86_64-linux-<span style="color: #000000;">gnu)
+    compiled by GNU C version </span><span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span>, GMP version <span style="color: #800080;">6.0</span>.<span style="color: #800080;">0</span>, MPFR version <span style="color: #800080;">3.1</span>.<span style="color: #800080;">2</span>-p3, MPC version <span style="color: #800080;">1.0</span>.<span style="color: #800080;">2</span><span style="color: #000000;">
+GGC heuristics: </span>--param ggc-min-expand=<span style="color: #800080;">100</span> --param ggc-min-heapsize=<span style="color: #800080;">131072</span><span style="color: #000000;">
+ignoring duplicate directory </span><span style="color: #800000;">"</span><span style="color: #800000;">/usr/include/x86_64-linux-gnu/c++/4.9</span><span style="color: #800000;">"</span><span style="color: #000000;">
+ignoring nonexistent directory </span><span style="color: #800000;">"</span><span style="color: #800000;">/usr/local/include/x86_64-linux-gnu</span><span style="color: #800000;">"</span><span style="color: #000000;">
+ignoring nonexistent directory </span><span style="color: #800000;">"</span><span style="color: #800000;">/usr/lib/gcc/x86_64-linux-gnu/4.9/../../../../x86_64-linux-gnu/include</span><span style="color: #800000;">"</span><span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">...</span><span style="color: #800000;">"</span><span style="color: #000000;"> search starts here:
+#include </span>&lt;...&gt;<span style="color: #000000;"> search starts here:
+ </span>/usr/include/c++/<span style="color: #800080;">4.9</span>
+ /usr/include/x86_64-linux-gnu/c++/<span style="color: #800080;">4.9</span>
+ /usr/include/c++/<span style="color: #800080;">4.9</span>/<span style="color: #000000;">backward
+ </span>/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/<span style="color: #000000;">include
+ </span>/usr/local/<span style="color: #000000;">include
+ </span>/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/include-<span style="color: #000000;">fixed
+ </span>/usr/include/x86_64-linux-<span style="color: #000000;">gnu
+ </span>/usr/<span style="color: #000000;">include
+End of search list.
+GNU C</span>++ (Debian <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span>-<span style="color: #800080;">10</span>) version <span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span> (x86_64-linux-<span style="color: #000000;">gnu)
+    compiled by GNU C version </span><span style="color: #800080;">4.9</span>.<span style="color: #800080;">2</span>, GMP version <span style="color: #800080;">6.0</span>.<span style="color: #800080;">0</span>, MPFR version <span style="color: #800080;">3.1</span>.<span style="color: #800080;">2</span>-p3, MPC version <span style="color: #800080;">1.0</span>.<span style="color: #800080;">2</span><span style="color: #000000;">
+GGC heuristics: </span>--param ggc-min-expand=<span style="color: #800080;">100</span> --param ggc-min-heapsize=<span style="color: #800080;">131072</span><span style="color: #000000;">
+Compiler executable checksum: ff85870e740eb08c48a56c2c170390f8
+COLLECT_GCC_OPTIONS</span>=<span style="color: #800000;">'</span><span style="color: #800000;">-v</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-shared-libgcc</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-mtune=generic</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-march=x86-64</span><span style="color: #800000;">'</span><span style="color: #000000;">
+ as </span>-v --<span style="color: #800080;">64</span> -o /tmp/cc9l3HyT.o /tmp/<span style="color: #000000;">ccqPyWpO.s
+GNU assembler version </span><span style="color: #800080;">2.25</span> (x86_64-linux-gnu) using BFD version (GNU Binutils <span style="color: #0000ff;">for</span> Debian) <span style="color: #800080;">2.25</span><span style="color: #000000;">
+COMPILER_PATH</span>=/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #000000;">
+LIBRARY_PATH</span>=/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../x86_64-linux-gnu/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../:/lib/:/usr/lib/<span style="color: #000000;">
+COLLECT_GCC_OPTIONS</span>=<span style="color: #800000;">'</span><span style="color: #800000;">-v</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-shared-libgcc</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-mtune=generic</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">-march=x86-64</span><span style="color: #800000;">'</span>
+ /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/collect2 -plugin /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/liblto_plugin.so -plugin-opt=/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/lto-wrapper -plugin-opt=-fresolution=/tmp/ccVqDgIY.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-<span style="color: #0000ff;">id</span> --eh-frame-hdr -m elf_x86_64 --hash-style=gnu -dynamic-linker /lib64/<span style="color: #0000ff;">ld</span>-linux-x86-<span style="color: #800080;">64</span>.so.<span style="color: #800080;">2</span> /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../x86_64-linux-gnu/crt1.o /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../x86_64-linux-gnu/crti.o /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/crtbegin.o -L/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span> -L/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../x86_64-linux-gnu -L/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../.. /tmp/cc9l3HyT.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/crtend.o /usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/../../../x86_64-linux-gnu/crtn.o</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>10、You can use the&nbsp;<code>-D<em>name</em></code>&nbsp;option to define a macro, or&nbsp;<code>-D<em>name</em>=<em>value</em></code>&nbsp;to define a macro with a value. The&nbsp;<code><em>value</em></code>&nbsp;should be enclosed in double quotes if it contains spaces. 例如说：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main() 
+{
+    cout </span>&lt;&lt; HELLO &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# g++ hello.<span style="color: #0000ff;">cpp</span> <strong>-DHELLO=<span style="color: #800080;">123</span> </strong>-<span style="color: #000000;">g
+root@xkfx:</span>~/labs# ./<span style="color: #000000;">a.out 
+</span><span style="color: #800080;">123</span></pre>
+</div>
+<p>11、Static Libraries (<span class="font-code">.lib,&nbsp;<span class="font-code">.a)&nbsp;vs. Shared Library (<span class="font-code">.dll,&nbsp;<span class="font-code">.so)</span></span></span></span></p>
+<p>前者是直接把外部代码拷贝进你的代码，然后形成可执行文件。</p>
+<p>后者则是在你的可执行程序跑起来之前，操作系统加载外部代码给你的程序调用。</p>
+<p>因为后者节省空间，内存（好几个程序可以共用一个 share library），GCC 总是会在可能的情况下优先采用动态链接。</p>
+<p>12、Searching for Header Files and Libraries (<span class="font-code">-I,&nbsp;<span class="font-code">-L&nbsp;and&nbsp;<span class="font-code">-l)</span></span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('79f93c7e-361e-429b-93ae-5d2fb64288e4')"><img id="code_img_closed_79f93c7e-361e-429b-93ae-5d2fb64288e4" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_79f93c7e-361e-429b-93ae-5d2fb64288e4" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('79f93c7e-361e-429b-93ae-5d2fb64288e4',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_79f93c7e-361e-429b-93ae-5d2fb64288e4" class="cnblogs_code_hide">
+<pre>When compiling the program, the compiler needs the header files to compile the source codes; the linker needs the libraries to resolve external references from other <span style="color: #0000ff;">object</span> files <span style="color: #0000ff;">or</span> libraries. The compiler <span style="color: #0000ff;">and</span> linker will <span style="color: #0000ff;">not</span> find the headers/libraries unless you set the appropriate options, which <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">not</span> obvious for first-<span style="color: #000000;">time user.
+
+For each of the headers used in your source (via #include directives), the compiler searches the so</span>-called include-paths for these headers. The include-paths are specified via -Idir option (<span style="color: #0000ff;">or</span> environment variable CPATH). Since the header<span style="color: #800000;">'</span><span style="color: #008000;">s filename is known (e.g., iostream.h, stdio.h), the compiler only needs the directories.
+
+The linker searches the so-called library-paths for libraries needed to link the program into an executable. The library-path is specified via -Ldir option (uppercase </span><span style="color: #800000;">'</span>L<span style="color: #800000;">'</span><span style="color: #008000;"> followed by the directory path) (or environment variable LIBRARY_PATH). In addition, you also have to specify the library name. In Unixes, the library libxxx.a is specified via -lxxx option (lowercase letter </span><span style="color: #800000;">'</span>l<span style="color: #800000;">'</span><span style="color: #008000;">, without the prefix "lib" and ".a" extension). In Windows, provide the full name such as -lxxx.lib. The linker needs to know both the directories as well as the library names. Hence, two options need to be specified.</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>13、尝试通过&ldquo;cpp -v&rdquo;列出&ldquo;GNU C预处理器&rdquo;使用的系统中的默认 include路径：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# <span style="color: #0000ff;">cpp</span> -<span style="color: #000000;">v
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ..........................</span>
+<strong>#include <span style="color: #800000;">"</span><span style="color: #800000;">...</span><span style="color: #800000;">"</span><span style="color: #000000;"> search starts here:
+#include </span>&lt;...&gt;<span style="color: #000000;"> search starts here:
+ </span>/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/<span style="color: #000000;">include
+ </span>/usr/local/<span style="color: #000000;">include
+ </span>/usr/lib/<span style="color: #0000ff;">gcc</span>/x86_64-linux-gnu/<span style="color: #800080;">4.9</span>/include-<span style="color: #000000;">fixed
+ </span>/usr/include/x86_64-linux-<span style="color: #000000;">gnu
+ </span>/usr/<span style="color: #000000;">include
+End of search list.</span></strong></pre>
+</div>
+<p>14、Try running the compilation in verbose mode (<code>-v</code>) to study the library-paths (<code>-L</code>) and libraries (<code>-l</code>) used in your system:</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180318150351982-378591745.png" alt="" width="728" height="231" /></p>
+<p>15、通过 file 查看文件类型：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# <span style="color: #0000ff;">file</span><span style="color: #000000;"> hello.o 
+<strong>hello.o: ELF </strong></span><strong><span style="color: #800080;">64</span>-bit LSB relocatable, x86-<span style="color: #800080;">64</span>, version <span style="color: #800080;">1</span></strong><span style="color: #000000;"><strong> (SYSV), not stripped</strong>
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">file</span><span style="color: #000000;"> a.out 
+<strong>a.out: ELF </strong></span><strong><span style="color: #800080;">64</span>-bit LSB executable, x86-<span style="color: #800080;">64</span>, version <span style="color: #800080;">1</span> (SYSV), dynamically linked, interpreter /lib64/<span style="color: #0000ff;">ld</span>-linux-x86-<span style="color: #800080;">64</span>.so.<span style="color: #800080;">2</span>, <span style="color: #0000ff;">for</span> GNU/Linux <span style="color: #800080;">2.6</span>.<span style="color: #800080;">32</span>, BuildID[sha1]=</strong><span style="color: #000000;"><strong>242ba76e8db35435fd054bf0d930f6ed2ca9375c, not stripped</strong>
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">file</span> hello.<span style="color: #0000ff;">cpp</span><strong><span style="color: #000000;"> 
+hello.</span><span style="color: #0000ff;">cpp</span>: C source, ASCII text</strong></pre>
+</div>
+<p>通过&nbsp;<span class="font-code">nm 列出特性文件中的符号信息（像是函数啥的），&nbsp;</span><span class="link_title"><a href="http://blog.csdn.net/stpeace/article/details/47089585">linux中的nm命令简介</a>&nbsp;这篇文章很生动，。（附带动态链接库、静态链接库怎么操作）</span></p>
+<p><span class="link_title">通过 ldd 列出动态链接库，同一位作者&nbsp;&nbsp;</span><span class="link_title"><a href="http://blog.csdn.net/stpeace/article/details/47069215" target="_blank">linux中的ldd命令简介</a></span></p>
+<div class="cnblogs_code">
+<pre>在实际linux开发与调试中， 要经常查看动态库依赖关系， ldd用得还是比较多的， 特别是出现故障的时候。OK, ldd命令就简单介绍到这里了， 虽然简单， 但很实用， 故不可不知。</pre>
+</div>
+<p>16、</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/<span style="color: #000000;">labs# vim hello.c
+root@xkfx:</span>~/<span style="color: #000000;">labs# vim makefile
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+hello.c  makefile</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# <span style="color: #0000ff;">make</span>
+<span style="color: #0000ff;">gcc</span> -<span style="color: #000000;">c hello.c
+</span><span style="color: #0000ff;">gcc</span> -<span style="color: #000000;">o hello.exe hello.o
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+hello.c  hello.exe  hello.o  makefile</span></pre>
+</div>
+<p>&nbsp;makefile 内容：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">all: hello.exe
+
+hello.exe: hello.o
+     </span><span style="color: #0000ff;">gcc</span> -<span style="color: #000000;">o hello.exe hello.o
+
+hello.o: hello.c
+     </span><span style="color: #0000ff;">gcc</span> -<span style="color: #000000;">c hello.c
+     
+clean:
+     </span><span style="color: #0000ff;">rm</span> hello.o hello.exe</pre>
+</div>
+<p>&nbsp;make 指令在没有目标的时候默认就是&nbsp; make all .</p>
+<p>A rule consists of 3 parts: a target, a list of pre-requisites and a command （目标，前提条件，命令）, as follows:</p>
+<div class="cnblogs_code">
+<pre>target: pre-req-<span style="color: #800080;">1</span> pre-req-<span style="color: #800080;">2</span><span style="color: #000000;"> ...
+    command<br /></span></pre>
+</div>
+<p>command 前面必须是 Tab 而不能是 Space</p>
+<p>makefile 的内容定义了 make 指令在该目录下的行为，</p>
+<p>例如输入 make clean ， clean 是目标，没有先决条件，那么就执行命令 rm hello.o hello.exe</p>
+<p>输入 make all ，先决条件是 hello.exe 如果没发现，那么就搜索指令去制造它。</p>
+<p>在制造 hello.exe 的时候，会检查 hello.o 是不是&ldquo;新鲜&rdquo;，（大概是比较创建文档的时间？），如果&ldquo;新鲜&rdquo;才会制造，否则的话：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/<span style="color: #000000;">labs# make
+make: Nothing to be done </span><span style="color: #0000ff;">for</span> <span style="color: #800000;">'</span><span style="color: #800000;">all</span><span style="color: #800000;">'</span>.</pre>
+</div>
+<p>现在想正常跑 make，一个方法是 make&nbsp; clean 一下：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# <span style="color: #0000ff;">make</span><span style="color: #000000;"> clean
+</span><span style="color: #0000ff;">rm</span><span style="color: #000000;"> hello.o hello.exe
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+hello.c  makefile
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">make</span>
+<span style="color: #0000ff;">gcc</span> -<span style="color: #000000;">c hello.c
+</span><span style="color: #0000ff;">gcc</span> -o hello.exe hello.o</pre>
+</div>
+<p>另一个方法就是让 hello.c 变&ldquo;新鲜&rdquo;（不用修改，打开后重新 wq保存一下就可以了。）:</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~/labs# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+hello.c  hello.exe  hello.o  makefile
+root@xkfx:</span>~/<span style="color: #000000;">labs# vim hello.c
+root@xkfx:</span>~/labs# <span style="color: #0000ff;">make</span>
+<span style="color: #0000ff;">gcc</span> -<span style="color: #000000;">c hello.c
+</span><span style="color: #0000ff;">gcc</span> -o hello.exe hello.o</pre>
+</div>
+<p>&nbsp;</p>

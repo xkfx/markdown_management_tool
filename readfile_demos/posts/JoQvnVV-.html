@@ -1,0 +1,129 @@
+<p>主要译自：</p>
+<p><a href="https://docs.spring.io/spring-data/jdbc/docs/current/reference/html/#repositories" target="_blank">https://docs.spring.io/spring-data/jdbc/docs/current/reference/html/#repositories</a></p>
+<p><a href="https://docs.spring.io/spring-data/jdbc/docs/current/reference/html/#jdbc.repositories" target="_blank">https://docs.spring.io/spring-data/jdbc/docs/current/reference/html/#jdbc.repositories</a></p>
+<h2 id="repositories">8. Working with Spring Data Repositories</h2>
+<p>本章解释了Spring Data存储库的<strong>核心概念</strong>和<strong>接口</strong>。</p>
+<p>一言蔽之，Spring Data repository抽象的目标就是&mdash;&mdash;<strong>减少重复的模板代码</strong>。</p>
+<h3 id="repositories.core-concepts">8.1. Core concepts</h3>
+<p>Spring Data repository抽象（abstraction）的中心接口是<span style="color: #3366ff;"><strong>repository</strong></span>。它将<span style="color: #3366ff;">域类（domain class）</span>以及<strong>域类的ID类型</strong>作为<span style="color: #3366ff;">类型参数（type arguments）</span>进行管理。此接口主要用作标记接口，用于捕获要使用的类型，并帮助您发现继承（extend）此类型的<span style="color: #3366ff;">接口</span>。<strong><span style="color: #3366ff;">Crudepository</span></strong><span style="color: #3366ff;">接口</span>为正在管理的<span style="color: #3366ff;">实体类（the entity class）</span>提供复杂的CRUD功能。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span> CrudRepository&lt;<span style="color: #ff0000;"><strong>T, ID</strong></span>&gt; <span style="color: #0000ff;">extends</span> Repository&lt;T, ID&gt;<span style="color: #000000;"> {
+
+  </span>&lt;S <span style="color: #0000ff;">extends</span> T&gt;<span style="color: #000000;"> S save(S entity);      
+
+  Optional</span>&lt;T&gt;<span style="color: #000000;"> findById(ID primaryKey); 
+
+  Iterable</span>&lt;T&gt;<span style="color: #000000;"> findAll();               
+
+  </span><span style="color: #0000ff;">long</span><span style="color: #000000;"> count();                        
+
+  </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> delete(T entity);               
+
+  </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> existsById(ID primaryKey);   
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> &hellip; more functionality omitted.</span>
+}</pre>
+</div>
+<p>从上往下的注释：</p>
+<ol>
+<li>保存给定的实体。（对应&lt;S extends T&gt; S save(S entity);）</li>
+<li>返回由给定ID标识的实体。</li>
+<li>返回所有实体。</li>
+<li>返回实体数。</li>
+<li>删除给定的实体。</li>
+<li>指示具有给定ID的实体是否存在。</li>
+</ol>
+<p>我们还提供<span style="color: #ff0000;">特定于<strong>持久性技术</strong></span>的抽象，如<span style="color: #ff0000;">JpaRepository</span>或<span style="color: #ff0000;">MongoRepository</span>。这些接口扩展（extend）了<span style="color: #ff0000;">Crudepository</span>，并公开了底层持久性技术的功能，以及与持久性技术无关的<span style="color: #ff0000;">通用接口</span>，如CrudRepository。</p>
+<p>在CrudRepository之上，还有一个PagingAndSortingRepository抽象，它添加了其他方法，以简化对实体的分页访问：（见原文）</p>
+<p>除了查询方法外，还可以对计数和删除查询进行<span style="color: #ff0000;">查询派生（query derivation）</span>。下表显示了派生（derived&nbsp;）计数查询的接口定义：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">interface</span> UserRepository <span style="color: #0000ff;">extends</span> CrudRepository&lt;User, Long&gt;<span style="color: #000000;"> {
+
+  </span><span style="color: #0000ff;">long</span><span style="color: #000000;"> countByLastname(String lastname);
+}</span></pre>
+</div>
+<h3 id="repositories.query-methods">8.2. Query Methods</h3>
+<p>标准CRUD功能存储库通常对底层数据存储进行查询。使用Spring数据，声明这些查询将变成一个<span style="color: #ff0000;">四步过程</span>：</p>
+<p>①声明一个接口<span style="color: #ff0000;">继承Repository</span>或其<span style="color: #ff0000;">子接口之一</span>，并将其键入应处理的域类（domain class）和ID类型，如以下示例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">interface</span> PersonRepository <span style="color: #0000ff;">extends</span> Repository&lt;Person, Long&gt; { &hellip; }</pre>
+</div>
+<p>②在接口上声明查询方法。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">interface</span> PersonRepository <span style="color: #0000ff;">extends</span> Repository&lt;Person, Long&gt;<span style="color: #000000;"> {
+  List</span>&lt;Person&gt;<span style="color: #000000;"> findByLastname(String lastname);
+}</span></pre>
+</div>
+<p>③设置Spring，使用JavaConfig或XML配置为这些接口创建代理实例（proxy instances）。<span style="color: #ff0000;">（详见文档）</span></p>
+<p>④注入存储库实例（the repository instance）并使用它，如下例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> SomeClient {
+
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> PersonRepository repository;
+
+  SomeClient(PersonRepository repository) {
+    </span><span style="color: #0000ff;">this</span>.repository =<span style="color: #000000;"> repository;
+  }
+
+  </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> doSomething() {
+    <strong><span style="color: #ff0000;">List</span></strong></span><strong><span style="color: #ff0000;">&lt;Person&gt; persons = repository.findByLastname("Matthews"</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;">);</span></strong>
+  }
+}</span></pre>
+</div>
+<h2 id="jdbc.repositories">9. JDBC Repositories</h2>
+<p>本章指出了JDBC存储库支持的特点。这建立在&ldquo;Working with Spring Data Repositories&rdquo;中介绍的核心存储库支持的基础上。你应该对这里解释的基本概念有很好的理解。</p>
+<h3 id="jdbc.why">9.1. Why Spring Data JDBC?</h3>
+<p>Java世界中关系数据库的主要持久化API当然是JPA，它有自己的Spring数据模块。为什么还有另一个？</p>
+<p>JPA做了很多事情来帮助开发者。除此之外，它还跟踪实体的变化。它为您提供了惰性加载。它允许您将大量对象构造映射到同样广泛的数据库设计。</p>
+<p>这很好，让很多事情变得非常简单。请看一个基本的JPA教程。但对于JPA为什么要做某件事，人们往往会感到困惑。而且，在JPA中，概念上非常简单的事情变得相当困难。</p>
+<p>Spring Data JDBC的目标是在概念上更加简单，包括以下设计决策：</p>
+<ul>
+<li>如果加载实体，SQL语句就会运行。完成后，就有了一个完全加载的实体。没有进行延迟加载或缓存。</li>
+<li>如果保存一个实体，它将被保存。如果你不这样做，它就不会。没有肮脏的跟踪和会话。</li>
+<li>关于如何将实体映射到表，有一个简单的模型。它可能只适用于相当简单的情况。如果你不喜欢这样，你应该编写自己的策略。Spring Data JDBC对使用注释定制策略的支持非常有限。</li>
+</ul>
+<h3 id="jdbc.domain-driven-design">9.2. Domain Driven Design and Relational Databases.</h3>
+<p>所有Spring数据模块都受到<span style="color: #ff0000;">域驱动设计（DDD）</span>中&ldquo;存储库&rdquo;、&ldquo;聚合&rdquo;和&ldquo;聚合根&rdquo;概念的启发。这些对于Spring Data JDBC可能更重要，因为它们在某种程度上<span style="color: #ff0000;">与处理关系数据库时的常规做法相反</span>。</p>
+<p><span style="color: #ff0000;">聚合（aggregate）</span>是一组实体，保证在对其进行原子更改时保持一致。一个典型的例子是带有<span style="color: #ff0000;">OrderItems</span>的<strong><span style="color: #ff0000;">Order</span></strong>。<span style="color: #ff0000;">Order</span>上的属性（例如，<span style="color: #ff0000;">numberOfItems</span>与<span style="color: #ff0000;">OrderItems</span>的实际数量一致）在进行更改时保持一致。</p>
+<p>聚合之间的引用（References）并不保证一直都是一致的。但他们保证最终会是一致的。</p>
+<p>每个聚合有且仅有一个<span style="color: #ff0000;">聚合根（aggregate root）</span>，它是聚合的一个实体。<span style="color: #ff0000;">仅通过<strong>聚合根</strong>上的方法对聚合进行操作</span>。这些是前面提到的原子变化。</p>
+<p><span style="color: #ff0000;">存储库（repository）</span>是持久化存储的抽象，它看起来像是某个类型的所有聚合的集合。对于一般的Spring Data，这意味着您希望每个聚合根都有一个<strong><span style="color: #ff0000;">Repository</span></strong>。此外，对于Spring Data JDBC，这意味着从<span style="color: #ff0000;">聚合根</span>可访问的所有实体都被认为是该聚合根的一部分。<span style="color: #3366ff;">Spring Data JDBC假设只有聚合具有存储聚合的非根实体的表的外键，并且没有其他实体指向非根实体。<strong>（？？？？）</strong></span></p>
+<p>在当前的实现中，Spring Data JDBC删除并重新创建从聚合根引用的实体。</p>
+<p>您可以使用与您的工作和设计数据库的风格相匹配的实现来覆盖存储库方法。</p>
+<h3 id="jdbc.getting-started">9.3. Getting Started</h3>
+<p>引导设置工作环境的一种简单方法是在STS或Spring Initializer中创建一个基于Spring的项目。</p>
+<p>首先，您需要设置一个正在运行的数据库服务器。有关如何为JDBC访问配置数据库的信息，请参阅供应商文档。</p>
+<h3 id="jdbc.examples-repo">9.4. Examples Repository</h3>
+<p><a href="https://github.com/spring-projects/spring-data-examples" target="_blank">https://github.com/spring-projects/spring-data-examples</a></p>
+<h3 id="jdbc.java-config">9.5. Annotation-based Configuration</h3>
+<p>Spring Data JDBC存储库支持可以通过Java配置的注释激活，如下例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Configuration
+@EnableJdbcRepositories   </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为从Repository派生的接口创建实现                                                             </span>
+<span style="color: #0000ff;">class</span> ApplicationConfig <span style="color: #0000ff;">extends</span> AbstractJdbcConfiguration { <span style="color: #008000;">//</span><span style="color: #008000;"> 提供Spring Data JDBC所需的各种默认bean                            </span>
+<span style="color: #000000;">
+    @Bean
+    DataSource dataSource() {                                                         
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建连接到数据库的数据源。
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这是以下两种bean方法所必需的。</span>
+        EmbeddedDatabaseBuilder builder = <span style="color: #0000ff;">new</span><span style="color: #000000;"> EmbeddedDatabaseBuilder();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> builder.setType(EmbeddedDatabaseType.HSQL).build();
+    }
+
+    @Bean
+    NamedParameterJdbcOperations namedParameterJdbcOperations(DataSource dataSource) { 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建Spring Data JDBC用于访问数据库的NamedParameterJDBC操作</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Bean
+    TransactionManager transactionManager(DataSource dataSource) {   
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Spring Data JDBC利用Spring JDBC提供的事务管理。</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DataSourceTransactionManager(dataSource);
+    }
+}</span></pre>
+</div>
+<p>前面示例中的配置类通过使用spring-jdbc的<span style="color: #ff0000;">EmbeddedDatabaseBuilder</span> <span style="color: #ff0000;">API</span>建立嵌入式HSQL数据库。然后使用<span style="color: #ff0000;">DataSource</span>设置<span style="color: #ff0000;">NamedParameterJdbcOperations</span>和<span style="color: #ff0000;">TransactionManager</span>。最后，我们使用<span style="color: #ff0000;">@EnableJdbcRepositories</span>激活Spring Data JDBC存储库。如果没有配置基本包，它将使用配置类所在的包。扩展<span style="color: #ff0000;">AbstractJdbcConfiguration</span>可确保注册各种bean。覆盖其方法可用于自定义设置（见下文）。</p>
+<p>使用Spring Boot可以进一步简化此配置。在Spring Boot中，一旦s<span style="color: #ff0000;">pring-boot-starter-data-jdbc</span>包含在依赖项中，数据源就足够了。其他一切都由Spring Boot完成。</p>
+<p>在这个设置中，可能需要定制一些东西。</p>
+<p>&nbsp;</p>

@@ -1,0 +1,172 @@
+<p>饮水思源：<a href="https://spring.io/guides/gs/accessing-data-mysql/" target="_blank">https://spring.io/guides/gs/accessing-data-mysql/</a></p>
+<p>①通过<a href="https://start.spring.io/" target="_blank">https://start.spring.io/</a>创建项目，添加Spring Web, Spring Data JPA, 和MySQL Driver这三个依赖。</p>
+<p>②创建数据库</p>
+<p>打开命令行工具登陆一个可以创建用户的用户：</p>
+<div class="cnblogs_code">
+<pre>D:\Temp&gt;<strong>mysql -uxkfx -p</strong></pre>
+</div>
+<p>创建一个新的数据库：</p>
+<div class="cnblogs_code">
+<pre>create database db_example;</pre>
+</div>
+<p>创建一个新的用户：</p>
+<div class="cnblogs_code">
+<pre><strong>create user <span style="color: #800000;">'</span><span style="color: #800000;">springuser</span><span style="color: #800000;">'</span>@<span style="color: #800000;">'</span><span style="color: #800000;">%</span><span style="color: #800000;">'</span> identified by <span style="color: #800000;">'</span><span style="color: #800000;">ThePassword</span><span style="color: #800000;">'</span>;</strong></pre>
+</div>
+<p>查看是否创建成功：</p>
+<div class="cnblogs_code">
+<pre>mysql&gt;<strong><span style="color: #000000;"> SELECT user,host FROM mysql.user;
+</span></strong>+---------------+-----------+
+| user          | host      |
++---------------+-----------+
+| springuser    | %         |
+| xkfx          | %         |
+| mysql.session | localhost |
+| mysql.sys     | localhost |
+| root          | localhost |
++---------------+-----------+</pre>
+</div>
+<p>把新数据库的所有权限都赋予新用户：</p>
+<div class="cnblogs_code">
+<pre><strong>grant all on db_example.* to <span style="color: #800000;">'</span><span style="color: #800000;">springuser</span><span style="color: #800000;">'</span>@<span style="color: #800000;">'</span><span style="color: #800000;">%</span><span style="color: #800000;">'</span>;</strong></pre>
+</div>
+<p>③编辑<span style="color: #ff0000;">application.properties</span></p>
+<p>Spring Data JPA底层默认用hibernate实现。</p>
+<p>需要对数据源以及hibernate的一些行为进行配置：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;">spring.jpa.hibernate.ddl-auto=<strong>update
+</strong></span>spring.datasource.url=<strong><span style="color: #ff0000;">jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_example</span></strong>
+spring.datasource.username=<span style="color: #000000;">springuser
+spring.datasource.password</span>=<span style="color: #000000;">ThePassword
+spring.datasource.driver</span>-class-name =<span style="color: #000000;"><span style="color: #ff0000;"><strong>com.mysql.cj.jdbc.Driver</strong></span>
+#spring.jpa.show</span>-sql: <span style="color: #0000ff;">true</span></pre>
+</div>
+<p>关于<span style="color: #ff0000;">spring.jpa.hibernate.ddl-auto</span>属性，<a href="https://spring.io/guides/gs/accessing-data-mysql/" target="_blank">原文</a>有较详细说明。</p>
+<p><strong><span style="color: #0000ff;">④创建实体（@Entity）模型：</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.accessingdatamysql;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.persistence.Entity;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.persistence.GeneratedValue;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.persistence.GenerationType;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.persistence.Id;
+
+@Entity </span><span style="color: #008000;">//</span><span style="color: #008000;"> This tells Hibernate to make a table out of this class</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> User {
+  @Id
+  @GeneratedValue(strategy</span>=<span style="color: #000000;">GenerationType.AUTO)
+  </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Integer id;
+
+  </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+
+  </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String email;
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Integer getId() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> id;
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setId(Integer id) {
+    </span><span style="color: #0000ff;">this</span>.id =<span style="color: #000000;"> id;
+  }
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setName(String name) {
+    </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+  }
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getEmail() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> email;
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setEmail(String email) {
+    </span><span style="color: #0000ff;">this</span>.email =<span style="color: #000000;"> email;
+  }
+}</span></pre>
+</div>
+<p>hibernate将自动把实体翻译成一张表。</p>
+<p><span style="color: #0000ff;"><strong>⑤创建Repository</strong></span></p>
+<p>您需要创建保存用户记录的存储库：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.accessingdatamysql;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.data.repository.CrudRepository;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.example.accessingdatamysql.User;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> CRUD refers Create, Read, Update, Delete</span>
+
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span> <strong><span style="color: #ff0000;">UserRepository</span> </strong><span style="color: #0000ff;">extends</span> CrudRepository&lt;User, Integer&gt;<span style="color: #000000;"> {
+
+}</span></pre>
+</div>
+<p>Spring在一个具有相同名称的bean中<strong><span style="color: #ff0000;">自动实现</span></strong>了这个存储库接口（大小写发生了变化）&mdash;&mdash;它叫<span style="color: #ff0000;">userRepository</span></p>
+<p><strong><span style="color: #0000ff;">⑥创建一个控制器</span></strong></p>
+<p>您需要创建一个控制器来处理对应用程序的HTTP请求，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.accessingdatamysql;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.beans.factory.annotation.Autowired;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.stereotype.Controller;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.GetMapping;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.PostMapping;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.RequestMapping;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.RequestParam;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller </span><span style="color: #008000;">//</span><span style="color: #008000;"> This means that this class is a Controller</span>
+@RequestMapping(path="/demo") <span style="color: #008000;">//</span><span style="color: #008000;"> This means URL's start with /demo (after Application path)</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MainController {
+  @Autowired </span><span style="color: #008000;">//</span><span style="color: #008000;"> This means to get the bean called userRepository
+         </span><span style="color: #008000;">//</span><span style="color: #008000;"> Which is auto-generated by Spring, we will use it to handle the data</span>
+  <span style="color: #0000ff;">private</span><span style="color: #000000;"> UserRepository userRepository;
+
+  @PostMapping(path</span>="/add") <span style="color: #008000;">//</span><span style="color: #008000;"> Map ONLY POST Requests</span>
+  <span style="color: #0000ff;">public</span><span style="color: #000000;"> @ResponseBody String addNewUser (@RequestParam String name
+      , @RequestParam String email) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> @ResponseBody means the returned String is the response, not a view name
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> @RequestParam means it is a parameter from the GET or POST request</span>
+<span style="color: #000000;">
+    User n </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> User();
+    n.setName(name);
+    n.setEmail(email);
+    userRepository.save(n);
+    </span><span style="color: #0000ff;">return</span> "Saved"<span style="color: #000000;">;
+  }
+
+  @GetMapping(path</span>="/all"<span style="color: #000000;">)
+  </span><span style="color: #0000ff;">public</span> @ResponseBody Iterable&lt;User&gt;<span style="color: #000000;"> getAllUsers() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> This returns a JSON or XML with the users</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> userRepository.findAll();
+  }
+}</span></pre>
+</div>
+<p><span style="color: #0000ff;"><strong>⑦程序入口已经自动创建了，所以直接打包运行程序：</strong></span></p>
+<div class="cnblogs_code">
+<pre>$ mvn <span style="color: #0000ff;">package</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>$ java -jar target/accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p>打包过程顺利，但是<span style="color: #ff0000;">运行过程却出现了异常</span>。我发现数据库中已经多了hibernate_sequence和user这两张表。</p>
+<p>错误日志主要信息：</p>
+<p>ERROR 12568 --- [ main] com.zaxxer.hikari.pool.PoolBase : HikariPool-1 - <span style="color: #ff0000;">Failed to execute isValid() for connection, configure connection test query</span> (<span style="color: #ff0000;"><strong>com.mysql.jdbc.Connection.isValid(I)Z</strong></span>).</p>
+<p>WARN 12568 --- [ main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: <span style="color: #ff0000;">Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]</span>: Invocation of init method failed; nested exception is <span style="color: #ff0000;">java.lang.AbstractMethodError: <strong>com.mysql.jdbc.Connection.isValid(I)Z</strong></span></p>
+<p>对BUG进行复现发现，数据库中的表是<span style="color: #0000ff;">在执行mvn package时创建的，而非执行java命令时创建的。</span></p>
+<p>该BUG已解决，且已更新到上文（2022年3月13日），详见：<a href="https://www.cnblogs.com/xkxf/p/15999655.html" target="_blank">https://www.cnblogs.com/xkxf/p/15999655.html</a></p>
+<p>⑧手动测试。</p>
+<p>通过curl指令POST一些数据到数据库：</p>
+<div class="cnblogs_code">
+<pre>curl localhost:<span style="color: #800080;">8080</span>/demo/add -d name=xkfx -d email=<span style="color: #800080;">1223830128309</span>@qq.com   </pre>
+</div>
+<p>可以通过curl，也可以通过浏览器访问http://localhost:8080/demo/all去查看数据：</p>
+<div class="cnblogs_code">
+<pre>[{"id":1,"name":"xkfx","email":"1223830128309@qq.com"},<br />{"id":2,"name":"xk3123fx","email":"1223830128309@qq.com"},<br />{"id":3,"name":"xk3123fx","email":"1223830128309@qq.com"},<br />{"id":4,"name":"xk3123fx","email":"1223830128123309@qq.com"},<br />{"id":5,"name":"xk3123123fx","email":"1223830128123309@qq.com"}]</pre>
+</div>
+<p>也可以去数据库验证。</p>
+<p>&nbsp;</p>
+<p>⑨一些安全性的改变。详见<a href="https://spring.io/guides/gs/accessing-data-mysql/" target="_blank">原文。</a></p>
+<p>&nbsp;</p>

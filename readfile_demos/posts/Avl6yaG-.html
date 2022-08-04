@@ -1,0 +1,37 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖雪峰的官方网站</a></p>
+<p>1、<strong>递归函数的优点</strong>是定义简单，逻辑清晰。</p>
+<p>&nbsp;</p>
+<p>2、<strong>使用递归函数</strong>需要注意防止栈溢出。</p>
+<p>&nbsp;</p>
+<p>3、在计算机中，函数调用是通过<strong>栈（stack）</strong>这种数据结构实现的，每当进入一个函数调用，栈就会加一层栈帧，每当函数返回，栈就会减一层栈帧。</p>
+<p>&nbsp;</p>
+<p>4、由于栈的大小不是无限的，所以，递归调用的次数过多，会导致栈溢出。例如<strong>调用</strong>&nbsp;<code>fact(1000)会出现：</code></p>
+<p><code>RecursionError: maximum recursion depth exceeded in&nbsp;</code><code>comparison 递归错误：超过最大递归深度</code></p>
+<p>&nbsp;</p>
+<p>5、解决递归调用栈溢出的方法是通过<strong>尾递归</strong>优化，事实上尾递归和循环的效果是一样的，</p>
+<p>&nbsp;</p>
+<p>所以，把循环看成是一种特殊的尾递归函数也是可以的，</p>
+<p>&nbsp;</p>
+<p>原理：递归本身无论调用多少次，都只占用一个栈帧。</p>
+<p>&nbsp;</p>
+<p>6、<strong>大多数编程语言没有针对尾递归做优化，Python解释器也没有做优化，所以，即使把上面的<code>fact(n)</code>函数改成尾递归方式，也会导致栈溢出。</strong></p>
+<p>&nbsp;</p>
+<h3 id="-">练习</h3>
+<p>汉诺塔：有三根相邻的柱子，标号为A、B、C，A柱子上从下到上按金字塔状叠放着n个不同大小的圆盘，要把所有盘子一个一个移动到柱子C上，并且每次移动，同一根柱子上都不能出现大盘子在小盘子上方。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> move(n, a, b, c):
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 递归边界 </span>
+    <span style="color: #0000ff;">if</span> n==1<span style="color: #000000;">:
+        </span><span style="color: #0000ff;">print</span>(a,<span style="color: #800000;">'</span><span style="color: #800000;">--&gt;</span><span style="color: #800000;">'</span><span style="color: #000000;">,c)
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> None
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 手下1</span>
+    move(n-1<span style="color: #000000;">, a, c, b);
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 自己动手</span>
+    <span style="color: #0000ff;">print</span>(a, <span style="color: #800000;">'</span><span style="color: #800000;">--&gt;</span><span style="color: #800000;">'</span><span style="color: #000000;">, c);
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 手下2</span>
+    move(n-1, b, a, c);</pre>
+</div>
+<p>&nbsp;</p>
+<p>递归本身就是为了方便人脑思维的。递归的思维方式就是：某人需要完成某一件事情，只需要委托另一个人（或者几个）完成一些事情，而另一个人只需要和委托者做相同的事情，最终就可以完成这件事情。例如我需要把n个不同大小的原盘从A移动到C，最简单的方式就是：先叫手下1把n-1个圆盘移动到B（不关注他是如何移的），然后由我自己把A盘剩下的1个圆盘移动到C，最后再叫手下2把n-1个圆盘从B移动到C。<strong>至于手下1和手下2怎么完成任务，只需要和我做同样的事情就可以了。</strong></p>
+<p>&nbsp;</p>

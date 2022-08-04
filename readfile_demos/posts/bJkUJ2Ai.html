@@ -1,0 +1,435 @@
+<p><a href="#a1">失败一</a> ※ <a href="#a2">失败二</a>&nbsp; ※ <a href="#a3">失败三</a>&nbsp;※ <a href="#a8">完</a></p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;"><a name="a1"></a>1- </span></strong>确认机型：</p>
+<div class="cnblogs_code">
+<pre>root@iZwz:~# <strong>lsb_release -</strong><span style="color: #000000;"><strong>a</strong>
+LSB Version:    core</span>-<span style="color: #800080;">2.0</span>-amd64:core-<span style="color: #800080;">2.0</span>-noarch:core-<span style="color: #800080;">3.0</span>-amd64:core-<span style="color: #800080;">3.0</span>-noarch:core-<span style="color: #800080;">3.1</span>-amd64:core-<span style="color: #800080;">3.1</span>-noarch:core-<span style="color: #800080;">3.2</span>-amd64:core-<span style="color: #800080;">3.2</span>-noarch:core-<span style="color: #800080;">4.0</span>-amd64:core-<span style="color: #800080;">4.0</span>-noarch:core-<span style="color: #800080;">4.1</span>-amd64:core-<span style="color: #800080;">4.1</span>-noarch:security-<span style="color: #800080;">4.0</span>-amd64:security-<span style="color: #800080;">4.0</span>-noarch:security-<span style="color: #800080;">4.1</span>-amd64:security-<span style="color: #800080;">4.1</span>-<span style="color: #000000;">noarch
+Distributor ID:    Debian
+Description:    Debian GNU</span>/Linux <span style="color: #800080;">8.8</span><span style="color: #000000;"> (jessie)
+Release:    </span><span style="color: #800080;">8.8</span><span style="color: #000000;">
+Codename:    jessie</span></pre>
+</div>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">2- </span></strong>确保安装了 tomcat 运行所需要的 JRE ：</p>
+<div class="cnblogs_code">
+<pre>java -version</pre>
+</div>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">3- </span></strong>确保安装了<a href="http://man.linuxde.net/wget" target="_blank"> wget </a>&nbsp;和 <a href="http://man.linuxde.net/unzip" target="_blank">unzip </a>（辅助后续安装）：</p>
+<div class="cnblogs_code">
+<pre>apt-get update &amp;&amp; apt-<span style="color: #000000;">get upgrade
+
+apt</span>-get <span style="color: #0000ff;">install</span> <span style="color: #0000ff;">unzip</span> <span style="color: #0000ff;">wget</span></pre>
+</div>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">4- </span></strong>创建一个单独的系统用户来跑 tomcat （网站建议），通过以下命令：</p>
+<div class="cnblogs_code">
+<pre>useradd -r tomcat --shell /bin/<span style="color: #0000ff;">false</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">shell进程是执行其它进程的进程，但在执行一个命令时，shell进程会指示内核把指定的程序作为另一个进程分开执行，并将输出写到终端。
+通过命令选项，我们可以修改命令执行的行为。命令行选项可以分为短命令行选项和长命令行选项两种。短命令行选项是由字母组成，长命令行选项是由单词组成。短命令行选项在选项前使用单横杠&ldquo;</span>-&rdquo;，长命令行选项前使用双横杠&ldquo;--&rdquo;。如果选项后面需要输入选项的参数，短命令行选项和参数之间使用空格分隔，而长命令行选项使用等号&ldquo;=<span style="color: #000000;">&rdquo;连接选项和参数。
+通过在命令后面添加选项&ldquo;</span>--help&rdquo;、&ldquo;-h&rdquo;或&ldquo;-？&rdquo;，我们可以获得一个命令的帮助信息。<strong> --- by 洪军不怕远征难</strong></pre>
+</div>
+<p><a class="question-hyperlink" href="https://unix.stackexchange.com/a/11382" target="_blank">What does &ldquo;--&rdquo; (double-dash) mean? (also known as &ldquo;bare double dash&rdquo;)</a>&nbsp;&lt;-- 不相关的笔记 :p</p>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">5- </span></strong>从网站下载 tomcat 到 /opt 目录下，和 windows 其实是一样的。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180222210949581-258939764.png" alt="" width="384" height="135" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">wget</span> <a href="https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.41/src/" target="_blank">https:<span style="color: #008000;">//</span></a><span style="color: #008000;"><a href="https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.41/src/" target="_blank">archive.apache.org/dist/tomcat/tomcat-8/v8.0.41/src/</a>apache-tomcat-8.0.41-src.tar.gz -P /opt</span></pre>
+</div>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">&nbsp;6- </span></strong>下载好后解压缩（到这里感觉都装好了 = =）</p>
+<div class="cnblogs_code">
+<pre>cd /<span style="color: #000000;">opt
+</span><span style="color: #0000ff;">tar</span> -zxf apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span>.<span style="color: #0000ff;">tar</span>.gz</pre>
+</div>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">&nbsp;7- </span></strong>创建汤姆猫的&ldquo;符号链接&rdquo;（？）并设置适当的所有权</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">ln</span> -s /opt/apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span> /opt/tomcat-<span style="color: #000000;">latest
+</span><span style="color: #0000ff;">chown</span> -hR tomcat: /opt/tomcat-latest /opt/apache-tomcat-*</pre>
+</div>
+<p>弄好后在 /opt 目录下是这个情况：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180222212124841-1412944007.png" alt="" width="695" height="45" /></p>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">&nbsp;8- </span></strong>创建一个系统初始化文件以便&nbsp;&nbsp;start/restart/stop 汤姆猫：</p>
+<div class="cnblogs_code">
+<pre>nano /etc/systemd/system/tomcat.service</pre>
+</div>
+<p>copy 下面的内容：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">[Unit]
+Description</span>=<span style="color: #000000;">Tomcat8
+After</span>=<span style="color: #000000;">network.target
+
+[Service]
+Type</span>=<span style="color: #000000;">forking
+User</span>=<span style="color: #000000;">tomcat
+Group</span>=<span style="color: #000000;">tomcat
+
+Environment</span>=CATALINA_PID=/opt/tomcat-latest/<span style="color: #000000;">tomcat8.pid
+Environment</span>=TOMCAT_JAVA_HOME=/usr/bin/<span style="color: #000000;">java
+Environment</span>=CATALINA_HOME=/opt/tomcat-<span style="color: #000000;">latest
+Environment</span>=CATALINA_BASE=/opt/tomcat-<span style="color: #000000;">latest
+Environment</span>=CATALINA_OPTS=<span style="color: #000000;">
+Environment</span>=<span style="color: #800000;">"</span><span style="color: #800000;">JAVA_OPTS=-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx512m</span><span style="color: #800000;">"</span><span style="color: #000000;">
+
+ExecStart</span>=/opt/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+ExecStop</span>=/bin/<span style="color: #0000ff;">kill</span> -<span style="color: #800080;">15</span><span style="color: #000000;"> $MAINPID
+
+[Install]
+WantedBy</span>=multi-user.target</pre>
+</div>
+<div class="cnblogs_code">
+<pre>linux下 nano 在编辑状态下退出请按Ctrl+X，会有两种情形： 如果文件未修改，直接退出； 如果修改了文件，下面会询问是否需要保存修改。输入Y确认保存，输入N不保存，按Ctrl+C取消返回。如果输入了Y，下一步会提示输入想要保存的文件名。如果不需要修改文件名直接回车就行；若想要保存成别的名字（也就是另存为）则 ... <strong>(来自百度知道 happygrid)</strong></pre>
+</div>
+<p><strong><span style="color: #ff00ff; background-color: #ffff99;">&nbsp;9- </span></strong>最后几个命令</p>
+<div class="cnblogs_code">
+<pre><strong>systemctl daemon-reload</strong> # 重载所有修改过的配置文件</pre>
+</div>
+<div class="cnblogs_code">
+<pre><strong>systemctl restart tomcat.service</strong> # 文章里是直接 restart tomcat 但是我用了报错。。后来发现其实效果是一样的</pre>
+</div>
+<div class="cnblogs_code">
+<pre><strong>systemctl enable tomcat</strong></pre>
+</div>
+<div class="cnblogs_code">
+<pre><a href="http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html" target="_blank"><span style="color: #000000;">如果配置文件里面设置了开机启动，systemctl enable命令相当于激活开机启动。<br />
+与之对应的，systemctl disable命令用于在两个目录之间，撤销符号链接关系，相当于撤销开机启动。 </span><strong>-- 阮一峰</strong> </a></pre>
+</div>
+<p>&nbsp;</p>
+<p>------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p>&nbsp;出点差错。。抛点 bug 才比较有真实感。</p>
+<p>按流程走下来，在 restart 和 enable 时都抛出了下面的提示（我的主机是这样 --- 囧）：</p>
+<div class="cnblogs_code">
+<pre>Job <span style="color: #0000ff;">for</span> tomcat.service failed. See <span style="color: #800000;">'</span><span style="color: #800000;">systemctl status tomcat.service</span><span style="color: #800000;">'</span> and <span style="color: #800000;">'</span><span style="color: #800000;">journalctl -xn</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span> details.</pre>
+</div>
+<p>&nbsp;<a class="question-hyperlink" href="https://unix.stackexchange.com/questions/235891/tomcat-8-will-not-start-after-initial-install" target="_blank">tomcat 8 will not start after initial install</a></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180223101518047-1311389160.png" alt="" width="557" height="160" /></p>
+<p>按照上面解决方案做抛出这个错误信息&nbsp;<a class="question-hyperlink" href="https://askubuntu.com/questions/59458/error-message-sudo-unable-to-resolve-host-user" target="_blank">Error message 'sudo: unable to resolve host &lt;USER&gt;'</a>&nbsp;我直接到阿里云控制台改HostName就解决了。</p>
+<p>成功输入上面的命令 restart 还是没用，于是换教程 2 。</p>
+<p>------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>&nbsp;先决条件：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:<strong>/usr/lib/jvm/java-8-oracle</strong># ls -<span style="color: #000000;">lsh
+total 26M
+</span>4.0K drwxr-xr-x 2 root root 4.0K Jan 14 00:53<span style="color: #000000;"> bin
+</span>4.0K -r--r--r-- 1 root root 3.2K Jan 14 00:53<span style="color: #000000;"> COPYRIGHT
+</span>4.0K drwxr-xr-x 4 root root 4.0K Jan 14 00:53<span style="color: #000000;"> db
+</span>4.0K drwxr-xr-x 3 root root 4.0K Jan 14 00:53<span style="color: #000000;"> include
+</span>5.0M -rwxr-xr-x 1 root root 5.0M Jan 14 00:53 javafx-<span style="color: #000000;">src.zip
+</span>4.0K drwxr-xr-x 5 root root 4.0K Jan 14 00:53<span style="color: #000000;"> jre
+</span>4.0K drwxr-xr-x 5 root root 4.0K Jan 14 00:53<span style="color: #000000;"> lib
+</span>4.0K -r--r--r-- 1 root root   40 Jan 14 00:53<span style="color: #000000;"> LICENSE
+</span>4.0K drwxr-xr-x 4 root root 4.0K Jan 14 00:53<span style="color: #000000;"> man
+</span>4.0K -r--r--r-- 1 root root  159 Jan 14 00:53<span style="color: #000000;"> README.html
+</span>4.0K -rw-r--r-- 1 root root  526 Jan 14 00:53<span style="color: #000000;"> release
+ 21M </span>-rw-r--r-- 1 root root  21M Jan 14 00:53<span style="color: #000000;"> src.zip
+ 64K </span>-rwxr-xr-x 1 root root  63K Jan 14 00:53 THIRDPARTYLICENSEREADME-<span style="color: #000000;">JAVAFX.txt
+144K </span>-r--r--r-- 1 root root 142K Jan 14 00:53<span style="color: #000000;"> THIRDPARTYLICENSEREADME.txt
+root@xkfx:</span>/usr/lib/jvm/java-8-<span style="color: #000000;">oracle# <strong>echo $JAVA_HOME</strong> 
+</span><strong>/usr/lib/jvm/java-8-oracle</strong></pre>
+</div>
+<p>&nbsp;先删除上面创建的用户：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/<span style="color: #000000;"># userdel tomcat
+root@xkfx:</span>/<span style="color: #000000;"># who # 查看当前登陆用户
+root     pts</span>/0        2018-02-23 10:13 (*******)</pre>
+</div>
+<p>&nbsp;1</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/# cd /opt/<span style="color: #000000;">
+root@xkfx:</span>/opt# ls -<span style="color: #000000;">lsh
+total </span>4<span style="color: #000000;">.8M
+</span>4.0K drwxr-xr-x 9 999 999 4.0K Feb 22 21:16 apache-tomcat-8.0.41-<span style="color: #000000;">src
+</span>4.8M -rw-r--r-- 1 999 999 4.8M Jan 19  2017 apache-tomcat-8.0.41-<span style="color: #000000;">src.tar.gz
+   </span>0 lrwxrwxrwx 1 999 999   25 Feb 22 21:19 tomcat-latest -&gt; /opt/apache-tomcat-8.0.41</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# <span style="color: #0000ff;">mv</span> apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span>-<span style="color: #000000;">src tomcat8
+root@xkfx:</span>/opt# <span style="color: #0000ff;">ls</span> -<span style="color: #000000;">lsh
+total </span><span style="color: #800080;">4.8M</span>
+<span style="color: #800080;">4.8M</span> -rw-r--r-- <span style="color: #800080;">1</span> <span style="color: #800080;">999</span> <span style="color: #800080;">999</span> <span style="color: #800080;">4.8M</span> Jan <span style="color: #800080;">19</span>  <span style="color: #800080;">2017</span> apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span>-src.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz
+</span><span style="color: #800080;">4</span>.0K drwxr-xr-x <span style="color: #800080;">9</span> <span style="color: #800080;">999</span> <span style="color: #800080;">999</span> <span style="color: #800080;">4</span>.0K Feb <span style="color: #800080;">22</span> <span style="color: #800080;">21</span>:<span style="color: #800080;">16</span><span style="color: #000000;"> tomcat8
+   </span><span style="color: #800080;">0</span> lrwxrwxrwx <span style="color: #800080;">1</span> <span style="color: #800080;">999</span> <span style="color: #800080;">999</span>   <span style="color: #800080;">25</span> Feb <span style="color: #800080;">22</span> <span style="color: #800080;">21</span>:<span style="color: #800080;">19</span> tomcat-latest -&gt; /opt/apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span></pre>
+</div>
+<p>&nbsp;2</p>
+<div class="cnblogs_code">
+<pre><strong>root@xkfx:/opt# <span style="color: #0000ff;">sudo</span> useradd -s /sbin/nologin -d /opt/tomcat/<span style="color: #000000;">temp tomcat
+root@xkfx:</span>/opt# <span style="color: #0000ff;">sudo</span> <span style="color: #0000ff;">chown</span> -R tomcat:tomcat /opt/</strong><span style="color: #000000;"><strong>tomcat8</strong>
+<strong>root@xkfx:</strong></span><strong>/opt# <span style="color: #0000ff;">pwd</span></strong>
+/<span style="color: #000000;">opt
+root@xkfx:</span>/opt# <span style="color: #0000ff;">ls</span> -<span style="color: #000000;">lsh
+total </span><span style="color: #800080;">4.8M</span>
+<span style="color: #800080;">4.8M</span> -rw-r--r-- <span style="color: #800080;">1</span>    <span style="color: #800080;">999</span>    <span style="color: #800080;">999</span> <span style="color: #800080;">4.8M</span> Jan <span style="color: #800080;">19</span>  <span style="color: #800080;">2017</span> apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span>-src.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz
+</span><span style="color: #800080;">4</span>.0K drwxr-xr-x <span style="color: #800080;">9</span> tomcat tomcat <span style="color: #800080;">4</span>.0K Feb <span style="color: #800080;">22</span> <span style="color: #800080;">21</span>:<span style="color: #800080;">16</span><span style="color: #000000;"> tomcat8
+   </span><span style="color: #800080;">0</span> lrwxrwxrwx <span style="color: #800080;">1</span>    <span style="color: #800080;">999</span>    <span style="color: #800080;">999</span>   <span style="color: #800080;">25</span> Feb <span style="color: #800080;">22</span> <span style="color: #800080;">21</span>:<span style="color: #800080;">19</span> tomcat-latest -&gt; /opt/apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span></pre>
+</div>
+<p>&nbsp;3</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> vim /etc/init.d/tomcat8</pre>
+</div>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+#
+#https:</span><span style="color: #008000;">//</span><span style="color: #008000;">wiki.debian.org/LSBInitScripts</span>
+<span style="color: #000000;">### BEGIN INIT INFO
+# Provides:          tomcat8
+# Required</span>-<span style="color: #000000;">Start:    $local_fs $remote_fs $network
+# Required</span>-<span style="color: #000000;">Stop:     $local_fs $remote_fs $network
+# Should</span>-<span style="color: #000000;">Start:      $named
+# Should</span>-<span style="color: #000000;">Stop:       $named
+# Default</span>-Start:     <span style="color: #800080;">2</span> <span style="color: #800080;">3</span> <span style="color: #800080;">4</span> <span style="color: #800080;">5</span><span style="color: #000000;">
+# Default</span>-Stop:      <span style="color: #800080;">0</span> <span style="color: #800080;">1</span> <span style="color: #800080;">6</span><span style="color: #000000;">
+# Short</span>-<span style="color: #000000;">Description: Start Tomcat.
+# Description:       Start the Tomcat servlet engine.
+### END INIT INFO
+
+export CATALINA_HOME</span>=/opt/<span style="color: #000000;">tomcat8
+export JAVA_HOME</span>=/opt/jdk/jdk1.<span style="color: #800080;">8</span><span style="color: #000000;">.0_66
+export PATH</span>=$JAVA_HOME/<span style="color: #000000;">bin:$PATH
+
+start() {
+ </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">Starting Tomcat 8...</span><span style="color: #800000;">"</span>
+ /bin/<span style="color: #0000ff;">su</span> -s /bin/bash tomcat -c $CATALINA_HOME/bin/startup.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+}
+stop() {
+ </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">Stopping Tomcat 8...</span><span style="color: #800000;">"</span>
+ /bin/<span style="color: #0000ff;">su</span> -s /bin/bash tomcat -c $CATALINA_HOME/bin/shutdown.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+}
+</span><span style="color: #0000ff;">case</span> $<span style="color: #800080;">1</span> <span style="color: #0000ff;">in</span><span style="color: #000000;">
+  start</span>|stop) $<span style="color: #800080;">1</span><span style="color: #000000;">;;
+  restart) stop; start;;
+  </span>*) <span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">Usage : $0 &lt;start|stop|restart&gt;</span><span style="color: #800000;">"</span>; exit <span style="color: #800080;">1</span><span style="color: #000000;">;;
+</span><span style="color: #0000ff;">esac</span><span style="color: #000000;">
+
+exit </span><span style="color: #800080;">0</span></pre>
+</div>
+<p>&nbsp;4</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# <strong><span style="color: #0000ff;">sudo</span> <span style="color: #0000ff;">chmod</span> <span style="color: #800080;">755</span> /etc/init.d/</strong><span style="color: #000000;"><strong>tomcat8</strong>
+root@xkfx:</span>/opt# <span style="color: #0000ff;">ls</span> -lsh /etc/init.d/<span style="color: #000000;">tomcat8
+</span><span style="color: #800080;">4</span>.0K -rwxr-xr-x <span style="color: #800080;">1</span> root root <span style="color: #800080;">859</span> Feb <span style="color: #800080;">23</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">18</span> /etc/init.d/<span style="color: #000000;">tomcat8
+<strong>root@xkfx:</strong></span><strong>/opt# <span style="color: #0000ff;">sudo</span> update-rc.d tomcat8 defaults <span style="color: #00ff00;"># Install the script.</span></strong></pre>
+</div>
+<p>&nbsp;测试后没反应，想起 copy 来的脚本没有修改：</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180223112621467-1660195660.png" alt="" width="564" height="94" /></p>
+<p>&nbsp;改好后还是没有反应！！！</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180223113814234-982685797.png" alt="" width="336" height="129" /></p>
+<p>试访问了一下也没有用。。。。。。。。。。</p>
+<p>所以 估计 是 脚本根本没跑</p>
+<p><a class="question-hyperlink" href="https://unix.stackexchange.com/questions/106656/how-do-services-in-debian-work-and-how-can-i-manage-them" target="_blank">How do services in Debian work, and how can I manage them?</a></p>
+<p>换了种方式 有点反应了：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180223115054187-150479880.png" alt="" width="573" height="105" /></p>
+<p>&nbsp;tomcat 用户是无法登陆的：</p>
+<div class="cnblogs_code">
+<pre><strong>root@xkfx:~# <span style="color: #0000ff;">su</span><span style="color: #000000;"> tomcat 
+Cannot execute </span>/sbin/nologin: No such <span style="color: #0000ff;">file</span> or directory</strong></pre>
+</div>
+<p>(su = switch user)</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>&nbsp;认真看一下发现教程二其实是针对 debian 7 的</p>
+<p>于是我干脆找了个<a href="https://linuxconfig.org/how-to-install-tomcat-9-on-debian-9-stretch-linux" target="_blank"> debian 9 的教程 </a>应该和 8.8 更相近。</p>
+<p>&nbsp;1</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">wget</span> https:<span style="color: #008000;">//</span><span style="color: #008000;">archive.apache.org/dist/tomcat/tomcat-9/v9.0.0.M21/src/apache-tomcat-9.0.0.M21-src.tar.gz</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# <span style="color: #0000ff;">ls</span> -<span style="color: #000000;">lsh
+total </span><span style="color: #800080;">9.5M</span>
+<span style="color: #800080;">4.8M</span> -rw-r--r-- <span style="color: #800080;">1</span>    <span style="color: #800080;">999</span>    <span style="color: #800080;">999</span> <span style="color: #800080;">4.8M</span> Jan <span style="color: #800080;">19</span>  <span style="color: #800080;">2017</span> apache-tomcat-<span style="color: #800080;">8.0</span>.<span style="color: #800080;">41</span>-src.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz
+</span><strong><span style="color: #800080;">4.8M</span> -rw-r--r-- <span style="color: #800080;">1</span> root   root   <span style="color: #800080;">4.8M</span> Jun <span style="color: #800080;">20</span>  <span style="color: #800080;">2017</span> apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">0</span>.M21-src.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz
+</span></strong><span style="color: #800080;">4</span>.0K drwxr-xr-x <span style="color: #800080;">9</span> tomcat tomcat <span style="color: #800080;">4</span>.0K Feb <span style="color: #800080;">22</span> <span style="color: #800080;">21</span>:<span style="color: #800080;">16</span> tomcat8</pre>
+</div>
+<div class="cnblogs_code">
+<pre>useradd -rs /bin/<span style="color: #0000ff;">false</span> tomcat # 删除重新添加</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# <span style="color: #0000ff;">mkdir</span> /opt/<span style="color: #000000;">tomcat
+root@xkfx:</span>/opt# <span style="color: #0000ff;">tar</span> -C /opt/tomcat/ -zxf apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">0</span>.M21-src.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz 
+root@xkfx:</span>/opt# <span style="color: #0000ff;">ln</span> -s /opt/tomcat/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">0</span>.M21-src/ /opt/tomcat/tomcat-<span style="color: #000000;">latest # 可选的，当更新汤姆猫的时候让事情变得容易
+root@xkfx:</span>/opt# <span style="color: #0000ff;">chown</span> -R tomcat.tomcat /opt/tomcat/tomcat-latest /opt/tomcat/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">0</span>.M21-src/ <span style="color: #00ff00;"><strong># Make our previously created user tomcat an owner of the entire directories</strong></span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt/tomcat# <span style="color: #0000ff;">ls</span> -<span style="color: #000000;">lsh
+total </span><span style="color: #800080;">4</span><span style="color: #000000;">.0K
+</span><span style="color: #800080;">4</span>.0K drwxr-xr-x <span style="color: #800080;">9</span> tomcat tomcat <span style="color: #800080;">4</span>.0K Feb <span style="color: #800080;">26</span> <span style="color: #800080;">10</span>:<span style="color: #800080;">41</span> apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">0</span>.M21-<span style="color: #000000;">src
+   </span><span style="color: #800080;">0</span> lrwxrwxrwx <span style="color: #800080;">1</span> tomcat tomcat   <span style="color: #800080;">40</span> Feb <span style="color: #800080;">26</span> <span style="color: #800080;">10</span>:<span style="color: #800080;">43</span> tomcat-latest -&gt; /opt/tomcat/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">0</span>.M21-src/</pre>
+</div>
+<p>&nbsp;Note, when upgrading tomcat, simply&nbsp;<code>unlink</code>&nbsp;the current symbolic link and recreate new as shown in previous steps.</p>
+<p>&nbsp;</p>
+<p>2</p>
+<p>干脆重装一下 JDK</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+jdk</span>-8u131-linux-x64.<span style="color: #0000ff;">tar</span>.gz  tomcat</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# <span style="color: #0000ff;">mkdir</span> /opt/java-<span style="color: #000000;">jdk
+root@xkfx:</span>/opt# <span style="color: #0000ff;">tar</span> -C /opt/java-jdk -zxf jdk-8u131-linux-x64.<span style="color: #0000ff;">tar</span><span style="color: #000000;">.gz
+root@xkfx:</span>/opt# update-alternatives --<span style="color: #0000ff;">install</span> /usr/bin/java java /opt/java-jdk/jdk1.<span style="color: #800080;">8</span>.0_131/bin/java <span style="color: #800080;">1</span><span style="color: #000000;">
+root@xkfx:</span>/opt# update-alternatives --<span style="color: #0000ff;">install</span> /usr/bin/javac javac /opt/java-jdk/<strong>jdk1.<span style="color: #800080;">8</span>.0_131</strong>/bin/javac <span style="color: #800080;">1</span><span style="color: #000000;">
+root@xkfx:</span>/opt# java -<span style="color: #000000;">version
+java version </span><strong><span style="color: #800000;">"</span><span style="color: #800000;">1.8.0_151</span><span style="color: #800000;">"</span></strong><span style="color: #000000;">
+Java(TM) SE Runtime Environment (build </span><span style="color: #800080;">1.8</span>.0_151-<span style="color: #000000;">b12)
+Java HotSpot(TM) </span><span style="color: #800080;">64</span>-Bit Server VM (build <span style="color: #800080;">25.151</span>-b12, mixed mode)</pre>
+</div>
+<p>&nbsp;没改成，重新设置：</p>
+<div class="cnblogs_code">
+<pre><strong>root@xkfx:/opt# sudo <span style="color: #0000ff;">update-alternatives --</span></strong><span style="color: #000000;"><span style="color: #0000ff;"><strong>config java</strong></span>
+There are </span><span style="color: #800080;">3</span> choices <span style="color: #0000ff;">for</span> the alternative java (providing /usr/bin/<span style="color: #000000;">java).
+
+  Selection    Path                                            Priority   Status
+</span>------------------------------------------------------------
+  <span style="color: #800080;">0</span>            /usr/lib/jvm/java-<span style="color: #800080;">8</span>-oracle/jre/bin/java          <span style="color: #800080;">1081</span><span style="color: #000000;">      auto mode
+  </span><span style="color: #800080;">1</span>            /opt/java-jdk/jdk1.<span style="color: #800080;">8</span>.0_131/bin/java              <span style="color: #800080;">1</span><span style="color: #000000;">         manual mode
+  </span><span style="color: #800080;">2</span>            /usr/lib/jvm/java-<span style="color: #800080;">7</span>-openjdk-amd64/jre/bin/java   <span style="color: #800080;">1071</span><span style="color: #000000;">      manual mode
+</span>* <span style="color: #800080;">3</span>            /usr/lib/jvm/java-<span style="color: #800080;">8</span>-oracle/jre/bin/java          <span style="color: #800080;">1081</span><span style="color: #000000;">      manual mode
+
+Press enter to keep the current choice[</span>*], or type selection number: <span style="color: #800080;">1</span><span style="color: #000000;">
+update</span>-alternatives: using /opt/java-jdk/jdk1.<span style="color: #800080;">8</span>.0_131/bin/java to provide /usr/bin/java (java) <span style="color: #0000ff;">in</span><span style="color: #000000;"> manual mode
+<strong>root@xkfx:</strong></span><strong>/opt# <span style="color: #0000ff;">java -</span></strong><span style="color: #000000;"><span style="color: #0000ff;"><strong>version</strong></span>
+java version </span><span style="color: #800000;">"</span><span style="color: #800000;">1.8.0_131</span><span style="color: #800000;">"</span><span style="color: #000000;">
+Java(TM) SE Runtime Environment (build </span><span style="color: #800080;">1.8</span>.0_131-<span style="color: #000000;">b11)
+Java HotSpot(TM) </span><span style="color: #800080;">64</span>-Bit Server VM (build <span style="color: #800080;">25.131</span>-b11, mixed mode)</pre>
+</div>
+<p>&nbsp;同样的方式改 javac</p>
+<p>&nbsp;</p>
+<p>3</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt# vim /etc/systemd/system/tomcat.service</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">[Unit]
+Description</span>=<span style="color: #000000;">Tomcat9
+After</span>=<span style="color: #000000;">network.target
+
+[Service]
+Type</span>=<span style="color: #000000;">forking
+User</span>=<span style="color: #000000;">tomcat
+Group</span>=<span style="color: #000000;">tomcat
+
+Environment</span>=CATALINA_PID=/opt/tomcat/tomcat-latest/<span style="color: #000000;">tomcat8.pid
+Environment</span>=TOMCAT_JAVA_HOME=/usr/bin/<span style="color: #000000;">java
+Environment</span>=CATALINA_HOME=/opt/tomcat/tomcat-<span style="color: #000000;">latest
+Environment</span>=CATALINA_BASE=/opt/tomcat/tomcat-<span style="color: #000000;">latest
+Environment</span>=CATALINA_OPTS=<span style="color: #000000;">
+Environment</span>=<span style="color: #800000;">"</span><span style="color: #800000;">JAVA_OPTS=-Dfile.encoding=UTF-8 -Dnet.sf.ehcache.skipUpdateCheck=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:MaxPermSize=128m -Xms512m -Xmx512m</span><span style="color: #800000;">"</span><span style="color: #000000;">
+
+ExecStart</span>=/opt/tomcat/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+ExecStop</span>=/bin/<span style="color: #0000ff;">kill</span> -<span style="color: #800080;">15</span><span style="color: #000000;"> $MAINPID
+
+[Install]
+WantedBy</span>=multi-user.target</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/# systemctl daemon-<span style="color: #000000;">reload
+root@xkfx:</span>/<span style="color: #000000;"># systemctl start tomcat
+<span style="color: #ff0000;"><strong>Job </strong></span></span><span style="color: #ff0000;"><strong>for tomcat.service failed. See 'systemctl status tomcat.service' and 'journalctl -xn' for</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong> details.</strong></span>
+root@xkfx:</span>/# systemctl enable tomcat</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/<span style="color: #000000;"># systemctl status tomcat.service
+<strong><span style="color: #ff9900;">●</span> </strong>tomcat.service </span>-<span style="color: #000000;"> Tomcat9
+   Loaded: loaded (</span>/etc/systemd/system/<span style="color: #000000;">tomcat.service; enabled)
+   Active: <strong><span style="color: #ff9900;">failed</span> </strong>(Result: exit</span>-code) since Mon <span style="color: #800080;">2018</span>-<span style="color: #800080;">02</span>-<span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span><span style="color: #000000;"> CST; 12min ago
+
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: Starting Tomcat9...
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span> xkfx systemd[<span style="color: #800080;">5357</span>]: <span style="color: #ff9900;"><strong>Failed at step EXEC spawning /opt/tomcat/tomcat-latest/</strong></span><span style="color: #000000;"><span style="color: #ff9900;"><strong>b...nied</strong></span>
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span> xkfx systemd[<span style="color: #800080;">1</span>]: <strong>tomcat.service: control process exited, code=exited status=<span style="color: #800080;">203</span></strong><span style="color: #000000;">
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: <span style="color: #ff9900;"><strong>Failed to start Tomcat9.</strong></span>
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: <strong>Unit tomcat.service entered failed state.
+
+<span style="color: #ff9900;">Warning:</span> </strong>Unit </span><span style="color: #0000ff;">file</span> changed on disk, <span style="color: #800000;">'</span><span style="color: #800000;">systemctl daemon-reload</span><span style="color: #800000;">'</span><span style="color: #000000;"> recommended.
+Hint: Some lines were ellipsized, use </span>-l to show <span style="color: #0000ff;">in</span> full.</pre>
+</div>
+<div class="cnblogs_code">
+<pre>Feb <span style="color: #800080;">26</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">07</span>:<span style="color: #800080;">26</span> xkfx systemd[<span style="color: #800080;">5357</span>]: <span style="color: #ff9900;"><strong>Failed at step EXEC spawning /opt/tomcat/tomcat-latest/bin/startup.sh: Permission denied</strong></span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/# <span style="color: #0000ff;">ls</span> -lsh /opt/tomcat/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span>
+<strong><span style="color: #800080;">4</span>.0K -<span style="color: #ff0000;">rw-r--r--</span> <span style="color: #800080;">1</span> tomcat tomcat <span style="color: #800080;">1</span>.9K May  <span style="color: #800080;">5</span>  <span style="color: #800080;">2017</span> /opt/tomcat/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span></strong></pre>
+</div>
+<p>持续 debug&nbsp;</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/# <span style="color: #0000ff;">chmod</span> -R u+x /opt/tomcat/tomcat-<span style="color: #000000;">latest
+root@xkfx:</span>/# <span style="color: #0000ff;">ls</span> -lsh /opt/tomcat/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span>
+<span style="color: #800080;">4</span>.0K -rwxr--r-- <span style="color: #800080;">1</span> tomcat tomcat <span style="color: #800080;">1</span>.9K May  <span style="color: #800080;">5</span>  <span style="color: #800080;">2017</span> /opt/tomcat/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+root@xkfx:</span>/<span style="color: #000000;"># systemctl start tomcat
+Job </span><span style="color: #0000ff;">for</span> tomcat.service failed. See <span style="color: #800000;">'</span><span style="color: #800000;">systemctl status tomcat.service</span><span style="color: #800000;">'</span> and <span style="color: #800000;">'</span><span style="color: #800000;">journalctl -xn</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span> details.</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/# systemctl status tomcat.service -<span style="color: #000000;">l
+<span style="color: #ff9900;">●</span> tomcat.service </span>-<span style="color: #000000;"> Tomcat9
+   Loaded: loaded (</span>/etc/systemd/system/<span style="color: #000000;">tomcat.service; enabled)
+   Active: <span style="color: #ff9900;"><strong>failed</strong></span> (Result: exit</span>-code) since Mon <span style="color: #800080;">2018</span>-<span style="color: #800080;">02</span>-<span style="color: #800080;">26</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">22</span><span style="color: #000000;"> CST; 27s ago
+  Process: </span><span style="color: #800080;">5509</span> ExecStart=/opt/tomcat/tomcat-latest/bin/startup.<span style="color: #0000ff;">sh</span><span style="color: #ff9900;"><strong> (code=exited, status=2</strong></span><span style="color: #000000;"><span style="color: #ff9900;"><strong>)
+</strong></span>
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">22</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">5509</span>]: <span style="color: #0000ff;">touch</span>: cannot <span style="color: #0000ff;">touch</span> &lsquo;/opt/tomcat/tomcat-latest/logs/catalina.out&rsquo;: No such <span style="color: #0000ff;">file</span><span style="color: #000000;"> or directory
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">22</span> xkfx systemd[<span style="color: #800080;">1</span>]: <strong>tomcat.service: control process exited, code=exited status=<span style="color: #800080;">2</span></strong><span style="color: #000000;">
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">22</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: <strong><span style="color: #ff9900;">Failed to start Tomcat9.</span></strong>
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">22</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: <strong>Unit tomcat.service entered failed state.</strong>
+Feb </span><span style="color: #800080;">26</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">22</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">5509</span>]: /opt/tomcat/tomcat-latest/bin/catalina.<span style="color: #0000ff;">sh</span>: <span style="color: #800080;">434</span>: /opt/tomcat/tomcat-latest/bin/catalina.<span style="color: #0000ff;">sh</span>: cannot create /opt/tomcat/tomcat-latest/logs/catalina.out: Directory nonexistent</pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt/tomcat/tomcat-latest# <span style="color: #0000ff;">mkdir</span><span style="color: #000000;"> logs
+root@xkfx:</span>/opt/tomcat/tomcat-<span style="color: #000000;">latest# systemctl start tomcat
+Job </span><span style="color: #0000ff;">for</span> tomcat.service failed. See <span style="color: #800000;">'</span><span style="color: #800000;">systemctl status tomcat.service</span><span style="color: #800000;">'</span> and <span style="color: #800000;">'</span><span style="color: #800000;">journalctl -xn</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span><span style="color: #000000;"> details.
+
+root@xkfx:</span>/opt/tomcat/tomcat-latest# systemctl status tomcat.service -<span style="color: #000000;">l
+...
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">03</span>:<span style="color: #800080;">03</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">7841</span>]: <span style="color: #0000ff;">touch</span>: cannot <span style="color: #0000ff;">touch</span> &lsquo;/opt/tomcat/tomcat-latest/logs/<span style="color: #000000;">catalina.out&rsquo;: Permission denied
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">03</span>:<span style="color: #800080;">03</span> xkfx systemd[<span style="color: #800080;">1</span>]: tomcat.service: control process exited, code=exited status=<span style="color: #800080;">2</span><span style="color: #000000;">
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">03</span>:<span style="color: #800080;">03</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: Failed to start Tomcat9.
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">03</span>:<span style="color: #800080;">03</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: Unit tomcat.service entered failed state.
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">03</span>:<span style="color: #800080;">03</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">7841</span>]: /opt/tomcat/tomcat-latest/bin/catalina.<span style="color: #0000ff;">sh</span>: <span style="color: #800080;">434</span>: /opt/tomcat/tomcat-latest/bin/catalina.<span style="color: #0000ff;">sh</span>: cannot create /opt/tomcat/tomcat-latest/logs/catalina.out: Permission denied</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;"> 
+
+root@xkfx:</span>/opt# <span style="color: #0000ff;">chmod</span> -R <span style="color: #800080;">777</span> tomcat/tomcat-<span style="color: #000000;">latest
+
+root@xkfx:</span>/opt# systemctl daemon-<span style="color: #000000;">reload
+
+root@xkfx:</span>/<span style="color: #000000;">opt# systemctl start tomcat
+root@xkfx:</span>/<span style="color: #000000;">opt# systemctl enable tomcat
+<strong>root@xkfx:</strong></span><strong>/opt# systemctl status tomcat.service -<span style="color: #000000;">l
+● tomcat.service </span>-<span style="color: #000000;"> Tomcat9
+Loaded: loaded (</span>/etc/systemd/system/<span style="color: #000000;">tomcat.service; enabled)
+Active: failed (Result: exit</span>-code) since Wed <span style="color: #800080;">2018</span>-<span style="color: #800080;">02</span>-<span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span><span style="color: #000000;"> CST; 18s ago
+Main PID: </span><span style="color: #800080;">7990</span> (code=exited, status=<span style="color: #800080;">1</span>/<span style="color: #000000;">FAILURE)
+
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">7977</span>]: Existing PID <span style="color: #0000ff;">file</span><span style="color: #000000;"> found during start.
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">7977</span>]: Removing/clearing stale PID <span style="color: #0000ff;">file</span><span style="color: #000000;">.
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span> xkfx startup.<span style="color: #0000ff;">sh</span>[<span style="color: #800080;">7977</span><span style="color: #000000;">]: Tomcat started.
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: Started Tomcat9.
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span> xkfx systemd[<span style="color: #800080;">1</span>]: tomcat.service: main process exited, code=exited, status=<span style="color: #800080;">1</span>/<span style="color: #000000;">FAILURE
+Feb </span><span style="color: #800080;">28</span> <span style="color: #800080;">11</span>:<span style="color: #800080;">14</span>:<span style="color: #800080;">15</span> xkfx systemd[<span style="color: #800080;">1</span><span style="color: #000000;">]: Unit tomcat.service entered failed state.
+root@xkfx:</span>/opt# ss -ant | <span style="color: #0000ff;">grep</span> <span style="color: #800080;">8080</span></strong></pre>
+</div>
+<p>感觉是相关问题：</p>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/40331741/systemd-tomcat-service-failed-with-no-errors" target="_blank">Systemd tomcat.service failed with no errors</a></p>
+<p>还是没有用。。。</p>
+<p>&nbsp;<a name="a8"></a></p>
+<p><a name="a8" href="https://www.mulesoft.com/cn/tcat/tomcat-linux" target="_blank">不创建新用户跑 tomcat</a></p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt/tomcat# <span style="color: #0000ff;">ls</span> -<span style="color: #000000;">lsh
+total </span><span style="color: #800080;">4</span><span style="color: #000000;">.0K
+</span><span style="color: #800080;">4</span>.0K drwxr-xr-x <span style="color: #800080;">9</span> root root <span style="color: #800080;">4</span>.0K Feb <span style="color: #800080;">28</span> <span style="color: #800080;">14</span>:<span style="color: #800080;">43</span> apache-tomcat-<span style="color: #800080;">8.5</span>.<span style="color: #800080;">28</span>
+   <span style="color: #800080;">0</span> lrwxrwxrwx <span style="color: #800080;">1</span> root root   <span style="color: #800080;">20</span> Feb <span style="color: #800080;">28</span> <span style="color: #800080;">14</span>:<span style="color: #800080;">45</span> tomcat-lastest -&gt; apache-tomcat-<span style="color: #800080;">8.5</span>.<span style="color: #800080;">28</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>vim ~/.bashrc<span style="color: #888888;"> # export CATALINA_HOME=/path/to/tomcat</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>$CATALINA_HOME/bin/startup.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+ss </span>-ant | <span style="color: #0000ff;">grep</span> <span style="color: #800080;">8080</span></pre>
+</div>
+<p>无人访问：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180228150823781-1400609841.png" alt="" width="855" height="44" /></p>
+<p>&nbsp;有人访问：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180228151047743-801738754.png" alt="" width="681" height="160" /></p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201802/1042431-20180228150431760-1126309173.png" alt="" width="426" height="174" /></p>
+<p>完成。</p>
+<p>&nbsp;</p>
+<hr />
+<p>参考资料：</p>
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-apache-tomcat-on-a-debian-server" target="_blank">How To Install and Configure Apache Tomcat on a Debian Server</a></p>
+<p><a href="https://www.mkyong.com/tomcat/how-to-install-apache-tomcat-8-on-debian/" target="_blank">How to Install Apache Tomcat 8 On Debian</a>（教程二）</p>
+<p><a href="https://www.rosehosting.com/blog/how-to-install-tomcat-8-on-debian-8/" target="_blank">How to install Tomcat 8 on Debian 8</a>（教程一）</p>
+<p>&nbsp;</p>

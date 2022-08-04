@@ -1,0 +1,27 @@
+<p><span style="line-height: 1.5;">p29~p31：</span></p>
+<p><strong><span style="color: #ff0000; background-color: #ffff00;">static关键字</span></strong></p>
+<p>1、static在作用于某个字段（也叫：类的数据成员、实例域）的时候，必然会改变数据的创建方式（创建的时机、位置）。</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff0000; background-color: #ffff00;">Java程序</span></strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> HelloData.java</span>
+<span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloData {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        System.out.println(</span>"Hello , it's: "<span style="color: #000000;">);
+       <span style="color: #ff0000;"> System.out.println(</span></span><span style="color: #ff0000;">new</span><span style="color: #000000;"><span style="color: #ff0000;"> Date());</span>
+    }
+}</span></pre>
+</div>
+<p>1、<a href="http://docs.oracle.com/javase/8/docs/api/" target="_blank">Sun公司提供的文档</a></p>
+<p>&nbsp;</p>
+<p>2、java.lang：被自动导入到每一个Java文件</p>
+<p>&nbsp;</p>
+<p>3、<strong>System.out</strong>：System类中的一个静态 PrintStream对象。</p>
+<p>1）因为是静态的，不需要创建就已经存在。</p>
+<p>2）因为System是java.lang里的类，java.lang被自动导入到每一个Java文件。</p>
+<p>所以System.out.println()可以直接使用：它的作用是&rdquo;将我给你的数据打印到控制台后换行&ldquo;。</p>
+<p>&nbsp;</p>
+<p>4、<strong>System.out.println(new Data());</strong>。（相关知识：toString()、垃圾回收机）</p>
+<p>&nbsp;</p>

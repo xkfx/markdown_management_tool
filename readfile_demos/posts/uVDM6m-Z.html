@@ -1,0 +1,44 @@
+<p>NPM是Node.js的包管理工具，而Bower则是一个前端包管理工具。</p>
+<p>根目录下只有一个index.html</p>
+<h2>NPM安装Bootstrap</h2>
+<p>执行指令：</p>
+<div class="cnblogs_code">
+<pre>$ cnpm <span style="color: #0000ff;">install</span> bootstrap-<span style="color: #000000;">
+&radic; Installed </span><span style="color: #800080;">1</span><span style="color: #000000;"> packages
+&radic; Linked </span><span style="color: #800080;">1</span><span style="color: #000000;"> latest versions
+&radic; Run </span><span style="color: #800080;">0</span><span style="color: #000000;"> scripts
+peerDependencies WARNING bootstrap@latest requires a peer of @popperjs</span>/core@^<span style="color: #800080;">2.10</span>.<span style="color: #800080;">2</span><span style="color: #000000;"> but none was installed
+&radic; All packages installed (</span><span style="color: #800080;">1</span> packages installed from npm registry, used 674ms(network 671ms), speed <span style="color: #800080;">21</span>.77KB/s, json <span style="color: #800080;">1</span>(<span style="color: #800080;">14</span>.6KB), tarball 0B)</pre>
+</div>
+<p>结果：</p>
+<p>D:.<br />└─node_modules<br />    ├─bootstrap（这是一个指向_bootstrap@5.1.3@bootstrap的快捷方式）<br />    │  ├─dist<br />    │  │  ├─css<br />    │  │  └─js<br />    │  ├─js<br />    │  │  ├─dist<br />    │  │  │  └─dom<br />    │  │  └─src<br />    │  │      ├─dom<br />    │  │      └─util<br />    │  └─scss<br />    │      ├─forms<br />    │      ├─helpers<br />    │      ├─mixins<br />    │      ├─utilities<br />    │      └─vendor<br />    └─_bootstrap@5.1.3@bootstrap<br />        <strong>├─dist（直接下载编译版本，得到的就是该文件）</strong><br /><strong>        │  ├─css</strong><br /><strong>        │  └─js</strong><br />        ├─js<br />        │  ├─dist<br />        │  │  └─dom<br />        │  └─src<br />        │      ├─dom<br />        │      └─util<br />        └─scss<br />            ├─forms<br />            ├─helpers<br />            ├─mixins<br />            ├─utilities<br />            └─vendor</p>
+<h2>Bower安装Bootstrap</h2>
+<p><a href="https://www.npmjs.com/package/bower" target="_blank">https://www.npmjs.com/package/bower</a></p>
+<p>清空文件夹，只留一个index.html</p>
+<p>在git bash中执行指令bower init：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ <strong>bower init</strong>
+bower ENOINT        Register requires an interactive shell
+
+Additional error details:
+Note that you can manually force an interactive shell with </span>--config.interactive</pre>
+</div>
+<p>切换到windows命令行下执行bower init指令，执行成功。再执行bower install bootstrap：</p>
+<div class="cnblogs_code">
+<pre>D:\Electron\bootstrap_test&gt;<strong>bower <span style="color: #0000ff;">install</span></strong><span style="color: #000000;"><strong> bootstrap</strong>
+bower retry         Request to https:</span><span style="color: #008000;">//</span><span style="color: #008000;">registry.bower.io/packages/bootstrap failed with ETIMEDOUT, retrying in 1.2s</span>
+bower retry         Request to https:<span style="color: #008000;">//</span><span style="color: #008000;">registry.bower.io/packages/bootstrap failed with ETIMEDOUT, retrying in 3.2s</span></pre>
+</div>
+<p>执行失败，改为执行bower install bootstrap --save：</p>
+<div class="cnblogs_code">
+<pre>D:\Electron\bootstrap_test&gt;<strong>bower <span style="color: #0000ff;">install</span> bootstrap --</strong><span style="color: #000000;"><strong>save</strong>
+bower ENOGIT        git is not installed or not </span><span style="color: #0000ff;">in</span> the PATH</pre>
+</div>
+<p>因为不想重装git bash，于是放弃了用bower安装bootstrap：</p>
+<div class="cnblogs_code">
+<pre>npm uninstall -g bower</pre>
+</div>
+<h2>直接下载已编译好的Bootstrap</h2>
+<p>内容和node_modules\_bootstrap@5.1.3@bootstrap\dist一致：</p>
+<p>D:.<br />│  bootstrap-5.1.3-dist.zip<br />└─bootstrap-5.1.3-dist<br />    ├─css<br />    │      bootstrap-grid.css<br />    │      bootstrap-grid.css.map<br />    │      bootstrap-grid.min.css<br />    │      bootstrap-grid.min.css.map<br />    │      （省略号&hellip;&hellip;）<br />    │<br />    └─js<br />            │&nbsp;bootstrap.bundle.js<br />            │&nbsp;bootstrap.bundle.js.map<br />│ （省略号&hellip;&hellip;）</p>
+<p>&nbsp;</p>

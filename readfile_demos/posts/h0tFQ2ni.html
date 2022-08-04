@@ -1,0 +1,75 @@
+<p>推荐看这篇<a href="https://blog.csdn.net/wzx19840423/article/details/50678381" target="_blank">&nbsp;mysql 利用触发器(Trigger)让代码更简单</a></p>
+<p class="title">以及 <a href="https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html" target="_blank">23.3.1&nbsp;Trigger Syntax and Examples</a></p>
+<p>&nbsp;感觉有点像 Spring 里的 AOP</p>
+<p>我们为什么需要触发器？ -- 因为我们希望当某件事情发生的时候另外一些事情自动发生。。</p>
+<p>例如 在向某张表插入数据的时候，同时向另外一张表插入数据。</p>
+<p>&ldquo;向某张表插入数据&rdquo; 就是事件（导火线），而&ldquo;向另外一张表插入数据&rdquo; 就是我们希望自动发生的事情（被触发的事情）。</p>
+<p>可是为什么不自己手动&ldquo; 先向某表插入数据，再向另外一张表插入数据&rdquo;呢？</p>
+<p>个人觉得，有两个理由促使我们这么做：</p>
+<ol>
+<li>实现某种业务逻辑，就像下了订单一定要减库存对吧？ 但是这个活是上层应用程序做还是数据库做是个问题。</li>
+<li>关注点分离。触发事件可以是一些琐碎、业务无关的安全性检查之类的，这个概念可以参考 Spring AOP</li>
+</ol>
+<p>下面 COPY 几个 demo 备用。</p>
+<p>首先是查看已存在的触发器：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span> information_schema.`TRIGGERS`;</pre>
+</div>
+<p>删除已经存在的触发器：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TRIGGER</span> newproduct;</pre>
+</div>
+<p>创建一个简单的触发器：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TRIGGER</span> newproduct AFTER <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">ON</span><span style="color: #000000;"> products
+</span><span style="color: #0000ff;">FOR</span> EACH ROW <span style="color: #0000ff;">SELECT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">Product added</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>-- -&nbsp; 每当向 products 插入数据的时候都执行 SELECT 'Product added' ，<span style="color: #888888;">// 原话打印</span></p>
+<p><span style="color: #000000;">- - -- FOR EACH ROW 对于插入的每一条记录都这么做</span></p>
+<p><span style="color: #000000;">--- --&nbsp; PS. 触发器只能创建在实表上，不能创建在虚表上（视图）</span></p>
+<p><span style="color: #000000;">-- - - - 每张表至多支持 6 个触发器<span style="color: #808080;"> AFTER BEFORE 2 * 3 UPDATE DELETE INSERT = 6&nbsp; &nbsp; &nbsp; PS. 这个有错。</span></span></p>
+<p>-&nbsp; ---我尝试了一下居然运行不出来 。。 。 所以，以上规则可能在新版本有变化。。</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TRIGGER</span> newproduct AFTER <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">ON</span><span style="color: #000000;"> products
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FOR</span> EACH ROW <span style="color: #0000ff;">SELECT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">Product added</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+ERROR </span><span style="color: #800000; font-weight: bold;">1415</span> (0A000): <span style="color: #808080;">Not</span> allowed <span style="color: #0000ff;">to</span> <span style="color: #0000ff;">return</span> a result <span style="color: #0000ff;">set</span> <span style="color: #0000ff;">from</span> a <span style="color: #0000ff;">trigger</span></pre>
+</div>
+<p>&nbsp;关于触发器的几个注意点：</p>
+<ol>
+<li>触发器不能被覆盖 override ，要修改的话，只能先删除旧的、再创建一个新的。</li>
+<li>在 BEFORE触发器 &rarr; SQL语句 &rarr; AFTER 触发器这个执行流程中，任何一步出现错误都将不再往下执行。</li>
+</ol>
+<h2>关于 OLD 和 NEW 关键词</h2>
+<p>Within the trigger body, the&nbsp;<code class="literal">OLD</code>&nbsp;and&nbsp;<code class="literal">NEW</code>&nbsp;keywords enable you to access columns in the rows affected by a trigger.&nbsp;<code class="literal">OLD</code>and&nbsp;<code class="literal">NEW</code>&nbsp;are MySQL extensions to triggers; they are not case-sensitive.</p>
+<p>In an&nbsp;<code class="literal">INSERT</code>&nbsp;trigger, only&nbsp;<code class="literal">NEW.<em class="replaceable"><code>col_name</code></em></code>&nbsp;can be used; there is no old row. In a&nbsp;<code class="literal">DELETE</code>&nbsp;trigger, only&nbsp;<code class="literal">OLD.<em class="replaceable"><code>col_name</code></em></code>&nbsp;can be used; there is no new row. In an&nbsp;<code class="literal">UPDATE</code>&nbsp;trigger, you can use&nbsp;<code class="literal">OLD.<em class="replaceable"><code>col_name</code></em></code>&nbsp;to refer to the columns of a row before it is updated and&nbsp;<code class="literal">NEW.<em class="replaceable"><code>col_name</code></em></code>&nbsp;to refer to the columns of the row after it is updated.</p>
+<p>A column named with&nbsp;<code class="literal">OLD</code>&nbsp;is read only. You can refer to it (if you have the&nbsp;<a class="link" title="13.2.10&nbsp;SELECT Syntax" href="https://dev.mysql.com/doc/refman/8.0/en/select.html"><code class="literal">SELECT</code></a>&nbsp;privilege), but not modify it. You can refer to a column named with&nbsp;<code class="literal">NEW</code>&nbsp;if you have the&nbsp;<a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_select"><code class="literal">SELECT</code></a>&nbsp;privilege for it. In a&nbsp;<code class="literal">BEFORE</code>&nbsp;trigger, you can also change its value with&nbsp;<code class="literal">SET NEW.<em class="replaceable"><code>col_name</code></em>&nbsp;=&nbsp;<em class="replaceable"><code>value</code></em></code>&nbsp;if you have the&nbsp;<a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_update"><code class="literal">UPDATE</code></a>&nbsp;privilege for it. This means you can use a trigger to modify the values to be inserted into a new row or used to update a row. (Such a&nbsp;<code class="literal">SET</code>&nbsp;statement has no effect in an&nbsp;<code class="literal">AFTER</code>trigger because the row change will have already occurred.)</p>
+<p>In a&nbsp;<code class="literal">BEFORE</code>&nbsp;trigger, the&nbsp;<code class="literal">NEW</code>&nbsp;value for an&nbsp;<code class="literal">AUTO_INCREMENT</code>&nbsp;column is 0, not the sequence number that is generated automatically when the new row actually is inserted.</p>
+<h2>触发更多语句</h2>
+<p>By using the&nbsp;<a class="link" title="13.6.1&nbsp;BEGIN ... END Compound-Statement Syntax" href="https://dev.mysql.com/doc/refman/8.0/en/begin-end.html"><code class="literal">BEGIN ... END</code></a>&nbsp;construct, you can define a trigger that executes multiple statements.</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> delimiter <span style="color: #808080;">//</span><span style="color: #000000;">
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TRIGGER</span> upd_check BEFORE <span style="color: #0000ff;">UPDATE</span> <span style="color: #0000ff;">ON</span><span style="color: #000000;"> account
+       </span><span style="color: #0000ff;">FOR</span><span style="color: #000000;"> EACH ROW
+       </span><span style="color: #0000ff;">BEGIN</span>
+           <span style="color: #0000ff;">IF</span> NEW.amount <span style="color: #808080;">&lt;</span> <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #0000ff;">THEN</span>
+               <span style="color: #0000ff;">SET</span> NEW.amount <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+           ELSEIF NEW.amount </span><span style="color: #808080;">&gt;</span> <span style="color: #800000; font-weight: bold;">100</span> <span style="color: #0000ff;">THEN</span>
+               <span style="color: #0000ff;">SET</span> NEW.amount <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">100</span><span style="color: #000000;">;
+           </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">IF</span><span style="color: #000000;">;
+       </span><span style="color: #0000ff;">END</span>;<span style="color: #808080;">//</span><span style="color: #000000;">
+mysql</span><span style="color: #808080;">&gt;</span> delimiter ;</pre>
+</div>
+<p>&nbsp;</p>
+<h3>demo</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TRIGGER</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> afterDeleteStudent;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TRIGGER</span><span style="color: #000000;"> afterDeleteStudent
+AFTER </span><span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">ON</span><span style="color: #000000;"> stu
+</span><span style="color: #0000ff;">FOR</span><span style="color: #000000;"> EACH ROW
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">FROM</span> SC <span style="color: #0000ff;">WHERE</span> SC.stu_id <span style="color: #808080;">=</span><span style="color: #000000;"> OLD.id;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;</span></pre>
+</div>
+<p>&nbsp;</p>

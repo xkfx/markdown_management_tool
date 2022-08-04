@@ -1,0 +1,27 @@
+<p><span style="line-height: 1.5;">内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖</a>雪峰的官方网站。</span></p>
+<p><span style="line-height: 1.5;">1、Python提供的</span><code style="line-height: 1.5;">sum()</code><span style="line-height: 1.5;">函数可以接受一个list并求和，请编写一个</span><code style="line-height: 1.5;">prod()</code><span style="line-height: 1.5;">函数，可以接受一个list并利用</span><code style="line-height: 1.5;">reduce()</code><span style="line-height: 1.5;">求积。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">from</span> functools <span style="color: #0000ff;">import</span><span style="color: #000000;"> reduce
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> prod(L):
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> f(x, y):
+        </span><span style="color: #0000ff;">return</span> x *<span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">return</span> reduce(f , L)</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;2、利用<code>map</code>和<code>reduce</code>编写一个<code>str2float</code>函数，把字符串<code>'123.456'</code>转换成浮点数<code>123.456。</code></p>
+<p>不会用map reduce。。。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">from</span><span style="color: #000000;"> functools import reduce
+def str2float(s):
+    c </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    pw </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> s:
+        </span><span style="color: #0000ff;">if</span> x != <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+            c </span>= c * <span style="color: #800080;">10</span> + <span style="color: #0000ff;">int</span><span style="color: #000000;">(x)
+    posi </span>= s.find(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(s) - posi - <span style="color: #800080;">1</span><span style="color: #000000;">):
+        pw </span>*= <span style="color: #800080;">0.1</span>
+    <span style="color: #0000ff;">return</span> c *<span style="color: #000000;"> pw
+    </span></pre>
+</div>
+<p>&nbsp;</p>

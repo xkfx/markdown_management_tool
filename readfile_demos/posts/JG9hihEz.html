@@ -1,0 +1,27 @@
+<p>1、git init&mdash;&mdash;初始化仓库</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203140005386-892407687.png" alt="" /></p>
+<p>初始化成功的标志如下（.git默认为隐藏）</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203140138604-288792147.png" alt="" /></p>
+<p>2、git status&mdash;&mdash;查看仓库状态</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203140541620-1168265416.png" alt="" /></p>
+<p>ps:未跟踪的文件 (untracked&nbsp;files)</p>
+<p>不妨在尝试在仓库建立一个readme.md，然后再次git status,结果</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203140658104-1743309223.png" alt="" /></p>
+<p>3、git add&mdash;&mdash;向暂存区中添加文件</p>
+<p>untracked file都是不属于git仓库的版本管理对象。要想让文件成为git的管理对象，就需要执行git add，</p>
+<p>将文件加入<span style="background-color: #ffff00;">【暂存区】（提交前的一个临时区域）<span style="background-color: #ffffff;"><br /></span></span></p>
+<p><span style="background-color: #ffff00;"><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203141313823-1113153636.png" alt="" /></span></p>
+<p>（图为执行 git add readme.md后）</p>
+<p>4、git commit&mdash;&mdash;保存仓库的历史记录</p>
+<p>git commmit命令可以讲当前暂存区中的文件实际保存到仓库的历史记录中。通过这些记录，我们就可以在工作树中复原文件。</p>
+<p>-m 参数后的字符串为提交信息，是对提交的概述。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203141721308-774926665.png" alt="" /></p>
+<p>5、git log&mdash;&mdash;查看提交日志</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170203142444433-990504022.png" alt="" /></p>
+<p>ps: commit 右边的是hash值</p>
+<p>基础参数</p>
+<p>git log readme.md 显示单一文件的提交信息</p>
+<p>git log -p readme.md 显示文件改动</p>
+<p>6、git diff&mdash;&mdash;</p>
+<p>git diff HEAD</p>
+<p>&nbsp;</p>

@@ -1,0 +1,38 @@
+<p><span style="color: #ff0000;">原始内容：https://www.tutorialspoint.com/struts_2/basic_mvc_architecture.htm</span></p>
+<p>&nbsp;</p>
+<h2>架构（很重要！尤其是图！）</h2>
+<p>从一个比较高的层次来看，Struts2是一个pull-MVC（或者MVC2）框架。</p>
+<p>Struts2的 <strong>Model-View-Controller&nbsp;</strong>模式通过以下五个核心组件实现：</p>
+<ul class="list">
+<li>
+<p><strong>Actions</strong></p>
+</li>
+<li>
+<p><strong>Interceptors</strong></p>
+</li>
+<li>
+<p><strong>Value Stack / OGNL</strong></p>
+</li>
+<li>
+<p><strong>Results / Result types</strong></p>
+</li>
+<li>
+<p><strong>View technologies</strong></p>
+</li>
+</ul>
+<p>Struts2和传统的MVC框架略有不同，尽管有一些重叠，在Struts2中，Action扮演的是模型的角色，而非控制器。</p>
+<p><img src="https://www.tutorialspoint.com/struts_2/images/struts_2_architecture.gif" alt="Struts 2 Architecture" width="467" height="399" /></p>
+<p><span style="background-color: #ffff99;">【注释】可以看到，setXxx()和getXxx()是一对的！</span></p>
+<p>上图描绘了Struts2的高层次架构。控制器是通过<strong>Struts2 分派servlet过滤器</strong>以及拦截器进行实现，模型是通过Actions进行实现，而视图则是<strong>结果类型</strong>和<strong>结果</strong>的结合。值栈和OGNL提供公共的thread、linking以及与其他组件之间的集成。</p>
+<p>除了上述的组件之外，还有许多配置相关的信息。例如web应用的配置，Actions的配置，拦截器的配置，results的配置等。</p>
+<p>这仅仅只是Struts2 MVC模式的体系结构的一个概述，在之后的章节中，我们将详细了解各个组件。</p>
+<h2>请求的生命周期（重要！！！）</h2>
+<p>基于上图，我们可以很容易地描述Struts2中请求的生命周期：</p>
+<ul class="list">
+<li>用户发送一个请求给服务，期望获得某些资源（比如，页面）</li>
+<li>过滤分派器（FilterDispatcher）查看这个请求，然后确定适当的Action.</li>
+<li>通过验证、文件上传等方式来配置&ldquo;拦截器（interceptors）&rdquo;功能。</li>
+<li>被选中的Action执行响应请求的操作</li>
+<li>另外，如果需要的话，已配置的&ldquo;拦截器&rdquo;可以被用来做任何&ldquo;后期处理&rdquo;</li>
+<li>最后，由视图显示结果并返回给用户。</li>
+</ul>

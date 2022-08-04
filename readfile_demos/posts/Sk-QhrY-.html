@@ -1,0 +1,210 @@
+<p>饮水思源：<a href="https://www.bilibili.com/video/BV1wy4y1D7JT?p=12" target="_blank">https://www.bilibili.com/video/BV1wy4y1D7JT?p=12</a></p>
+<p>一句话：状态驱动页面，状态改变，页面改变。</p>
+<h2>简单组件</h2>
+<p>被传入的数据可在组件中通过&nbsp;<code class="gatsby-code-text">this.props</code>&nbsp;在&nbsp;<code class="gatsby-code-text">render()</code>&nbsp;访问。</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/babel"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+    let 容器 </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#test</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+    class 这是一个简单组件<span style="color: #ff0000;"><strong> extends React.Component</strong></span> {
+      render() {
+        console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">) 
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">h2</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">我是{</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.props.name}</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">h2&gt;</span>
+<span style="background-color: #f5f5f5; color: #000000;">      }
+    }
+    ReactDOM.render(</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">这是一个简单组件 <strong><span style="color: #ff0000;">name</span></strong></span><strong><span style="color: #ff0000;"><span style="background-color: #f5f5f5;">=</span><span style="background-color: #f5f5f5;">{</span><span style="background-color: #f5f5f5;">"</span><span style="background-color: #f5f5f5;">火车王</span><span style="background-color: #f5f5f5;">"</span><span style="background-color: #f5f5f5;">} </span></span></strong><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">&gt;, 容器);</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h2>有状态组件</h2>
+<p>直接抄官网：除了使用<strong>外部数据</strong>（通过&nbsp;<code class="gatsby-code-text">this.props</code>&nbsp;访问）以外，组件还可以维护其<strong>内部的状态数据</strong>（通过&nbsp;<code class="gatsby-code-text">this.state</code>&nbsp;访问）。当组件的<strong>状态数据改变</strong>时，组件会再次调用&nbsp;<code class="gatsby-code-text">render()</code>&nbsp;方法<strong>重新渲染</strong>对应的标记。</p>
+<p>解决类中this指向问题：<a href="https://www.bilibili.com/video/BV1wy4y1D7JT?p=16" target="_blank">https://www.bilibili.com/video/BV1wy4y1D7JT?p=16</a></p>
+<p>效果演示(点击文字改变):</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211220171715312-1607952897.gif" alt="" width="318" height="157" loading="lazy" /></p>
+<p><strong>状态不能直接更改，要借助内部API更改（严重注意！），且setState是合并不是替换。</strong>错误示例：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('160a3dce-41db-4038-b53e-37ecf317168d')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_160a3dce-41db-4038-b53e-37ecf317168d" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_160a3dce-41db-4038-b53e-37ecf317168d" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_160a3dce-41db-4038-b53e-37ecf317168d" class="cnblogs_code_hide">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/babel"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+    let 容器 </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#test</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+
+    let that;
+    class 这是一个有状态的组件 extends React.Component {
+      constructor(props) {
+        super(props) </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 为了接属性</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.state </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {
+          name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+        }
+
+        that </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">;
+      }
+
+      render() {
+        console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">) 
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">h2 onClick</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">{changeName}</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">我是{</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.state.name}</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">h2&gt;</span>
+<span style="background-color: #f5f5f5; color: #000000;">      }
+    }
+
+    ReactDOM.render(</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">这是一个有状态的组件 </span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">&gt;, 容器);</span>
+
+    <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> changeName() {
+      console.log(that)
+      console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">函数被</span><span style="background-color: #f5f5f5; color: #000000;">"</span> <span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> that.state.name </span><span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">触发</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+      </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (that.state.name </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">) {
+        that.state.name </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王的儿子</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+      } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+        that.state.name </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+      }
+    }
+  </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">无效代码</span></div>
+<p>采用setState。写法一：</p>
+<div class="cnblogs_code">
+<pre>    let 容器 = document.querySelector("#test"<span style="color: #000000;">);
+
+    let that;
+    class 这是一个有状态的组件 extends React.Component {
+      constructor(props) {
+        super(props) </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为了接属性</span>
+        <span style="color: #0000ff;">this</span>.state =<span style="color: #000000;"> {
+          name: </span>"火车王"<span style="color: #000000;">,
+        }
+
+        that </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+      }
+
+      render() {
+        </span><span style="color: #0000ff;">return</span> &lt;h2 onClick={changeName}&gt;我是{<span style="color: #0000ff;">this</span>.state.name}&lt;/h2&gt;
+<span style="color: #000000;">      }
+    }
+
+    ReactDOM.render(</span>&lt;这是一个有状态的组件 /&gt;, 容器);
+
+    <span style="color: #0000ff;">function</span><span style="color: #000000;"> changeName() {
+      let str;
+      </span><span style="color: #0000ff;">if</span> (that.state.name == "火车王"<span style="color: #000000;">) {
+        str </span>= "火车王的儿子"<span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        str </span>= "火车王"<span style="color: #000000;">
+      }
+      that.setState({name: str});
+    }</span></pre>
+</div>
+<p>写法二：</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;Add React <span style="color: #0000ff;">in</span> One Minute&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;div id="test"&gt;&lt;/div&gt;
+  &lt;script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin&gt;&lt;/script&gt;
+  &lt;script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin&gt;&lt;/script&gt;
+  &lt;!-- Load Babel --&gt;
+  &lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;
+
+  &lt;script type="text/babel"&gt;<span style="color: #000000;">
+    let 容器 </span>= document.querySelector("#test"<span style="color: #000000;">);
+
+    class 这是一个有状态的组件 extends React.Component {
+      constructor(props) {
+        super(props) </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为了接属性</span>
+        <span style="color: #0000ff;">this</span>.state =<span style="color: #000000;"> {
+          name: </span>"火车王"<span style="color: #000000;">,
+        }
+        </span><span style="color: #0000ff;">this</span>.changeName = changeName.bind(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+      }
+
+      render() {
+        </span><span style="color: #0000ff;">return</span> &lt;h2 onClick={<span style="color: #0000ff;">this</span>.changeName}&gt;我是{<span style="color: #0000ff;">this</span>.state.name}&lt;/h2&gt;
+<span style="color: #000000;">      }
+    }
+
+    ReactDOM.render(</span>&lt;这是一个有状态的组件 /&gt;, 容器);
+
+    <span style="color: #0000ff;">function</span><span style="color: #000000;"> changeName() {
+      let str;
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.state.name == "火车王"<span style="color: #000000;">) {
+        str </span>= "火车王的儿子"<span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        str </span>= "火车王"<span style="color: #000000;">
+      }
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setState({name: str});
+    }
+  </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>把changeName挂在原型上也行：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211220173035331-253610548.png" alt="" width="266" height="265" loading="lazy" /></p>
+<div class="cnblogs_code">
+<pre>    let 容器 = document.querySelector("#test"<span style="color: #000000;">);
+
+    class 这是一个有状态的组件 extends React.Component {
+      constructor(props) {
+        super(props) </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为了接属性</span>
+        <span style="color: #0000ff;">this</span>.state =<span style="color: #000000;"> {
+          name: </span>"火车王"<span style="color: #000000;">,
+        }
+        </span><strong><span style="color: #0000ff;">this</span>.changeName = <span style="color: #0000ff;">this</span>.changeName.bind(<span style="color: #0000ff;">this</span></strong><span style="color: #000000;"><strong>);</strong>
+      }
+
+      render() {
+        console.log(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span> &lt;h2 onClick={<span style="color: #0000ff;">this</span>.changeName}&gt;我是{<span style="color: #0000ff;">this</span>.state.name}&lt;/h2&gt;
+<span style="color: #000000;">      }
+      
+      changeName() {
+        let str;
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.state.name == "火车王"<span style="color: #000000;">) {
+          str </span>= "火车王的儿子"<span style="color: #000000;">
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+          str </span>= "火车王"<span style="color: #000000;">
+        }
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setState({name: str});
+      }
+    }
+
+    ReactDOM.render(</span>&lt;这是一个有状态的组件 /&gt;, 容器);</pre>
+</div>
+<p>必须注意，this.changeName = this.changeName.bind(this);是必要的，因为onClick时，changeName是作为回调函数调用的，而不是通过对象实例调用，也就是说，他的this的指向是有问题的。</p>
+<p>简写形式。在class中直接写赋值语句是直接挂在对象上而不是原型上的，必须用箭头函数而不可以用function，箭头函数没有自己的this：</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/babel"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+    let 容器 </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#test</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+
+    class 这是一个有状态的组件 extends React.Component {
+
+      state </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 在对象上</span>
+<span style="background-color: #f5f5f5; color: #000000;">        name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+      }
+
+      changeName </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> () </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 自定义方法，在对象上，不在对象原型上</span>
+<span style="background-color: #f5f5f5; color: #000000;">
+        console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">);
+
+        let str;
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.state.name </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">) {
+          str </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王的儿子</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+        } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+          str </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">火车王</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+        }
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.setState({name: str});
+      }
+
+      render() {
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">h2 onClick</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.changeName}</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">我是{</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.state.name}</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">h2&gt;</span>
+<span style="background-color: #f5f5f5; color: #000000;">      }
+    }
+
+    ReactDOM.render(</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">这是一个有状态的组件 </span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">&gt;, 容器);</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h2>小结</h2>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211220181629760-162384110.png" alt="" width="451" height="132" loading="lazy" /></p>
+<p>强烈注意，render方法中的this为组件实例对象</p>
+<p>组件自定义方法中的this在作为回调函数调用时，为undefined，解决办法是：</p>
+<p>通过bind()强制绑定this；或者，在class中写箭头函数，因为箭头函数本身不带this</p>
+<p>&nbsp;</p>

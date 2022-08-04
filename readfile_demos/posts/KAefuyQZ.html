@@ -1,0 +1,151 @@
+<h2>【Spring之自动化装配bean尝试】</h2>
+<p>1、添加dependencies如下所示（不是每一个都用得到</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-context<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.3.9.RELEASE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.3.5.RELEASE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-core<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.3.7.RELEASE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-beans<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.3.9.RELEASE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.12<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>junit<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.12<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">2、创建可以被发现的&ldquo; bean &rdquo;</span></strong></p>
+<p>首先定义CD的概念</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> CompactDisc {
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> play();
+}</span></pre>
+</div>
+<p>创建带有 <strong>@Component</strong> 注解的实现类</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+</span><span style="color: #0000ff;">import</span> org.springframework.stereotype.*<span style="color: #000000;">;
+
+@Component
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> SgtPeppers <span style="color: #0000ff;">implements</span><span style="color: #000000;"> CompactDisc {
+    
+    </span><span style="color: #0000ff;">private</span> String title = "Sgt. Pepper's Lonely Hearts Club Band"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> String artist = "The Beatles"<span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> play() {
+        System.out.println(</span>"Playing" + title + " by " +<span style="color: #000000;"> artist);
+    }
+}</span></pre>
+</div>
+<p>@Component 注解的作用</p>
+<ol>
+<li>表明该类会作为组件类</li>
+<li><strong><span style="color: #ff0000;">告知&nbsp;</span></strong>Spring 要为这个类创建 bean</li>
+</ol>
+<p>&nbsp;</p>
+<p>3、声明组件扫描，下面这个类与 CD 实现类在同一个包下。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.ComponentScan;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> CDplayerConfig {
+    
+}</span></pre>
+</div>
+<p>注解 1&nbsp;<strong>@Configuration</strong>&nbsp;告知 <em>Spring的应用上下文</em> 要在该类中加载配置</p>
+<p>注解 2&nbsp;<strong>@ComponentScan</strong>&nbsp;告知&nbsp;<em>Spring的应用上下文 </em>&nbsp;要启用组件扫描，默认扫描与配置类相同的包</p>
+<p>&nbsp;</p>
+<p>4、测试自动化装配 bean</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span> org.junit.Assert.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.runner.RunWith;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.beans.factory.annotation.Autowired;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.context.ContextConfiguration;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">)
+@ContextConfiguration(classes </span>= CDplayerConfig.<span style="color: #0000ff;">class</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> CDPlayerTest {
+
+    @Autowired
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> CompactDisc cd;
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> cdShouldNotBeNull() {
+        assertNotNull(cd);
+    }
+}</span></pre>
+</div>
+<p>- @RunWith 创建 Spring的应用上下文</p>
+<p>- @ContextConfiguration 加载配置 --&gt; 启用组件扫描 --&gt; 扫描组件，发现带 @Component 注解的 CD实现类 --&gt; 自动创建 bean&nbsp;</p>
+<p>- @Autowired 将 CD实现类 对象 注入到测试代码中</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: line-through;">5、自动装配 bean 的数量是不限的</span></p>
+<div class="cnblogs_code">
+<pre><span style="text-decoration: line-through;"><span style="color: #0000ff; text-decoration: line-through;">public</span> <span style="color: #0000ff; text-decoration: line-through;">class</span><span style="color: #000000; text-decoration: line-through;"> CDPlayerTest {
+
+    @Autowired
+    </span><span style="color: #0000ff; text-decoration: line-through;">private</span><span style="color: #000000; text-decoration: line-through;"> CompactDisc cd;
+
+    @Autowired
+    </span><span style="color: #0000ff; text-decoration: line-through;">private</span><span style="color: #000000; text-decoration: line-through;"> CompactDisc cd2;
+
+    @Autowired
+    </span><span style="color: #0000ff; text-decoration: line-through;">private</span><span style="color: #000000; text-decoration: line-through;"> CompactDisc cd3;
+
+    @Autowired
+    .........
+
+    @Autowired
+    </span><span style="color: #0000ff; text-decoration: line-through;">private</span><span style="color: #000000; text-decoration: line-through;"> CompactDisc cdn;
+
+    @Test
+    </span><span style="color: #0000ff; text-decoration: line-through;">public</span> <span style="color: #0000ff; text-decoration: line-through;">void</span><span style="color: #000000; text-decoration: line-through;"> cdShouldNotBeNull() {
+        assertNotNull(cd);
+        assertNotNull(cd2);
+    }
+}</span></span></pre>
+</div>
+<p>&nbsp;<span style="color: #ff0000;">上述代码有误</span>，<strong>无限</strong>指的是 只需要一个&nbsp;</p>
+<pre>@ComponentScan</pre>
+<p>注解，就可自动创建无限的bean，这些bean对应于<strong>各自不同的类</strong>，</p>
+<p>扫描产生的bean<strong>默认为<span style="color: #ff0000;">单例</span></strong>。</p>
+<p>&nbsp;</p>
+<h2>【Spring 自动化装配 bean 相关注解 深入探讨】</h2>
+<p>自动化装配总结起来就是：</p>
+<p>创建可用的 bean --&gt; 声明组件扫描 --&gt; 启用配置，声明自动装配</p>
+<p>这中间还有一些可做的（可自定义）的事情，</p>
+<p>例如说，为组件扫描的 bean 命名、设置组件扫描的基础包（定义扫描范围），</p>
+<p>为各种东西（构造器、方法）添加 @Autowired 注解（该注解有个required属性，</p>
+<p>自动装配的缺陷在于有多个匹配的 bean 时将产生歧义（来自《Spring in Action》。。。</p>

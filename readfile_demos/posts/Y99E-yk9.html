@@ -1,0 +1,41 @@
+<p><span style="text-decoration: underline;">6.2-1</span></p>
+<p>略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.2-2</span></p>
+<p>比较元素大小的地方"&gt;"改成"&lt;"，运行时间没变化。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.2-3</span></p>
+<p>原数组不会有任何改变。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.2-4</span></p>
+<p>因为当i&gt;a.heap-size/2时，i为叶子节点下标，所以原数组不会有改变。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.2-5</span></p>
+<div class="cnblogs_code">
+<pre>                <span style="color: #008000;">//</span><span style="color: #008000;"> 非递归版本</span>
+<span style="color: #000000;">                static maxHeapify2(arr, i) {
+                    let flag </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (flag) {
+                        let l </span>=<span style="color: #000000;"> HeapSort.left(i);
+                        let r </span>=<span style="color: #000000;"> HeapSort.right(i);
+                        let largest </span>=<span style="color: #000000;"> i;
+                        </span><span style="color: #0000ff;">if</span> (l &lt; arr.length &amp;&amp; arr[l] &gt;<span style="color: #000000;"> arr[largest]) {
+                            largest </span>=<span style="color: #000000;"> l;
+                        }
+                        </span><span style="color: #0000ff;">if</span> (r &lt; arr.length &amp;&amp; arr[r] &gt;<span style="color: #000000;"> arr[largest]) {
+                            largest </span>=<span style="color: #000000;"> r;
+                        }                
+                        </span><span style="color: #0000ff;">if</span> (largest !=<span style="color: #000000;"> i) {
+                            let temp </span>=<span style="color: #000000;"> arr[i];
+                            arr[i] </span>=<span style="color: #000000;"> arr[largest];
+                            arr[largest] </span>= temp; <span style="color: #008000;">//</span><span style="color: #008000;"> 此时arr[largest]已经被置换成更小的那个</span>
+                            i =<span style="color: #000000;"> largest;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            flag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                        }
+                    }            
+                }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.2-6</span></p>
+<p>略。。</p>

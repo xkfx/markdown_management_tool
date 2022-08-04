@@ -1,0 +1,20 @@
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> strlen(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">);
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, strlen(<span style="color: #800000;">"</span><span style="color: #800000;">hello, world</span><span style="color: #800000;">"</span><span style="color: #000000;">));
+}
+
+</span><span style="color: #0000ff;">int</span> strlen(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">s)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    
+    </span><span style="color: #0000ff;">for</span>(n = <span style="color: #800080;">0</span>; *s != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>; s ++<span style="color: #000000;">)
+        ;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

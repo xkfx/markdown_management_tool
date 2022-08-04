@@ -1,0 +1,168 @@
+<h2>你将构建什么</h2>
+<p>你将在http://localhost:8080/greeting上建立一个接受HTTP GET请求的服务。</p>
+<p>它将返回一个JSON格式的信息：</p>
+<div class="cnblogs_code">
+<pre>{"id":1,"content":"Hello, World!"}</pre>
+</div>
+<p>你可以通过添加一个name参数来定制化上述响应，例如：</p>
+<div class="cnblogs_code">
+<pre>http:<span style="color: #008000;">//</span><span style="color: #008000;">localhost:8080/greeting?name=User</span></pre>
+</div>
+<p>name的参数值将覆盖默认的参数值World，如下所示：</p>
+<div class="cnblogs_code">
+<pre>{"id":1,"content":"Hello, User!"}</pre>
+</div>
+<h2>你需要什么</h2>
+<ul>
+<li>大概15分钟</li>
+<li>一个最喜欢的编辑器或者集成环境</li>
+<li>JDK1.8以上</li>
+<li>Gradle 4+ 或者Maven 3.2+</li>
+<li>你也可以直接把代码导入你的集成环境（<a href="https://spring.io/guides/gs/sts/" target="_blank">Spring Tool Suite</a>或IntelliJ IDEA）</li>
+</ul>
+<h2>如何完成本指南</h2>
+<p>与大多数Spring入门指南一样，您可以从头开始并完成每个步骤，也可以跳过您已经熟悉的基本设置步骤。无论采用哪种方式，最终都可以得到可以工作的代码。</p>
+<p>要从头开始，请继续使用Spring Initialize。</p>
+<p>要跳过这些基本步骤，请做以下步骤：</p>
+<ul>
+<li>下载并解压本指南的源代码库，或者使用Git克隆它：git clone https://github.com/spring-guides/gs-rest-service.git</li>
+<li>cd到gs-rest-service/initial</li>
+<li>跳过中间步骤创建一个资源表示类（Resource Representation Class）</li>
+</ul>
+<p>完成后，可以根据gs-rest-service/complete中的代码检查结果。</p>
+<h2>从Spring Initialize开始</h2>
+<p>对于所有Spring应用程序，都应该从<a href="https://start.spring.io/" target="_blank">Spring Initializr</a>开始。Initializr提供了一种快速的方法来拉入应用程序所需的所有依赖项，并为您完成了大量的设置工作。<strong>这个例子只需要Spring Web依赖项</strong>。从官方页面跳转过去的配置如下（不过，我选的java 8）：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202102/1042431-20210208192649056-1475615086.png" alt="" width="503" height="469" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202102/1042431-20210208192804889-1003731205.png" alt="" width="496" height="207" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>您可以直接从Spring Initializr获得包含必要依赖项的Maven构建文件。下面的清单显示了在采用Maven时创建的pom.xml文件：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;"> xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+    xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">parent</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-starter-parent<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.4.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">relativePath</span><span style="color: #0000ff;">/&gt;</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> lookup parent from repository </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">parent</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.example<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>rest-service<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>0.0.1-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>rest-service<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>Demo project for Spring Boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">java.version</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">java.version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">properties</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-starter-web<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-starter-test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>test<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scope</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">build</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugins</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework.boot<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-boot-maven-plugin<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugins</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">build</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>采用Gradle的略。</p>
+<h2>创建一个资源表示类（Resource Representation Class）</h2>
+<p>现在已经设置了项目和构建系统，可以创建web服务了。</p>
+<p>从考虑服务交互开始。</p>
+<p>该服务将处理发送至<strong>/greeting的GET请求</strong>，查询字符串中可以有一个<strong>name参数</strong>。GET请求应该返回一个<strong>200 OK响应</strong>，其中包含表示一个问候语（greeting）的JSON。类似于下面：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">{
+    </span>"id": 1<span style="color: #000000;">,
+    </span>"content": "Hello, World!"<span style="color: #000000;">
+}</span></pre>
+</div>
+<p>id字段是问候语的唯一标识符，content是问候语的文本表示。</p>
+<p>为了对greeting这个资源的表示进行建模，创建一个资源表示类。为此，提供一个带有字段、构造器、访问器的POJO（plain old Java object），放在src/main/java/com/example/restservice/Greeting.java中：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.restservice;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Greeting {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">long</span><span style="color: #000000;"> id;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> String content;
+
+    </span><span style="color: #0000ff;">public</span> Greeting(<span style="color: #0000ff;">long</span><span style="color: #000000;"> id, String content) {
+        </span><span style="color: #0000ff;">this</span>.id =<span style="color: #000000;"> id;
+        </span><span style="color: #0000ff;">this</span>.content =<span style="color: #000000;"> content;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">long</span><span style="color: #000000;"> getId() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> id;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getContent() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> content;
+    }
+}</span></pre>
+</div>
+<p>（该应用将采用默认包含的Jackson JSON库把Greeting实例转化成JSON）</p>
+<h2>创建资源控制器（Resource Controller）</h2>
+<p>在Spring构建的RESTful web服务中，HTTP请求由控制器处理。</p>
+<p>这些组件由@RestController注解标识，例如下面的GreetingController（路径是src/main/java/com/example/restservice/GreetingController.java）通过返回一个Greeting类的实例，处理发送到/greeting的GET请求：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.restservice;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.atomic.AtomicLong;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.GetMapping;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.RequestParam;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.bind.annotation.RestController;
+
+@RestController
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> GreetingController {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String template = "Hello, %s!"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> AtomicLong counter = <span style="color: #0000ff;">new</span><span style="color: #000000;"> AtomicLong();
+
+    @GetMapping(</span>"/greeting"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span> Greeting greeting(@RequestParam(value = "name", defaultValue = "World"<span style="color: #000000;">) String name) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> Greeting(counter.incrementAndGet(), String.format(template, name));
+    }
+}</span></pre>
+</div>
+<p>这个控制器简洁而简单，但是它背后其实做了很多事情。我们一步一步将其拆分讲解。</p>
+<p><strong>@GetMapping注解</strong>确保发送至/greeting的HTTP GET请求映射到greeting()方法。</p>
+<p><strong>@RequestParam</strong>将查询字符串参数name的值绑定到greeting()方法的name参数中。如果请求中没有name参数，则使用defaultValue，也就是World</p>
+<p>传统MVC控制器和前面展示的RESTful web服务控制器之间的一个关键区别是HTTP响应体的创建方式。这个RESTful web服务控制器填充并返回一个greeting对象，而不是依赖视图技术来执行将greeting数据填充到HTML的服务器端渲染（server-side rendering）。对象数据将作为JSON直接写入HTTP响应。</p>
+<p>这段代码使用Spring的<strong>@RestController注解</strong>，它将类标记为控制器，其中每个方法返回一个领域对象（domain object），而不是一个视图。@RestController是@Controller和@ResponseBody组合起来的简写。</p>
+<p>Greeting对象必须转换为JSON。由于Spring的HTTP消息转换器支持，您不需要手动进行此转换。因为Jackson2在类路径中，Spring的<strong>MappingJackson2HttpMessageConverter</strong>被自动选择来将Greeting实例转换为JSON。</p>
+<p><strong>@SpringBootApplication</strong>是一个方便的注解，它添加了以下所有内容:</p>
+<ul>
+<li>@Configuration：将类标记为应用程序上下文的bean定义源。</li>
+<li>@EnableAutoConfiguration：告诉Spring Boot开始添加基于类路径设置、其他bean和各种属性设置的bean。例如，如果spring-webmvc在类路径上，这个注释将把应用程序标记为web应用程序，并激活关键行为，如设置DispatcherServlet。</li>
+<li>@ComponentScan：告诉Spring在com/example包中寻找其他组件、配置和服务，让它找到控制器。</li>
+</ul>
+<p>main()方法使用Spring Boot的SpringApplication.run()方法来启动应用程序。您是否注意到没有一行XML呢？也没有web.xml文件。这个web应用程序是100%纯Java的，您不需要配置任何管道或基础设施。</p>
+<h2>构建一个可执行JAR</h2>
+<p>maven的话，用下面的指令（在项目根目录）：</p>
+<div class="cnblogs_code">
+<pre>mvn clean package</pre>
+</div>
+<p>执行成功后，运行JAR：</p>
+<div class="cnblogs_code">
+<pre>java -jar target/gs-rest-service-<span style="color: #800080;">0.1</span>.<span style="color: #800080;">0</span>.jar</pre>
+</div>
+<h2>测试服务</h2>
+<p>访问http://localhost:8080/greeting?name=User返回如下内容</p>
+<div class="cnblogs_code">
+<pre>{"id":1,"content":"Hello, User!"}</pre>
+</div>
+<p>刷新页面，id将递增。</p>

@@ -1,0 +1,140 @@
+<p><a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431864715651c99511036d884cf1b399e65ae0d27f7e000" target="_blank"><span style="color: #000000;">廖雪峰官网笔记</span></a></p>
+<p><span style="color: #ff00ff;">【类和实例】</span></p>
+<p><span style="background-color: #ff0000;">1、</span>在Java中，类决定了对象的属性和方法，和Java不同，Python允许对实例变量绑定任何数据，即同类的对象可能有不同的特征。</p>
+<p>&nbsp;</p>
+<p>2、Python中的类长什么样？</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Student(object):
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 相当于构造器</span>
+    <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, name, score):
+        self.name </span>=<span style="color: #000000;"> name
+        self.score </span>=<span style="color: #000000;"> score
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> print_score(self):
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">%s: %s</span><span style="color: #800000;">'</span> % (self.name, self.score))</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、Python中如何创建对象，调用方法：</p>
+<div class="cnblogs_code">
+<pre>bart = Student(<span style="color: #800000;">'</span><span style="color: #800000;">Bart Simpson</span><span style="color: #800000;">'</span>, 59<span style="color: #000000;">)
+lisa </span>= Student(<span style="color: #800000;">'</span><span style="color: #800000;">Lisa Simpson</span><span style="color: #800000;">'</span>, 87<span style="color: #000000;">)
+bart.print_score()
+lisa.print_score()</span></pre>
+</div>
+<p>&nbsp;&nbsp;</p>
+<p><span style="color: #ff00ff;">【访问限制】</span></p>
+<p>1、在Python中，设置私有变量的方法是self.__name = name # 双下划线！</p>
+<p>&nbsp;</p>
+<p><span><span>2、之所以大费周折的写修改器方法是为了实现参数检查，避免传入无效参数。</span></span></p>
+<p>&nbsp;</p>
+<p>3、尝试用Python重写顾客类：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/usr/bin/env python3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Movie(object):
+
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, title, priceCode):
+        self.</span><span style="color: #800080;">__title</span> =<span style="color: #000000;"> title
+        self.</span><span style="color: #800080;">__priceCode</span> =<span style="color: #000000;"> priceCode
+    
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> getTitle(self):
+        </span><span style="color: #0000ff;">return</span> self.<span style="color: #800080;">__title</span>
+    
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> getPriceCode(self):
+        </span><span style="color: #0000ff;">return</span> self.<span style="color: #800080;">__priceCode</span>
+
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> setTitle(self, title):
+        self.</span><span style="color: #800080;">__title</span> =<span style="color: #000000;"> title
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 类测试</span>
+<span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    movie_A </span>= Movie(<span style="color: #800000;">'</span><span style="color: #800000;">Tokyo Ghoul</span><span style="color: #800000;">'</span>, 145<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(movie_A.getTitle())
+    movie_A.setTitle(</span><span style="color: #800000;">'</span><span style="color: #800000;">Love Python</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span>(movie_A.getTitle() + <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #ff00ff;">print(movie_A.getPriceCode())</span></pre>
+</div>
+<p><span style="color: #ff00ff;">&nbsp;</span></p>
+<p><span style="color: #ff00ff;">【继承和多态】</span></p>
+<p>与Java的差异。</p>
+<p>1、语法上。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span> son(father) 等价于Java的 <span style="color: #0000ff;">class</span> son extends father</pre>
+</div>
+<p><span style="line-height: 1.5;">2、动态语言的鸭子类型特点。</span></p>
+<p><span style="line-height: 1.5;">例如：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> run(Animal):
+    Animal.run()</span></pre>
+</div>
+<p>传入的不一定必须是Animal的对象或是其子类对象（Java的话就必须得是！），只要是含有run方法的类对象就好了，这一特点使得继承不是那么不可替代。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【获取对象信息】</span></p>
+<p>1、获取对象类型。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; type(123<span style="color: #000000;">)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">int</span><span style="color: #800000;">'</span>&gt;
+&gt;&gt;&gt; type(<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">str</span><span style="color: #800000;">'</span>&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、判断是不是函数。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> type(f)
+</span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">function</span><span style="color: #800000;">'</span>&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、判断是不是某类的实例。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; isinstance(123<span style="color: #000000;">, int)
+True</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、获得一个对象的所有属性和方法。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; dir(<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+[</span><span style="color: #800000;">'</span><span style="color: #800000;">__add__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__class__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__contains__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__delattr__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__dir__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__doc__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__eq__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__format__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__ge__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__getattribute__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__getitem__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__getnewargs__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__gt__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__hash__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__init__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__iter__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__le__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__len__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__lt__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__mod__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__mul__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__ne__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__new__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__reduce__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__reduce_ex__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__repr__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__rmod__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__rmul__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__setattr__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__sizeof__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__str__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__subclasshook__</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">capitalize</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">casefold</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">center</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">count</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">encode</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">endswith</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">expandtabs</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">find</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">format</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">format_map</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">index</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isalnum</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isalpha</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isdecimal</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isdigit</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isidentifier</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">islower</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isnumeric</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isprintable</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isspace</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">istitle</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">isupper</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">join</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">ljust</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">lower</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">lstrip</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">maketrans</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">partition</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">replace</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rfind</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rindex</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rjust</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rpartition</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rsplit</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rstrip</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">split</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">splitlines</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">startswith</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">strip</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">swapcase</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">title</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">translate</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">upper</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">zfill</span><span style="color: #800000;">'</span>]</pre>
+</div>
+<p>&nbsp;</p>
+<p>5、类似于__xxx__的方法调用方式为：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyDog(object):
+...     </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__len__</span><span style="color: #000000;">(self):
+...         </span><span style="color: #0000ff;">return</span> 100<span style="color: #000000;">
+...
+</span>&gt;&gt;&gt; dog =<span style="color: #000000;"> MyDog()
+</span>&gt;&gt;&gt;<span style="color: #000000;"> len(dog)
+</span>100</pre>
+</div>
+<p>&nbsp;</p>
+<p>6、<code>getattr()</code>、<code>setattr()</code>以及<code>hasattr()方法。</code></p>
+<p><span style="text-decoration: underline;">hasattr()</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; hasattr(obj, <span style="color: #800000;">'</span><span style="color: #800000;">x</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 有属性'x'吗？</span>
+True</pre>
+</div>
+<p><span style="text-decoration: underline;">&nbsp;getattr()</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; getattr(obj, <span style="color: #800000;">'</span><span style="color: #800000;">y</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 获取属性'y'</span>
+19</pre>
+</div>
+<p><span style="line-height: 1.5;">可以传入一个default参数，如果属性不存在，就返回默认值：</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; getattr(obj, <span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>, 404) <span style="color: #008000;">#</span><span style="color: #008000;"> 获取属性'z'，如果不存在，返回默认值404</span>
+404</pre>
+</div>
+<p>以上同样对函数的成员方法使用，把变量名改成函数名就可以了（不用加括号）</p>
+<p><span style="text-decoration: underline;">setattr()</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; setattr(obj, <span style="color: #800000;">'</span><span style="color: #800000;">y</span><span style="color: #800000;">'</span>, 19) <span style="color: #008000;">#</span><span style="color: #008000;"> 设置一个属性'y'</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【实例属性和类属性】</span></p>
+<p><span style="color: #000000;">声明方式：</span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">class</span><span style="color: #000000;"> Student(object):
+...     name </span>= <span style="color: #800000;">'</span><span style="color: #800000;">Student</span><span style="color: #800000;">'</span><span style="color: #000000;">
+...</span></pre>
+</div>
+<p><span style="line-height: 1.5;">实例属性的优先级高于类属性，类属性可以通过"classname.属性名"访问，类似于Java中的静态变量。</span></p>

@@ -1,0 +1,117 @@
+<h2>C++重载&lt;运算符</h2>
+<p>C++的string已经定义了各种比较运算符。</p>
+<p>C风格的字符串（char数组）则采用strcmp比较字符串大小。详细见下</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 先按成绩比较
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 成绩相同按名字，
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 名字相同按年龄 </span>
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Student {
+    </span><span style="color: #0000ff;">char</span> name[<span style="color: #800080;">101</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> age;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> score;
+    </span><span style="background-color: #ffffff;"><strong><span style="color: #008000;">//</span><span style="color: #008000;"> ①const Student&amp; 既可以持有常量也可以持有变量，持有变量时不改变。 
+    </span><span style="color: #008000;">//</span></strong><span style="color: #008000;"><strong> ②Class::fun() const 表示该函数不修改类对象，也就是不修改成员变量，如果改了，编译器报错。</strong> </span>
+    <span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span> &lt; (<span style="color: #0000ff;">const</span> Student&amp; b) <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (score != b.score) <span style="color: #0000ff;">return</span> score &lt;<span style="color: #000000;"> b.score;
+        </span><span style="color: #0000ff;">int</span> tmp =<span style="color: #000000;"> strcmp(name, b.name);
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> ③strcmp 自左向右直到出现不同的字符或者'\0' 
+        </span><span style="color: #008000;">//</span></strong><span style="color: #008000;"><strong> 按ASCII值大小相比较，若s1=s2则返回0，s1&lt;s2返回负数，s1&gt;s2返回正数。</strong> </span>
+        <span style="color: #0000ff;">if</span> (tmp != <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> tmp &lt; <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> age &lt;</span><span style="color: #000000;"><span style="background-color: #ffffff;"> b.age;
+    }       </span> 
+};
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Student x </span>= {<span style="color: #800000;">"</span><span style="color: #800000;">aaa</span><span style="color: #800000;">"</span>, <span style="color: #800080;">18</span>, <span style="color: #800080;">99</span><span style="color: #000000;">};
+    Student y </span>= {<span style="color: #800000;">"</span><span style="color: #800000;">bbb</span><span style="color: #800000;">"</span>, <span style="color: #800080;">18</span>, <span style="color: #800080;">99</span><span style="color: #000000;">};
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, x &lt; y ? <span style="color: #800000;">"</span><span style="color: #800000;">yes</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">no</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<h2>排序结构体方法一：重载&lt;运算符</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> StructName {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> index1;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> index2;
+    </span><strong><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span> &lt; (<span style="color: #0000ff;">const</span> StructName&amp; b) <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (index1 != b.index1) <span style="color: #0000ff;">return</span> index1 &lt;<span style="color: #000000;"> b.index1;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> index2 &lt;</strong><span style="color: #000000;"><strong> b.index2;
+    }</strong>
+} buf[</span><span style="color: #800080;">5</span><span style="color: #000000;">];
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> printBuf()
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">5</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf[i].index1, buf[i].index2);
+    }    
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    buf[</span><span style="color: #800080;">0</span>] = {<span style="color: #800080;">3</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">1</span>] = {<span style="color: #800080;">3</span>, <span style="color: #800080;">2</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">2</span>] = {<span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">3</span>] = {<span style="color: #800080;">3</span>, <span style="color: #800080;">1</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">4</span>] = {<span style="color: #800080;">7</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    
+<strong>    sort(buf, buf </strong></span><strong>+ <span style="color: #800080;">5</span></strong><span style="color: #000000;"><strong>);</strong>
+    
+    printBuf();
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<h2>排序结构体方法二：自定义cmp函数</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> StructName {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> index1;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> index2;
+} buf[</span><span style="color: #800080;">5</span><span style="color: #000000;">];
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> printBuf()
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">5</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf[i].index1, buf[i].index2);
+    }    
+}
+
+</span><strong><span style="color: #0000ff;">bool</span> cmp(<span style="color: #0000ff;">const</span> StructName&amp; a, <span style="color: #0000ff;">const</span> StructName&amp;<span style="color: #000000;"> b)
+{
+    </span><span style="color: #0000ff;">if</span> (a.index1 != b.index1) <span style="color: #0000ff;">return</span> a.index1 &lt;<span style="color: #000000;"> b.index1;
+    </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> a.index2 &lt;<span style="color: #000000;"> b.index2;    
+}
+
+</span></strong><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    buf[</span><span style="color: #800080;">0</span>] = {<span style="color: #800080;">3</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">1</span>] = {<span style="color: #800080;">3</span>, <span style="color: #800080;">2</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">2</span>] = {<span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">3</span>] = {<span style="color: #800080;">3</span>, <span style="color: #800080;">1</span><span style="color: #000000;">};
+    buf[</span><span style="color: #800080;">4</span>] = {<span style="color: #800080;">7</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    
+<strong>    sort(buf, buf </strong></span><strong>+ <span style="color: #800080;">5</span></strong><span style="color: #000000;"><strong>, cmp);</strong>
+    
+    printBuf();
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

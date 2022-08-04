@@ -1,0 +1,107 @@
+<p>译自：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using" target="_blank">https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using</a></p>
+<h2 id="using.auto-configuration">4. Auto-configuration</h2>
+<p><span style="text-decoration: underline;"><span style="color: #ff0000; text-decoration: underline;">Spring Boot auto-configuration尝试根据添加的jar依赖项自动配置Spring应用程序。</span></span>例如，如果HSQLDB在类路径上，并且您没有手动配置任何数据库连接bean，那么Spring Boot将自动配置内存中的数据库。</p>
+<p>您需要通过在@Configuration类中添加@EnableAutoConfiguration或@SpringBootApplication注解来启用自动配置。</p>
+<p>您应该只添加一个@SpringBootApplication或@EnableAutoConfiguration注解。我们通常建议您只将其中一个添加到主@Configuration类中。</p>
+<h3 id="using.auto-configuration.replacing">4.1. Gradually Replacing Auto-configuration</h3>
+<p>auto-configuration是非侵入性的（non-invasive）。在任何时候，您都可以开始定义自己的配置来替换auto-configuration的特定部分。例如，如果您添加自己的<em><span style="color: #0000ff;">DataSource</span></em> bean，默认的嵌入式数据库支持就会后退（backs away）。</p>
+<p>如果您需要了解当前应用的auto-configuration以及原因，请使用--debug模式（the&nbsp;<code>--debug</code>&nbsp;switch）启动应用程序。这样做可以为选定的核心记录器启用调试日志，并将条件报告记录到控制台。这样做可以为选定的核心记录器启用调试日志，并将条件报告记录到控制台。</p>
+<h3 id="using.auto-configuration.disabling-specific">4.2. Disabling Specific Auto-configuration Classes</h3>
+<p>如果你发现某个你不想要的自动配置类正在被应用，你可以使用@SpringBootApplication的exclude属性来禁用它们，如下所示：</p>
+<div class="cnblogs_code">
+<pre>@SpringBootApplication(exclude = { DataSourceAutoConfiguration.<span style="color: #0000ff;">class</span><span style="color: #000000;"> })
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+}</span></pre>
+</div>
+<h2>5. Spring Beans and Dependency Injection</h2>
+<p>您可以自由地使用任何标准Spring Framework技术来定义bean及其注入的依赖项。我们通常建议使用构造函数注入来连接依赖和@ComponentScan来查找bean。</p>
+<p>如果您按照上面建议的方式构造代码(将应用程序类定位在顶级包中)，您可以不带任何参数添加@ComponentScan或使用隐式包含它的@SpringBootApplication注释。您的所有应用程序组件（@Component、@Service、@Repository、@Controller，以及其他）都自动注册为Spring bean。</p>
+<p>下面的例子展示了一个@Service Bean，它使用构造函数注入来获得一个所需的RiskAssessor Bean：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.stereotype.Service;
+
+@Service
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyAccountService <span style="color: #0000ff;">implements</span><span style="color: #000000;"> AccountService {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> RiskAssessor riskAssessor;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> MyAccountService(RiskAssessor riskAssessor) {
+        </span><span style="color: #0000ff;">this</span>.riskAssessor =<span style="color: #000000;"> riskAssessor;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+<span style="color: #000000;">
+}</span></pre>
+</div>
+<p>如果一个bean有多个构造函数，你需要用@Autowired标记你想让Spring使用的构造函数：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.PrintStream;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.beans.factory.annotation.Autowired;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.stereotype.Service;
+
+@Service
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyAccountService <span style="color: #0000ff;">implements</span><span style="color: #000000;"> AccountService {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> RiskAssessor riskAssessor;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> PrintStream out;
+
+    @Autowired
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> MyAccountService(RiskAssessor riskAssessor) {
+        </span><span style="color: #0000ff;">this</span>.riskAssessor =<span style="color: #000000;"> riskAssessor;
+        </span><span style="color: #0000ff;">this</span>.out =<span style="color: #000000;"> System.out;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> MyAccountService(RiskAssessor riskAssessor, PrintStream out) {
+        </span><span style="color: #0000ff;">this</span>.riskAssessor =<span style="color: #000000;"> riskAssessor;
+        </span><span style="color: #0000ff;">this</span>.out =<span style="color: #000000;"> out;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+<span style="color: #000000;">
+}</span></pre>
+</div>
+<h2>6. Using the @SpringBootApplication Annotation</h2>
+<p>许多Spring Boot开发者喜欢他们的应用使用自动配置（auto-configuration）、组件扫描（component scan），并且能够在他们的&ldquo;应用类（application class）&rdquo;上定义额外的配置（configuration）。一个@SpringBootApplication注释可以用来启用这三个特性，即：</p>
+<ul>
+<li>@EnableAutoConfiguration：启用Spring Boot的自动配置机制（<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.auto-configuration" target="_blank">Spring Boot&rsquo;s auto-configuration mechanism</a>）</li>
+<li>@ComponentScan：在应用程序所在的包上启用@Component scan（参见<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.structuring-your-code" target="_blank">the best practices</a>）</li>
+<li>@SpringBootConfiguration：允许在上下文中注册额外的bean，或者导入额外的配置类。Spring标准@Configuration的替代方案，它可以帮助集成测试中的配置检测（<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.testing.spring-boot-applications.detecting-configuration" target="_blank">configuration detection</a>）。</li>
+</ul>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Same as @SpringBootConfiguration @EnableAutoConfiguration @ComponentScan</span>
+<span style="color: #000000;">@SpringBootApplication
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication.run(MyApplication.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">, args);
+    }
+
+}</span></pre>
+</div>
+<p>这些特性都不是强制性的，您可以选择用它启用的任何特性来替换这个单一的注释。例如，你可能不想在你的应用程序中使用组件扫描（component scan）或配置属性扫描（configuration properties scan）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringBootConfiguration;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.Import;
+
+@SpringBootConfiguration(proxyBeanMethods </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">)
+@EnableAutoConfiguration
+@Import({ SomeConfiguration.</span><span style="color: #0000ff;">class</span>, AnotherConfiguration.<span style="color: #0000ff;">class</span><span style="color: #000000;"> })
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication.run(MyApplication.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">, args);
+    }
+
+}</span></pre>
+</div>
+<p>在这个例子中，MyApplication和其他任何Spring Boot应用程序一样，除了带<strong>@Component注释</strong>的类和带<strong>@ConfigurationProperties注释</strong>的类不会自动检测到，用户定义的bean会显式导入（参见@Import）。</p>
+<h2 id="using.whats-next">10. What to Read Next</h2>
+<p>现在，您应该了解如何使用Spring Boot以及应该遵循的一些最佳实践。现在，您可以继续深入了解Spring Boot的特定特性（specific&nbsp;<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features" target="_blank">Spring Boot features</a>&nbsp;），或者跳过它，阅读Spring Boot的&ldquo;生产准备（<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator" target="_blank">production ready</a>）&rdquo;方面的内容。</p>

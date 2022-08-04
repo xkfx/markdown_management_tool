@@ -1,0 +1,137 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ol>
+<li><a href="#a1">回调版本</a></li>
+<li><a href="#a2">Promise版本1</a></li>
+<li><a href="#a3">Promise版本2</a></li>
+</ol></div>
+<h2>Notes</h2>
+<p>参考资料：</p>
+<p><a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014345008539155e93fc16046d4bb7854943814c4f9dc2000" target="_blank">Promise</a></p>
+<p><a href="https://developers.google.com/web/fundamentals/primers/promises#_8" target="_blank">JavaScript Promise：简介</a></p>
+<p>&nbsp;</p>
+<p>你去书店借书，按照异步的套路，剧情如下&darr;</p>
+<p>你：&ldquo;老板，有xxx吗？&rdquo;</p>
+<p>老板：&ldquo;你等下，我得找一找看，到时候打电话给你。&rdquo;</p>
+<p>然后你就去做其它事情了。</p>
+<p>&nbsp;</p>
+<p><a name="a1"></a>1、回调版本：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 辅助函数</span>
+const randomBoolean = () =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> Math.random() &lt; 0.5<span style="color: #000000;">;
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 客户对象，处理找书的结果</span>
+const customer =<span style="color: #000000;"> {
+    dealWithResult: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(success) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(success) {
+            console.log(</span>'customer：去书店取书'<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            console.log(</span>'customer：有空去别的书店问问'<span style="color: #000000;">);
+        }
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 书店老板对象，提供一个异步的找书方法。</span>
+const bossOfBookstore =<span style="color: #000000;"> {
+    askForBook: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(bookName, phoneNumber, cb) {
+        setTimeout((phoneNumber) </span>=&gt;<span style="color: #000000;"> {
+            let result </span>=<span style="color: #000000;"> randomBoolean();
+            console.log(</span>'bossOfBookstore：' + (result ? '找到书了' : '没有这本书'<span style="color: #000000;">));
+            cb(result);
+        }, </span>3000<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">debugger;</span>
+bossOfBookstore.askForBook('某某书', 15298000122<span style="color: #000000;">, customer.dealWithResult);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; bossOfBookstore：没有这本书</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; customer：有空去别的书店问问 </span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、Promise版本1：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 辅助函数</span>
+const randomBoolean = () =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> Math.random() &lt; 0.5<span style="color: #000000;">;
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 客户对象，处理找书的结果</span>
+const customer =<span style="color: #000000;"> {
+    dealWithResult: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(success) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(success) {
+            console.log(</span>'customer：去书店取书'<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            console.log(</span>'customer：有空去别的书店问问'<span style="color: #000000;">);
+        }
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 书店老板对象，提供一个异步的找书方法。</span>
+const bossOfBookstore =<span style="color: #000000;"> {
+    askForBook: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(bookName, phoneNumber) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise(resolve =&gt;<span style="color: #000000;"> {
+            setTimeout(phoneNumber </span>=&gt;<span style="color: #000000;"> {
+                let result </span>=<span style="color: #000000;"> randomBoolean();
+                console.log(</span>'bossOfBookstore：' + (result ? '找到书了' : '没有这本书'<span style="color: #000000;">));
+                resolve(result); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 书店老板才不关心你怎么处理的！    </span>
+            }, 3000<span style="color: #000000;">);            
+        });
+    }
+}
+
+bossOfBookstore.askForBook(</span>'某某书', 15298000122).then(result =&gt;<span style="color: #000000;"> {
+    customer.dealWithResult(result);
+});</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、Promise版本2：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 辅助函数</span>
+const randomBoolean = () =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> Math.random() &lt; 0.5<span style="color: #000000;">;
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 客户对象，处理找书的结果</span>
+const customer =<span style="color: #000000;"> {
+    dealWithResult: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(success) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(success) {
+            console.log(</span>'customer：去书店取书'<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            console.log(</span>'customer：有空去别的书店问问'<span style="color: #000000;">);
+        }
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 书店老板对象，提供一个异步的找书方法。</span>
+const bossOfBookstore =<span style="color: #000000;"> {
+    askForBook: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(bookName, phoneNumber) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((resolve, reject) =&gt;<span style="color: #000000;"> {
+            setTimeout(phoneNumber </span>=&gt;<span style="color: #000000;"> {
+                let result </span>=<span style="color: #000000;"> randomBoolean();
+                console.log(</span>'bossOfBookstore：' + (result ? '找到书了' : '没有这本书'<span style="color: #000000;">));
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (result) {
+                    resolve(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    reject(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                }
+            }, </span>500<span style="color: #000000;">);            
+        });
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 写法一</span>
+bossOfBookstore.askForBook('某某书', 15298000122).then(result =&gt;<span style="color: #000000;"> {
+    customer.dealWithResult(result);
+}).</span><span style="color: #0000ff;">catch</span>(result =&gt;<span style="color: #000000;"> { 
+    customer.dealWithResult(result);
+});
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 写法二</span>
+bossOfBookstore.askForBook('某某书', 15298000122).then(result =&gt;<span style="color: #000000;"> {
+    customer.dealWithResult(result);
+}, result </span>=&gt;<span style="color: #000000;"> { 
+    customer.dealWithResult(result);
+});</span></pre>
+</div>

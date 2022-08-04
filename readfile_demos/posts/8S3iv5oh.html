@@ -1,0 +1,63 @@
+<p>索引</p>
+<ul>
+<li>database&nbsp;</li>
+<li>table</li>
+<li>schema</li>
+<li><strong><a href="#prk">Primary Key&nbsp;</a></strong></li>
+<li>
+<p><a href="#a7">MySQL</a></p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<p>书的第一章介绍一些基本的概念。理解数据库是掌握 MySQL 非常重要的一个部分。</p>
+<p>&nbsp;第二章简单介绍了 MySQL 以及若干个 MySQL工具，熟练掌握&nbsp;<span class="docEmphStrong"><tt>mysql</tt> Command-Line Utility 就行了。</span></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">database&nbsp;</span></h4>
+<p>The term <span class="docEmphasis">database&nbsp;is used in many different ways, but for our purposes a database is <span style="color: #ff00ff;"><strong>a collection of data stored in some organized fashion</strong>.&nbsp;</span></span></p>
+<div class="docNote">
+<p class="docNoteTitle">People often use the term <span class="docEmphasis">database&nbsp;to refer to the database software they are running. This is incorrect, and it is a source of much confusion. Database software is actually called the <span class="docEmphasis">Database Management System (or DBMS). The database is the container created and manipulated via the DBMS. A database might be a file stored on a hard drive, but it might not. And for the most part this is not even significant as you never access a database directly anyway; <strong><span style="color: #ff00ff;">you always use the <span style="color: #ff0000;">DBMS</span></span> and it accesses the database for you.</strong></span></span></p>
+<p class="docNoteTitle"><span class="docEmphasis"><span class="docEmphasis"><strong>&nbsp;</strong></span></span></p>
+<h4><span style="text-decoration: underline;">table</span></h4>
+<div class="cnblogs_code" onclick="cnblogs_code_show('988be98c-4ad1-485b-babe-be446d4de14f')"><img id="code_img_closed_988be98c-4ad1-485b-babe-be446d4de14f" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_988be98c-4ad1-485b-babe-be446d4de14f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('988be98c-4ad1-485b-babe-be446d4de14f',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_988be98c-4ad1-485b-babe-be446d4de14f" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">information
+
+filing cabinet 文件柜
+
+toss it </span><span style="color: #808080;">in</span><span style="color: #000000;"> a drawer 把它扔在抽屉里
+
+you </span><span style="color: #0000ff;">create</span><span style="color: #000000;"> files within the filing cabinet 你在文件柜内创建文件
+
+</span><span style="color: #808080;">and</span> <span style="color: #0000ff;">then</span> you <span style="color: #0000ff;">file</span> related data <span style="color: #808080;">in</span><span style="color: #000000;"> specific files. 然后在特定文件中提交相关数据。
+
+</span><span style="color: #808080;">In</span> the <span style="color: #0000ff;">database</span> world, that <span style="color: #0000ff;">file</span> <span style="color: #0000ff;">is</span> called a <span style="color: #0000ff;">table</span>.</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;The key here is that the data stored in the table is one type of data or one list. <span style="color: #ffcc00;"><strong>You would never store a list of customers and a list of orders in the same database table.</strong> </span>Doing so would make subsequent retrieval and access difficult. Rather, you'd create two tables, one for each list.、、</p>
+<p class="docNoteTitle">&nbsp;</p>
+<h4><span style="text-decoration: underline;">schema</span></h4>
+<p class="docNoteTitle">Tables have characteristics and properties that define how data is stored in them. These include information about what data may be stored, how it is broken up, how individual pieces of information are named, and much more. <span style="color: #ff6600;"><strong>This set of information that describes a table is known as a </strong><em>schema</em><strong>,</strong></span> and schema are used to describe specific tables within a database, as well as entire databases (and the relationship between tables in them, if any).</p>
+<p class="docNoteTitle">&nbsp;</p>
+<h4 class="docSection2Title"><span style="text-decoration: underline;">Columns and Datatypes</span></h4>
+<p class="docNoteTitle">A single field in a table. All tables are made up of one or more columns.</p>
+<p class="docNoteTitle">Tables are made up of columns.</p>
+<p class="docNoteTitle"><span class="docEmphStrong"><strong>Breaking Up Data</strong>&nbsp;It is extremely important to break data into multiple columns correctly. For example, city, state, and ZIP Code should always be separate columns. By breaking these out, it becomes possible to sort or filter data by specific columns (for example, to find all customers in a particular state or in a particular city). If city and state are combined into one column, it would be extremely difficult to sort or filter by state.</span></p>
+<p class="docNoteTitle">&nbsp;</p>
+<h4 class="docNoteTitle"><span style="text-decoration: underline;"><a name="prk"></a>Primary Key&nbsp;</span></h4>
+<p class="docText"><span class="docEmphStrong">A column (or set of columns) whose values uniquely identify every row in a table.</span></p>
+<p class="docNoteTitle">主键值应该可以唯一标识一条记录并且是非空的。书中提到，虽然对于一张表而言主键不是硬性需要的，但是我们应该&ldquo;总是定义主键&rdquo;。</p>
+<p class="docNoteTitle">关于主键的三条普遍接受的最佳实践：</p>
+<ul>
+<li>
+<p class="docList">Don't update values in primary key columns.</p>
+</li>
+<li>
+<p class="docList">Don't reuse values in primary key columns.</p>
+</li>
+<li>
+<p class="docList">Don't use values that might change in primary key columns. (For example, when you use a name as a primary key to identify a supplier, you would have to change the primary key when the supplier merges and changes its name.)</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<p><a name="a7"></a>As explained, it is the database software (<span class="docEmphasis">DBMS or <span class="docEmphasis">Database Management System) that actually does all the work of storing, retrieving, managing, and manipulating data. <span style="background-color: #000080; color: #ffff99;"><strong>MySQL is a DBMS;</strong> </span>that is, it is database software.</span></span></p>
+</div>

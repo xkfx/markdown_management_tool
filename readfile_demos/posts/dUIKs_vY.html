@@ -1,0 +1,25 @@
+<p><span style="background-color: #ffff99;">&nbsp;《c++ primer, 5E》第47页到第53页</span></p>
+<p>1、编译器无法检查指针的有效性。</p>
+<p>&ldquo;访问无效指针的后果无法预计， 因此程序员必须清楚任意给定的指针是否有效&rdquo;</p>
+<p>&nbsp;</p>
+<p>2、理解【解引用】，指向指针的指针...的指针的所指的各级对象的访问方法。</p>
+<p>&nbsp;</p>
+<p>3、int *&amp;r = p。 r是指针p 的引用(从右向左阅读r的定义)</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 2.21</span></p>
+<p>a不合法，类型不兼容 b不合法，没有取地址符 c合法</p>
+<p>※需要注意的是 double* dp和 double *dp 没有任何区别，并且double* dp, p 的话</p>
+<p>dp是一个指向double型的指针变量， 而后者则是double型的变量。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 2.23</span></p>
+<p>不能。&ldquo;访问无效指针的后果无法预计， 因此程序员必须清楚任意给定的指针是否有效&rdquo;</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 2.24</span></p>
+<p>void* 指针可以指向任意类型的对象， 而long *lp必须指向long型的变量</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 2.25</span></p>
+<p>a ip是指向整型对象的指针，值(有效性)由定义的位置所定， i是整型变量， r是i的别名</p>
+<p>b i是整型变量, ip是一个空指针</p>
+<p>c ip是指向整型对象的指针， ip2是整型变量</p>
+<p><br /> <br /><span style="background-color: #ffff99;">收获：</span></p>
+<p>1、发现一个写得很详细的<a href="http://blog.csdn.net/fengzhanghao23/article/details/48352353" target="_blank">关于</a><span class="fontstyle0"><a href="http://blog.csdn.net/fengzhanghao23/article/details/48352353" target="_blank">《</a><span class="fontstyle1"><a href="http://blog.csdn.net/fengzhanghao23/article/details/48352353" target="_blank">c++ primer</a><span class="fontstyle0"><a href="http://blog.csdn.net/fengzhanghao23/article/details/48352353" target="_blank">》的博客 </a>&nbsp;<br /></span></span></span><span class="fontstyle0"><span class="fontstyle1"><span class="fontstyle0"><br /></span></span></span> </p>

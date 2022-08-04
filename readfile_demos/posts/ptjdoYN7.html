@@ -1,0 +1,245 @@
+<p>重定向与请求分派</p>
+<p><a href="#a4">&ldquo;局部&rdquo;参数&mdash;&mdash;ServletConfig&mdash;&mdash;servlet初始化参数</a></p>
+<p><a href="#a5">&ldquo;全局&rdquo;参数&mdash;&mdash;ServletContext&mdash;&mdash;上下文初始化参数</a></p>
+<p>Web app的&ldquo;构造器&rdquo;&mdash;&mdash;ServletContextListener</p>
+<p><a href="#a7">实战：如何创建一个全局的dog？</a></p>
+<p>&nbsp;</p>
+<p>1、重定向与请求分派。</p>
+<div class="cnblogs_code">
+<pre>        resp.sendRedirect("http://www.cnblogs.com/xkxf/");</pre>
+</div>
+<div class="cnblogs_code">
+<pre>        RequestDispatcher view = req.getRequestDispatcher("result.jsp"); // 为JSP实例化一个请求分派器
+<span>
+        view.forward(req, resp); // 使用请求分派器要求容器准备好JSP，并向JSP发送请求和响应</span></pre>
+</div>
+<ul>
+<li>重定向由客户端完成，请求分派由服务器完成。</li>
+<li>重定向是让客户完成工作，而请求分派要求服务器上的某某来完成任务。</li>
+</ul>
+<p>&nbsp;</p>
+<p>2、在页面中显示email。</p>
+<p>很显然，不可能通过硬编码来完成。而是需要从数据库拿数据，可以想象这个过程，当我们点开某个社交网站，然后点开&ldquo;个人资料&rdquo;，这个时候servlet中会调用一个getEmail的方法得到email，之后把它传给视图，最后展示给用户。</p>
+<p>那么，有没必要在部署描述文件（DD，deployment descriptor）中存储email呢？假设你写搭建一个个人博客、编辑一份网页简历，这是有可能的，总要好过硬编码在html中。</p>
+<p>&nbsp;</p>
+<p>3、还是需要快速搭建一个测试环境，沿用上一节的代码。</p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、如何在DD中添加email呢？如下所示：</p>
+<p>先修改web.xml，</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>MyTest<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>com.example.web.MyTest<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+        
+<strong><span style="color: #ff0000;">        &lt;init-param&gt;
+            &lt;param-name&gt;email&lt;/param-name&gt;
+            &lt;param-value&gt;wyzxk_fx@163.com&lt;/param-value&gt;
+        &lt;/init-param&gt;</span></strong>
+        
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>MyTest<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/MyTest.do<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;修改servlet，</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+        </span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyTest <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException, ServletException {
+        resp.setContentType(</span>"text/html"<span style="color: #000000;">);
+
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+        <span style="color: #ff0000;"><strong>out.println(getServletConfig().getInitParameter(</strong></span></span><span style="color: #ff0000;"><strong>"email"));
+        </strong></span><span style="color: #008000;">//</span><span style="color: #008000;"> 这里相当于调用this.getServletConfig().ge...，this是谁呢？this是一个HttpServlet对象。</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>重启Tomcat，点击submit，可以看到</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170602151308758-797475799.png" alt="" width="243" height="86" /></p>
+<p>BTW:需要注意的是，不能在构造函数中调用getServletConfig()，原因是在这个时候ServletConfig根本不存在！</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> javax.servlet;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> Servlet {
+    </span><span style="color: #ff0000;"><strong>void init(ServletConfig var1) throws</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong> ServletException;</strong></span>
+
+    ServletConfig getServletConfig();
+
+    </span><span style="color: #0000ff;">void</span> service(ServletRequest var1, ServletResponse var2) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException;
+
+    String getServletInfo();
+
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> destroy();
+}</span></pre>
+</div>
+<p>回忆一下servlet的生命周期，<span style="color: #ff0000;"><strong>servlet的生命周期由Web容器所掌控</strong></span>，Web容器首先调用Servlet的构造函数，在这之后才调用Servlet的init()函数。观察上面的代码，可以发现init()的参数正是ServletConfig。实际情况是这样的：</p>
+<ul>
+<li>容器初始化一个servlet的时候，会为这个servlet建立一个<strong>唯一</strong>的ServletConfig。</li>
+<li>容器从DD（也就是web.xml）中&ldquo;读出&rdquo;ServletConfig（也就是init-param）并把这些参数交给ServletConfig。然后把ServletConfig传递给servlet的init()方法。</li>
+</ul>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、有时候，需要一个更&ldquo;全局&rdquo;的参数，在Web的世界里，它被叫做<strong>上下文初始化参数</strong>，与servlet初始化参数不同的是，它的有效范围是整个Web App，而不仅仅是一个servlet。设置方法为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+
+ <span style="color: #ff0000;"><strong>   &lt;context-param&gt;
+        &lt;param-name&gt;email&lt;/param-name&gt;
+        &lt;param-value&gt;wyzxk_fx@163.com&lt;/param-value&gt;
+    &lt;/context-param&gt;</strong></span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>MyTest<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>com.example.web.MyTest<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>MyTest<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/MyTest.do<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">在这之后，还可以以有更多的servlet，而context-param是对所有servlet有效的！</span><span style="color: #008000;">--&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>调用的方式与servlet初始化参数类似：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+        </span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyTest <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException, ServletException {
+        resp.setContentType(</span>"text/html"<span style="color: #000000;">);
+
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> out.println(getServletConfig().getInitParameter("email"));</span>
+        out.println(getServletContext().getInitParameter("email"<span style="color: #000000;">));
+        </span></strong><span style="color: #008000;">//</span><span style="color: #008000;"> 只需要把Config改成Context就Ok了！</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>重启tomcat之后，点击submit，仍旧会得到相同的输出页面，对用户来说，不会体验到任何差别！不过需要再次强调：每个servlet有一个ServletConfig，每个Web应用有一个ServletContext。</p>
+<p>&nbsp;</p>
+<p>6、在一些场合下，我们希望有一些代码在Web应用提供服务之前，首先被执行，类似于通过&ldquo;静态加载块&rdquo;来加载数据库连接，也就是在程序正式工作前，完成一些初始化工作，例如，创建一个&ldquo;全局&rdquo;的数据库连接，或是其它的<strong>全局对象</strong>，这就需要用到<span style="color: #ff0000;"><strong>ServletContextListener</strong></span>。</p>
+<p>我们知道，完成一个事件响应，首先需要实现接口，然后注册事件，最后写响应方法。那么，这个Listener应该由谁来注册呢？如何使用这个监听者呢？</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170602170318899-1216396501.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、一个简单的ServletContextListener：如何创建一个全局的dog？</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Dog {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String breed;
+
+    </span><span style="color: #ff0000;"><strong>public Dog(String breed) {
+        this.breed = breed;
+    }
+
+    </strong></span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getBreed() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> breed;
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>ListenerTester<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>com.example.ListenerTester<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>ListenerTester<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/ListenerTester.do<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+
+
+<span style="color: #ff0000;"><strong>    &lt;context-param&gt;
+        &lt;param-name&gt;breed&lt;/param-name&gt;
+        &lt;param-value&gt;Great Dane&lt;/param-value&gt;
+    &lt;/context-param&gt;</strong>
+<strong>
+    &lt;listener&gt;
+        &lt;listener-class&gt;
+            com.example.MyServletContextListener
+            &lt;!--在初始化任何servlet之前初始化应用--&gt;
+        &lt;/listener-class&gt;
+    &lt;/listener&gt;</strong></span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletContext;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletContextEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletContextListener;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> <span style="color: #ff0000;"><strong>MyServletContextListener</strong></span> <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ServletContextListener {
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> contextInitialized(ServletContextEvent servletContextEvent) {
+        ServletContext servletContext </span>=<span style="color: #000000;"> servletContextEvent.getServletContext();
+      <span style="color: #ff0000;"><strong>  String breed </strong></span></span><span style="color: #ff0000;"><strong>= servletContext.getInitParameter("breed");
+        
+        Dog dog = new Dog(breed);
+        <span style="color: #ff00ff;">servletContext.setAttribute("dog"</span></strong></span><span style="color: #000000;"><span style="color: #ff00ff;"><strong>, dog);</strong></span>
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> contextDestroyed(ServletContextEvent servletContextEvent) {
+
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ListenerTester <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        resp.setContentType(</span>"text/html"<span style="color: #000000;">);
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+
+        out.println(</span>"test context attribute set by listener &lt;br /&gt;"<span style="color: #000000;">);
+        out.println(</span>"&lt;br /&gt;"<span style="color: #000000;">);
+
+        <span style="color: #ff0000;"><strong>Dog dog </strong></span></span><span style="color: #ff0000;"><strong>= <span style="color: #ff00ff;">(Dog)getServletContext().getAttribute("dog"</span></strong></span><span style="color: #000000;"><span style="color: #ff00ff;"><strong>);</strong></span>
+        out.println(</span>"Dog's breed is: " +<span style="color: #000000;"> dog.getBreed());
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

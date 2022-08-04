@@ -1,0 +1,90 @@
+<p>&nbsp;p37</p>
+<p>1、<a href="http://www.cnblogs.com/huozhicheng/archive/2010/04/08/2533199.html" target="_blank">java ant详解</a></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习8</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/26.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> A {
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> i = 47<span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestStatic {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        A a1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> A();
+        A a2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> A();
+        A a3 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> A();
+        a2.i</span>++<span style="color: #000000;">;
+        a3.i</span>++<span style="color: #000000;">;
+        System.out.println(a1.i);   </span><span style="color: #008000;">//</span><span style="color: #008000;"> 并没有直接通过a1来改变i</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习9</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/26.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Boolean b </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">boolean</span> b1 =<span style="color: #000000;"> b;
+        System.out.println(b1);
+
+        Character ch </span>= 'x'<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">char</span> c =<span style="color: #000000;"> ch;
+        System.out.println(c);
+
+        Byte by </span>= 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">byte</span> b2 =<span style="color: #000000;"> by;
+        System.out.println(b2);
+
+        Integer in </span>= 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> k =<span style="color: #000000;"> in;
+        System.out.println(k);
+    }
+}</span></pre>
+</div>
+<p>不用写全部吧。。。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习10</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/26.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; args.length; ++<span style="color: #000000;">i) {
+            System.out.println(args[i]);
+        }
+    }
+}</span></pre>
+</div>
+<p>测试示例：</p>
+<div class="cnblogs_code">
+<pre>mdzz@LAPTOP-QGECNCGO MINGW64 /d/Projects/untitled/<span style="color: #000000;">src
+$ java Test </span>1 2<span style="color: #000000;"> Hello
+</span>1
+2<span style="color: #000000;">
+Hello</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习11</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/26.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ALLTheColorsOfTheRainbow {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> anIntegerRepresentingColors;
+    </span><span style="color: #0000ff;">void</span> changeTheHueofTheColor(<span style="color: #0000ff;">int</span><span style="color: #000000;"> newHue) {
+        </span><span style="color: #0000ff;">this</span>.anIntegerRepresentingColors =<span style="color: #000000;"> newHue;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ALLTheColorsOfTheRainbow x </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ALLTheColorsOfTheRainbow();
+        x.changeTheHueofTheColor(</span>17<span style="color: #000000;">);
+        System.out.println(x.anIntegerRepresentingColors);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

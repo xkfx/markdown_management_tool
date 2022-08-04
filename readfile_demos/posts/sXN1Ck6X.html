@@ -1,0 +1,122 @@
+<p>环境：&nbsp;Debian 8.8 64位， 同样适用 win10&nbsp;</p>
+<p>基本步骤：</p>
+<ol>
+<li><a href="#a1">安装 Python</a></li>
+<li><a href="#a2">安装必要的库</a></li>
+<li><a href="#a3">测试</a></li>
+</ol>
+<p>&nbsp;</p>
+<h2><a name="a1"></a>一、安装 Python</h2>
+<p>延续之前的&nbsp;<a href="http://www.cnblogs.com/xkxf/p/8245371.html#a2" target="_blank">搭建 Python 环境</a>&nbsp;选取折中版本 Python 3.4</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> python3</pre>
+</div>
+<p>这个时候会遇到一个问题：<a href="https://www.zhihu.com/question/21653286" target="_blank">同时装了Python3和Python2，怎么用pip？</a>默认安装的 pip 对应的是 python 2.7</p>
+<p class="QuestionHeader-title">选用最 简单直接的方案：</p>
+<div class="cnblogs_code">
+<pre>apt-get purge -y python3-<span style="color: #000000;">pip
+apt</span>-get <span style="color: #0000ff;">install</span> python3-pip</pre>
+</div>
+<p>检查有没有安装好：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt/python# <strong>python3 -m pip -</strong><span style="color: #000000;"><strong>V</strong>
+pip </span><span style="color: #800080;">1.5</span>.<span style="color: #800080;">6</span> from /usr/lib/python3/dist-packages (python <span style="color: #800080;">3.4</span>)</pre>
+</div>
+<p>更新到最新版本：</p>
+<div class="cnblogs_code">
+<pre>python3 -m pip <span style="color: #0000ff;">install</span> --upgrade pip  </pre>
+</div>
+<p>用 pip 安装模块到对应 Python 版本的方法（指明 Python 版本）：</p>
+<div class="cnblogs_code">
+<pre>python3 -m pip <span style="color: #0000ff;">install</span> 模块名</pre>
+</div>
+<p>PS. -m 大概是&nbsp;module模块的意思</p>
+<h2><a name="a2"></a>二、安装必要的库</h2>
+<p>ipython：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~#<strong> python3 -m pip <span style="color: #0000ff;">install</span></strong><span style="color: #000000;"><strong> ipython</strong>
+
+root@xkfx:</span>/opt/<span style="color: #000000;">python# ipython
+Python </span><span style="color: #800080;">3.4</span>.<span style="color: #800080;">2</span> (default, Oct <span style="color: #800080;">8</span> <span style="color: #800080;">2014</span>, <span style="color: #800080;">10</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">20</span><span style="color: #000000;">) 
+Type </span><span style="color: #800000;">'</span><span style="color: #800000;">copyright</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">credits</span><span style="color: #800000;">'</span> or <span style="color: #800000;">'</span><span style="color: #800000;">license</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">more</span><span style="color: #000000;"> information
+IPython </span><span style="color: #800080;">6.3</span>.<span style="color: #800080;">1</span> -- An enhanced Interactive Python. Type <span style="color: #800000;">'</span><span style="color: #800000;">?</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span><span style="color: #000000;"> help.
+
+In [</span><span style="color: #800080;">1</span>]: exit</pre>
+</div>
+<p>matplotlib：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# <strong>python3 -m pip <span style="color: #0000ff;">install</span></strong><span style="color: #000000;"><strong> matplotlib</strong>
+
+root@xkfx:</span>~<span style="color: #000000;"># python3
+Python </span><span style="color: #800080;">3.4</span>.<span style="color: #800080;">2</span> (default, Oct <span style="color: #800080;">8</span> <span style="color: #800080;">2014</span>, <span style="color: #800080;">10</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">20</span><span style="color: #000000;">) 
+[GCC </span><span style="color: #800080;">4.9</span>.<span style="color: #800080;">1</span><span style="color: #000000;">] on linux
+Type </span><span style="color: #800000;">"</span><span style="color: #800000;">help</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">copyright</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">credits</span><span style="color: #800000;">"</span> or <span style="color: #800000;">"</span><span style="color: #800000;">license</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">more</span><span style="color: #000000;"> information.
+</span>&gt;&gt;&gt;<span style="color: #000000;"> import xxxxxx
+Traceback (most recent call </span><span style="color: #0000ff;">last</span><span style="color: #000000;">):
+File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line <span style="color: #800080;">1</span>, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+ImportError: No module named </span><span style="color: #800000;">'</span><span style="color: #800000;">xxxxxx</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; import matplotlib</pre>
+</div>
+<p>numpy：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# python3 -m pip <span style="color: #0000ff;">install</span><span style="color: #000000;"> numpy
+Looking </span><span style="color: #0000ff;">in</span> indexes: http:<span style="color: #008000;">//</span><span style="color: #008000;">mirrors.aliyun.com/pypi/simple/</span>
+Requirement already satisfied: numpy <span style="color: #0000ff;">in</span> /usr/local/lib/python3.<span style="color: #800080;">4</span>/dist-packages (<span style="color: #800080;">1.14</span>.<span style="color: #800080;">2</span><span style="color: #000000;">)
+root@xkfx:</span>~<span style="color: #000000;"># python3
+Python </span><span style="color: #800080;">3.4</span>.<span style="color: #800080;">2</span> (default, Oct <span style="color: #800080;">8</span> <span style="color: #800080;">2014</span>, <span style="color: #800080;">10</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">20</span><span style="color: #000000;">) 
+[GCC </span><span style="color: #800080;">4.9</span>.<span style="color: #800080;">1</span><span style="color: #000000;">] on linux
+Type </span><span style="color: #800000;">"</span><span style="color: #800000;">help</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">copyright</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">credits</span><span style="color: #800000;">"</span> or <span style="color: #800000;">"</span><span style="color: #800000;">license</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">more</span><span style="color: #000000;"> information.
+</span>&gt;&gt;&gt; import numpy</pre>
+</div>
+<p>sklearn：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# python3 -m pip <span style="color: #0000ff;">install</span><span style="color: #000000;"> scipy
+
+root@xkfx:</span>~# python3 -m pip <span style="color: #0000ff;">install</span><span style="color: #000000;"> sklearn
+
+root@xkfx:</span>~<span style="color: #000000;"># python3
+Python </span><span style="color: #800080;">3.4</span>.<span style="color: #800080;">2</span> (default, Oct <span style="color: #800080;">8</span> <span style="color: #800080;">2014</span>, <span style="color: #800080;">10</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">20</span><span style="color: #000000;">) 
+[GCC </span><span style="color: #800080;">4.9</span>.<span style="color: #800080;">1</span><span style="color: #000000;">] on linux
+Type </span><span style="color: #800000;">"</span><span style="color: #800000;">help</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">copyright</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">credits</span><span style="color: #800000;">"</span> or <span style="color: #800000;">"</span><span style="color: #800000;">license</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">more</span><span style="color: #000000;"> information.
+</span>&gt;&gt;&gt; import sklearn</pre>
+</div>
+<p>tensorflow：</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# python3 -m pip <span style="color: #0000ff;">install</span><span style="color: #000000;"> tensorflow
+
+root@xkfx:</span>~<span style="color: #000000;"># python3
+Python </span><span style="color: #800080;">3.4</span>.<span style="color: #800080;">2</span> (default, Oct <span style="color: #800080;">8</span> <span style="color: #800080;">2014</span>, <span style="color: #800080;">10</span>:<span style="color: #800080;">45</span>:<span style="color: #800080;">20</span><span style="color: #000000;">) 
+[GCC </span><span style="color: #800080;">4.9</span>.<span style="color: #800080;">1</span><span style="color: #000000;">] on linux
+Type </span><span style="color: #800000;">"</span><span style="color: #800000;">help</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">copyright</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">credits</span><span style="color: #800000;">"</span> or <span style="color: #800000;">"</span><span style="color: #800000;">license</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">more</span><span style="color: #000000;"> information.
+</span>&gt;&gt;&gt;<span style="color: #000000;"> import tensorflow as tf
+</span>&gt;&gt;&gt;<span style="color: #000000;"> print(tf.__version__)
+</span><span style="color: #800080;">1.7</span>.<span style="color: #800080;">0</span></pre>
+</div>
+<p>pandas：</p>
+<div class="cnblogs_code">
+<pre>python3 -m pip <span style="color: #0000ff;">install</span><span style="color: #000000;"> pandas 
+
+ Command </span><span style="color: #800000;">"</span><span style="color: #800000;">/usr/bin/python3 -m pip install --ignore-installed --no-user --prefix /tmp/pip-build-env-kfazvlty http://mirrors.aliyun.com/pypi/packages/1b/d2/22cde5ea9af055f81814f9f2545f5ed8a053eb749c08d186b369959189a8/wheel-0.31.0-py2.py3-none-any.whl#md5=240d714477a715bcd90e94cb2c44f28c http://mirrors.aliyun.com/pypi/packages/20/d7/04a0b689d3035143e2ff288f4b9ee4bf6ed80585cc121c90bfd85a1a8c2e/setuptools-39.0.1-py2.py3-none-any.whl#md5=ca299c7acd13a72e1171a3697f2b99bc http://mirrors.aliyun.com/pypi/packages/70/25/1e1521e6ce2cf78ff4a8b06fbc2cd513ce004ec337000eddfe016fdf3fc6/Cython-0.28.2-cp34-cp34m-manylinux1_x86_64.whl#md5=e277ba5fdbbaab6e3434bdcf58e41d6a http://mirrors.aliyun.com/pypi/packages/fc/1b/a1717502572587c724858862fd9b98a66105f3a3443225bda9a1bd16ee14/numpy-1.9.3-cp34-cp34m-manylinux1_x86_64.whl#md5=e1130c8f540a759d79ba5e8960f6915a http://mirrors.aliyun.com/pypi/packages/02/64/c6c1c24ff4dbcd789fcfdb782e343ac23c074f6b8b03e818ff60eb0f937f/numpy-1.12.1-cp34-cp34m-manylinux1_x86_64.whl#md5=6288d4e9cfea859e03dc82879539d029 http://mirrors.aliyun.com/pypi/packages/1b/ee/f65826b2880f67652c21326565b4c166c7cdb1019f84b82af65e625475cd/numpy-1.13.1-cp34-cp34m-manylinux1_x86_64.whl#md5=c51520d0d3836c91cba18d1fa8cf299c</span><span style="color: #800000;">"</span> failed with error code <span style="color: #800080;">1</span> <span style="color: #0000ff;">in</span> None</pre>
+</div>
+<p>由于在 debian 下无论如何都没有成功安装 pandas&nbsp;</p>
+<p>我最后决定在 windows&nbsp; 上搭建环境。。。</p>
+<h2><a name="a3"></a>三、测试</h2>
+<p>&nbsp;把下面这段代码运行一下，没有报错基本就 ok 了。&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">import math
+
+from IPython import display
+from matplotlib import cm
+from matplotlib import gridspec
+from matplotlib import pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+import tensorflow as tf
+from tensorflow.python.data import Dataset
+
+tf.logging.set_verbosity(tf.logging.ERROR)
+pd.options.display.max_rows </span>= <span style="color: #800080;">10</span><span style="color: #000000;">
+pd.options.display.float_format </span>= <span style="color: #800000;">'</span><span style="color: #800000;">{:.1f}</span><span style="color: #800000;">'</span>.format</pre>
+</div>
+<p>&nbsp;</p>

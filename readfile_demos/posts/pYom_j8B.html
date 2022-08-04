@@ -1,0 +1,50 @@
+<div>IPC=inter-process communication=进程间通信</div>
+<p>仍然以<a class="postTitle2 vertical-middle" href="https://www.cnblogs.com/xkxf/p/15526414.html" target="_blank">Electron读取本地文件并显示</a>中的原始代码作为基础（"electron": "^15.3.0"）</p>
+<h2>例子1</h2>
+<p>preload.js（渲染进程向主进程发送hello）：</p>
+<div class="cnblogs_code">
+<pre>  const { ipcRenderer } = require('electron'<span style="color: #000000;">);
+  let sendMsgToMainProcess </span>= (str) =&gt;<span style="color: #000000;"> {
+<strong>    ipcRenderer.send(</strong></span><strong>"line1", str); <span style="color: #008000;">//</span><span style="color: #008000;"> 默认就是异步</span></strong>
+<span style="color: #000000;">  }
+
+  document.querySelector(</span>'#btn2').addEventListener("click", event =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 点击按钮发送信息</span>
+    sendMsgToMainProcess('hello from renderer1'<span style="color: #000000;">);
+  })</span></pre>
+</div>
+<p>main.js（主进程接收该消息并回复）：</p>
+<div class="cnblogs_code">
+<pre>  ipcMain.on("line1", (event, arg) =&gt;<span style="color: #000000;"> {
+    console.log(arg);
+<strong>    event.reply(</strong></span><strong>"line1-reply", "helle from main process"</strong><span style="color: #000000;"><strong>);</strong>
+  })</span></pre>
+</div>
+<p>preload.js（渲染进程监听并处理主进程返回的消息）：</p>
+<div class="cnblogs_code">
+<pre>  ipcRenderer.on(<strong>"line1-reply"</strong>, (event, args) =&gt;<span style="color: #000000;"> {
+    console.log(args); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打印主线程的回复</span>
+  })</pre>
+</div>
+<h2>例子2</h2>
+<p>渲染进程中点击按钮创建一个新的窗口。如果在渲染进程中直接使用electron主进程模块的API将抛出类似于BrowserWindow is not a constructor的异常.</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202111/1042431-20211110222035733-329531415.png" alt="" width="615" height="464" loading="lazy" /></p>
+<p>preload.js</p>
+<div class="cnblogs_code">
+<pre>  document.querySelector('#btn3').addEventListener("click", event =&gt;<span style="color: #000000;"> {
+    ipcRenderer.send(</span>"line2", "createWindow"); 
+  })</pre>
+</div>
+<p>main.js</p>
+<div class="cnblogs_code">
+<pre>  ipcMain.on("line2", (event, arg) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (arg == "createWindow"<span style="color: #000000;">) {
+      const newWindow </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BrowserWindow({
+        width: </span>300<span style="color: #000000;">,
+        height: </span>300<span style="color: #000000;">,
+      }) 
+      newWindow.loadURL(</span>'https://baidu.com'<span style="color: #000000;">)
+    }
+  })</span></pre>
+</div>
+<p>&nbsp;</p>

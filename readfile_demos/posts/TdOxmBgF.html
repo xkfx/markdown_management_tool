@@ -1,0 +1,97 @@
+<h4>索引</h4>
+<ul>
+<li><a href="#a1">排序检索的数据</a></li>
+<li><a href="#a2">SQL 过滤 vs. 应用程序过滤</a></li>
+<li><a href="#a3">简单 Where 补充：大小写敏感. BETWEEN. IS NULL</a></li>
+</ul>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a1"></a>Sorting Retrieved Data</span></h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> manga_name;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+-------------------+--------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name            <span style="color: #808080;">|</span> manga_discription <span style="color: #808080;">|</span> manga_status <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+-------------------+--------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span> 2asdasds              <span style="color: #808080;">|</span> dasd              <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1006</span> <span style="color: #808080;">|</span> 3dasdas）             <span style="color: #808080;">|</span> 别出心裁          <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1007</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">4444444444</span>            <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">3333</span>              <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1004</span> <span style="color: #808080;">|</span> dasda                 <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">23123</span>             <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> manga_name, manga_discription;<span style="color: #008000;"><strong> # 先按 name 排，然后按 discription
+</strong></span></span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+-------------------+--------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name            <span style="color: #808080;">|</span> manga_discription <span style="color: #808080;">|</span> manga_status <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+-------------------+--------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span> 2asdasds              <span style="color: #808080;">|</span> dasd              <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1006</span> <span style="color: #808080;">|</span> 3dasdas）             <span style="color: #808080;">|</span> 别出心裁          <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1007</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">4444444444</span>            <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">3333</span>              <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1004</span> <span style="color: #808080;">|</span> dasda                 <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">23123</span>             <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> manga_name <span style="color: #0000ff;">DESC</span>, manga_discription;<strong> <span style="color: #0000ff;"># 第一次排是降序（Z~A），第二次（内部排）还是正常序（A~Z）
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+-------------------+--------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name            <span style="color: #808080;">|</span> manga_discription <span style="color: #808080;">|</span> manga_status <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+-------------------+--------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #808080;">|</span> 至不死的你            <span style="color: #808080;">|</span> 以为是哲学        <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span> 烙印勇士              <span style="color: #808080;">|</span> 好看到哭          <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span> 幸福（happiness）     <span style="color: #808080;">|</span> 别出心裁          <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span> 东京食尸鬼            <span style="color: #808080;">|</span> 美食动漫          <span style="color: #808080;">|</span>            <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #808080;">|</span></pre>
+</div>
+<p>Using a combination&nbsp;of <tt>ORDER BY</tt> and <tt>LIMIT</tt>, it is possible to find the highest or lowest value in a column. The following example demonstrates how to find the value of the most expensive item:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> prod_price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> prod_price <span style="color: #0000ff;">DESC</span><span style="color: #000000;">
+LIMIT </span><span style="color: #800000; font-weight: bold;">1</span>;</pre>
+</div>
+<p class="docText"><span class="docEmphStrong" style="color: #ff0000;">Position of <tt>ORDER BY</tt> Clause When specifying an <tt>ORDER BY</tt> clause, be sure that it is after the <tt>FROM</tt> clause. If <tt>LIMIT</tt> is used, it must come <span class="docEmphasis">after <tt>ORDER BY</tt>. Using clauses <strong>out of order</strong> will generate an error message.</span></span></p>
+<p class="docText">&nbsp;</p>
+<h4 class="docText"><span class="docEmphStrong"><a name="a2"></a>SQL Versus Application Filtering </span></h4>
+<p class="docText"><span class="docEmphStrong"><span style="color: #ff0000;"><strong>Data&nbsp;can also be filtered at the application level. </strong></span>To do this, the SQL <tt>SELECT</tt> statement retrieves more data than is actually required for the client application, and the client code loops through the returned data to extract just the needed rows.</span></p>
+<p class="docText"><span style="color: #ff0000;">As a rule, this practice is <strong>strongly</strong> discouraged.</span> Databases are optimized to perform filtering quickly and efficiently. Making the client application (or development language) do the database's job dramatically impacts application performance and creates applications that cannot scale properly. In addition, if data is filtered at the client, the server has to send unneeded data across the network connections, resulting in a waste of network bandwidth resources.</p>
+<p class="docText">&nbsp;</p>
+<p class="docText">&nbsp;</p>
+<h4 class="docSection1Title"><a name="a3"></a>The <tt>WHERE</tt> Clause Operators</h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> manga_name<span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">big</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1008</span> <span style="color: #808080;">|</span> BIG        <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1009</span> <span style="color: #808080;">|</span> big        <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1010</span> <span style="color: #808080;">|</span> Big        <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1011</span> <span style="color: #808080;">|</span> BiG        <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;By default, MySQL is not case sensitive when performing matches, and so&nbsp;<tt>fuses</tt>&nbsp;and&nbsp;<tt>Fuses</tt>&nbsp;matched.</p>
+<p>不过需要注意的是 LIKE + '通配符语句' 是&nbsp;case-sensitive （大小写敏感的）</p>
+<p>/</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> manga_id <span style="color: #808080;">BETWEEN</span> <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">AND</span> <span style="color: #800000; font-weight: bold;">1007</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span> 2asdasds   <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1006</span> <span style="color: #808080;">|</span> 3dasdas）  <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1007</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">4444444444</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;/</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> manga_name <span style="color: #0000ff;">IS</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">;
+Empty </span><span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>网上有建议说 尽可能设定默认值而不是用 NULL&nbsp;</p>

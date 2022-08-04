@@ -1,0 +1,35 @@
+<p><span class="goog-text-highlight" style="color: #ff0000;">原始内容：https://www.tutorialspoint.com/struts_2/basic_mvc_architecture.htm</span></p>
+<p>&nbsp;</p>
+<p><span class="goog-text-highlight">Web服务器需要一个JSP引擎，即一个处理JSP页面的容器。</span><strong>JSP容器</strong>负责截取JSP页面的请求。本教程使用了<strong>内置JSP容器的Apache</strong>来支持JSP页面的开发。</p>
+<p><span><span><strong>JSP容器</strong>与Web服务器配合工作以提供<strong>运行时环境</strong>和JSP需要的其他服务。</span><span>它知道如何理解作为JSP一部分的特殊元素。</span></span></p>
+<p><span>下图显示了JSP容器和JSP文件在Web应用程序中的位置。</span></p>
+<p><img src="https://www.tutorialspoint.com/jsp/images/jsp-arch.jpg" alt="JSP Architecture" width="706" height="350" /></p>
+<h2>Web服务器如何使用JSP创建Web页面</h2>
+<p><span>以下步骤说明Web服务器如何使用JSP创建Web页面 -</span></p>
+<ul class="list">
+<li>
+<p><span>与正常页面一样，浏览器向Web服务器发送HTTP<span style="color: #ff00ff;"><strong>请求</strong></span>。</span></p>
+</li>
+<li>
+<p><span><span>Web服务器<span style="color: #ff00ff;"><strong>识别</strong></span>HTTP请求是针对JSP页面，并将其<span style="color: #ff00ff;"><strong>转发</strong></span>给JSP引擎。</span><span>这可以通过使用以</span></span><strong>.jsp</strong><span>而不是</span><strong>.html</strong><span><span>结尾的URL或JSP页面完成</span><span>。</span></span></p>
+</li>
+<li>
+<p><span><span>JSP引擎从磁盘<span style="color: #ff00ff;">加载</span>JSP页面并将其<span style="color: #ff00ff;"><strong>转换</strong></span>为servlet（.java）。</span><span>此转换非常简单，所有HTML文本都转换为println()语句，所有JSP元素转换为Java代码。</span><span>这些代码实现了页面的相应动态行为。<span style="color: #ff0000; background-color: #ffff99;">【注释】直接看转换的源代码就清楚了</span></span></span></p>
+</li>
+<li>
+<p><span>JSP引擎将servlet<strong>编译</strong>成可执行类(.class)，并将原始请求转发到<strong>servlet引擎</strong>。</span></p>
+</li>
+<li>
+<p><span><span>servlet引擎（Web服务器的一部分）<span style="color: #ff00ff;">加载</span>Servlet类<span style="color: #ff00ff;">并执行</span>它。</span><span>在执行期间，servlet生成<strong>HTML格式的输出</strong>。</span><span>HTTP响应中的servlet引擎将输出传递给Web服务器。</span></span></p>
+</li>
+<li>
+<p><span>Web服务器将<strong>含有静态HTML的HTTP响应</strong>转发到浏览器。</span></p>
+</li>
+<li>
+<p><span>最后，Web浏览器处理HTTP响应中动态生成的HTML页面，就像处理一个静态页面一样。</span></p>
+</li>
+</ul>
+<p><span>所有上述步骤可以在下图中看到 -</span></p>
+<p><img src="https://www.tutorialspoint.com/jsp/images/jsp-processing.jpg" alt="JSP Processing" width="802" height="413" /></p>
+<p><span>通常，JSP引擎将检查JSP文件的对应的servlet是否已存在，以及.jsp文件的修改日期是否比对应的.java更早。如果.jsp早于其生成的.java，则JSP容器假定.jsp没有更改，并且生成的.java仍然与.jsp的内容匹配。这使得<strong>创建Web页面的过程</strong>相对其他脚本语言（如PHP）更加高效。<span style="color: #ff0000; background-color: #ffff99;"><a href="http://www.cnblogs.com/xkxf/p/6971980.html#a8" target="_blank"><span style="color: #ff0000; background-color: #ffff99;">【注释】友情链接</span></a></span></span></p>
+<p><span><span>所以,在某种程度上，<strong><span style="color: #ff0000;">JSP页面实际上只是另一种编写servlet的方法</span></strong>，</span><span><strong><span style="color: #ff0000;">除了翻译阶段，JSP页面的处理方式与普通的servlet完全相同</span></strong>。</span></span></p>

@@ -1,0 +1,172 @@
+<p>饮水思源：<a class="navbar-brand" href="http://jinxuliang.com/">金老师的自学网站</a>、<a href="https://docs.microsoft.com/en-us/dotnet/csharp/index" target="_blank">C# Guide</a></p>
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">变量与数据类型</a></li>
+<li><a href="#anchor1">C#中For each的写法</a></li>
+<li><a href="#anchor2">C#控制台程序编程技巧</a></li>
+<li><a href="#custom1">简易图片浏览器</a></li>
+<li><a href="#custom2">BigInteger以及浮点数的比较</a></li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<h2><a name="anchor0"></a>一、变量与数据类型</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            </span><span style="color: #0000ff;">int</span> intValue = <span style="color: #800080;">100</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">long</span> longValue = <span style="color: #800080;">100L</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">double</span> doubleValue = <span style="color: #800080;">100.5d</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">float</span> floatValue = <span style="color: #800080;">100.5f</span><span style="color: #000000;">;
+
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">==========GetType()===============</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            Console.WriteLine(intValue.GetType());
+            Console.WriteLine(longValue.GetType());
+            Console.WriteLine(doubleValue.GetType());
+            Console.WriteLine(floatValue.GetType());
+
+            Console.WriteLine(</span><span style="color: #0000ff;">typeof</span>(<span style="color: #0000ff;">int</span><span style="color: #000000;">));
+            Console.WriteLine(</span><span style="color: #0000ff;">typeof</span>(<span style="color: #0000ff;">int</span>) == intValue.GetType()); <span style="color: #008000;">//</span><span style="color: #008000;"> typeof可用于检测变量是否是特定类型
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; System.Int32
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; System.Int64
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; System.Double
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; System.Single
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; System.Int32
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; True</span>
+<span style="color: #000000;">            Console.ReadKey();
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">==========String or string?===============</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            Console.WriteLine(</span><span style="color: #0000ff;">typeof</span>(String) == <span style="color: #0000ff;">typeof</span>(<span style="color: #0000ff;">string</span>)); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; True
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 但是string仍然属于引用类型，生存于&ldquo;堆&rdquo;中</span>
+<span style="color: #000000;">            Console.ReadKey();
+
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">==========var===============</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">var</span> v1 = <span style="color: #800000;">"</span><span style="color: #800000;">hello</span><span style="color: #800000;">"</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 但是用var关键字定义变量时，c#可以根据右边的赋值，自动推断类型</span>
+            <span style="color: #0000ff;">var</span> v2 = <span style="color: #0000ff;">new</span> Dictionary&lt;<span style="color: #0000ff;">string</span>, List&lt;<span style="color: #0000ff;">int</span>&gt;&gt;<span style="color: #000000;">();
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">type of v1: {0}\ntype of v2: {1}</span><span style="color: #800000;">"</span><span style="color: #000000;">, v1.GetType(), v2.GetType());
+            Console.ReadKey();
+
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">==========sizeof===============</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">int所占字节的大小</span><span style="color: #800000;">"</span> + <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">int</span>)); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 4</span>
+            Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">long所占字节的大小</span><span style="color: #800000;">"</span> + <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">long</span>)); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 8</span>
+            <span style="color: #0000ff;">long</span> v3 = <span style="color: #800080;">22L</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> v4 = (<span style="color: #0000ff;">int</span>) v3; <span style="color: #008000;">//</span><span style="color: #008000;"> 所占字节大的赋给所占字节小的需要类型转换</span>
+<span style="color: #000000;">            Console.ReadKey();
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> string转化为数值类型</span>
+            v4 = <span style="color: #0000ff;">int</span>.Parse(<span style="color: #800000;">"</span><span style="color: #800000;">100</span><span style="color: #800000;">"</span>) + Convert.ToInt32(<span style="color: #800000;">"</span><span style="color: #800000;">200</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">v4: </span><span style="color: #800000;">"</span> + v4); <span style="color: #008000;">//</span><span style="color: #008000;"> 隐式调用了v4.ToString()</span>
+<span style="color: #000000;">            Console.ReadKey();
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="anchor1"></a>二、C#中For each的写法</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            </span><span style="color: #0000ff;">var</span> names = <span style="color: #0000ff;">new</span> List&lt;<span style="color: #0000ff;">string</span>&gt; { <span style="color: #800000;">"</span><span style="color: #800000;">&lt;name&gt;</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Ana</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Felipe</span><span style="color: #800000;">"</span><span style="color: #000000;"> };
+            </span><span style="color: #0000ff;">foreach</span> (<span style="color: #0000ff;">var</span> name <span style="color: #0000ff;">in</span><span style="color: #000000;"> names)
+            {
+                Console.WriteLine($</span><span style="color: #800000;">"</span><span style="color: #800000;">Hello {name.ToUpper()}!</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            }
+
+            </span><span style="color: #0000ff;">int</span>[] numbers = { <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;"> };
+            </span><span style="color: #0000ff;">foreach</span> (<span style="color: #0000ff;">var</span> number <span style="color: #0000ff;">in</span><span style="color: #000000;"> numbers)
+            {
+                Console.WriteLine(number);
+            }
+
+            Console.ReadKey();
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="anchor2"></a>三、C#控制台程序编程技巧</h2>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/api/system.console?view=netframework-4.8#methods" target="_blank">https://docs.microsoft.com/en-us/dotnet/api/system.console?view=netframework-4.8#methods</a></p>
+<p>&nbsp;</p>
+<h2><a name="custom1"></a>四、简易图片浏览器</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201904/1042431-20190430165224254-1650909909.png" alt="" width="376" height="427" /></p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> button1_Click(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+            loadPic();
+        }
+
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 加载图片
+        </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> loadPic()
+        {
+            DialogResult result </span>=<span style="color: #000000;"> openFileDialog1.ShowDialog();
+            </span><span style="color: #0000ff;">if</span> (result ==<span style="color: #000000;"> DialogResult.OK)
+            {
+                MessageBox.Show(</span><span style="color: #800000;">"</span><span style="color: #800000;">即将为你打开图片：</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> openFileDialog1.FileName);
+                pictureBox1.ImageLocation </span>=<span style="color: #000000;"> openFileDialog1.FileName;
+            }
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+            {
+                MessageBox.Show(</span><span style="color: #800000;">"</span><span style="color: #800000;">操作已取消</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            }
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="custom2"></a>五、BigInteger以及浮点数的比较</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Numerics;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算机使用固定的位数来保存数值，因此，能处理的数值大小是有限的，
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当要处理的数值超过了这一范围时，计算机将会自动截断数值的二进制表
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 示为它所能处理的最多位数。
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 需要添加对System.Numerics程序集的引用</span>
+            BigInteger bi = <span style="color: #0000ff;">long</span><span style="color: #000000;">.MaxValue;
+            bi </span>*= <span style="color: #800080;">2</span><span style="color: #000000;">;
+            Console.WriteLine(</span><span style="color: #0000ff;">long</span><span style="color: #000000;">.MaxValue);
+            Console.WriteLine(bi);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 9223372036854775807
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 18446744073709551614</span>
+<span style="color: #000000;">            Console.ReadKey();
+
+            </span><span style="color: #0000ff;">double</span> i = <span style="color: #800080;">0.0001</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">double</span> j = <span style="color: #800080;">0.00010000000000000001</span><span style="color: #000000;">;
+            Console.WriteLine(i </span>== j); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; True
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算机不能精确地表达浮点数（特殊形式的除外），因此，当
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 需要比较两个浮点数是否相等时，应该比较其差的绝对值是否
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 在某个允许范围之内即可，无法做到像数学那样的精确比较。</span>
+            Console.WriteLine(Math.Abs(i - j) &lt; 1e-<span style="color: #800080;">10</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; True</span>
+<span style="color: #000000;">            Console.ReadKey();
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

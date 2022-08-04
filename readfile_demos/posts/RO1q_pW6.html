@@ -1,0 +1,44 @@
+<p>===========手动分割线===2018-12-26=============================================</p>
+<p>Maven项目直接添加如下依赖即可：</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.taglibs<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>taglibs-standard-spec<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.5<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.taglibs<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>taglibs-standard-impl<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.5<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>==============手动分割线===2017-06-22=============================================</p>
+<p>最近在看《Head First Servlet JSP》学习JSP，看到JSTL一章，为了添加JSTL支持折腾了好久。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622182600585-1227847394.png" alt="" width="110" height="99" /></p>
+<p>网上的教程五花八门，而且多数比较旧。</p>
+<p>我尝试了各种方法都没有成功，很多时候<strong>IntelliJ IDEA</strong>不报错了，web程序还是跑不出来。</p>
+<p>终于发现是需要<strong>手动</strong>添加下面这5个包（当然可以有其它方法，比如java ee里面的c.tld、maven等）</p>
+<p>下载地址：<a href="http://tomcat.apache.org/download-taglibs.cgi" target="_blank">http://tomcat.apache.org/download-taglibs.cgi</a>&nbsp;</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622182649538-375411063.png" alt="" width="675" height="124" /></p>
+<p>最后的结果是 在<span style="color: #ff0000;"><strong>IntelliJ IDEA报错的情况下</strong></span>跑出来了！</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622182911507-1206625469.png" alt="" width="505" height="308" /></p>
+<p>方法特别简单，就是把 上面的5个jar包添加到<strong>WEB-INF/lib</strong>下面（没有lib文件夹的话要自己创建）,</p>
+<p>web.xml不需要再进行配置，那是<strong>JSTL 1.2</strong>以前才干的事情！</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622183047929-949170322.png" alt="" width="353" height="217" /></p>
+<p>然后就可以在web程序里面用<strong>JSTL的各种标签了</strong>。</p>
+<p>标签怎么用 --&gt; 参考：<a href="https://www.tutorialspoint.com/jsp/jsp_standard_tag_library.htm" target="_blank">JSP - Standard Tag Library (JSTL) Tutorial</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622183501945-114357448.png" alt="" width="242" height="81" /></p>
+<p>要解决<strong>IntelliJ IDEA</strong>的<strong>Cannot resolve &nbsp;symbol&nbsp;</strong>问题 并获得<strong>&nbsp;JSTL标签补全功能</strong> 的话把上述的5个包添加到<strong>Dependencies</strong>上就好了</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622183647288-152821676.png" alt="" width="388" height="153" /></p>
+<p><a href="http://pan.baidu.com/s/1c2AcVzq" target="_blank">&nbsp;网盘手动下载</a></p>
+<p>&nbsp;</p>
+<p>完美支持！</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170622183659382-537979319.png" alt="" width="544" height="314" /></p>
+<p>&nbsp;</p>
+<p>小结：</p>
+<ol>
+<li>IntelliJ IDEA 并不总是可靠。。有时候报错也可试着运行一下</li>
+<li>网上搜索再多Tutorial（教程），都不如认真看一下官方<a href="https://www.apache.org/dist/tomcat/taglibs/taglibs-standard-1.2.5/README_bin.txt" target="_blank">README</a></li>
+</ol>
+<p>&nbsp;我在写完之后发现一篇4年前的<a href="https://my.oschina.net/fdblog/blog/180602" target="_blank">类似教程</a></p>

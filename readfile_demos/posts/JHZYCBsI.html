@@ -1,0 +1,47 @@
+<h2>1、下载</h2>
+<p><a href="http://maven.apache.org/download.cgi" target="_blank">http://maven.apache.org/download.cgi</a></p>
+<h2>2、添加到环境变量</h2>
+<p>右键此电脑&gt;属性&gt;高级系统设置&gt;环境变量&gt;系统变量&gt;选中系统变量或者用户变量中的Path&gt;点击编辑&gt;将maven根目录下的bin目录添加进去</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202102/1042431-20210204103339634-1073784963.png" alt="" width="537" height="186" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><span style="color: #888888;">&nbsp;添加到环境变量</span></p>
+<h2>3、检查</h2>
+<p>打开cmd，输入mvn -v后按回车。如果显示版本信息，说明配置成功。</p>
+<h2>4、仓库概念</h2>
+<p>采用maven的所有项目共享一个JAR包仓库</p>
+<h2>5、修改仓库位置</h2>
+<p>打开D:\apache-maven-3.6.0\conf中的settings.xml</p>
+<p>通过ctrl+F找到localRepository，可以找到下面这段注释部分</p>
+<div class="cnblogs_code">
+<pre>  &lt;!--<span style="color: #000000;"> localRepository
+   | The path to the local repository maven will use to store artifacts.
+   |
+   | Default: ${user.home}</span>/.m2/<span style="color: #000000;">repository
+  </span>&lt;localRepository&gt;/path/to/local/repo&lt;/localRepository&gt;
+  --&gt;</pre>
+</div>
+<p><span>Default: ${user.home}/.m2/<span>repository表示JAR包默认放的位置，例如我这里是C:\Users\mdzz\.m2\repository</span></span></p>
+<p><span><span>修改仓库位置只需在该注释部分下添加一个元素：</span></span></p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> localRepository
+   | The path to the local repository maven will use to store artifacts.
+   |
+   | Default: ${user.home}/.m2/repository
+  &lt;localRepository&gt;/path/to/local/repo&lt;/localRepository&gt;
+  </span><span style="color: #008000;">--&gt;</span>
+<strong>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">localRepository</span><span style="color: #0000ff;">&gt;</span>d:/maven_repository<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">localRepository</span><span style="color: #0000ff;">&gt;</span></strong></pre>
+</div>
+<p>d:/maven_repository就是我设置的新地址。修改仓库地址后有可能还需要修改相应的集成环境配置，否则可能出现已下载的类包在集成环境中无法识别而报错的情况（实际没问题，但是集成环境报错）。</p>
+<h2>6、旧的jar包转移到新仓库</h2>
+<p>把旧仓库地址的内容，全部剪切到新地址下就可以了。此时，集成环境可能需要重新扫描新仓库的JAR包以更新其内置的目录。</p>
+<h2>7、修改JAR包下载地址</h2>
+<p>有时候默认下载地址比较慢。可以添加阿里云的镜像。参考https://maven.aliyun.com/mvn/guide</p>
+<p>打开maven的配置文件（windows 机器一般在maven安装目录的conf/settings.xml），在<span class="maven-guide__inline-code">&lt;mirrors&gt;&lt;/mirrors&gt;标签中添加mirror子节点:</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">mirror</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">id</span><span style="color: #0000ff;">&gt;</span>aliyunmaven<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">id</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">mirrorOf</span><span style="color: #0000ff;">&gt;</span>*<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">mirrorOf</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>阿里云公共仓库<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url</span><span style="color: #0000ff;">&gt;</span>https://maven.aliyun.com/repository/public<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">mirror</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

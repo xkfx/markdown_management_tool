@@ -1,0 +1,108 @@
+<p><span style="background-color: #ffff99;">p105~p108:</span></p>
+<p>1、迭代器与数组的不同：<strong>迭代器的索引值必须是无符号类型</strong>，数组的索引无此要求。</p>
+<p>&nbsp;</p>
+<p>2、使用数组的时候编译器一般会把它转化为指针。</p>
+<p>&nbsp;</p>
+<p>3、<strong>auto ia2(数组名);</strong>的结果是：获得一个指向ia的第一个元素的指针。</p>
+<p>&nbsp;</p>
+<p>4、<strong>decltype(数组名) ia3;</strong>的结果是：获得一个数组。</p>
+<p>&nbsp;</p>
+<p>5、指针与迭代器类似，两个指针相减（参与运算的指针必须是指向用一数组）的结果是一种名为<strong>有符号</strong>&nbsp;<strong>ptrdiff_t</strong>的标准库类型。</p>
+<p>&nbsp;</p>
+<p>6、标准库函数<strong> begin和 end</strong>。示例：</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span> std::end;</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> *b = begin(arr); b != end(arr); ++<span style="color: #000000;">b) {
+    cout </span>&lt;&lt; *b &lt;&lt;<span style="color: #000000;"> endl;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>7、<span style="color: #ff0000;">只要指针指向的是数组中的元素，都可以执行下表运算。</span>例如：int *p = &amp;ia[2];则 p[0]等价于ia[2]，p[k]等价于 *(p+k)。</p>
+<p>&nbsp;</p>
+<p>8、遍历数组的几种方式。</p>
+<p><br />（***）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">遇到的问题</span></p>
+<p><em>1、+=的优先级比 - 的低。p1 += p2 - p1; 等价于 p1 = p1 + (p2 - p1); </em><br /><em>验证方法：(p1 += p2) - p1;非法。指针不能够相加。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.34</span></p>
+<p><em>功能：将p2的值赋给p1</em></p>
+<p><em>当p1是const point时，该操作是非法的。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.35</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span> *e = &amp;arr[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> *b = arr; b != e; ++<span style="color: #000000;">b) {
+        </span>*b = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 验证</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> x: arr) {
+        cout </span>&lt;&lt; x &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习3.36</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+<span style="color: #ff0000;">#include</span></span><span style="color: #ff0000;">&lt;iterator&gt;
+using std::begin;
+using std::end;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 默认相同类型</span>
+    <span style="color: #0000ff;">int</span> arr1[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span> arr2[<span style="color: #800080;">7</span><span style="color: #000000;">];
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 比较索引范围</span>
+    <span style="color: #0000ff;">int</span> size_arr1 = end(arr1) -<span style="color: #000000;"> begin(arr1);
+    </span><span style="color: #0000ff;">int</span> size_arr2 = end(arr2) -<span style="color: #000000;"> begin(arr2);
+    </span><span style="color: #0000ff;">if</span> (size_arr1 !=<span style="color: #000000;"> size_arr2) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Differen. </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 比较数组内容</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != size_arr1; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (arr1[i] !=<span style="color: #000000;"> arr2[i]) {
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Different. </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+    }
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Same arr. </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec{<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec2{<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">if</span> (ivec ==<span style="color: #000000;"> ivec2) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Same vector. </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Different. </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,108 @@
+<p><span style="background-color: #ffff00;">p101~p104:</span></p>
+<p>1、数组中的元素个数也属于数组类型的一部分。</p>
+<p>&nbsp;</p>
+<p>2、<strong>编译的时候</strong>数组的维度应该是已知的，也就是说维度必须是 const expression</p>
+<p>&nbsp;</p>
+<p>3、<strong>const expression</strong> 是指值不会改变并且在编译过程就能得到计算结果的表达式。</p>
+<p>&nbsp;</p>
+<p>4、不存在引用的数组，但是存在数组的引用。</p>
+<p>&nbsp;</p>
+<p>5、在使用数组下标的时候，通常将其定义为<strong> size_t类型</strong>。</p>
+<p>&nbsp;</p>
+<p>6、数组所用的下标运算符是由<strong> C++语言直接定义</strong>的。</p>
+<p>&nbsp;</p>
+<p><strong>7、编译器不会检查下标是否越界！</strong></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.27</span></p>
+<p><em>（a）非法。buf_size 不是一个常量表达式</em><br /><em>（b）合法。</em><br /><em>（c）当 txt_size()是 constexpr 时正确；否则错误</em><br /><em>（d）非法。没有空间可存放空字符！</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.28</span></p>
+<p><em>全局变量被初始化为 null或 0,</em><br /><em>而局部变量的值是未定义的。</em></p>
+<p><span style="background-color: #ffff00;">&nbsp;</span></p>
+<p><span style="background-color: #ffff00;">练习3.29</span><br /><em>相比于 vector来说：</em><br /><em>1）数组的初始化不灵活。（必须提供一个常量表达式）</em><br /><em>2）数组的容量无法动态改变。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.30</span><br /><em>访问非法内存区域。元素ia[10]是未定义的， </em></p>
+<p><em>int iap[10]仅定义了下标0到9的元素。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.31</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        arr[i] </span>=<span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.32</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        arr[i] </span>=<span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">int</span> arr2[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        arr2[i] </span>=<span style="color: #000000;"> arr[i];
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ivec;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        ivec.push_back(i);
+    }
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec2 = ivec;    <span style="color: #008000;">//</span><span style="color: #008000;"> 参考p88</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.33</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    unsigned scores[</span><span style="color: #800080;">11</span><span style="color: #000000;">];
+    unsigned grade;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> grade) {
+        </span><span style="color: #0000ff;">if</span> (grade &lt;= <span style="color: #800080;">100</span><span style="color: #000000;">) {
+            </span>++scores[grade/<span style="color: #800080;">10</span><span style="color: #000000;">];
+        }
+    }
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto x: scores) {
+        std::cout </span>&lt;&lt; x &lt;&lt;<span style="color: #000000;"> std::endl; 
+    }
+}</span></pre>
+</div>
+<p>运行的结果就是</p>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;<span style="color: #000000;">prog1
+</span><span style="color: #800080;">2</span>
+<span style="color: #800080;">3</span>
+<span style="color: #800080;">4</span>
+<span style="color: #800080;">5</span>
+^<span style="color: #000000;">Z
+</span><span style="color: #800080;">4199108</span>
+<span style="color: #800080;">4199104</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">4200976</span>
+<span style="color: #800080;">6422240</span>
+<span style="color: #800080;">6422296</span>
+<span style="color: #800080;">6422476</span>
+<span style="color: #800080;">1983763024</span>
+<span style="color: #800080;">1362710793</span>
+<span style="color: #800080;">4294967294</span>
+<span style="color: #800080;">1983738842</span></pre>
+</div>
+<p>&nbsp;</p>

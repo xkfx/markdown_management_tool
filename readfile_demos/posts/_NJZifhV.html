@@ -1,0 +1,117 @@
+<style><!--
+@page { margin: 2cm }
+		p { margin-bottom: 0.25cm; direction: ltr; line-height: 120%; text-align: left; orphans: 2; widows: 2 }
+		p.western { font-family: "Tahoma", serif; font-size: 11pt }
+		p.cjk { font-family: "微软雅黑"; font-size: 11pt }
+--></style>
+<p class="cjk"><span style="color: #333333;"><span style="font-family: 宋体;"><span>要求编写一个简单的人员信息管理程序，具体要求如下：</span></span></span></p>
+<p class="cjk"><span style="color: #333333;"><span style="font-family: 宋体;"><span>（</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>1</span></span></span></span><span style="font-family: 宋体;"><span>）程序涉及到五个类，分别是</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>employee</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>technician</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salesman</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>manager</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salsemanager</span></span></span></span><span style="font-family: 宋体;"><span>。这五个类的关系为：</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>employee</span></span></span></span><span style="font-family: 宋体;"><span>是顶层父类，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>technician</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salesman</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>manager</span></span></span></span><span style="font-family: 宋体;"><span>是</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>employee</span></span></span></span><span style="font-family: 宋体;"><span>的子类，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salsemanager</span></span></span></span><span style="font-family: 宋体;"><span>是</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salesman</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>manager</span></span></span></span><span style="font-family: 宋体;"><span>的子类。</span></span></span></p>
+<p class="cjk"><span style="color: #333333;"><span style="font-family: 宋体;"><span>（</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>2</span></span></span></span><span style="font-family: 宋体;"><span>）</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>employee</span></span></span></span><span style="font-family: 宋体;"><span>具有员工号，姓名，收入等属性，有设置姓名，获取姓名，获取员工号，获取收入等函数。</span></span></span></p>
+<p class="cjk"><span style="color: #333333;"><span style="font-family: 宋体;"><span>（</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>3</span></span></span></span><span style="font-family: 宋体;"><span>）</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>technician</span></span></span></span><span style="font-family: 宋体;"><span>的收入计算方法为工作小时数</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>*</span></span></span></span><span style="font-family: 宋体;"><span>时薪，另外具有设置工作小时数，时薪的函数，具有工作小时数和时薪的属性。</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salesman</span></span></span></span><span style="font-family: 宋体;"><span>的收入计算方法为销售额</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>*</span></span></span></span><span style="font-family: 宋体;"><span>提成比例，另外具有设置销售额，提成比例的函数，具有销售额和提成比例的属性。</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>manager</span></span></span></span><span style="font-family: 宋体;"><span>的收入计算方法为固定月薪，另外具有设置固定月薪的函数，具有固定月薪的属性。</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salsemanager</span></span></span></span><span style="font-family: 宋体;"><span>收入计算方法为销售额</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>*</span></span></span></span><span style="font-family: 宋体;"><span>提成比例</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>+</span></span></span></span><span style="font-family: 宋体;"><span>固定月薪。</span></span></span></p>
+<p class="cjk"><span style="color: #333333;"><span style="font-family: 宋体;"><span>（</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>4</span></span></span></span><span style="font-family: 宋体;"><span>）要求利用</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>employee</span></span></span></span><span style="font-family: 宋体;"><span>类型的指针数组，指向</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>8</span></span></span></span><span style="font-family: 宋体;"><span>个子类对象（</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>technician</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salesman</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>manager</span></span></span></span><span style="font-family: 宋体;"><span>，</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>salsemanager</span></span></span></span><span style="font-family: 宋体;"><span>每个类</span></span><span style="font-family: Tahoma, serif;"><span lang="en-US"><span style="font-family: Helvetica, serif;"><span>2</span></span></span></span><span style="font-family: 宋体;"><span>个），通过相应方法输出这些对象的姓名（姓名的初始化通过键盘录入），员工号，收入（多态的形式）。 </span></span></span></p>
+<p class="cjk">&nbsp;</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 1-employee</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Employee {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> constructor</span>
+    Employee(<span style="color: #0000ff;">int</span> nu, <span style="color: #0000ff;">string</span> na, <span style="color: #0000ff;">double</span><span style="color: #000000;"> sa): number(nu), name(na), salary(sa) {}
+
+    </span><span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">void</span> display() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">employee: %d %s salary=%.2lf\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, number, name.c_str(), salary);
+    }
+
+</span><span style="color: #0000ff;">protected</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> info of Employe</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> number;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> salary;
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 2-technician</span>
+<span style="color: #0000ff;">class</span> Technician : <span style="color: #0000ff;">public</span><span style="color: #000000;"> Employee {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> constructor</span>
+    Technician(<span style="color: #0000ff;">int</span> nu, <span style="color: #0000ff;">string</span> na, <span style="color: #0000ff;">int</span> h, <span style="color: #0000ff;">double</span> money): Employee(nu, na, h*<span style="color: #000000;">money) {}
+
+    </span><span style="color: #0000ff;">void</span> display() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">technician: %d %s salary=%.2lf\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, number, name.c_str(), salary);
+    }
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 2-salesman</span>
+<span style="color: #0000ff;">class</span> Salesman : <span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">public</span><span style="color: #000000;"> Employee {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> constructors</span>
+    Salesman(<span style="color: #0000ff;">int</span> nu, <span style="color: #0000ff;">string</span> na, <span style="color: #0000ff;">double</span><span style="color: #000000;"> sa): Employee(nu, na, sa) {}
+    Salesman(</span><span style="color: #0000ff;">int</span> nu, <span style="color: #0000ff;">string</span> na, <span style="color: #0000ff;">double</span> percent, <span style="color: #0000ff;">double</span> money): Employee(nu, na, percent*<span style="color: #000000;">money) {}
+
+    </span><span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">void</span> display() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">salesman: %d %s salary=%.2lf\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, number, name.c_str(), salary);
+    }
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 2-manager</span>
+<span style="color: #0000ff;">class</span> Manager : <span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">public</span><span style="color: #000000;"> Employee {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> constructors</span>
+    Manager(<span style="color: #0000ff;">int</span> nu, <span style="color: #0000ff;">string</span> na, <span style="color: #0000ff;">double</span><span style="color: #000000;"> sa): Employee(nu, na, sa) {}
+
+    </span><span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">void</span> display() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">manager: %d %s salary=%.2lf\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, number, name.c_str(), salary);
+    }
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 3-salsemanager</span>
+<span style="color: #0000ff;">class</span> Salsemanager : <span style="color: #0000ff;">public</span> Manager, <span style="color: #0000ff;">public</span><span style="color: #000000;"> Salesman {
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Salsemanager(</span><span style="color: #0000ff;">int</span> nu, <span style="color: #0000ff;">string</span> na, <span style="color: #0000ff;">double</span> percent, <span style="color: #0000ff;">double</span> money, <span style="color: #0000ff;">double</span><span style="color: #000000;"> Money):
+        Employee(nu, na, percent</span>*money+Money), Manager(nu, na, percent*money+Money), Salesman(nu, na, percent*money+<span style="color: #000000;">Money) {}
+
+    </span><span style="color: #0000ff;">virtual</span> <span style="color: #0000ff;">void</span> display() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">salsemanager: %d %s salary=%.2lf\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, number, name.c_str(), salary);
+    }
+};
+
+</span><span style="color: #0000ff;">void</span> showInfo(Employee&amp;<span style="color: #000000;"> x) {
+    x.display();
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> unit test</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> N = <span style="color: #800080;">5</span><span style="color: #000000;">;
+    Employee</span>*<span style="color: #000000;"> p[N];
+
+    Employee em(</span><span style="color: #800080;">12301</span>, <span style="color: #800000;">"</span><span style="color: #800000;">wang</span><span style="color: #800000;">"</span>, <span style="color: #800080;">3200</span><span style="color: #000000;">);
+    p[</span><span style="color: #800080;">0</span>] = &amp;<span style="color: #000000;">em;
+
+    Technician te(</span><span style="color: #800080;">12302</span>, <span style="color: #800000;">"</span><span style="color: #800000;">liu</span><span style="color: #800000;">"</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">100</span><span style="color: #000000;">);
+    p[</span><span style="color: #800080;">1</span>] = &amp;<span style="color: #000000;">te;
+
+    Salesman sa(</span><span style="color: #800080;">12304</span>, <span style="color: #800000;">"</span><span style="color: #800000;">li</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0.7</span>, <span style="color: #800080;">4000</span><span style="color: #000000;">);
+    p[</span><span style="color: #800080;">2</span>] = &amp;<span style="color: #000000;">sa;
+
+    Manager ma(</span><span style="color: #800080;">12305</span>, <span style="color: #800000;">"</span><span style="color: #800000;">zhu</span><span style="color: #800000;">"</span>, <span style="color: #800080;">4000</span><span style="color: #000000;">);
+    p[</span><span style="color: #800080;">3</span>] = &amp;<span style="color: #000000;">ma;
+
+    Salsemanager sal(</span><span style="color: #800080;">12307</span>, <span style="color: #800000;">"</span><span style="color: #800000;">yao</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0.7</span>, <span style="color: #800080;">1000</span>, <span style="color: #800080;">7000</span><span style="color: #000000;">);
+    p[</span><span style="color: #800080;">4</span>] = &amp;<span style="color: #000000;">sal;
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        showInfo(</span>*<span style="color: #000000;">p[i]);
+    }
+
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>1.动态绑定的出现场景通常是函数参数（基础类引用）作为子类对象的持有者。<br />2.只需把基类方法声明virtual，其子类对它的覆盖默认为虚函数。<br />3.如果不把基类方法声明成virtual而在子类对它进行覆盖，其父类引用仍可以持有子类对象，但是当通过父类引用调用方法的时候，将调用父类的方法而不是子类的方法（不会进行动态绑定）。</p>
+<p class="cjk"><br />
+
+</p>

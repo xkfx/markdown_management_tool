@@ -1,0 +1,233 @@
+<p>p187~p199：</p>
+<p><span style="color: #000000;">【传值参数】</span></p>
+<p><span style="color: #ff00ff;">【传引用参数】</span></p>
+<p><span style="color: #000000;"><span style="text-decoration: underline;">使用引用形参返回额外信息</span>：传入一个（或者多个）额外的引用实参，令其保存字符出现的次数。</span></p>
+<p><span style="color: #000000;">&nbsp;</span></p>
+<p><span style="text-decoration: underline;">6.11</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> reset(<span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">i)
+{
+    i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">9999</span><span style="color: #000000;">;
+    reset(i);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">i = </span><span style="color: #800000;">"</span> &lt;&lt; i &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output: i = 0</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.12</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span> &amp;p, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">q)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    temp </span>=<span style="color: #000000;"> p;
+    p </span>=<span style="color: #000000;"> q;
+    q </span>=<span style="color: #000000;"> temp;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> a = <span style="color: #800080;">3</span>, b = <span style="color: #800080;">4</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; a &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; b &lt;&lt;<span style="color: #000000;"> endl;
+    swap(a , b);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 交换之后</span>
+    cout &lt;&lt; a &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; b &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+        4
+        3
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.13</span></p>
+<p>void f(T)中的T在调用函数的时候将拷贝实参的值，而voidd f(&amp;T)中的T则是传入实参的临时别名。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.14</span></p>
+<p>感觉几乎都可以用引用类型，想到的一个是&ldquo;删减字符串然后返回&rdquo;，但是仍然可以在函数内部定义局部变量再进行操作。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.15</span></p>
+<p>因为不希望在函数里面改变string的值，因此s是常量引用（s设置为const可以提高可读性、更加安全，但是这应该不是必须的）。</p>
+<p>s定义为引用类型可以避免拷贝，occurs定义为引用类型是为了返回&ldquo;额外的信息&rdquo;，定义成常量就无法统计值了。</p>
+<p>至于c为什么不是引用类型。。。（更多原因见下文）</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【const形参和实参】</span></p>
+<p><span style="color: #000000;">续上节，补充<span style="color: #ff00ff; background-color: #ffff99;">尽量使用常量引用的原因</span>：形参的初始化和变量的初始化是相同的，常量引用相比普通引用能够接收更多的类型。</span><span>一个实例是f(string &amp;s)无法传入字面值（非常量引用无非用字面值来初始化），如果传入将发生编译错误。</span><span>正确的做法是：f(const string &amp;s)。</span></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.16</span></p>
+<p>见上文。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.17</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 函数1</span>
+<span style="color: #0000ff;">bool</span> has_bigc(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">s) 
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span><span style="color: #000000;"> c : s) {
+        </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> || c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 函数2</span>
+<span style="color: #0000ff;">void</span> to_Lower(<span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">s) 
+{
+    </span><span style="color: #0000ff;">int</span> L = <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> - <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">char</span> &amp;<span style="color: #000000;">c : s) {
+        </span><span style="color: #0000ff;">if</span> (c &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> || c &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            c </span>-=<span style="color: #000000;"> L;
+        }
+    }
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; (has_bigc(<span style="color: #800000;">"</span><span style="color: #800000;">Lovecpp</span><span style="color: #800000;">"</span>) ? <span style="color: #800000;">"</span><span style="color: #800000;">Yes!</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">No!</span><span style="color: #800000;">"</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">string</span> s = <span style="color: #800000;">"</span><span style="color: #800000;">HeLlo WORLD</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    to_Lower(s);
+    cout </span>&lt;&lt; s &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.18</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">bool</span> compare(matrix&amp;, matrix&amp;<span style="color: #000000;">);
+vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;::iterator change_val(<span style="color: #0000ff;">int</span> , vector&lt;<span style="color: #0000ff;">int</span>&gt;::iterator);</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.19</span></p>
+<p>不合法 合法 合法 &nbsp;合法</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.20</span></p>
+<p>略。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【数组形参】</span></p>
+<p><span style="text-decoration: underline; color: #000000;"><span style="text-decoration: underline;">一维数组</span></span></p>
+<p><span style="color: #000000;">含有数组形参的函数的声明方式：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">void</span> opera_array(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span>*); <span style="color: #008000;">//</span><span style="color: #008000;"> 推荐，更符合实际意义</span>
+<span style="color: #0000ff;">void</span> opera_array(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[]);
+</span><span style="color: #0000ff;">void</span> opera_array(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span>[<span style="color: #800080;">10</span>]);</pre>
+</div>
+<p><span style="color: #000000;">以上三个函数是等价的。</span>可以看出，函数参数实际接收的是指向数组首元素的指针（假设一个数组a，传入a等价于传入&amp;a[0]）。因为数组是以指针形式传递给函数，所以函数并不知道<span style="color: #ff0000;">数组的确切尺寸</span>。调用者因此应该提供额外的信息，主要有三种途径：</p>
+<p>1、在数组尾部放标记。（例如c风格的字符串尾部的'\0'）</p>
+<p>2、传入指向数组首尾元素的指针。（借助标准库的begin(a);end(j);）</p>
+<p>3、显式传入长度。（例如void f(int *a, int len);）</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">多维数组</span></p>
+<p>多位数组实质上是&ldquo;数组的数组&rdquo;，数组的第二维（以及以后的维度）的大小都是数组类型的一部分，在声明的时候不可省略！正确使用的例子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">void</span> f(<span style="color: #0000ff;">int</span> (*array)[<span style="color: #800080;">10</span>]);</pre>
+</div>
+<p>&nbsp;避免混乱的一个好办法就是：坚持一种直观的方式。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.21</span></p>
+<p>const int *p;</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.22</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span>* &amp;p, <span style="color: #0000ff;">int</span>* &amp;<span style="color: #000000;">q)
+{
+    </span><span style="color: #0000ff;">int</span>*<span style="color: #000000;"> temp;
+    temp </span>=<span style="color: #000000;"> p;
+    p </span>=<span style="color: #000000;"> q;
+    q </span>=<span style="color: #000000;"> temp;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">3</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> *p = &amp;<span style="color: #000000;">i;
+    </span><span style="color: #0000ff;">int</span> *q =<span style="color: #000000;"> nullptr;
+    swap(p, q);
+    cout </span>&lt;&lt; *q &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.23</span></p>
+<p>&nbsp;略。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.24</span></p>
+<p>&nbsp;打印元素个数为10的int型数组元素，代码没问题。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【main：处理命令行选项】</span></p>
+<p><span>简单的示例：</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">argv[])
+{
+    </span><span style="color: #0000ff;">for</span> (size_t i = <span style="color: #800080;">0</span>; i != argc; ++<span style="color: #000000;">i) 
+        cout </span>&lt;&lt; argv[i] &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> c风格的字符串可以当成字面值来用。</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ a hello world i love you
+a </span><span style="color: #008000;">#</span><span style="color: #008000;"> 第一个元素是exe文件的名字</span>
+hello <span style="color: #008000;">#</span><span style="color: #008000;"> 以下是传入的参数</span>
+<span style="color: #000000;">world
+i
+love
+you</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.25</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">argv[])
+{
+    </span><span style="color: #0000ff;">string</span> hi = <span style="color: #800000;">""</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (size_t i = <span style="color: #800080;">0</span>; i != argc; ++<span style="color: #000000;">i){
+        hi </span>+=<span style="color: #000000;"> argv[i];
+        hi </span>+= <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+    cout </span>&lt;&lt; hi &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.26</span></p>
+<p>略。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【含有可变形参的函数】</span></p>
+<p>initializer_list&lt;T&gt; 的特点：1、元素永远是常量 2、传入值要加花括号</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="color: #000000; text-decoration: underline;">6.27</span></span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;initializer_list&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> sum(initializer_list&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> il)
+{
+    </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">x : il) {
+        sum </span>+=<span style="color: #000000;"> x;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; sum({<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span>}) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output=15</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.28</span></p>
+<p>string</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.29</span></p>
+<p>看具体情况。</p>
+<p>&nbsp;</p>

@@ -1,0 +1,126 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">读取html中的SQL语句</a></li>
+<li><a href="#anchor1">缺陷总结</a></li>
+</ul>
+</div>
+<p>在<a id="cb_post_title_url" href="https://www.cnblogs.com/xkxf/p/10128082.html">Java连接数据库 #04#</a>里大概是这样放sql语句的：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.shop.db.queryrunner;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.shop.db.queryrunner.statementfactory.StatementFactory;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO sql一长可读性变得非常非常差</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> Statements {
+
+    String ITEM_SAVE_ITEM </span>= "INSERT INTO item(user_id, name, price, status, quantity) VALUES (?, ?, ?, ?, ?)"<span style="color: #000000;">;
+    String ITEM_REMOVE_BY_ID </span>= "DELETE FROM item WHERE id=?"<span style="color: #000000;">;
+    String ITEM_UPDATE_BY_ID </span>= "UPDATE item SET name=?, price=?, status=?, quantity=? WHERE id=?"<span style="color: #000000;">;
+    String ITEM_GET_BY_ID </span>= "SELECT id, user_id AS userId, name, price, status, quantity FROM item WHERE id=?"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> order</span>
+    String ORDER_GET_BY_UID = "SELECT id, user_id AS userId, total FROM simple_order WHERE user_id=?"<span style="color: #000000;">;
+    String ORDER_SAVE_ORDER </span>= "INSERT INTO simple_order(user_id, total) VALUES(?, ?)"<span style="color: #000000;">;
+    String ORDER_SAVE_ORDER_DETAIL </span>= "INSERT INTO order_detail(order_id, item_id, user_id, quantity, price, status) VALUES(?, ?, ?, ?, ?, ?)"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> order detail</span>
+    String ORDER_DETAIL_GET_BY_ORDER_ID = "SELECT id, order_id AS orderId, item_id AS itemId, user_id AS userId, quantity, price, status FROM order_detail WHERE order_id=?"<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>在简单的程序里这样写还是挺方便的，然而单条sql语句一旦变长<span style="color: #ff0000;">可读性就会变得</span><strong><span style="color: #ff0000;">非常非常差</span>。改起来也相当不方便。</strong></p>
+<p>我首先想到的解决办法是：像mybatis一样把sql放到单独一个XML文件里。于是，我简单写了个草稿程序添加<strong>DOM4J依赖开始尝试。结果当我把sql字符串放到xml标签里却被提示格式不对，解析起来也报错。。。。。。</strong></p>
+<p>然后仔细看看，mybatis能正常解析xml依靠的是这个&darr;</p>
+<p><strong><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181230093542455-1078001465.png" alt="" /></strong></p>
+<p>我只是想把sql单独放到文件里，并且我希望：</p>
+<ul>
+<li><span style="color: #ff0000;"><strong>方便阅读和修改sql语句</strong></span></li>
+<li><span style="color: #ff0000;"><strong>方便Java解析文件并读取sql语句</strong></span></li>
+</ul>
+<p>为了节约学习成本，我脑洞一开。。。。就投机取巧地用html + jsoup做这件事了。</p>
+<h2><a name="anchor0"></a>读取html中的SQL语句</h2>
+<p>sql.html：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #808080;">&lt;</span>sql id<span style="color: #808080;">=</span>"ITEM_LIST_BY_UID_AND_STATUS"<span style="color: #808080;">&gt;</span>
+    <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span> rownum <span style="color: #0000ff;">AS</span> r, id, <span style="color: #ff00ff;">user_id</span> <span style="color: #0000ff;">AS</span><span style="color: #000000;"> userId, name, price, status, quantity
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> item
+    </span><span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">user_id</span><span style="color: #808080;">=</span>? <span style="color: #808080;">AND</span> status<span style="color: #808080;">=</span><span style="color: #000000;">?
+    )</span><span style="color: #0000ff;">temp</span>
+    <span style="color: #0000ff;">WHERE</span> r <span style="color: #808080;">&gt;=</span> ? <span style="color: #808080;">AND</span> r <span style="color: #808080;">&lt;</span><span style="color: #000000;"> ?
+</span><span style="color: #808080;">&lt;/</span>sql<span style="color: #808080;">&gt;</span>
+<span style="color: #808080;">&lt;</span>sql id<span style="color: #808080;">=</span>"ITEM_SAVE_ITEM"<span style="color: #808080;">&gt;</span>
+    <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span> item(<span style="color: #ff00ff;">user_id</span><span style="color: #000000;">, name, price, status, quantity)
+    </span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;"> (?, ?, ?, ?, ?)
+</span><span style="color: #808080;">&lt;/</span>sql<span style="color: #808080;">&gt;</span>
+<span style="color: #808080;">&lt;</span>sql id<span style="color: #808080;">=</span>"ITEM_REMOVE_BY_ID"<span style="color: #808080;">&gt;</span>
+    <span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> item
+    </span><span style="color: #0000ff;">WHERE</span> id<span style="color: #808080;">=</span><span style="color: #000000;">?
+</span><span style="color: #808080;">&lt;/</span>sql<span style="color: #808080;">&gt;</span>
+<span style="color: #808080;">&lt;</span>sql id<span style="color: #808080;">=</span>"ITEM_UPDATE_BY_ID"<span style="color: #808080;">&gt;</span>
+    <span style="color: #0000ff;">UPDATE</span><span style="color: #000000;"> item
+    </span><span style="color: #0000ff;">SET</span> name<span style="color: #808080;">=</span>?, price<span style="color: #808080;">=</span>?, status<span style="color: #808080;">=</span>?, quantity<span style="color: #808080;">=</span><span style="color: #000000;">?
+    </span><span style="color: #0000ff;">WHERE</span> id<span style="color: #808080;">=</span><span style="color: #000000;">?
+</span><span style="color: #808080;">&lt;/</span>sql<span style="color: #808080;">&gt;</span>
+<span style="color: #808080;">&lt;</span>sql id<span style="color: #808080;">=</span>"ITEM_GET_BY_ID"<span style="color: #808080;">&gt;</span>
+    <span style="color: #0000ff;">SELECT</span> id, <span style="color: #ff00ff;">user_id</span> <span style="color: #0000ff;">AS</span><span style="color: #000000;"> userId, name, price, status, quantity
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> item
+    </span><span style="color: #0000ff;">WHERE</span> id<span style="color: #808080;">=</span><span style="color: #000000;">?
+</span><span style="color: #808080;">&lt;/</span>sql<span style="color: #808080;">&gt;</span></pre>
+</div>
+<p>/</p>
+<p>StatementFactory.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">package org.sample.shop.db.queryrunner.statementfactory;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.</span><span style="color: #0000ff;">File</span><span style="color: #000000;">;
+import java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;"> class StatementFactory {
+    private static final String PATHNAME </span><span style="color: #808080;">=</span> StatementFactory.class.getResource("<span style="color: #808080;">/</span><span style="color: #000000;">sql.html").getPath();
+    private static final String CHAR_SET </span><span style="color: #808080;">=</span> "UTF<span style="color: #808080;">-</span><span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">";
+
+    private static Document doc;
+
+    static {
+        </span><span style="color: #0000ff;">File</span> input <span style="color: #808080;">=</span> new <span style="color: #0000ff;">File</span><span style="color: #000000;">(PATHNAME);
+        try {
+            doc </span><span style="color: #808080;">=</span><span style="color: #000000;"> Jsoup.parse(input, CHAR_SET, "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> static String getStatement(String statementId) {
+        Element sql </span><span style="color: #808080;">=</span> doc.<span style="color: #0000ff;">select</span><span style="color: #000000;">(statementId).first();
+        </span><span style="color: #0000ff;">return</span> sql.<span style="color: #0000ff;">text</span><span style="color: #000000;">();
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>Statements.java（原来的Sql.java）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">package org.sample.shop.db.queryrunner;
+
+import org.sample.shop.db.queryrunner.statementfactory.StatementFactory;
+
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;"> interface Statements {
+    </span><span style="color: #808080;">//</span><span style="color: #000000;"> item
+    String ITEM_LIST_BY_UID_AND_STATUS </span><span style="color: #808080;">=</span><span style="color: #000000;"> StatementFactory.getStatement("#ITEM_LIST_BY_UID_AND_STATUS");
+    String ITEM_SAVE_ITEM </span><span style="color: #808080;">=</span><span style="color: #000000;"> StatementFactory.getStatement("#ITEM_SAVE_ITEM");
+    String ITEM_REMOVE_BY_ID </span><span style="color: #808080;">=</span><span style="color: #000000;"> StatementFactory.getStatement("#ITEM_REMOVE_BY_ID");
+    String ITEM_UPDATE_BY_ID </span><span style="color: #808080;">=</span><span style="color: #000000;"> StatementFactory.getStatement("#ITEM_UPDATE_BY_ID");
+    String ITEM_GET_BY_ID </span><span style="color: #808080;">=</span><span style="color: #000000;"> StatementFactory.getStatement("#ITEM_GET_BY_ID");;
+}</span></pre>
+</div>
+<p>PS.&nbsp;interface中常量和类中静态域性质是一样的！！</p>
+<h2><a name="anchor1"></a>缺陷总结</h2>
+<p>这样做虽然解决了一些问题，但是改进空间还是相当大的。。。</p>
+<p>例如说实际写的时候需要来回在4个文件跳转：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181230100201896-313219749.png" alt="" width="549" height="67" /></p>
+<p>以及Statements.java和StatementFactory.java职能其实是重合的。。只是暂时没去把它们写到一起。</p>
+<p>就。。有时间再搞吧。。。。。。。。。。。。。。。。</p>
+<p>&nbsp;</p>

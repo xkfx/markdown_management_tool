@@ -1,0 +1,18 @@
+<p><span style="background-color: #ffff99;">什么是类和对象</span></p>
+<p><br /><span style="background-color: #ffff99;">如何定义 Java 中的类</span></p>
+<p><br /><span style="background-color: #ffff99;">如何使用 Java 中的对象</span></p>
+<p><br /><span style="background-color: #ffff99;">Java中的成员变量和局部变量</span><br />1、成员变量：在类中定义，描述构成对象的组件。</p>
+<p><br />2、局部变量：在类的方法中，用于临时保存数据。</p>
+<p><br />3、成员变量的有效范围：类中的所有方法都可以调用成员变量。</p>
+<p><br /><strong>4、局部变量和成员变量允许重名，这个时候局部变量具有更高优先级。</strong></p>
+<p><br /><span style="background-color: #ffff99;">Java 中的构造方法</span><br /><strong>1、若不自己写构造方法，Java会默认给一个无参的构造方法。但若是自定义了构造方法，不论有无参数，系统默认给的无参构造器都会失效。</strong></p>
+<p><br />2、写构造器的时候可以顺便检查参数的合理性。</p>
+<p><br />3、以前看到过一个关于构造器的阐述：构造器就是new的一瞬间执行的代码，未必一定是用来初始化对象。</p>
+<p><br /><span style="background-color: #ffff99;">Java 中的 static 使用之静态变量</span><br />1、静态变量是类所有的，被类的所有对象共享。</p>
+<p><br />2、可以用对象访问，但是<strong>强烈建议用类名访问</strong>。</p>
+<p><br /><span style="background-color: #ffff99;">Java 中的 static 使用之静态方法</span><br />1、静态方法中可以直接调用同类中的静态成员（方法），但不能直接调用非静态成员（方法）。</p>
+<p><br />2、如果希望在静态方法中调用非静态变量（方法），可以通过创建类的对象，然后通过对象来访问非静态变量（方法）。例如：在main()方法中。</p>
+<p><br />3、在普通成员方法中，则可以直接访问同类的非静态变量和静态变量。</p>
+<p><br /><span style="background-color: #ffff99;">Java 中的 static 使用之静态初始化块</span><br />1、静态初始化块只在类加载时执行，且<strong>只会执行一次（并且是最先执行的）</strong>，同时静态初始化块只能给静态变量赋值，不能初始化普通的成员变量。</p>
+<p><br />2、而非静态初始化块在每次new的时候都会执行一遍。</p>
+<p><br />3、<strong>初始化块总是优先于构造器执行</strong>。</p>

@@ -1,0 +1,46 @@
+<p>教程：<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-nohup/" target="_blank">Linux 技巧：让进程在后台可靠运行的几种方法</a></p>
+<p>网上搜索了一下，方法很多，选用最流行的 screen</p>
+<p>命令参考：<a href="http://man.linuxde.net/screen%20" target="_blank">http://man.linuxde.net/screen&nbsp;</a></p>
+<p>&nbsp;</p>
+<h4>1. 安装</h4>
+<div class="cnblogs_code">
+<pre>root@xkfx:~# apt <span style="color: #0000ff;">install</span><span style="color: #000000;"> screen
+
+...
+
+root@xkfx:</span>~# screen -<span style="color: #000000;">list 列出所有会话
+There is a screen on:
+        </span><span style="color: #800080;">1883</span>.pts-<span style="color: #800080;">0</span>.xkfx (<span style="color: #800080;">03</span>/<span style="color: #800080;">04</span>/<span style="color: #800080;">2018</span> <span style="color: #800080;">12</span>:<span style="color: #800080;">06</span>:<span style="color: #800080;">15</span><span style="color: #000000;"> PM)        (Attached)
+</span><span style="color: #800080;">1</span> Socket <span style="color: #0000ff;">in</span> /var/run/screen/S-root.</pre>
+</div>
+<p>&nbsp;</p>
+<h4>2. 基本操作</h4>
+<p>例如说我现在打算断开 ssh ，又希望XXXXXXXX程序继续运行：</p>
+<p><span style="color: #999999;">root@xkfx:~# screen -ls</span><br /><span style="color: #999999;">There is a screen on:</span><br /><span style="color: #999999;">	1883.pts-0.xkfx	(03/04/2018 12:06:14 PM)	(Detached)</span><br /><span style="color: #999999;">1 Socket in /var/run/screen/S-root.</span></p>
+<p><strong><span style="color: #ff0000; background-color: #ffff00;">root@xkfx:~# screen -dmS MyWorker</span></strong></p>
+<p>（创建一个新的视窗，并指定名字）<br /><span style="color: #999999;">root@xkfx:~# screen -ls</span><br /><span style="color: #999999;">There are screens on:</span><br /><span style="color: #999999;">	2210.MyWorker	(03/04/2018 12:38:55 PM)<span style="color: #ff0000;">	(Detached)</span></span><br /><span style="color: #999999;">	1883.pts-0.xkfx	(03/04/2018 12:06:15 PM)	(Detached)</span><br /><span style="color: #999999;">2 Sockets in /var/run/screen/S-root.</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;"><strong>root@xkfx:~# screen -r 2227.MyWorker&nbsp;</strong></span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">（screen -r 2227 或者 screen -r MyWorker 均可）</span></p>
+<p>（Attached某个视窗，也可以理解为进入某个视窗）</p>
+<p><span style="color: #999999;">root@xkfx:/# screen -ls</span><br /><span style="color: #999999;">There are screens on:</span><br /><span style="color: #999999;">        2227.MyWorker   (03/04/2018 12:40:00 PM)<span style="color: #ff0000;">        (Attached)</span></span><br /><span style="color: #999999;">        1883.pts-0.xkfx (03/04/2018 12:06:15 PM)        (Detached)</span><br /><span style="color: #999999;">2 Sockets in /var/run/screen/S-root.</span></p>
+<p>（执行你想进行的任何操作）</p>
+<p><strong><span style="color: #ff0000; background-color: #ffff00;">root@xkfx:/# cd /opt/antpool/cpuminer-2.5.0/</span></strong><br /><strong><span style="color: #ff0000; background-color: #ffff00;">root@xkfx:/opt/antpool/cpuminer-2.5.0# ./minerd -o stratum+tcp://stratum-ltc.antpool.com:8888 -u xkfx.01</span></strong><br /><strong><span style="color: #ff0000; background-color: #ffff00;">[2018-03-04 12:45:10] 1 miner threads started, using 'scrypt' algorithm.</span></strong><br /><strong><span style="color: #ff0000; background-color: #ffff00;">[2018-03-04 12:45:10] Starting Stratum on stratum+tcp://stratum-ltc.antpool.com:8888</span></strong><br /><strong><span style="color: #ff0000; background-color: #ffff00;">[2018-03-04 12:45:12] thread 0: 4104 hashes, 15.34 khash/s</span></strong></p>
+<p><strong><span style="color: #ff0000; background-color: #ffff00;">[detached from 2227.MyWorker]</span></strong></p>
+<p>（退出某个视窗，但保持该视窗工作继续进行。这里的操作是 Ctrl + A + D）</p>
+<p><span style="color: #999999;">root@xkfx:~# screen -ls</span><br /><span style="color: #999999;">There are screens on:</span><br /><span style="color: #999999;">	2227.MyWorker	(03/04/2018 12:40:00 PM)	<span style="color: #ff0000;">(Detached)</span></span><br /><span style="color: #999999;">	1883.pts-0.xkfx	(03/04/2018 12:06:15 PM)	(Detached)</span><br /><span style="color: #999999;">2 Sockets in /var/run/screen/S-root.</span></p>
+<p>好了，现在可以断开 ssh了。</p>
+<p>重新连接ssh，看看程序是不是仍在运行：</p>
+<p><span style="background-color: #ffffff; color: #999999;">root@xkfx:~# screen -ls</span><br /><span style="background-color: #ffffff; color: #999999;">There are screens on:</span><br /><span style="background-color: #ffffff; color: #999999;">	2227.MyWorker	(03/04/2018 12:39:59 PM)	(Detached)</span><br /><span style="background-color: #ffffff; color: #999999;">	1883.pts-0.xkfx	(03/04/2018 12:06:14 PM)	(Detached)</span><br /><span style="background-color: #ffffff; color: #999999;">2 Sockets in /var/run/screen/S-root.</span></p>
+<p><strong><span style="color: #ff0000; background-color: #ffff00;">root@xkfx:~# screen -r 2227.MyWorker</span></strong></p>
+<p><span style="color: #888888;">[2018-03-04 13:26:38] accepted: 28/28 (100.00%), 15.55 khash/s (yay!!!)</span><br /><span style="color: #888888;">[2018-03-04 13:27:38] thread 0: 932832 hashes, 15.55 khash/s</span><br /><span style="color: #888888;">[2018-03-04 13:27:39] thread 0: 9480 hashes, 15.58 khash/s</span><br /><span style="color: #888888;">[2018-03-04 13:27:39] accepted: 29/29 (100.00%), 15.58 khash/s (yay!!!)</span><br /><span style="color: #888888;">[2018-03-04 13:28:14] thread 0: 539904 hashes, 15.55 khash/s</span><br /><span style="color: #888888;">[2018-03-04 13:28:14] accepted: 30/30 (100.00%), 15.55 k1hash/s (yay!!!)</span></p>
+<p>PS. 终结一个 screen ，切入该 screen 结束正在运行的程序， Ctrl + D</p>
+<p>&nbsp;</p>
+<h4>3. 应用</h4>
+<p>解决一下上次的<a href="http://www.cnblogs.com/xkxf/p/8280878.html" target="_blank">遗留问题</a>：</p>
+<p><span style="color: #ff0000; background-color: #ffff00;"><strong>root@xkfx:~# screen -dmS myChatroomServer</strong></span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;"><strong>root@xkfx:~# screen -r myChatroomServer </strong></span></p>
+<p><span style="color: #888888;">root@xkfx:~# java -jar main.jar</span><br /><span style="color: #888888;">The server is listening on 10000 port ...</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;"><strong>[detached from 2586.myChatroomServer]</strong></span></p>
+<p>操作完后断开 ssh 测试：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180304134654616-1915206249.png" alt="" width="533" height="305" /></p>
+<p>&nbsp;</p>

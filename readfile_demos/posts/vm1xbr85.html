@@ -1,0 +1,17 @@
+<p><a href="https://github.com/xkfx/Guiforsql" target="_blank"><span style="line-height: 1.5;">代码</span></a></p>
+<p><span style="line-height: 1.5;">笔记:</span></p>
+<p>1、确保导入mysql-connector-java-xxxx-bin.jar</p>
+<p>2、sql语句容易出错，例如在组合String的时候漏掉空格</p>
+<p>3、设置jlist的方法有很多种，具体参考api</p>
+<p>4、继承一个类并不意味着继承父类的构造器， 原因是父类的私有域只能通过调用父类的公开方法来初始化。</p>
+<p>5、要正确显示TableMode提供的列名，必须为table加上scrollPane。</p>
+<div class="cnblogs_code">
+<pre>        TableModel model = <span style="color: #0000ff;">new</span><span style="color: #000000;"> DbTableModel(dbName , tableName);
+        JTable table </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTable(model);
+        JScrollPane sp </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JScrollPane(table);
+
+        add(sp);
+        pack();</span></pre>
+</div>
+<p>&nbsp;6、<span style="background-color: #ffff00;">鼠标右键对应的事件是e.getButton() == 3，如果不知道具体事件是什么，可以采用system.out.println(event)</span></p>
+<p><span style="background-color: #ffff00;">7、对象间传递对象（共享同一个对象），可以通过写一个 accept方法，例如 a.accept(b.table)</span></p>

@@ -1,0 +1,291 @@
+<p>通过构造器创建对象有什么不好？</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190112165447613-594487096.png" alt="" width="768" height="123" /></p>
+<p>构造器是方法，如果两个服务互相调用的话有可能不注意就容易造成stackoverflow</p>
+<p>单例是一个简单的解决方式，互相只持有对方的引用，而不是创建彼此。wrong并不能解决问题 ，仍然需要互相调用对方。</p>
+<p>为什么不用 enum个人实践后觉得很别扭。</p>
+<p>&nbsp;</p>
+<p>按照性质的重要性分类，别整些没用的概念。</p>
+<p>例如最终要的性质当然是是不是线程安全。</p>
+<p>实现单例模式并没有那么简单，我们需要考虑如下几个问题：</p>
+<ol>
+<li>是否需要懒加载</li>
+<li>是否需要序列化</li>
+<li>是否需要应对多线程情况</li>
+<li>是不是有多个类加载器</li>
+<li>需不需要应对反射</li>
+<li>对性能的要求怎么样</li>
+</ol>
+<p>针对上述几个问题，我们可以先给出一个经典实现并写出几个测试</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201808/1042431-20180802095121083-1346410475.png" alt="" width="699" height="153" /></p>
+<p>&nbsp;</p>
+<p>单例模式是<a href="https://baike.baidu.com/item/GoF/6406151" target="_blank">《Gang of Four 设计模式》</a>里所讲述的 23 种设计模式中的一种设计模式。它在概念上非常地简单：</p>
+<p>Ensure a class has only one instance, and provide a global point of access to it. （出自 gang of four）</p>
+<p>虽然单例模式有许多不同的实现方式，但实现了该模式的类（也就是&ldquo;单例类&rdquo;）通常都具备一些共同的特征：</p>
+<ol>
+<li>私有构造器：限制其它类非法创建该对象。</li>
+<li>私有静态变量：用于指向该类的唯一实例。</li>
+<li>公有静态方法：用于访问该类的唯一实例。</li>
+</ol>
+<p>索引 &darr;</p>
+<ol>
+<li>饿汉单例模式一（线程安全）</li>
+<li>饿汉单例模式二（线程安全，静态初始化块）</li>
+<li>懒汉单例模式一（线程不安全）</li>
+<li>懒汉单例模式二（线程安全）</li>
+<li>双重校验锁单例模式（DCL，克服懒汉二的性能问题，在 jdk1.5 版本前不可用）</li>
+<li>静态内部类</li>
+<li>枚举</li>
+<li>注册处</li>
+<li>总结&nbsp;</li>
+<li>Reference</li>
+</ol>
+<p>&nbsp;</p>
+<h2>饿汉式一（线程安全）</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HungryManOne {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> HungryManOne instance = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HungryManOne();
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> HungryManOne(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> HungryManOne getInstance(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> instance;
+    }
+}</span></pre>
+</div>
+<p>修改建议： 把 instance 改为 INSTANCE 并且把 private 直接改为 public&nbsp; 去掉&nbsp; getInstance()</p>
+<p>优点：代码简单；通过 classloader 机制避免了多线程的同步问题 ；final 可以促使编译器做一些性能上地优化</p>
+<p>缺点：我们一般都希望在需要用到对象的时候再实例化对象（例如说各种物理设备的关联对象）从而避免浪费内存空间，这种实例化方式称作懒加载（lazy initialization）。而饿汉单例模式在类装载时就实例化对象（第一次用到该类时，包括但不限于调用 getInstance 方法！），并没有实现懒加载；缺点二是向构造器传递参数比较不方便</p>
+<p>&nbsp;</p>
+<h2>饿汉式二（线程安全）</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HungryManTwo {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> HungryManTwo instance<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;">{
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            instance </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HungryManTwo();
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> RuntimeException("Exception occured in creating singleton instance"<span style="color: #000000;">);
+        }
+    }
+    
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> HungryManTwo(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> HungryManTwo getInstance(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> instance;
+    }
+}</span></pre>
+</div>
+<p>代码摘自&nbsp;<a href="https://www.journaldev.com/1377/java-singleton-design-pattern-best-practices-examples" target="_blank">Java Singleton Design Pattern Best Practices with Examples</a></p>
+<p>饿汉式二和饿汉式一的区别不大，饿汉式二的优势在于：允许在实例化对象前后做更多的事情，例如捕获异常、加载所需参数等。</p>
+<p>&nbsp;</p>
+<h2>懒汉式一（经典，线程不安全）</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LazyManOne {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> LazyManOne instance<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> LazyManOne(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> LazyManOne getInstance(){
+        </span><span style="color: #0000ff;">if</span> (instance == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            instance </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> LazyManOne();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> instance;
+    }
+}</span></pre>
+</div>
+<p>优点：简单易懂；懒加载</p>
+<p>缺点：线程不安全，例如多个线程可能会同时进入 if (xxxx == null) {} 代码块 &middot;&middot;&middot;&middot;&middot;&middot;</p>
+<p>&nbsp;</p>
+<h2>懒汉式二（线程安全）</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LazyManTwo {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> LazyManTwo instance<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> LazyManTwo(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">synchronized</span><span style="color: #000000;"> LazyManTwo getInstance(){
+        </span><span style="color: #0000ff;">if</span> (instance == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            instance </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> LazyManTwo();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> instance;
+    }
+}</span></pre>
+</div>
+<p>这是懒汉一的简单升级版本，弥补了懒汉一在线程安全上的缺陷。代码是正确的，但在性能上却有严重问题：在对象完成实例化之后就没必要再用同步锁了，之后每次调用 getInstance() 时额外的申请锁、释放锁、线程排队等都是没有意义的开销，并且这一开销会随着 getInstance() 被调用的次数变多不断增大。</p>
+<p>&nbsp;</p>
+<h2>双重校验锁（DCL，克服懒汉二的性能问题，在 jdk1.5 版本前不可用）</h2>
+<p>先看下面的代码- 原始 DCL(错误示范！) ：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DCL {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> DCL instance<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> DCL(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> DCL getInstance(){
+        </span><span style="color: #0000ff;">if</span> (instance == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">synchronized</span> (DCL.<span style="color: #0000ff;">class</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (instance == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    instance </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DCL();
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> instance;
+    }
+}</span></pre>
+</div>
+<p>这段代码看似一箭双雕地解决了懒汉一、二的问题：</p>
+<ol>
+<li>线程安全：万一多个线程进入了 if 代码块内，就同步再判断一次（所谓的双重校验锁）</li>
+<li>性能：初始化完成后就不用再访问同步代码了</li>
+</ol>
+<p>然而懒汉一的并发问题并不止&ldquo;多个线程共入 if 代码块&rdquo;那么简单。要完全做到线程安全还得给 instance 加上 volatile。</p>
+<p>&ldquo;内存可见性&rdquo;只是加 volatile 的一方面原因，如果仅仅是 instance 更新时间的迟早（甚至不更新）并不至于产生什么致命错误（重复初始化对象、方法返回 null），至多只是导致某个/些线程多排会儿队、进行第二次 if 校验，而在使用同一个锁的 synchronized 代码块之间是不存在内存可见性问题的（详细参考Java并发编程实践&nbsp;<span class="fontstyle0">3<span class="fontstyle1">.<span class="fontstyle0">1<span class="fontstyle1">.<span class="fontstyle0">3&nbsp;<span class="fontstyle1">Locking and visibility）。用 volatile 更重要地一方面是为了&ldquo;禁止指令重排序优化&rdquo;，因为 instance = new DCL() 并不是一条原子语句，这可能会造成一些错误（例如 DCL 还没初始化完，instance就已经指向对应内存块not null&nbsp;了），详细可以参考&nbsp;</span></span></span></span></span></span><a href="https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html" target="_blank">The "Double-Checked Locking is Broken" Declaration - CS@UMD</a>&nbsp;</p>
+<p>总而言之，加上 volatile 就可以修复这个问题，正确 DCL 代码一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DCL {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">volatile</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> DCL instance;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> DCL(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> DCL getInstance(){
+        </span><span style="color: #0000ff;">if</span> (instance == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">synchronized</span> (DCL.<span style="color: #0000ff;">class</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span> (instance == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    instance </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DCL();
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> instance;
+    }
+}</span></pre>
+</div>
+<p>正确 DCL 代码二（来自<a class="question-hyperlink" href="https://stackoverflow.com/questions/3578604/how-to-solve-the-double-checked-locking-is-broken-declaration-in-java">How to solve the &ldquo;Double-Checked Locking is Broken&rdquo; Declaration in Java</a>，据说性能比较好）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Double-check idiom for lazy initialization of instance fields</span>
+<span style="color: #0000ff;">private</span> <span style="color: #0000ff;">volatile</span><span style="color: #000000;"> FieldType field;
+FieldType getField() {
+    FieldType result </span>=<span style="color: #000000;"> field;
+    </span><span style="color: #0000ff;">if</span> (result == <span style="color: #0000ff;">null</span>) { <span style="color: #008000;">//</span><span style="color: #008000;"> First check (no locking)</span>
+        <span style="color: #0000ff;">synchronized</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+            result </span>=<span style="color: #000000;"> field;
+            </span><span style="color: #0000ff;">if</span> (result == <span style="color: #0000ff;">null</span>) <span style="color: #008000;">//</span><span style="color: #008000;"> Second check (with locking)</span>
+                field = result =<span style="color: #000000;"> computeFieldValue();
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2 id="静态内部类-static-nested-class">静态内部类</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Something {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LazyHolder {
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Something INSTANCE = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Something();
+    }
+    
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Something(){}
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Something getInstance() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> LazyHolder.INSTANCE;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2 id="枚举-Enum">枚举</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">enum</span><span style="color: #000000;"> Something {
+
+    INSTANCE;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> anyMethod() {
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Something st1 </span>=<span style="color: #000000;"> Something.INSTANCE;
+        st1.anyMethod();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;问题在于构造器不需要参数的吗？？？</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.singleton;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.lang.reflect.Constructor;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.lang.reflect.InvocationTargetException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">enum</span><span style="color: #000000;"> Something {
+
+    INSTANCE;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> anyMethod() {
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Something st1 </span>=<span style="color: #000000;"> Something.INSTANCE;
+        st1.anyMethod();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 尝试用反射来破坏单例模式</span>
+        <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Constructor[] constructors </span>=  Something.<span style="color: #0000ff;">class</span><span style="color: #000000;">.getConstructors();
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Constructor constructor : constructors) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> Below code will destroy the singleton pattern</span>
+                constructor.setAccessible(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                Object object </span>=<span style="color: #000000;"> constructor.newInstance();
+                System.out.println(object);
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IllegalAccessException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InstantiationException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>总结</h2>
+<p>所有懒汉单例模式缺点都比较多，不够简洁，一般都不选用。</p>
+<p>因此正常都选用静态内部类或者枚举，一是可以突出采用的设计模式，二是代码简单给力。</p>
+<p>&nbsp;</p>
+<p>参考</p>
+<ul>
+<li class="post-title"><a href="http://wuchong.me/blog/2014/08/28/how-to-correctly-write-singleton-pattern/" target="_blank">如何正确地写出单例模式 -&nbsp;<span class="site-title">Jark's Blog</span></a></li>
+<li class="post-title">
+<p class="entry-title "><a href="http://www.tekbroaden.com/singleton-java.html" target="_blank">你真的会写单例模式吗&mdash;&mdash;Java实现</a></p>
+</li>
+<li><a href="http://www.runoob.com/design-pattern/singleton-pattern.html" target="_blank">单例模式 - 菜鸟教程</a></li>
+<li></li>
+</ul>
+<p><span style="color: #222222; font-family: Lato, 'PingFang SC', 'Microsoft YaHei', sans-serif;"><span style="font-size: 22px;"><strong>&nbsp;</strong></span></span></p>

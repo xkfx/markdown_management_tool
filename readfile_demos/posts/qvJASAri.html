@@ -1,0 +1,49 @@
+<h2>背景</h2>
+<p>去年，因为毕业设计需要，多开了个github小号。</p>
+<p>时隔近1年多未使用，毕设已经结束，于是需要切换回大号。</p>
+<h2>问题</h2>
+<p>我登陆上自己的github账号（大号），然后随便复制了一个仓库地址，在本地某目录下执行</p>
+<p>git clone https://github.com/xkfx/xkfx.github.io.git</p>
+<p>进展顺利。</p>
+<p>xkfx.github.io文件夹出现在当前目录下。</p>
+<p>于是我切入文件夹对文件进行修改，修改完之后</p>
+<p>git add --all</p>
+<p>git commit -m "add all . test "</p>
+<p>都顺利运行，于是我继续执行</p>
+<p>git push origin master将修改提交到远程仓库</p>
+<p>不出意外，出现了问题</p>
+<p><span style="color: #ff0000;">fatal: AggregateException encountered.</span><br /><span style="color: #ff0000;">   ▒▒▒▒һ▒▒▒▒▒▒▒▒▒▒</span><br /><span style="color: #ff0000;">remote: Permission to xkfx/xkfx.github.io.git denied to 我的小号名字.</span><br /><span style="color: #ff0000;">fatal: unable to access 'https://github.com/xkfx/xkfx.github.io.git/': The requested URL returned error: 403</span></p>
+<p>也就是我本地的用户是我小号，没办法向大号的仓库提交修改。</p>
+<h2>解决办法</h2>
+<p>把本地用户修改回大号。</p>
+<h3>尝试1 - push成功了，但是用户没有改，仍然是作为小号提交的。</h3>
+<p>删掉系统存储的用户名和密码，重新登陆（参考https://www.jianshu.com/p/0301684cd208），具体步骤如下：</p>
+<ol>
+<li>先执行rundll32.exe keymgr.dll,KRShowKeyMgr</li>
+<li>在跳出的窗口中将Github相关条目删掉</li>
+<li>重新执行git push -u origin master跳出窗口提醒你重新登陆</li>
+
+
+
+
+
+</ol>
+<p>最开始是在一个<span style="color: #ff0000;">弹出窗口</span>输入大号用户名和密码，但是还是会有相同的403错误。</p>
+<p>于是我重启了cmd又执行git push -u origin maste并且在弹出<span style="color: #ff0000;">上面说的那个弹出窗口</span>后把它叉掉，然后就出现了下面这个情形（提示你在cmd中输入用户名，弹出窗输入密码），结果是提交成功了。<strong>但是</strong>用户并没有改，如标题所说，Github上还是显示小号提交。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202101/1042431-20210113115447953-436500154.png" alt="" width="393" height="150" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><span style="color: #c0c0c0;">重新cmd后关闭弹出窗口在cmd中输入用户名</span></p>
+<h3>尝试2</h3>
+<p>所以尝试1只是获得了push的权限，并没有彻底更改本地的git用户。</p>
+<p>于是我又借鉴这篇文章https://www.cnblogs.com/shenxiaolin/p/7896489.html</p>
+<p>具体步骤是：</p>
+<ol>
+<li>执行git config user.name检查当前用户，果然不是预期的</li>
+<li>git config &nbsp;--global user.name 你的目标用户名；</li>
+<li>git config &nbsp;--global user.email 你的目标邮箱名;</li>
+
+
+
+
+</ol>
+<p>做完上面的事情，重新测试，结果符合预期。</p>
+<p>&nbsp;</p>

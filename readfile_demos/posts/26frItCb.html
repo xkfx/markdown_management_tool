@@ -1,0 +1,181 @@
+<p>改编自学校实验，涉及一些字符集相关的问题。</p>
+<h2>索引</h2>
+<ol>
+<li><a href="#a1">建库</a></li>
+<li><a href="#a2">导入数据</a></li>
+<li><a href="#a3">最终脚本</a></li>
+</ol>
+<p>&nbsp;</p>
+<p>下载数据&nbsp;<a href="https://pan.baidu.com/s/1XKonxEFlnHlp2bbQM7FVJw" target="_blank">点击这里</a></p>
+<h2><a name="a1"></a>建库</h2>
+<p>create.sql</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">DATABASE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> orderdb;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">DATABASE</span><span style="color: #000000;"> orderdb;
+</span><span style="color: #0000ff;">USE</span><span style="color: #000000;"> orderdb;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> employee (
+        employee_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">),
+        employee_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">),
+        sex </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">),
+        birthday DATE,
+        address </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+        telephone </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+        hiredate DATE COMMENT </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">聘用日期</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        department </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">30</span><span style="color: #000000;">),
+        headship </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">10</span>) COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">职务</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        salary </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+
+        </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(employee_no)
+
+)       ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customer (
+        customer_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+        customer_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">),
+        telephone </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+        address </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">),
+        zip </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">6</span><span style="color: #000000;">),
+
+        </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(customer_no)
+
+)       ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> product (
+        product_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+        product_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">40</span><span style="color: #000000;">),
+        product_class </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+        product_price </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">7</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+
+)       ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+        order_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+        customer_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+        saler_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">),
+        order_date DATE,
+        order_sum </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">9</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+        invoiceno </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">10</span>) COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">发票号码</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+
+        </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_no),
+
+        </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (customer_no)
+                </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> customer(customer_no)
+
+)       ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_detail (
+        order_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+        product_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+        quantity </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+        price </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">7</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+
+        </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_no, product_no),
+
+        </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_no)
+                </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> order_master(order_no),
+        </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (product_no)
+                </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> product(product_no)
+
+)       ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8;</pre>
+</div>
+<p>Linux 环境下运行脚本：</p>
+<div class="cnblogs_code">
+<pre>root<span style="color: #008000;">@xkfx</span>:<span style="color: #808080;">~/</span>sql<span style="color: #808080;">-</span>exercise# <strong>readlink <span style="color: #808080;">-</span>f <span style="color: #0000ff;">create</span></strong><span style="color: #000000;"><strong>.sql</strong> 
+</span><span style="color: #808080;">/</span>root<span style="color: #808080;">/</span>sql<span style="color: #808080;">-</span>exercise<span style="color: #808080;">/</span><span style="color: #0000ff;">create</span><span style="color: #000000;">.sql # 复制这个路径
+root</span><span style="color: #008000;">@xkfx</span>:<span style="color: #808080;">~/</span>sql<span style="color: #808080;">-</span>exercise# mysql <span style="color: #808080;">-</span>uroot <span style="color: #808080;">-</span><span style="color: #000000;">p
+mysql </span><span style="color: #808080;">&gt;</span> <strong>SOURCE <span style="color: #808080;">/</span>root<span style="color: #808080;">/</span>sql<span style="color: #808080;">-</span>exercise<span style="color: #808080;">/</span><span style="color: #0000ff;">create</span>.sql</strong> # 运行脚本</pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="a2"></a>导入数据</h2>
+<p>在 Linux 环境下或许需要修改 txt 的编码格式：</p>
+<div class="cnblogs_code">
+<pre>root<span style="color: #008000;">@xkfx</span>:<span style="color: #808080;">~/</span>sql<span style="color: #808080;">-</span>exercise# <strong>iconv <span style="color: #808080;">-</span>f gb18030  <span style="color: #808080;">-</span>t utf8 customer.txt <span style="color: #808080;">-</span>o customer.txt</strong></pre>
+</div>
+<p>并且待导入的 txt 文件必须放在特定目录下，查看特定目录：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <strong>show variables <span style="color: #808080;">like</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">%secure%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+-----------------------+</span>
+<span style="color: #808080;">|</span> Variable_name    <span style="color: #808080;">|</span> Value                 <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+-----------------------+</span>
+<span style="color: #808080;">|</span> secure_auth      <span style="color: #808080;">|</span> <span style="color: #0000ff;">OFF</span>                   <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> secure_file_priv <span style="color: #808080;">|</span> <strong><span style="color: #808080;">/</span><span style="color: #ff00ff;">var</span><span style="color: #808080;">/</span>lib<span style="color: #808080;">/</span>mysql<span style="color: #808080;">-</span>files<span style="color: #808080;">/</span></strong> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+-----------------------+</span></pre>
+</div>
+<p>如上所示 /var/lib/mysql-files/ 就是特定的目录。导入数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">file_path</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> table_name
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">xxx</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">xxxx</span><span style="color: #ff0000;">'</span></pre>
+</div>
+<p>示范如下：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">USE</span><span style="color: #000000;"> orderdb
+Reading </span><span style="color: #0000ff;">table</span> information <span style="color: #0000ff;">for</span> completion <span style="color: #0000ff;">of</span> <span style="color: #0000ff;">table</span> <span style="color: #808080;">and</span> <span style="color: #0000ff;">column</span><span style="color: #000000;"> names
+You can turn </span><span style="color: #0000ff;">off</span> this feature <span style="color: #0000ff;">to</span> get a quicker startup <span style="color: #0000ff;">with</span> <span style="color: #808080;">-</span><span style="color: #000000;">A
+
+</span><span style="color: #0000ff;">Database</span><span style="color: #000000;"> changed
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/customer.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customer
+    </span><span style="color: #808080;">-&gt;</span> FIELDS TERMINATED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span>
+    <span style="color: #808080;">-&gt;</span> LINES TERMINATED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+Query OK, </span><span style="color: #800000; font-weight: bold;">10</span> rows affected, <span style="color: #800000; font-weight: bold;">10</span> warnings (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+Records: </span><span style="color: #800000; font-weight: bold;">10</span>  Deleted: <span style="color: #800000; font-weight: bold;">0</span>  Skipped: <span style="color: #800000; font-weight: bold;">0</span>  Warnings: <span style="color: #800000; font-weight: bold;">10</span></pre>
+</div>
+<p>&nbsp;这个时候试着 SELECT 一下 customer 中的数据，有很大概率是乱码的，这个时候不要着急，你需要重新设定字符集再来一遍：</p>
+<div class="cnblogs_code">
+<pre>SHOW VARIABLES <span style="color: #808080;">LIKE</span> "<span style="color: #808080;">%</span><span style="color: #0000ff;">char</span><span style="color: #808080;">%</span><span style="color: #000000;">"; # 显示字符集的设定情况
+</span><span style="color: #0000ff;">SET</span> character_set_database<span style="color: #808080;">=</span><span style="color: #000000;">utf8; # 像这样，把不是 utf8 的设定为 utf8
+</span><span style="color: #0000ff;">SET</span> NAMES <span style="color: #ff0000;">'</span><span style="color: #ff0000;">utf8</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+SOURCE </span><span style="color: #808080;">/</span>root<span style="color: #808080;">/</span>sql<span style="color: #808080;">-</span>exercise<span style="color: #808080;">/</span><span style="color: #0000ff;">create</span><span style="color: #000000;">.sql
+
+</span><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/customer.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customer
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>补充：平时创建表的时候要保证 &darr;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180430200948518-1681253764.png" alt="" width="631" height="319" /></p>
+<p>以及：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> xxxxx (
+  
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #ff0000;"><strong>DEFAULT CHARSET=utf8</strong></span>;</pre>
+</div>
+<p>才不容易出现乱码。</p>
+<p>&nbsp;</p>
+<h2><a name="a3"></a>最终脚本</h2>
+<p>为了方便起见，只需要把相应文件放在 特定位置，修改一下脚本中的路径，最后运行最终脚本就可以了：</p>
+<p>&nbsp;populate.sql&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/customer.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customer
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/employee.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> employee
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/ordermaster.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_master
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/product.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> product
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">LOAD</span> DATA INFILE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">/var/lib/mysql-files/orderdetail.txt</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">INTO</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_detail
+FIELDS TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">,</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+LINES TERMINATED </span><span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">\n</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>最终脚本.sql</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SET</span> character_set_database <span style="color: #808080;">=</span><span style="color: #000000;"> utf8; 
+</span><span style="color: #0000ff;">SET</span> character_set_server <span style="color: #808080;">=</span><span style="color: #000000;"> utf8;
+</span><span style="color: #0000ff;">SET</span> NAMES <span style="color: #ff0000;">'</span><span style="color: #ff0000;">utf8</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+SHOW VARIABLES </span><span style="color: #808080;">LIKE</span> "<span style="color: #808080;">%</span><span style="color: #0000ff;">char</span><span style="color: #808080;">%</span><span style="color: #000000;">"; 
+SOURCE </span><span style="color: #808080;">/</span>root<span style="color: #808080;">/</span>sql<span style="color: #808080;">-</span>exercise<span style="color: #808080;">/</span><span style="color: #0000ff;">create</span><span style="color: #000000;">.sql
+SOURCE </span><span style="color: #808080;">/</span>root<span style="color: #808080;">/</span>sql<span style="color: #808080;">-</span>exercise<span style="color: #808080;">/</span>populate.sql</pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> SOURCE <span style="color: #808080;">/</span>root<span style="color: #808080;">/</span>sql<span style="color: #808080;">-</span>exercise<span style="color: #808080;">/</span>orderdb.sql</pre>
+</div>
+<p>&nbsp;</p>

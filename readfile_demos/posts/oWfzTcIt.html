@@ -1,0 +1,113 @@
+<p>快排和归并排序一样采用经典的分治思想，不同的地方在于，归并排序的关键步骤在于&ldquo;合并&rdquo;，而快速排序的关键步骤在于&ldquo;分解&rdquo;。快速排序的最坏运行时间虽然是O(n^2)，不过在实际中基本都比归并排序快，并且可以通过随机选择主元来防止极端的输入。它的具体步骤如下&darr;</p>
+<p>分解：快排的核心步骤，其结果是数组被分成以某个数为基准的左右两个子数组（可能为空），其中左边的数都小于该基准数，右边的数都大于该基准数。详细步骤包括计算基准数下标，以及移动数组内元素。</p>
+<p>解决：通过递归调用快速排序，对两个子数组进行排序。</p>
+<p>合并：因为是原址排序，快速排序不需要合并操作。</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('56817f12-682f-48f2-95cd-9ea02f069ff3')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_56817f12-682f-48f2-95cd-9ea02f069ff3" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_56817f12-682f-48f2-95cd-9ea02f069ff3" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_56817f12-682f-48f2-95cd-9ea02f069ff3" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> partition(arr, start, end) {
+                let i </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> start;
+                let j </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> end </span><span style="background-color: #f5f5f5; color: #000000;">-</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">;
+                
+                let x </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> arr[i];
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">while</span><span style="background-color: #f5f5f5; color: #000000;"> (i </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;"> j) {
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">while</span><span style="background-color: #f5f5f5; color: #000000;"> (arr[j] </span><span style="background-color: #f5f5f5; color: #000000;">&gt;=</span><span style="background-color: #f5f5f5; color: #000000;"> x </span><span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span><span style="background-color: #f5f5f5; color: #000000;"> i </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;"> j) j</span><span style="background-color: #f5f5f5; color: #000000;">--</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    arr[i] </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> arr[j];
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">while</span><span style="background-color: #f5f5f5; color: #000000;"> (arr[i] </span><span style="background-color: #f5f5f5; color: #000000;">&lt;=</span><span style="background-color: #f5f5f5; color: #000000;"> x </span><span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span><span style="background-color: #f5f5f5; color: #000000;"> i </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;"> j) i</span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    arr[j] </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> arr[i];
+                }
+                arr[i] </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> x;
+                
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> i;
+            }
+                        
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> quicksort(arr, start, end) {
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (start </span><span style="background-color: #f5f5f5; color: #000000;">&gt;=</span><span style="background-color: #f5f5f5; color: #000000;"> end </span><span style="background-color: #f5f5f5; color: #000000;">-</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">) { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 只有一个元素就不用排了</span>
+                    <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;">;
+                } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    let mid </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> partition(arr, start, end); 
+                    quicksort(arr, start, mid); 
+                    quicksort(arr, mid </span><span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">, end);
+                }
+            }
+
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> randomNum(min, max) {
+                  let rg </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> max </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> min;
+                  let rand </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> Math.random();
+                  let digit </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> min </span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> Math.floor(rand </span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;"> rg); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">舍去</span>
+                  <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> digit;
+                  </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> min &le; digit &lt; max</span>
+<span style="background-color: #f5f5f5; color: #000000;">            }
+            
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> randomizedPartition(arr, start, end) {
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 随机选取主元</span>
+<span style="background-color: #f5f5f5; color: #000000;">                let i </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> randomNum(start, end);
+                let temp </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> arr[i];
+                arr[i] </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> arr[start];
+                arr[start] </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> temp;        
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> partition(arr, start, end);
+            }
+            
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> randomizedQuicksort(arr, start, end) {
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (start </span><span style="background-color: #f5f5f5; color: #000000;">&gt;=</span><span style="background-color: #f5f5f5; color: #000000;"> end </span><span style="background-color: #f5f5f5; color: #000000;">-</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">) { 
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;">;
+                } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    let mid </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> randomizedPartition(arr, start, end); 
+                    randomizedQuicksort(arr, start, mid); 
+                    randomizedQuicksort(arr, mid </span><span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">, end);
+                }                
+            }
+            
+            let test_arr </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> [</span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">];
+            randomizedQuicksort(test_arr, </span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, test_arr.length);
+            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">""</span><span style="background-color: #f5f5f5; color: #000000;">, test_arr);
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">快速排序js描述</span></div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.1-1</span></p>
+<p>略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.1-2</span></p>
+<p>输入规模为n，假设数组内元素都相同，则挖坑填数法的partition返回值依次为0，1，2，3，4，...，n-1，修改partition如下：</p>
+<div class="cnblogs_code">
+<pre>            <span style="color: #0000ff;">function</span><span style="color: #000000;"> partition(arr, start, end) {
+                </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> 数组元素全部相同的情况</span>
+                let k =<span style="color: #000000;"> start;
+                </span><span style="color: #0000ff;">for</span> (; k != end - 1; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">if</span> (arr[k] != arr[k + 1]) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">if</span> (k == end -1<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">return</span> Math.floor((start + end) / 2</strong><span style="color: #000000;"><strong>)
+                }</strong>
+                
+                let i </span>=<span style="color: #000000;"> start;
+                let j </span>= end - 1<span style="color: #000000;">;
+                
+                let x </span>=<span style="color: #000000;"> arr[i];
+                </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> j) {
+                    </span><span style="color: #0000ff;">while</span> (arr[j] &gt;= x &amp;&amp; i &lt; j) j--<span style="color: #000000;">;
+                    arr[i] </span>=<span style="color: #000000;"> arr[j];
+                    </span><span style="color: #0000ff;">while</span> (arr[i] &lt;= x &amp;&amp; i &lt; j) i++<span style="color: #000000;">;
+                    arr[j] </span>=<span style="color: #000000;"> arr[i];
+                }
+                arr[i] </span>=<span style="color: #000000;"> x;
+                
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+            }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.1-3</span></p>
+<p>i，j合作扫描了一遍数组，所以是theta n</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.1-4</span></p>
+<p>partition里的&gt;=和&lt;=互换一下。</p>

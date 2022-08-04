@@ -1,0 +1,207 @@
+<p>便于 COPY</p>
+<p>▲ 在所有操作<strong><span style="color: #ff0000;">之前</span></strong>：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SET</span> character_set_database<span style="color: #808080;">=</span>utf8;</pre>
+</div>
+<p>确保 &darr;</p>
+<p>mysql&gt;<span style="color: #0000ff;"> <strong>SHOW VARIABLES LIKE "%char%";</strong></span><br />+--------------------------+----------------------------+<br />| Variable_name            | Value                      |<br />+--------------------------+----------------------------+<br />| character_set_client     | utf8                       |<br />| character_set_connection | utf8                       |<br /><span style="color: #ff0000;">| character_set_database   | utf8                       |</span><br />| character_set_filesystem | binary                     |<br />| character_set_results    | utf8                       |<br />| character_set_server     | latin1                     |<br />| character_set_system     | utf8                       |<br />| character_sets_dir       | /usr/share/mysql/charsets/ |<br />+--------------------------+----------------------------+<br />8 rows in set (0.00 sec)</p>
+<p>&nbsp;</p>
+<p>▲&nbsp;创建数据库：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">DATABASE</span> sql_lab;</pre>
+</div>
+<p>▲&nbsp;然后创建表：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> chucang (
+    chucang_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+    enterprise_name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+    chucang_time DATE,
+    chucang_type </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span>) COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">企业性质，Y 公有，N 私有</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    enterprise_address </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    delivery_car_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+    chucang_sum </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(chucang_no)
+    
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <strong><span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span></strong><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> chucang_detail (
+    chucang_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+    product_no </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">12</span><span style="color: #000000;">),
+    price </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    quantity </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+    total </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (chucang_no) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> chucang(chucang_no)
+        
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <strong><span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8;</strong></pre>
+</div>
+<p>PS. 别漏掉<span style="background-color: #ffff99; color: #0000ff;"> DEFAULT CHARSET=utf8</span></p>
+<p>▲&nbsp;确认表是否创建：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span><span style="color: #ff00ff;"><strong> SHOW TABLES;
+</strong></span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+</span>
+<span style="color: #808080;">|</span> Tables_in_sql_lab <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+</span>
+<span style="color: #808080;">|</span> chucang           <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> chucang_detail    <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+</span>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.01</span> sec)</pre>
+</div>
+<p>&nbsp;▲&nbsp;插入数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> chucang
+    (chucang_no, 
+    enterprise_name, 
+    chucang_time, 
+    chucang_type,
+    enterprise_address,
+    delivery_car_no,
+    chucang_sum)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10001</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">enterprise_a</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1997-10-11</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Y</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">????</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">30005</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10002</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">enterprise_b</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1997-10-21</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Y</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">shanghai</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">30001</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10003</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">enterprise_c</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1997-10-22</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">N</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">beijin</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">30003</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10004</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">enterprise_d</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1997-10-23</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Y</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">shanghai</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">30004</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10005</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">enterprise_e</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1997-10-24</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">N</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">guangdong</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">30007</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">);
+    
+</span><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> chucang_detail
+    (chucang_no, 
+    product_no, 
+    price, 
+    quantity,
+    total)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10002</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">221</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">30.5</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10003</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">222</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">31.5</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">22</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10004</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">223</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">40.5</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10001</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">224</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">41.5</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;">),
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">10005</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">225</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">43.5</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">,
+    </span><span style="color: #800000; font-weight: bold;">0.00</span>);</pre>
+</div>
+<p>▲&nbsp;检查数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+<span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang_detail
+</span>LIMIT <span style="color: #800000; font-weight: bold;">3</span>\G</pre>
+</div>
+<p>&nbsp;▲&nbsp;修改表，插入一个新的字段/属性/列：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> chucang
+</span><span style="color: #0000ff;">ADD</span> enterprise_phone <span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">20</span>);</pre>
+</div>
+<p>▲&nbsp;检查是否修改成功：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> DESCRIBE chucang;</pre>
+</div>
+<p>&nbsp;▲ 更新数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">UPDATE</span><span style="color: #000000;"> chucang_detail
+</span><span style="color: #0000ff;">SET</span> total <span style="color: #808080;">=</span> quantity <span style="color: #808080;">*</span> price;</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">UPDATE</span><span style="color: #000000;"> chucang x, chucang_detail y
+</span><span style="color: #0000ff;">SET</span> x.chucang_sum <span style="color: #808080;">=</span><span style="color: #000000;"> y.total
+</span><span style="color: #0000ff;">WHERE</span> x.chucang_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.chucang_no;
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 多表示例 &uarr; &darr;</span>
+<span style="color: #0000ff;">UPDATE</span><span style="color: #000000;"> chucang x
+</span><span style="color: #0000ff;">SET</span> x.chucang_sum <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">SUM</span><span style="color: #000000;">(total)
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang_detail y
+    </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> y.chucang_no
+    </span><span style="color: #0000ff;">HAVING</span> y.chucang_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.chucang_no
+)</span></pre>
+</div>
+<p>▲ 最简单的查询：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> chucang_sum
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang
+</span><span style="color: #0000ff;">WHERE</span> chucang_type <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">Y</span><span style="color: #ff0000;">'</span></pre>
+</div>
+<p>▲ 排序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> chucang_no, enterprise_name
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> chucang_no</pre>
+</div>
+<p>▲ 子查询：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> chucang_no
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang_detail
+</span><span style="color: #0000ff;">WHERE</span> chucang_no <span style="color: #808080;">NOT</span> <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> chucang_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang
+)</span></pre>
+</div>
+<p>▲ 分组过滤 &amp; 聚集函数：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> chucang_type, <span style="color: #ff00ff;">SUM</span><span style="color: #000000;">(chucang_sum)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> chucang
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> chucang_type
+</span><span style="color: #0000ff;">HAVING</span> chucang_type <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">Y</span><span style="color: #ff0000;">'</span></pre>
+</div>
+<p>▲&nbsp;本题无关，联表查询示例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_no, employee_name, product_name, quantity, price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee x
+</span><strong><span style="color: #808080;">LEFT</span> <span style="color: #808080;">OUTER</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.employee_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.saler_no
+</span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">OUTER</span> <span style="color: #808080;">JOIN</span> order_detail z <span style="color: #0000ff;">ON</span> z.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+</span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">OUTER</span> <span style="color: #808080;">JOIN</span> product m <span style="color: #0000ff;">ON</span> m.product_no <span style="color: #808080;">=</span></strong><span style="color: #000000;"><strong> z.product_no</strong> 
+</span><span style="color: #0000ff;">WHERE</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span><span style="color: #000000;"> product_no)
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master w
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">OUTER</span> <span style="color: #808080;">JOIN</span> order_detail e <span style="color: #0000ff;">ON</span> w.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> e.order_no
+    </span><span style="color: #0000ff;">WHERE</span> w.saler_no <span style="color: #808080;">=</span> x.employee_no) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">5</span>
+<span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> employee_no</pre>
+</div>
+<p>&nbsp;</p>

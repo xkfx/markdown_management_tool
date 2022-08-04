@@ -1,0 +1,115 @@
+<h2>题&amp;例子</h2>
+<p>vector的拷贝</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">void</span> print(<span style="color: #0000ff;">string</span> lable, vector&lt;<span style="color: #0000ff;">int</span>&gt; &amp;<span style="color: #000000;">v) 
+{
+    cout </span>&lt;&lt; lable &lt;&lt;<span style="color: #000000;"> endl;    
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, v[i]);
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 拷贝vector， 不同于java里面的传递对象！ </span>
+    vector&lt;<span style="color: #0000ff;">int</span>&gt; ivec1; <span style="color: #008000;">//</span><span style="color: #008000;"> c++98没法用方便的初始化方式</span>
+    ivec1.push_back(<span style="color: #800080;">1</span><span style="color: #000000;">);
+    ivec1.push_back(</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+    ivec1.push_back(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+    
+    print(</span><span style="color: #800000;">"</span><span style="color: #800000;">ivec1:</span><span style="color: #800000;">"</span><span style="color: #000000;">, ivec1);
+    
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ivec2(ivec1);
+    ivec2[</span><span style="color: #800080;">1</span>] = <span style="color: #800080;">100000</span><span style="color: #000000;">;
+    print(</span><span style="color: #800000;">"</span><span style="color: #800000;">改变ivec2:</span><span style="color: #800000;">"</span><span style="color: #000000;">, ivec2);
+    print(</span><span style="color: #800000;">"</span><span style="color: #800000;">ivec1不变:</span><span style="color: #800000;">"</span><span style="color: #000000;">, ivec1);
+    
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec3 =<span style="color: #000000;"> ivec1;
+    ivec3[</span><span style="color: #800080;">1</span>] = <span style="color: #800080;">2222222</span><span style="color: #000000;">;
+    print(</span><span style="color: #800000;">"</span><span style="color: #800000;">改变ivec3:</span><span style="color: #800000;">"</span><span style="color: #000000;">, ivec3);
+    print(</span><span style="color: #800000;">"</span><span style="color: #800000;">ivec1不变:</span><span style="color: #800000;">"</span><span style="color: #000000;">, ivec1);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+Output
+
+ivec1:
+1 2 3
+
+改变ivec2:
+1 100000 3
+ivec1不变:
+1 2 3
+
+改变ivec3:
+1 2222222 3
+ivec1不变:
+1 2 3
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例题5-3 安迪的第一个字典。<sup>[1]</sup></p>
+<p>补充set和map的知识，它们之间的区别与联系<sup>[3]</sup>：</p>
+<ul>
+<li>set = 键</li>
+<li>map = 键 + 值</li>
+</ul>
+<p>两者的元素都会基于键从小到大自动排序。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">set</span>&gt;<span style="color: #000000;">
+#include </span>&lt;sstream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> dict;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s, buf;
+    
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> s) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> s里面存的是不规则的字符串，例如 Left." 又 例如Road.you
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 是包含标点的 </span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != s.length(); ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (isalpha(s[i])) { <span style="color: #008000;">//</span><span style="color: #008000;"> isalpha判断是否是字母，非字母返回零</span>
+                s[i] =<span style="color: #000000;"> tolower(s[i]);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                s[i] </span>= <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+        }        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 经改造后就变成 left  以及 road you
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 包含空格，并且可能一个s对应多个单词 </span>
+<span style="color: #000000;">        stringstream ss(s);
+        </span><span style="color: #0000ff;">while</span> (ss &gt;&gt; buf) { <span style="color: #008000;">//</span><span style="color: #008000;"> 从字符串流里逐个单词读入到buf中 </span>
+            dict.insert(buf); <span style="color: #008000;">//</span><span style="color: #008000;"> 插入到集合里 </span>
+<span style="color: #000000;">        }
+    }
+    
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">string</span>&gt;::iterator it = dict.begin(); it != dict.end(); ++<span style="color: #000000;">it) {
+        cout </span>&lt;&lt; *it &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.baidu.com/link?url=2wF_NYRmKHdHGzjo4GMx8-62iP9XcztuSmL5QszySrISh_izJXyXR7MmOIa27Z4Hh_68Xgo6ACoW7BTHZGsIqK&amp;wd=&amp;eqid=8aa5542d0004e835000000055e8c67c1" target="_blank" data-click="{
+			'F':'778717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6E',
+			'F3':'54E5243F',
+			'T':'1586259906',
+						'y':'BFDFCFF2'
+												}">安迪的第一个字典&nbsp;Andy's&nbsp;First&nbsp;Dictionary,&nbsp;UVa&nbsp;10815_博客园</a></p>
+<p>[2]&nbsp;<a href="https://zhidao.baidu.com/question/368355018.html" target="_blank">c++ cin返回值是多少_百度知道</a></p>
+<p>[3] <a href="https://blog.csdn.net/lirui7610/article/details/79932949" target="_blank">set和map的区别与联系</a></p>
+<p>&nbsp;</p>

@@ -1,0 +1,77 @@
+<h2>题</h2>
+<p>例题6-6 小球下落 - 模拟全过程，这里有几个关于二叉树的重要结论</p>
+<p>如果把结点从上到下从左到右编号为1,2,3&hellip;&hellip;，则结点k的左右子结点编号分别为2k和2k+1 （书上原话）</p>
+<p>将满二叉树的根结点定义第1层，则由第1层到第n层各层的结点数量，是一个首项为1，公比为2的等比数列。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+
+<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> maxd = <span style="color: #800080;">20</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span> s[<span style="color: #800080;">1</span> &lt;&lt; maxd]; <span style="color: #008000;">//</span><span style="color: #008000;"> 当小球在s[i]结点是应该往左还是往右</span>
+
+<span style="color: #0000ff;">void</span> print_tree(<span style="color: #0000ff;">int</span> ball_pos, <span style="color: #0000ff;">int</span><span style="color: #000000;"> tree_depth) {
+    </span><span style="color: #0000ff;">if</span> (tree_depth &gt; <span style="color: #800080;">5</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">int</span> no = <span style="color: #800080;">0</span>, cur = <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 前者为结点序号，后者为当前层的结点数 </span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= tree_depth; ++i) { <span style="color: #008000;">//</span><span style="color: #008000;"> 逐层打印 </span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt;= cur; ++<span style="color: #000000;">j) {
+            no</span>++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (no !=<span style="color: #000000;"> ball_pos) {
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> %3d(%c) </span><span style="color: #800000;">"</span>, no, s[no] ? <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span> : <span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">[%3d(%c)]</span><span style="color: #800000;">"</span>, no, s[no] ? <span style="color: #800000;">'</span><span style="color: #800000;">R</span><span style="color: #800000;">'</span> : <span style="color: #800000;">'</span><span style="color: #800000;">L</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            }            
+        }
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        
+        cur </span>= cur * <span style="color: #800080;">2</span><span style="color: #000000;">;
+    }    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">----------------------------\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}
+
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> D, I; <span style="color: #008000;">//</span><span style="color: #008000;"> D叶子深度 I小球个数</span>
+    
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> k, n;
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;D, &amp;I) == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">=== === === === === === === ===\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">=== depth: %d === Number of balls: %d ===\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, D, I);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">=== === === === === === === ===\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);    
+            
+        memset(s, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span>(s)); <span style="color: #008000;">//</span><span style="color: #008000;"> 初始是全部关闭的，关闭（也就是 s[i] 为 0 时）往左走 </span>
+<span style="color: #000000;">        
+        n </span>= (<span style="color: #800080;">1</span> &lt;&lt; D) - <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> n是最大结点编号，例如 D 为 3 时 n 就是 7</span>
+        
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != I; ++<span style="color: #000000;">i) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">=========第 %d 个小球==========\n</span><span style="color: #800000;">"</span>, i + <span style="color: #800080;">1</span><span style="color: #000000;">);    
+                    
+            k </span>= <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 用 k 标识小球的当前位置 </span>
+            
+            <span style="color: #0000ff;">while</span> (<span style="color: #800080;">1</span><span style="color: #000000;">) {
+                            
+                print_tree(k, D);
+                            
+                k </span>= s[k] ? k * <span style="color: #800080;">2</span> + <span style="color: #800080;">1</span> : k * <span style="color: #800080;">2</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 1 是右，0 是左，左右取决于开关一开始的状态             </span>
+<span style="color: #000000;">                                                             
+                s[k </span>/ <span style="color: #800080;">2</span>] = !s[k / <span style="color: #800080;">2</span>]; <span style="color: #008000;">//</span><span style="color: #008000;"> 小球离开那个 内结点后 开关状态改变</span>
+                
+                <span style="color: #0000ff;">if</span> (k &gt; n) <span style="color: #0000ff;">break</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 小球出界 </span>
+<span style="color: #000000;">            }
+        }
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">The final position of the last ball: %d\n</span><span style="color: #800000;">"</span>, k / <span style="color: #800080;">2</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 回滚到上一层的位置 </span>
+<span style="color: #000000;">    }     
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.zybang.com/question/d070e4f29bb862b4f652468ece8195dd.html">只有一个节点的二叉树的高度(深度)是为0还是1?_作业帮</a></p>
+<p>[2]&nbsp;<a href="https://zhidao.baidu.com/question/1049355164561069899.html">二叉树的前两个性质没搞清楚，层和深度区别在哪里？_百度知道</a></p>
+<p>[3]&nbsp;<a href="https://baike.baidu.com/item/%E6%BB%A1%E4%BA%8C%E5%8F%89%E6%A0%91/7773283?fr=aladdin">满二叉树_百度百科</a></p>
+<p>[4]&nbsp;<a href="https://baike.baidu.com/item/%E4%BA%8C%E5%8F%89%E6%A0%91/1602879?fr=aladdin">二叉树_百度百科</a></p>
+<p>[5]&nbsp;<a href="https://www.baidu.com/s?wd=%E7%AD%89%E6%AF%94%E6%95%B0%E5%88%97&amp;rsv_spt=1&amp;rsv_iqid=0xee0c813000014161&amp;issp=1&amp;f=8&amp;rsv_bp=1&amp;rsv_idx=2&amp;ie=utf-8&amp;tn=baiduhome_pg&amp;rsv_enter=1&amp;rsv_dl=tb&amp;rsv_sug3=21&amp;rsv_sug1=18&amp;rsv_sug7=101&amp;rsv_sug2=0&amp;inputT=4408&amp;rsv_sug4=4408">等比数列_百度搜索</a></p>
+<p>[6]&nbsp;<a href="https://blog.csdn.net/YHxiaohao/article/details/79861154" target="_blank">DEV C++编写程序出现 [errror]Id returned 1 exit status错误可能出现的原因_C/C++_YHxiaohao的博客-CSDN博客</a></p>

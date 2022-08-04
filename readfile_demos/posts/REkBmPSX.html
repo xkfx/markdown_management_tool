@@ -1,0 +1,10 @@
+<p>问题：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225151654667-1981018578.png" alt="" width="770" height="114" loading="lazy" /></p>
+<p>Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.<br />remote: Please see <a href="https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/" target="_blank">https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/</a> for more information.</p>
+<p>办法：</p>
+<p>访问相应网站，按步骤创建personal access token，记得把&nbsp;personal access token保存下来。</p>
+<p>然后重新git push -u origin master，会提示你输入用户名和密码，不管是用户登录密码，还是OpenSSH都直接把token粘贴过去。</p>
+<p>然后就可以了。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202112/1042431-20211225151936152-1018805840.png" alt="" width="351" height="140" loading="lazy" /></p>
+<p>有个困惑是，我有些仓库是没设置之前也可以正常Push的。</p>
+<p>&nbsp;</p>

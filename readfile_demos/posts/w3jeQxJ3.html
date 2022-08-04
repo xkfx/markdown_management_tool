@@ -1,0 +1,29 @@
+<p><span style="background-color: #ffff99;">Java 中的继承</span><br />1、作用：代码复用。</p>
+<p>&nbsp;</p>
+<p>2、语法：extends关键字。</p>
+<p>&nbsp;</p>
+<p>3、注意点：<span style="text-decoration: underline;">私有（private）财产（methods、fields）不可继承。</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的方法重写</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff99;">Java 中的继承初始化顺序</span></p>
+<p>1、摘：<span style="text-decoration: underline;">父类对象-&gt;属性初始化-&gt;构造方法-&gt;子类对象-&gt;属性初始化-&gt;构造方法。</span></p>
+<p>&nbsp;</p>
+<p>2、其实是子类构造隐式调用父类的构造器super.constructor()。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的 final 的使用</span></p>
+<p>1、修饰类和方法：不允许继承、重写。</p>
+<p>&nbsp;</p>
+<p>2、修饰field：<span style="text-decoration: underline;">必须初始化（属性初始化、构造器初始化二选一），不可改变值。</span></p>
+<p>&nbsp;</p>
+<p>3、使用在局部：即方法内部，看当成c++中的<strong>const</strong>来用。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的 super 的使用</span><br />1、子类在构造器中必须调用父类的构造器,而且必须要放在构造方法的<span style="text-decoration: underline;">第一行</span>。</p>
+<p>&nbsp;</p>
+<p>2、如果不调用则隐式的调用父类无参数构造器。（意味着父类没有无参构造方法的时候<span style="text-decoration: underline;">子类就必须显式调用父类有参数的构造器</span>）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的 Object 类 Ⅰ</span> <br />1、idea也可以直接导入toString()方法：右键<span style="text-decoration: underline;">generate</span>。</p>
+<p>&nbsp;</p>
+<p>2、有些代码永远不需要自己去写，实在要写也可以百度到。（这也算是一种面向对象思想吧？）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的 Object 类 Ⅱ</span><br />1、equals方法用generate导入。</p>

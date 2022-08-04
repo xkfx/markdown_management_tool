@@ -1,0 +1,7 @@
+<p>该类的目标是格式化LogEvent并返回（字符串）结果。结果的格式取决于具体的模式字符串（pattern string）。这里的模式字符串与c语言中printf函数的转换模式非常相似。模式字符串由&ldquo;转换说明符&rdquo;和&ldquo;格式控制表达式&rdquo;组成。（&nbsp;\t, \n, \r, \f都可以应用在pattern string里，\\表示单个反斜杠）</p>
+<p>每个转换说明符以百分号(%)开头，然后是<strong>可选的</strong>格式修饰符和转换字符。转换字符指定数据类型，例如类别、优先级、日期、线程名称等。格式修饰符控制字段宽度、填充、左对齐和右对齐。通过设置<a href="https://logging.apache.org/log4j/2.x/manual/configuration.html#AutomaticReconfiguration" target="_blank">Automatic Reconfiguration</a>可以方便地<strong>实时</strong>修改输出内容、格式。</p>
+<p>例如%m%n通常作为默认的pattern。（\n和%n都可以表达换行，%m则表示原消息字符串）</p>
+<p>当模式为%m%n时，logger.debug("Message 1");的输出为Message 1</p>
+<p>保持logger.debug("Message 1");不变动态修改模式字符串。修改为<strong>%-5p [%t]: %m%n</strong>输出是DEBUG [http-nio-8080-exec-8]:&nbsp;Message 1（%p代表logger优先级，%t表示线程名，-5表示左对齐至少占5个字符宽）</p>
+<p>如果模式字符串不包含用于处理被记录的Throwable的说明符，模式的解析就会表现得像<strong>%xEx</strong>说明符被添加到模式字符串末尾一样。要完全禁止Throwable的格式化，只需在模式字符串中添加<strong>%ex{0}</strong>作为说明符。</p>
+<p>详尽的文档：<a href="https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout" target="_blank">https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout</a></p>

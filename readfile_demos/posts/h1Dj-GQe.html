@@ -1,0 +1,366 @@
+<p><span style="color: #ff0000; background-color: #ffff00;">《c++ primer, 5E》</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">第68页到第81页，笔记:</span></p>
+<p>1、读取未知量的string对象示例</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+    {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> word;
+        </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> word)
+            cout </span>&lt;&lt; word &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、使用getline读取一行示例</p>
+<div class="cnblogs_code">
+<pre>    #include&lt;iostream&gt;
+    <span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+    </span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+    </span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+    #include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+    <span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+
+                </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+                {
+                        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> line;
+                        </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(getline(cin , line))
+                                    cout </span>&lt;&lt; line &lt;&lt;<span style="color: #000000;"> endl;
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }</span></pre>
+</div>
+<p>3、string_A.empty()、string_A.size()</p>
+<p>4、string_A.size()返回值是一个无符号的整数，不要在表达式中与有符号的int型混用</p>
+<p>5、string比较大小按照字典序，大小写敏感！</p>
+<p>6、字符串字面值与string是不同的类型。不能把字面值直接相加，必须确保每个加法运算 + 两侧的运算对象至少有一个是string</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">遇到的问题：</span><br /> </p>
+<p><span style="color: #ff0000; background-color: #ffff00;">课后练习:</span></p>
+<p><span style="background-color: #ffff00;">练习3.1</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> val = <span style="color: #800080;">50</span>; val &lt;= <span style="color: #800080;">100</span>; ++<span style="color: #000000;">val)
+        sum </span>+=<span style="color: #000000;"> val;
+    cout </span>&lt;&lt; sum &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> val = <span style="color: #800080;">10</span>; val &gt;= <span style="color: #800080;">0</span>; --<span style="color: #000000;">val)
+        cout </span>&lt;&lt; val &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a, b;
+    cin </span>&gt;&gt; a &gt;&gt;<span style="color: #000000;"> b;
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> val = a; val &lt;= b; ++<span style="color: #000000;">val)
+        cout </span>&lt;&lt; val &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data data;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cin &gt;&gt; data;</span>
+    cin &gt;&gt; data.bookNo &gt;&gt; data.units_sold &gt;&gt;<span style="color: #000000;"> data.price;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cout &lt;&lt; data;</span>
+    cout &lt;&lt; data.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; data.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; data.price &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data data1, data2;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cin &gt;&gt; data1 &gt;&gt; data2;</span>
+    cin &gt;&gt; data1.bookNo &gt;&gt; data1.units_sold &gt;&gt;<span style="color: #000000;"> data1.price;
+    cin </span>&gt;&gt; data2.bookNo &gt;&gt; data2.units_sold &gt;&gt;<span style="color: #000000;"> data2.price;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cout &lt;&lt; data1 + data2;</span>
+    cout &lt;&lt; data1.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; data1.units_sold + data2.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; data1.price &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>6</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data data, sum_data;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt; data.bookNo &gt;&gt; data.units_sold &gt;&gt;<span style="color: #000000;"> data.price)
+        sum_data.units_sold </span>+=<span style="color: #000000;"> data.units_sold;
+    cout </span>&lt;&lt; data.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; sum_data.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; data.price &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>7</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> num = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> last_bookNo;
+    Sales_data temp_data;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 读取第一个
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cin &gt;&gt; temp_data;</span>
+    cin &gt;&gt; temp_data.bookNo &gt;&gt; temp_data.units_sold &gt;&gt;<span style="color: #000000;"> temp_data.price;
+    last_bookNo </span>=<span style="color: #000000;"> temp_data.bookNo;
+    num </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> while(cin &gt;&gt; temp_data){</span>
+    <span style="color: #0000ff;">while</span>(cin &gt;&gt; temp_data.bookNo &gt;&gt; temp_data.units_sold &gt;&gt;<span style="color: #000000;"> temp_data.price){
+        </span><span style="color: #0000ff;">if</span>(temp_data.bookNo ==<span style="color: #000000;"> last_bookNo){
+            </span>++<span style="color: #000000;">num;
+        }
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            cout </span>&lt;&lt; last_bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> num;
+            last_bookNo </span>=<span style="color: #000000;"> temp_data.bookNo;
+            num </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+    }
+    cout </span>&lt;&lt; last_bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> num;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>8</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cerr;
+</span><span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data total;
+    </span><span style="color: #0000ff;">if</span>(cin &gt;&gt; total.bookNo &gt;&gt; total.units_sold &gt;&gt;<span style="color: #000000;"> total.price){
+        Sales_data trans;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> while(cin &gt;&gt; total)</span>
+        <span style="color: #0000ff;">while</span>(cin &gt;&gt; trans.bookNo &gt;&gt; trans.units_sold &gt;&gt;<span style="color: #000000;"> trans.price){
+            </span><span style="color: #0000ff;">if</span>(total.bookNo ==<span style="color: #000000;"> trans.bookNo){
+                total.units_sold </span>+=<span style="color: #000000;"> trans.units_sold;
+            }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cout &lt;&lt; total &lt;&lt; std::endl;</span>
+                cout &lt;&lt; total.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.price &lt;&lt;<span style="color: #000000;"> endl;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> total = trans;</span>
+                total =<span style="color: #000000;"> trans;
+            }
+        }
+        cout </span>&lt;&lt; total.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.price &lt;&lt;<span style="color: #000000;"> endl;
+    }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+        cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.2</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>    #include&lt;iostream&gt;
+    <span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+    </span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+    </span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+    #include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+    <span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+
+                </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+                {
+                        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> line;
+                        </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(getline(cin , line))
+                                    cout </span>&lt;&lt; line &lt;&lt;<span style="color: #000000;"> endl;
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+    {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> word;
+        </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> word)
+            cout </span>&lt;&lt; word &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.3</span></p>
+<p>string类的输入运算符将空白字符作为分隔符，</p>
+<p>string类的getline函数将空白符作为字符读入字符串。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">练习3.4</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s1, s2;
+    cin </span>&gt;&gt; s1 &gt;&gt;<span style="color: #000000;"> s2;
+    </span><span style="color: #0000ff;">if</span>(s1 ==<span style="color: #000000;"> s2)
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Equal</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(s1 &gt;<span style="color: #000000;"> s2)
+        cout </span>&lt;&lt; s1 &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        cout </span>&lt;&lt; s2 &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s1, s2;
+    cin </span>&gt;&gt; s1 &gt;&gt;<span style="color: #000000;"> s2;
+    </span><span style="color: #0000ff;">if</span>(s1.size() ==<span style="color: #000000;"> s2.size())
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Equal</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(s1.size() &gt;<span style="color: #000000;"> s2.size())
+        cout </span>&lt;&lt; s1 &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        cout </span>&lt;&lt; s2 &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>练习 3.5</p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> sum_string;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> temp_string;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> temp_string)
+        sum_string </span>+=<span style="color: #000000;"> temp_string;
+    cout </span>&lt;&lt; sum_string &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> sum_string;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> temp_string;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> temp_string)
+        sum_string </span>+= temp_string + <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; sum_string &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

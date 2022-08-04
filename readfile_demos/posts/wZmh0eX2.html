@@ -1,0 +1,36 @@
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;<span style="color: #000000;">
+#include</span>&lt;stdlib.h&gt;
+
+<span style="color: #0000ff;">void</span> main(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> locate</span>
+    <span style="color: #0000ff;">char</span> infile[<span style="color: #800080;">20</span>], outfile[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    gets(infile);
+    gets(outfile);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> open</span>
+    FILE *<span style="color: #0000ff;">in</span>, *<span style="color: #0000ff;">out</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">in</span> = fopen(infile, <span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">in</span> ==<span style="color: #000000;"> NULL)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">error: without infile\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">infile has open.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">out</span> = fopen(outfile, <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> operate</span>
+    <span style="color: #0000ff;">while</span>(!feof(<span style="color: #0000ff;">in</span><span style="color: #000000;">))
+        fputc(fgetc(</span><span style="color: #0000ff;">in</span>), <span style="color: #0000ff;">out</span><span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> close</span>
+    <span style="color: #0000ff;">if</span>(fclose(<span style="color: #0000ff;">in</span>) == <span style="color: #800080;">0</span> &amp;&amp; fclose(<span style="color: #0000ff;">out</span>) == <span style="color: #800080;">0</span><span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">close successfully\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">fclose: error\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;关于文件的概念:</p>
+<p>文件的签名，</p>
+<p>文件的存储形式，</p>
+<p>文件的操作方式。</p>

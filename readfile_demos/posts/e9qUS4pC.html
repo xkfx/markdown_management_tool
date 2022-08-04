@@ -1,0 +1,400 @@
+<p>饮水思源：<a class="navbar-brand" href="http://jinxuliang.com/">金老师的自学网站</a></p>
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">编写一个简单的控制台程序。</a></li>
+<li><a href="#anchor1">日期计算的结构化编程实现</a></li>
+<li><a href="#anchor2">日期计算机面向对象编程实现</a></li>
+<li><a href="#anchor3">直接应用已有组件</a></li>
+</ul>
+</div>
+<h2><a name="anchor0"></a>1、编写一个简单的控制台程序。</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            Console.Title </span>= <span style="color: #800000;">"</span><span style="color: #800000;">my title</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> DateTime.Now;
+            Console.ForegroundColor </span>=<span style="color: #000000;"> System.ConsoleColor.DarkGreen;
+            Console.BackgroundColor </span>=<span style="color: #000000;"> System.ConsoleColor.White;
+
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">Hello worldd 2019-04-28</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            
+            String userinput </span>=<span style="color: #000000;"> Console.ReadLine();
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">{0}这是两个占位符号{1}</span><span style="color: #800000;">"</span><span style="color: #000000;">, userinput, userinput.Length);
+
+            Console.Beep();
+            Console.ReadKey(); </span><span style="color: #008000;">//</span><span style="color: #008000;"> ReadKey是Console类的另一个方法，用于接收按键</span>
+            Console.ReadKey(<span style="color: #0000ff;">true</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 添加true参数不回显所接收按键
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 生成的.exe文件可运行在任何具有相应版本.NET的计算机上</span>
+<span style="color: #000000;">        }
+    }
+}</span></pre>
+</div>
+<h2><a name="anchor1"></a>2、日期计算的结构化编程实现</h2>
+<p>结构化编程一般设计步骤：</p>
+<ol>
+<li>先设计数据结构。</li>
+<li>基于数据结构确定算法。简单的情形是，将人的计算方法转化为计算机算法，每个算法步骤用一个函数实现。</li>
+<li>进一步细化与调整方案</li>
+<li>将整体装配成一个函数，得到最终设计方案</li>
+</ol>
+<p>PPT截图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201904/1042431-20190429101239903-453605484.png" alt="" width="789" height="367" /></p>
+<p>开发时，依据依赖关系由下至上。通常情况，避免跨层调用。</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('9fe0e89b-bdc1-4e49-a0ac-722a8ac2e732')"><img id="code_img_closed_9fe0e89b-bdc1-4e49-a0ac-722a8ac2e732" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_9fe0e89b-bdc1-4e49-a0ac-722a8ac2e732" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('9fe0e89b-bdc1-4e49-a0ac-722a8ac2e732',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_9fe0e89b-bdc1-4e49-a0ac-722a8ac2e732" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> CalculateDaysForSP
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">封装日期信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">struct</span><span style="color: #000000;"> MyDate
+    {
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> Year;    <span style="color: #008000;">//</span><span style="color: #008000;">年</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> Month;   <span style="color: #008000;">//</span><span style="color: #008000;">月</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> Day;     <span style="color: #008000;">//</span><span style="color: #008000;">日</span>
+<span style="color: #000000;">    }
+
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">MyDate.cs</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('71a2ba57-f1bc-4ad9-a98d-24e9bbe5aea2')"><img id="code_img_closed_71a2ba57-f1bc-4ad9-a98d-24e9bbe5aea2" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_71a2ba57-f1bc-4ad9-a98d-24e9bbe5aea2" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('71a2ba57-f1bc-4ad9-a98d-24e9bbe5aea2',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_71a2ba57-f1bc-4ad9-a98d-24e9bbe5aea2" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> CalculateDaysForSP
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">存放每月天数，第一个元素为0是因为数组下标从0起，而我们希望按月份直接获取天数</span>
+        <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span>[] months = { <span style="color: #800080;">0</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">28</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span><span style="color: #000000;"> };
+
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            MyDate d1, d2;     </span><span style="color: #008000;">//</span><span style="color: #008000;">起始日期和结束日期
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">1999年5月10日</span>
+            d1.Year = <span style="color: #800080;">1999</span><span style="color: #000000;">;
+            d1.Month </span>= <span style="color: #800080;">5</span><span style="color: #000000;">;
+            d1.Day </span>= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">2006年3月8日</span>
+            d2.Year = <span style="color: #800080;">2006</span><span style="color: #000000;">;
+            d2.Month </span>= <span style="color: #800080;">3</span><span style="color: #000000;">;
+            d2.Day </span>= <span style="color: #800080;">8</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">计算结果</span>
+            <span style="color: #0000ff;">int</span> days =<span style="color: #000000;"> CalculateDaysOfTwoDate(d1, d2);
+
+            </span><span style="color: #0000ff;">string</span> str = <span style="color: #800000;">"</span><span style="color: #800000;">{0}年{1}月{2}日到{3}年{4}月{5}日共有天数：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            str </span>=<span style="color: #000000;"> String.Format(str, d1.Year, d1.Month, d1.Day, d2.Year, d2.Month, d2.Day);
+            Console.WriteLine(str </span>+<span style="color: #000000;"> days);
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">暂停,敲任意键结束</span>
+<span style="color: #000000;">            Console.ReadKey();
+        }
+
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">计算两个日期中的整天数</span>
+        <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> CalculateDaysOfTwoDate(MyDate beginDate, MyDate endDate)
+        {
+            </span><span style="color: #0000ff;">int</span> days = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            days </span>=<span style="color: #000000;"> CalculateDaysOfTwoYear(beginDate.Year, endDate.Year);
+            </span><span style="color: #0000ff;">if</span> (beginDate.Year ==<span style="color: #000000;"> endDate.Year)
+
+                days </span>+= CalculateDaysOfTwoMonth(beginDate, endDate, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                days </span>+= CalculateDaysOfTwoMonth(beginDate, endDate, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> days;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">计算两年之间的整年天数，不足一年的去掉</span>
+        <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> CalculateDaysOfTwoYear(<span style="color: #0000ff;">int</span> beginYear, <span style="color: #0000ff;">int</span><span style="color: #000000;"> endYear)
+        {
+            </span><span style="color: #0000ff;">int</span> days = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = beginYear + <span style="color: #800080;">1</span>; i &lt;= endYear - <span style="color: #800080;">1</span>; i++<span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsLeapYear(i))
+                    days </span>+= <span style="color: #800080;">366</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                    days </span>+= <span style="color: #800080;">365</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> days;
+        }
+
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">根据两个日期，计算出这两个日期之间的天数</span>
+        <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> CalculateDaysOfTwoMonth(MyDate beginDate, MyDate endDate, <span style="color: #0000ff;">bool</span><span style="color: #000000;"> IsInOneYear)
+        {
+            </span><span style="color: #0000ff;">int</span> days = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">对于同一月，天数直接相减</span>
+            <span style="color: #0000ff;">if</span> (beginDate.Month ==<span style="color: #000000;"> endDate.Month)
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsInOneYear)
+                    </span><span style="color: #0000ff;">return</span> endDate.Day -<span style="color: #000000;"> beginDate.Day;
+                </span><span style="color: #0000ff;">else</span>
+                    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsLeapYear(beginDate.Year))
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">366</span> + (endDate.Day -<span style="color: #000000;"> beginDate.Day);
+                </span><span style="color: #0000ff;">else</span>
+                    <span style="color: #0000ff;">return</span> <span style="color: #800080;">365</span> + (endDate.Day -<span style="color: #000000;"> beginDate.Day);
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">不同月</span>
+            <span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsInOneYear)
+            {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">同一年</span>
+                <span style="color: #0000ff;">for</span> (i = beginDate.Month; i &lt;= endDate.Month; i++<span style="color: #000000;">)
+                {
+                    days </span>+=<span style="color: #000000;"> months[i];
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;">处理闰二月</span>
+                    <span style="color: #0000ff;">if</span> ((IsLeapYear(beginDate.Year) &amp;&amp; (i == <span style="color: #800080;">2</span><span style="color: #000000;">)))
+                        days </span>+= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去月初到起始日的天数</span>
+                days -=<span style="color: #000000;"> beginDate.Day;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去结束日到月底的天数</span>
+                days -= months[endDate.Month] -<span style="color: #000000;"> endDate.Day;
+            }
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+            {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">不同年
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">计算到年底的天数</span>
+                <span style="color: #0000ff;">for</span> (i = beginDate.Month; i &lt;= <span style="color: #800080;">12</span>; i++<span style="color: #000000;">)
+                    days </span>+=<span style="color: #000000;"> months[i];
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去月初到起始日的天数</span>
+                days -=<span style="color: #000000;"> beginDate.Day;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">从年初到结束月的天数</span>
+                <span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">1</span>; i &lt;= endDate.Month; i++<span style="color: #000000;">)
+                    days </span>+=<span style="color: #000000;"> months[i];
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去结束日到月底的天数</span>
+                days -= months[endDate.Month] -<span style="color: #000000;"> endDate.Day;
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> days;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">根据年数判断其是否为闰年</span>
+        <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">bool</span> IsLeapYear(<span style="color: #0000ff;">int</span><span style="color: #000000;"> year)
+        {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">如果年数能被400整除，是闰年</span>
+            <span style="color: #0000ff;">if</span> (year % <span style="color: #800080;">400</span> == <span style="color: #800080;">0</span><span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">能被4整除，但不能被100整除，是闰年</span>
+            <span style="color: #0000ff;">if</span> (year % <span style="color: #800080;">4</span> == <span style="color: #800080;">0</span> &amp;&amp; year % <span style="color: #800080;">100</span> != <span style="color: #800080;">0</span><span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">其他情况，是平年</span>
+            <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Program.cs</span></div>
+<h2><a name="anchor2"></a>3、日期计算机面向对象编程实现</h2>
+<p>MyDate.cs同上，但命名空间改为CalculateDaysForOO</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('707230d8-0e06-4675-86c0-2653b5b5dfae')"><img id="code_img_closed_707230d8-0e06-4675-86c0-2653b5b5dfae" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_707230d8-0e06-4675-86c0-2653b5b5dfae" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('707230d8-0e06-4675-86c0-2653b5b5dfae',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_707230d8-0e06-4675-86c0-2653b5b5dfae" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> CalculateDaysForOO
+{
+    </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+    <span style="color: #808080;">///</span><span style="color: #008000;"> 用于完成日期计算
+    </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DateCalculator
+    {
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">存放每月天数，第一个元素为0是因为数组下标从0起，而我们希望按月份直接获取天数</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span>[] months = { <span style="color: #800080;">0</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">28</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span>, <span style="color: #800080;">30</span>, <span style="color: #800080;">31</span><span style="color: #000000;"> };
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">计算两个日期中的整天数</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> CalculateDaysOfTwoDate(MyDate beginDate, MyDate endDate)
+        {
+            </span><span style="color: #0000ff;">int</span> days = <span style="color: #800080;">0</span><span style="color: #000000;">; 
+            days </span>=<span style="color: #000000;"> CalculateDaysOfTwoYear(beginDate.Year, endDate.Year);
+            </span><span style="color: #0000ff;">if</span> (beginDate.Year ==<span style="color: #000000;"> endDate.Year)
+
+                days </span>+= CalculateDaysOfTwoMonth(beginDate, endDate, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                days </span>+= CalculateDaysOfTwoMonth(beginDate, endDate, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> days;
+        }
+
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">计算两年之间的整年天数，不足一年的去掉</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> CalculateDaysOfTwoYear(<span style="color: #0000ff;">int</span> beginYear, <span style="color: #0000ff;">int</span><span style="color: #000000;"> endYear)
+        {
+            </span><span style="color: #0000ff;">int</span> days = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = beginYear + <span style="color: #800080;">1</span>; i &lt;= endYear - <span style="color: #800080;">1</span>; i++<span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsLeapYear(i))
+                    days </span>+= <span style="color: #800080;">366</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                    days </span>+= <span style="color: #800080;">365</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> days;
+        }
+
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">根据两个日期，计算出这两个日期之间的天数</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> CalculateDaysOfTwoMonth(MyDate beginDate, MyDate endDate, <span style="color: #0000ff;">bool</span><span style="color: #000000;"> IsInOneYear)
+        {
+            </span><span style="color: #0000ff;">int</span> days = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">对于同一月，天数直接相减</span>
+            <span style="color: #0000ff;">if</span> (beginDate.Month ==<span style="color: #000000;"> endDate.Month)
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsInOneYear)
+                    </span><span style="color: #0000ff;">return</span> endDate.Day -<span style="color: #000000;"> beginDate.Day;
+                </span><span style="color: #0000ff;">else</span>
+                    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsLeapYear(beginDate.Year))
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">366</span> + (endDate.Day -<span style="color: #000000;"> beginDate.Day);
+                </span><span style="color: #0000ff;">else</span>
+                    <span style="color: #0000ff;">return</span> <span style="color: #800080;">365</span> + (endDate.Day -<span style="color: #000000;"> beginDate.Day);
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">不同月</span>
+            <span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (IsInOneYear)
+            {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">同一年</span>
+                <span style="color: #0000ff;">for</span> (i = beginDate.Month; i &lt;= endDate.Month; i++<span style="color: #000000;">)
+                {
+                    days </span>+=<span style="color: #000000;"> months[i];
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;">处理闰二月</span>
+                    <span style="color: #0000ff;">if</span> ((IsLeapYear(beginDate.Year) &amp;&amp; (i == <span style="color: #800080;">2</span><span style="color: #000000;">)))
+                        days </span>+= <span style="color: #800080;">1</span><span style="color: #000000;">;
+                }
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去月初到起始日的天数</span>
+                days -=<span style="color: #000000;"> beginDate.Day;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去结束日到月底的天数</span>
+                days -= months[endDate.Month] -<span style="color: #000000;"> endDate.Day;
+            }
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+            {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">不同年
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">计算到年底的天数</span>
+                <span style="color: #0000ff;">for</span> (i = beginDate.Month; i &lt;= <span style="color: #800080;">12</span>; i++<span style="color: #000000;">)
+                    days </span>+=<span style="color: #000000;"> months[i];
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去月初到起始日的天数</span>
+                days -=<span style="color: #000000;"> beginDate.Day;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">从年初到结束月的天数</span>
+                <span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">1</span>; i &lt;= endDate.Month; i++<span style="color: #000000;">)
+                    days </span>+=<span style="color: #000000;"> months[i];
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">减去结束日到月底的天数</span>
+                days -= months[endDate.Month] -<span style="color: #000000;"> endDate.Day;
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> days;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">根据年数判断其是否为闰年</span>
+        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">bool</span> IsLeapYear(<span style="color: #0000ff;">int</span><span style="color: #000000;"> year)
+        {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">如果年数能被400整除，是闰年</span>
+            <span style="color: #0000ff;">if</span> (year % <span style="color: #800080;">400</span> == <span style="color: #800080;">0</span><span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">能被4整数，但不能被100整除，是闰年</span>
+            <span style="color: #0000ff;">if</span> (year % <span style="color: #800080;">4</span> == <span style="color: #800080;">0</span> &amp;&amp; year % <span style="color: #800080;">100</span> != <span style="color: #800080;">0</span><span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">其他情况，是平年</span>
+            <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">DateCalculator.cs</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('b77d878f-dda0-4005-931f-bd62fccc9d19')"><img id="code_img_closed_b77d878f-dda0-4005-931f-bd62fccc9d19" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_b77d878f-dda0-4005-931f-bd62fccc9d19" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('b77d878f-dda0-4005-931f-bd62fccc9d19',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_b77d878f-dda0-4005-931f-bd62fccc9d19" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> CalculateDaysForOO
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            MyDate d1, d2;  </span><span style="color: #008000;">//</span><span style="color: #008000;">起始日期和结束日期
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">1999年5月10日</span>
+            d1.Year = <span style="color: #800080;">1999</span><span style="color: #000000;">;
+            d1.Month </span>= <span style="color: #800080;">5</span><span style="color: #000000;">;
+            d1.Day </span>= <span style="color: #800080;">10</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">2006年3月8日</span>
+            d2.Year = <span style="color: #800080;">2006</span><span style="color: #000000;">;
+            d2.Month </span>= <span style="color: #800080;">3</span><span style="color: #000000;">;
+            d2.Day </span>= <span style="color: #800080;">8</span><span style="color: #000000;">;
+
+            </span><span style="color: #0000ff;">string</span> str = <span style="color: #800000;">"</span><span style="color: #800000;">{0}年{1}月{2}日到{3}年{4}月{5}日共有天数：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            str </span>=<span style="color: #000000;"> String.Format(str, d1.Year, d1.Month, d1.Day, d2.Year, d2.Month, d2.Day);
+            
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">创建类CalculateDate的对象，让变量obj引用它</span>
+            DateCalculator obj = <span style="color: #0000ff;">new</span><span style="color: #000000;"> DateCalculator(); 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">调用对象obj的CalculateDaysOfTwoDate方法计算</span>
+            <span style="color: #0000ff;">int</span> days =<span style="color: #000000;"> obj.CalculateDaysOfTwoDate(d1, d2);
+
+            Console.WriteLine(str </span>+<span style="color: #000000;"> days);
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">暂停,敲任意键结束</span>
+<span style="color: #000000;">            Console.ReadKey();
+        }
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Program.cs</span></div>
+<h2><a name="anchor3"></a>4、直接应用已有组件</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Collections.Generic;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Linq;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Text;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Threading.Tasks;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> CalculatorDaysUseDotNet
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            DateTime d1 </span>= <span style="color: #0000ff;">new</span> DateTime(<span style="color: #800080;">1999</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">10</span><span style="color: #000000;">);
+            DateTime d2 </span>= <span style="color: #0000ff;">new</span> DateTime(<span style="color: #800080;">2006</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">8</span><span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">计算结果</span>
+            <span style="color: #0000ff;">double</span> days = (d2 -<span style="color: #000000;"> d1).TotalDays; 
+
+            </span><span style="color: #0000ff;">string</span> str = <span style="color: #800000;">"</span><span style="color: #800000;">{0}年{1}月{2}日到{3}年{4}月{5}日共有天数：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+            str </span>=<span style="color: #000000;"> String.Format(str, d1.Year, d1.Month, d1.Day, d2.Year, d2.Month, d2.Day);
+            Console.WriteLine(str </span>+<span style="color: #000000;"> days);
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">暂停,敲任意键结束</span>
+<span style="color: #000000;">            Console.ReadKey();
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

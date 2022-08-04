@@ -1,0 +1,122 @@
+<h2>INDEX</h2>
+<p>&nbsp;　　由于<span style="text-decoration: underline; color: #ff00ff;"><span style="text-decoration: underline;"><a href="#a2"><span style="color: #ff00ff; text-decoration: underline;">性能、智能结果</span></a></span></span>等多方面原因，在搜索文本时，<span style="color: #ff0000;"><span style="text-decoration: underline; color: #ff00ff;"><a href="#a3"><span style="color: #ff00ff; text-decoration: underline;">全文搜索</span></a></span><span style="color: #000000;">一</span></span>般要优于通配符和正则表达式，前者为指定列建立索引，以便快速找到对应行，并且<span style="text-decoration: underline; color: #ff00ff;"><span style="text-decoration: underline;"><a href="#a5"><span style="color: #ff00ff; text-decoration: underline;">将结果集智能排序</span></a></span></span>。<span style="text-decoration: underline;"><span style="color: #ff0000; text-decoration: underline;"><span style="color: #ff00ff; text-decoration: underline;">启</span><span style="color: #ff00ff; text-decoration: underline;">用<a href="#a6"><span style="color: #ff00ff; text-decoration: underline;">查询扩展</span></a></span></span>可以</span>让我们得到未必包含关键字的相关行，<span style="text-decoration: underline; color: #ff00ff;"><span style="background-color: #ffffff; text-decoration: underline;">启用<a href="#a7"><span style="background-color: #ffffff; color: #ff00ff; text-decoration: underline;">布尔模式</span></a></span></span>可以让我们指定搜索内容不应包含的单词、各个关键词的权重等。</p>
+<p><span style="color: #ff0000;">　　</span><span style="text-decoration: underline;"><span style="color: #ff0000; text-decoration: underline;"><span style="color: #ff00ff;"><a href="#a8"><span style="color: #ff00ff; text-decoration: underline;">全文索引使用说明。</span></a></span></span></span></p>
+<p><span style="color: #ff0000;">　　</span><span style="text-decoration: underline;"><span style="color: #ff0000; text-decoration: underline;"><span style="color: #ff00ff;"><a href="#a4"><span style="color: #ff00ff; text-decoration: underline;">不要在导入数据前进行全文索引。</span></a></span></span></span></p>
+<h2><a name="a1"></a>WARNING</h2>
+<p>不是所有数据库引擎都支持全文搜索。MyISAM 支持全文索引，InnoDB 不支持全文索引。</p>
+<p>PS. 据说 MySQL 5.6 以上版本的 InnoDB 支持全文索引，语法格式和 MyISAM 的全文索引类似。</p>
+<h2 class="docSection1Title"><a name="a2"></a>Understanding Full-Text Searching</h2>
+<p class="docSection1Title">通配符和正则表达式都很强大，但是它们有几个很严重的缺点：</p>
+<ul>
+<li class="docSection1Title">性能：通配符和正则表达式总是和表中的每一行匹配，因此当行数增加时这两种匹配方式非常耗时。</li>
+<li class="docSection1Title">精确控制：通配符和正则表达式很难精确控制匹配什么不匹配什么。</li>
+<li class="docSection1Title">智能结果：例如说，不论字段内容中有一个匹配还是多个匹配，通配符和正则表达式都一视同仁的返回该行；如果字段内容不包含匹配，但包括相关（相近）词不会返回该行。</li>
+</ul>
+<p>上述的缺点都可以通过全文索引来解决。当使用全文搜索的时候， MySQL 不需要单独地匹配每行，而是创建单词（在指定的列中）的索引，这样 MySQL 就可以快速而有效地确定哪些词匹配，哪些不匹配等等。</p>
+<p>可以理解为 MySQL 为指定列生成了一个目录，该目录标注了 包含 xxx 单词的行是第1、4、8、9行（假设），借助这个目录，搜索 xxx 单词时就可以很快找到对应行1、4、8、9了，类似于用空间换取时间。</p>
+<h2 class="docSection1Title"><a name="a3"></a>Using Full-Text Searching</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> productnotes
+(
+  note_id    </span><span style="color: #0000ff;">int</span>           <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> AUTO_INCREMENT,
+  prod_id    </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">10</span>)      <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+  note_date </span><span style="color: #0000ff;">datetime</span>       <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+  note_text  </span><span style="color: #0000ff;">text</span>          <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(note_id),
+  <strong>FULLTEXT(note_text)</strong>
+) ENGINE</span><span style="color: #808080;">=</span>MyISAM;</pre>
+</div>
+<p>PS. 全文索引多个字段也是可以的！&nbsp;</p>
+<p>一旦定义了全文索引，MySQL 会自动维护这个索引，当增加记录、删除记录，索引会相应的变化</p>
+<h2><span class="docEmphStrong"><a name="a4"></a>Don't Use <tt>FULLTEXT</tt> When Importing Data</span></h2>
+<p>Updating indexes takes timenot a lot of time, but time nonetheless. If you are importing data into a new table, you should not enable <tt>FULLTEXT</tt> indexing at that time. Rather, first import all of the data, and then modify the table to define <tt>FULLTEXT</tt>. This makes for a much faster data import (and the total time needed to index all data will be less than the sum of the time needed to index each row individually).</p>
+<h2 class="docSection2Title"><a name="a5"></a>Performing Full-Text Searches</h2>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> note_text
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> productnotes
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> Match(note_text) Against(<span style="color: #ff0000;">'</span><span style="color: #ff0000;">rabbit</span><span style="color: #ff0000;">'</span><span style="color: #000000;">);
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> note_text                                                                                                            <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> Customer complaint: rabbit has been able <span style="color: #0000ff;">to</span> detect trap, food apparently less effective now.                         <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Quantity varies, sold <span style="color: #0000ff;">by</span> the sack <span style="color: #0000ff;">load</span><span style="color: #000000;">.
+</span><span style="color: #808080;">All</span> guaranteed <span style="color: #0000ff;">to</span> be bright <span style="color: #808080;">and</span> orange, <span style="color: #808080;">and</span> suitable <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">use</span> <span style="color: #0000ff;">as</span> rabbit bait. <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>Match(colunm_name必须和定义为 FULLTEXT的列一致) 和 Against('xxx') ，记住这两个函数！另外，搜索是大小写不敏感的！</p>
+<p>事实上，利用通配符也可以很方便地达到上面的效果，不过性能和结果都会有不同：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> note_text
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> productnotes
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> note_text <span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">%rabbit%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> note_text                                                                                                            <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> Quantity varies, sold <span style="color: #0000ff;">by</span> the sack <span style="color: #0000ff;">load</span><span style="color: #000000;">.
+</span><span style="color: #808080;">All</span> guaranteed <span style="color: #0000ff;">to</span> be bright <span style="color: #808080;">and</span> orange, <span style="color: #808080;">and</span> suitable <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">use</span> <span style="color: #0000ff;">as</span> rabbit bait. <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Customer complaint: rabbit has been able <span style="color: #0000ff;">to</span> detect trap, food apparently less effective now.                         <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>我们很震惊地发现，虽然行数是没错，不过顺序却不一致 。 。 。</p>
+<p>这是因为 全文搜索有一个重要特性：<strong>结果排名（the ranking of results）</strong>，排名高的优先返回。查看列的排名：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> note_text,
+       Match(note_text) Against(</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">rabbit</span><span style="color: #ff0000;">'</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> rank
+</span><span style="color: #0000ff;">FROM</span> productnotes;</pre>
+</div>
+<p>rank 越高的排名越前，这个与关键字出现与否、出现在前面还是后面等因素有关。</p>
+<h2 class="docSection2Title"><a name="a6"></a>Using Query Expansion</h2>
+<p class="docText">When<span style="color: #ff0000;"><strong> query expansion</strong></span> is used, MySQL makes two passes through the data and indexes to perform your search:</p>
+<ul>
+<li>
+<p class="docList">First, a basic full-text search is performed to find all rows that match the search criteria.</p>
+</li>
+<li>
+<p class="docList">Next, MySQL examines those matched rows and selects all useful words (we'll explain how MySQL figures out what is useful and what is not shortly).</p>
+</li>
+<li>
+<p class="docList">Then, MySQL performs the full-text search again, this time using not just the original criteria, but also all of the useful words.</p>
+</li>
+</ul>
+<p class="docText">Using query expansion you can therefore find results that might be relevant, even if they don't contain the exact words for which you were looking.</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> note_text
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> productnotes
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> Match(note_text) Against(<span style="color: #ff0000;">'</span><span style="color: #ff0000;">rabbit</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">WITH</span><span style="color: #000000;"> QUERY EXPANSION);
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> note_text                                                                                                                                                <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #808080;">|</span> Quantity varies, sold <span style="color: #0000ff;">by</span> the sack <span style="color: #0000ff;">load</span><span style="color: #000000;">.
+</span><span style="color: #808080;">All</span> guaranteed <span style="color: #0000ff;">to</span> be bright <span style="color: #808080;">and</span> orange, <span style="color: #808080;">and</span> suitable <span style="color: #0000ff;">for</span> <span style="color: #0000ff;">use</span> <span style="color: #0000ff;">as</span><span style="color: #ff0000;"><strong> rabbit</strong></span> bait.                                     <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span><strong><span style="color: #0000ff;"> Customer</span></strong> complaint:<strong><span style="color: #ff0000;"> rabbit</span> </strong>has been able <span style="color: #0000ff;">to</span> detect trap, food apparently less effective now.                                                             <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span><span style="color: #000000;"><span style="color: #0000ff;"><strong> Customer</strong> </span>complaint:
+Circular hole </span><span style="color: #808080;">in</span> safe <span style="color: #ff00ff;">floor</span> can apparently be easily cut <span style="color: #0000ff;">with</span> handsaw.                                                               <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span><span style="color: #000000;"><strong><span style="color: #0000ff;"> Customer</span></strong> complaint:
+Sticks </span><span style="color: #808080;">not</span> individually wrapped, too easy <span style="color: #0000ff;">to</span> mistakenly detonate <span style="color: #808080;">all</span> at <span style="color: #0000ff;">once</span><span style="color: #000000;">.
+Recommend individual wrapping.                         </span><span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span><span style="color: #000000;"><span style="color: #0000ff;"><strong> Customer</strong></span> complaint:
+</span><span style="color: #808080;">Not</span> heavy enough <span style="color: #0000ff;">to</span> generate flying stars around head <span style="color: #0000ff;">of</span> victim. <span style="color: #0000ff;">If</span> being purchased <span style="color: #0000ff;">for</span> dropping, recommend ANV02 <span style="color: #808080;">or</span> ANV03 instead.  <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Multiple customer <span style="color: #0000ff;">returns</span>, anvils failing <span style="color: #0000ff;">to</span> <span style="color: #0000ff;">drop</span> fast enough <span style="color: #808080;">or</span> falling backwards <span style="color: #0000ff;">on</span> purchaser. Recommend that customer considers using heavier anvils. <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------------------------------------------------------------------------------------------------------------------------------------------+</span>
+<span style="color: #800000; font-weight: bold;">6</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<h2><a name="a7"></a>Boolean Text Searches</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> note_text
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> productnotes
+</span><span style="color: #0000ff;">WHERE</span> Match(note_text) Against(<span style="color: #ff0000;">'</span><span style="color: #ff0000;">+rabbit +bait"</span><span style="color: #ff0000;">'</span> <span style="color: #808080;">IN</span> BOOLEAN MODE);</pre>
+</div>
+<p>更多操作参见原书第 18 章，通过各种符号来指明关键词优先级、包含什么单词、排除什么单词等。</p>
+<h2><a name="a8"></a>Full-Text Search Usage Notes</h2>
+<p>重要的说明：</p>
+<ol>
+<li>MySQL 不会给<strong><span style="color: #ff0000;">短单词</span></strong>建立索引，短单词默认定义为三个字母以内的。</li>
+<li>MySQL 有一个内建的<span style="color: #ff0000;"><strong>停用词列表</strong></span>，它的下场和短单词一样，当然这个也是可以手动修改的，具体方法可以搜索资料、查查文档。</li>
+<li>许多单词出现频繁，以至于搜索它们将毫无用处（返回的结果太多）。 因此，MySQL授予<span style="color: #ff0000;"><strong>50％的规则</strong></span>，一个单词出现在50％或更多的行中，它被视为一个停用词并被有效地忽略。 （50％的规则不用于IN BOOLEAN模式）。</li>
+<li>如果表中的行少于三行（也就是两行或者两行以下，因为每个但凡出现的单词的出现次数总是至少为行数的50％），全文搜索不返回任何结果。</li>
+<li>单词内的<span style="color: #ff0000;"><strong>单引号会被忽略</strong></span>，例如 don't 的索引为 dont</li>
+<li>没有单词分隔符（包括日语和中文）的语言将不会正确返回全文结果。&nbsp;</li>
+</ol>
+<p>那么如何实现中文分词&amp;全文索引呢？待更新</p>

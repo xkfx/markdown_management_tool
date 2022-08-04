@@ -1,0 +1,10 @@
+<h3>Note</h3>
+<p>LLF 是面向<strong>周期性任务</strong>的实时调度算法。</p>
+<p>松弛度 = 必须完成时间 - 其本身的运行时间 - 当前时间</p>
+<p><span class="link_title">下面几张图可以帮助理解 LLF调度算法：</span></p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180123150705537-1914629145.png" alt="" width="378" height="274" /></p>
+<p><span class="link_title"><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180123151306584-1751125779.png" alt="" width="729" height="545" /></span></p>
+<p>图一是在无竞争状态下任务A 和任务B 的运行状况。</p>
+<p>图二是在任务A 具有更高优先级的运行状况（抢占式调度）</p>
+<p>图三是在任务B 具有更高优先级的运行状况（抢占式调度）</p>
+<p>图四是采用 LLF调度算法各任务的运行状况（抢占式调度）</p>

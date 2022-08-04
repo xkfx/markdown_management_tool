@@ -1,0 +1,396 @@
+<p>个人记录贴。。。</p>
+<p>代码过烂不宜参考。。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration-line: underline;">效果展示</span></p>
+<p>1、选择需要打开的数据库，查看数据库下的表。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170312093136232-794743743.png" alt="" width="154" height="261" /><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170312092941170-78995546.png" alt="" width="139" height="236" /></p>
+<p>2、双击打开一个表</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170312093400170-2067036032.png" alt="" width="319" height="179" /></p>
+<p>3、没有CRUD。。。。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170312095812592-1194110569.png" alt="" width="255" height="173" /></p>
+<p><span style="text-decoration: underline; background-color: #ffffff;">代码</span></p>
+<p>test-main:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> shell.DBList;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> javax.swing.JFrame.EXIT_ON_CLOSE;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        EventQueue.invokeLater(() </span>-&gt;<span style="color: #000000;"> {
+            JFrame w </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DBList();
+            w.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            w.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        });
+    }
+}</span></pre>
+</div>
+<p>DBList:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> shell;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> data.DataBase;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionListener;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.MouseEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.MouseListener;
+</span><span style="color: #0000ff;">import</span> java.sql.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/1/31.
+ </span><span style="color: #008000;">*/</span>
+
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> DBList <span style="color: #0000ff;">extends</span> JFrame <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ActionListener, MouseListener {
+
+    </span><span style="color: #0000ff;">private</span> JComboBox comboDatabases = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JComboBox();
+    </span><span style="color: #0000ff;">private</span> JList listTables = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JList();
+
+    String DBName </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> DBList(){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 窗体大小</span>
+        Toolkit kit =<span style="color: #000000;"> Toolkit.getDefaultToolkit();
+        Dimension screenSize </span>=<span style="color: #000000;"> kit.getScreenSize();
+        </span><span style="color: #0000ff;">int</span> screenWidth =<span style="color: #000000;"> screenSize.width;
+        </span><span style="color: #0000ff;">int</span> screenHeight =<span style="color: #000000;"> screenSize.height;
+
+        setSize(screenWidth</span>/6 , screenHeight/2<span style="color: #000000;">);
+        setResizable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 窗体位置</span>
+        setLocationByPlatform(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 窗体布局</span>
+        setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+
+        JScrollPane sp </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JScrollPane(listTables);
+
+        add(comboDatabases , BorderLayout.NORTH);
+        add(sp , BorderLayout.CENTER);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 添加数据库列表</span>
+        Connection cn = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Statement st </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ResultSet rs </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            cn </span>=<span style="color: #000000;"> DataBase.getConnection();
+            st </span>=<span style="color: #000000;"> cn.createStatement();
+            rs </span>= st.executeQuery("show Databases"<span style="color: #000000;">);
+
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(rs.next()){
+                comboDatabases.addItem(rs.getString(</span>1<span style="color: #000000;">));
+        }
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+        </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+                rs.close();
+                st.close();
+                cn.close();
+            }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e){}
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注册事件监听</span>
+        comboDatabases.addActionListener(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        listTables.addMouseListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent event) {
+        DBName </span>=<span style="color: #000000;"> comboDatabases.getSelectedItem().toString();
+
+        Connection recentConn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Statement st </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ResultSet rs </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        String request </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ArrayList</span>&lt;String&gt; tables = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            recentConn </span>=<span style="color: #000000;"> DataBase.getConnection();
+            st </span>=<span style="color: #000000;"> recentConn.createStatement();
+            request </span>= "show tables from " +<span style="color: #000000;"> DBName;
+            rs </span>=<span style="color: #000000;"> st.executeQuery(request);
+
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(rs.next()){
+                tables.add(rs.getString(</span>1<span style="color: #000000;">));
+            }
+            String[] temp </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> String[tables.size()];
+            tables.toArray(temp);
+            listTables.setListData(temp);
+
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+        </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+                rs.close();
+                st.close();
+                recentConn.close();
+            }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e){}
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> mousePressed(MouseEvent event) {
+        </span><span style="color: #0000ff;">if</span>(event.getClickCount() == 2<span style="color: #000000;">){
+            String tableName </span>=<span style="color: #000000;"> listTables.getSelectedValue().toString();
+
+            JFrame selectTable </span>= <span style="color: #0000ff;">new</span> DBTable(DBName, tableName, <span style="color: #0000ff;">this</span>.getWidth()+<span style="color: #0000ff;">this</span>.getX(), <span style="color: #0000ff;">this</span><span style="color: #000000;">.getY());
+            selectTable.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "DBList{" +
+                "comboDatabases=" + comboDatabases +
+                ", listTables=" + listTables +
+                ", DBName='" + DBName + '\'' +
+                '}'<span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> equals(Object o) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span> == o) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (o == <span style="color: #0000ff;">null</span> || getClass() != o.getClass()) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+
+        DBList dbList </span>=<span style="color: #000000;"> (DBList) o;
+
+        </span><span style="color: #0000ff;">if</span> (comboDatabases != <span style="color: #0000ff;">null</span> ? !comboDatabases.equals(dbList.comboDatabases) : dbList.comboDatabases != <span style="color: #0000ff;">null</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (listTables != <span style="color: #0000ff;">null</span> ? !listTables.equals(dbList.listTables) : dbList.listTables != <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> DBName != <span style="color: #0000ff;">null</span> ? DBName.equals(dbList.DBName) : dbList.DBName == <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> hashCode() {
+        </span><span style="color: #0000ff;">int</span> result = comboDatabases != <span style="color: #0000ff;">null</span> ? comboDatabases.hashCode() : 0<span style="color: #000000;">;
+        result </span>= 31 * result + (listTables != <span style="color: #0000ff;">null</span> ? listTables.hashCode() : 0<span style="color: #000000;">);
+        result </span>= 31 * result + (DBName != <span style="color: #0000ff;">null</span> ? DBName.hashCode() : 0<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+}</span></pre>
+</div>
+<p>DBTable:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> shell;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> data.DbTableModel;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.swing.table.TableModel;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/1.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> DBTable <span style="color: #0000ff;">extends</span><span style="color: #000000;"> JFrame {
+
+    </span><span style="color: #0000ff;">public</span> DBTable(String dbName, String tableName, <span style="color: #0000ff;">int</span> X, <span style="color: #0000ff;">int</span><span style="color: #000000;"> Y){
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> JTable</span><span style="color: #000000;">
+        TableModel model </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DbTableModel(dbName , tableName);
+        JTable table </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTable(model);
+        JScrollPane sp </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JScrollPane(table);
+
+        add(sp);
+        pack();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置表格大小</span>
+        Toolkit kit =<span style="color: #000000;"> Toolkit.getDefaultToolkit();
+        Dimension screenSize </span>=<span style="color: #000000;"> kit.getScreenSize();
+        </span><span style="color: #0000ff;">int</span> screenWidth =<span style="color: #000000;"> screenSize.width;
+        </span><span style="color: #0000ff;">int</span> screenHeight =<span style="color: #000000;"> screenSize.height;
+
+        setSize(screenWidth</span>/2 , screenHeight/2<span style="color: #000000;">);
+        setResizable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置位置</span>
+<span style="color: #000000;">        setLocation(X , Y);
+    }
+}</span></pre>
+</div>
+<p>DbTableModel:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> data;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.table.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Statement;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/2.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> DbTableModel <span style="color: #0000ff;">extends</span><span style="color: #000000;"> AbstractTableModel{
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">共享表格</span>
+    ResultSet resultTable = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    ResultSet resultColumns </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取对应表格</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> DbTableModel(String DBName, String tableName){
+
+        Connection conn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Statement st1 </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Statement st2 </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            conn </span>=<span style="color: #000000;"> DataBase.getConnection(DBName);
+            st1 </span>=<span style="color: #000000;"> conn.createStatement();
+            st2 </span>=<span style="color: #000000;"> conn.createStatement();
+            resultTable </span>= st1.executeQuery("select * from "+<span style="color: #000000;"> tableName);
+            resultColumns </span>= st2.executeQuery("SHOW COLUMNS FROM "+<span style="color: #000000;"> tableName);
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRowCount() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            resultTable.last();
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> resultTable.getRow();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getColumnCount() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> resultTable.getMetaData().getColumnCount();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> Object getValueAt(<span style="color: #0000ff;">int</span> rowIndex, <span style="color: #0000ff;">int</span><span style="color: #000000;"> columnIndex) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            resultTable.absolute(rowIndex </span>+ 1<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span> resultTable.getObject(columnIndex + 1<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> String getColumnName(<span style="color: #0000ff;">int</span><span style="color: #000000;"> c){
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            resultColumns.next();
+            System.out.println(resultColumns.getString(</span>1<span style="color: #000000;">));
+            </span><span style="color: #0000ff;">return</span> resultColumns.getString(1<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+       }
+    }
+}</span></pre>
+</div>
+<p><span>DataBase:</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> data;
+
+</span><span style="color: #0000ff;">import</span> java.sql.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ResourceBundle;
+
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DataBase {</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String URL;</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String USERNAME;</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String PASSWORD;
+</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String DRIVER;</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> ResourceBundle localInfo = ResourceBundle.getBundle("data.db-config"<span style="color: #000000;">);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">使用静态块加载驱动程序</span>
+    <span style="color: #0000ff;">static</span><span style="color: #000000;">{
+
+        URL </span>= localInfo.getString("jdbc.url"<span style="color: #000000;">);
+        USERNAME </span>= localInfo.getString("jdbc.username"<span style="color: #000000;">);
+        PASSWORD </span>= localInfo.getString("jdbc.password"<span style="color: #000000;">);
+        DRIVER </span>= localInfo.getString("jdbc.driver"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            Class.forName(DRIVER);
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取 mysql.connection 的两种静态方法</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Connection getConnection(String dbName){
+
+        Connection cn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            cn </span>= DriverManager.getConnection(URL+<span style="color: #000000;">dbName, USERNAME, PASSWORD);
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e){
+            e.printStackTrace();
+        }
+
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cn;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Connection getConnection(){
+        </span><span style="color: #0000ff;">return</span> getConnection(""<span style="color: #000000;">);
+    }
+
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> unit test</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        Connection cn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Statement st </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ResultSet rs </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            cn </span>=<span style="color: #000000;"> DataBase.getConnection();
+            st </span>=<span style="color: #000000;"> cn.createStatement();
+            rs </span>= st.executeQuery("show Databases"<span style="color: #000000;">);
+
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;">(rs.next()){
+                System.out.println(rs.getString(</span>1<span style="color: #000000;">));
+            }
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+        </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+                rs.close();
+                st.close();
+                cn.close();
+            }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e){}
+        }
+    }
+}</span></pre>
+</div>
+<p>db-config.properties:</p>
+<div class="cnblogs_code">
+<pre>jdbc.url=jdbc:mysql:<span style="color: #008000;">//</span><span style="color: #008000;">localhost:3306/</span>
+jdbc.username=<span style="color: #000000;">root
+jdbc.password</span>=****<span style="color: #000000;">
+jdbc.driver</span>=org.gjt.mm.mysql.Driver</pre>
+</div>
+<p>&nbsp;</p>

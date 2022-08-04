@@ -1,0 +1,65 @@
+<p>代码来自《K&amp;R》</p>
+<p>范例输入(控制台):</p>
+<p>-32 23 11 18<br />33987 23<br />^Z</p>
+<p>范例输出:</p>
+<p>-32<br />23<br />11<br />18<br />33987<br />23</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> SIZE 100
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> n, array[SIZE], getint(<span style="color: #0000ff;">int</span> *<span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">for</span>(n = <span style="color: #800080;">0</span>; n &lt; SIZE &amp;&amp; getint(&amp;array[n]) != EOF; n ++<span style="color: #000000;">)
+        ;
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; n; i ++<span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, *(array+<span style="color: #000000;">i));
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+#include</span>&lt;ctype.h&gt;
+
+<span style="color: #0000ff;">int</span> getch(<span style="color: #0000ff;">void</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">void</span> ungetch(<span style="color: #0000ff;">int</span><span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">int</span> getint(<span style="color: #0000ff;">int</span> *<span style="color: #000000;">pn)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> c, sign;
+    
+    </span><span style="color: #0000ff;">while</span>(isspace(c =<span style="color: #000000;"> getch()))
+        ;
+    </span><span style="color: #0000ff;">if</span>(!isdigit(c) &amp;&amp; c != EOF &amp;&amp; c != <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> &amp;&amp; c != <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+        ungetch(c);
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    sign </span>= (c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>)? -<span style="color: #800080;">1</span> : <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span>(c == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        c </span>=<span style="color: #000000;"> getch();
+    </span><span style="color: #0000ff;">for</span>(*pn = <span style="color: #800080;">0</span>; isdigit(c); c =<span style="color: #000000;"> getch())
+        </span>*pn = <span style="color: #800080;">10</span> * *pn + (c - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    </span>*pn *=<span style="color: #000000;"> sign;
+    </span><span style="color: #0000ff;">if</span>(c !=<span style="color: #000000;"> EOF)
+        ungetch(c);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+}
+
+</span><span style="color: #0000ff;">#define</span> BUFSIZE 100
+
+<span style="color: #0000ff;">char</span><span style="color: #000000;"> buf[BUFSIZE];
+</span><span style="color: #0000ff;">int</span> bufp = <span style="color: #800080;">0</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">int</span> getch(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+{
+    </span><span style="color: #0000ff;">return</span> (bufp &gt; <span style="color: #800080;">0</span>)? buf[--<span style="color: #000000;">bufp] : getchar(); 
+}
+
+</span><span style="color: #0000ff;">void</span> ungetch(<span style="color: #0000ff;">int</span><span style="color: #000000;"> c)
+{
+    </span><span style="color: #0000ff;">if</span>(bufp &gt;=<span style="color: #000000;"> BUFSIZE)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">ungetch: too many characters\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        buf[bufp</span>++] =<span style="color: #000000;"> c;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

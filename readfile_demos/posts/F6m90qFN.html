@@ -1,0 +1,59 @@
+<p><span style="line-height: 1.5; background-color: #ffff99;">p129~p131：</span></p>
+<p>1、赋值运算的左侧运算对象必须是一个<strong>可修改的</strong>左值。</p>
+<p>&nbsp;</p>
+<p>2、赋值运算满足<strong>右结合律</strong>。</p>
+<p>&nbsp;</p>
+<p>3、赋值运算的结果是它的左侧对象，并且是一个<strong>左值</strong>。</p>
+<p>验证：</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a, b, c;
+    b </span>= <span style="color: #800080;">2</span><span style="color: #000000;">;
+    c </span>= <span style="color: #800080;">3</span><span style="color: #000000;">;
+    (a </span>= b) = c;    <span style="color: #008000;">//</span><span style="color: #008000;"> 先计算a = b;返回值为a，再计算a = c;</span>
+    cout &lt;&lt; a &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、赋值运算符的<strong>优先级较低</strong>，在条件语句中，赋值部分应该加上括号。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.13</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> d;
+    d </span>= i = <span style="color: #800080;">3.5</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; i &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; d &lt;&lt;<span style="color: #000000;"> endl;
+    i </span>= d = <span style="color: #800080;">3.5</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; i &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; d &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+3 3
+3 3.5
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.14</span></p>
+<p><em>if (42 = i) // ... 编译不出来</em></p>
+<p><em>if (i = 42) // ... i的值为42，转换为布尔值1，条件为true</em></p>
+<p><em>&nbsp;</em></p>
+<p><span style="background-color: #ffff99;">练习 4.15</span></p>
+<p><em>指针类型和算数类型无法相互转化。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.16</span></p>
+<p><em>修改：</em></p>
+<div class="cnblogs_code">
+<pre>(a) <span style="color: #0000ff;">if</span> ((p = getPtr()) != <span style="color: #800080;">0</span><span style="color: #000000;">)
+(b) </span><span style="color: #0000ff;">if</span> (i == <span style="color: #800080;">1024</span>)</pre>
+</div>
+<p>&nbsp;</p>

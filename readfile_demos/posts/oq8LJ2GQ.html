@@ -1,0 +1,438 @@
+<div id="diy_right_menu">
+<p><a href="#1">链接到错误处理</a></p>
+<p><a href="#2">链接到调试</a></p>
+<p><a href="#3">链接到单元测试</a></p>
+<p><a href="#4">链接到文档测试</a></p>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong><a name="1"></a></strong>【错误处理】</span></p>
+<p>小结：遇到错误怎么办？</p>
+<p>1、不理它。</p>
+<p>2、捕获它，再抛出。</p>
+<p>3、捕获并处理错误。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong><span style="text-decoration: underline;">raise</span></strong></span></p>
+<p>不懂如何处理错误就直接抛出（raise），交由合适的层次处理，有时候需要自定义错误，但是通常使用Python内置的错误就可以了：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/usr/bin/env python3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 自定义的异常</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> MyError(Exception):
+    </span><span style="color: #0000ff;">pass</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 抛出异常的函数</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">raise</span> MyError(<span style="color: #800000;">'</span><span style="color: #800000;">This is my error!</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 不处理，继续抛</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f2():
+    f()
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 不处理，继续抛</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f3():
+    f2()
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi1</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 被打印</span>
+<span style="color: #000000;">f3()
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi2</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 不会被打印，因为程序因为出错而终止了</span></pre>
+</div>
+<p>处理机的调用和函数调用的方向刚好相反，因为最终都没有人来处理这个错误，所以错误被一直上抛，直到被Python解释器捕获：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">hi1
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 21, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 18, <span style="color: #0000ff;">in</span><span style="color: #000000;"> f3
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 14, <span style="color: #0000ff;">in</span><span style="color: #000000;"> f2
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 10, <span style="color: #0000ff;">in</span><span style="color: #000000;"> f
+</span><span style="color: #800080;">__main__</span>.MyError: This <span style="color: #0000ff;">is</span> my error!</pre>
+</div>
+<p>不懂如何处理错误的第二种方式是记录一下再继续抛出，这需要用到&ldquo;try...except&rdquo;：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 自定义的异常</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> MyError(Exception):
+    </span><span style="color: #0000ff;">pass</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 抛出异常的函数</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">raise</span> MyError(<span style="color: #800000;">'</span><span style="color: #800000;">This is my error!</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 不处理，继续抛</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f2():
+    f()
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 不处理，继续抛</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> f3():
+    f2()
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi1</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 被打印</span>
+
+<span style="color: #0000ff;">try</span><span style="color: #000000;">:
+    f3()
+</span><span style="color: #0000ff;">except</span><span style="color: #000000;"> Exception as e:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">...mark</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">raise</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 原样抛出</span>
+<span style="color: #0000ff;">finally</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi2</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 错误没被处理了，程序不再执行</span></pre>
+</div>
+<p>输出：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">hi1
+...mark
+b
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 23, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 18, <span style="color: #0000ff;">in</span><span style="color: #000000;"> f3
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 14, <span style="color: #0000ff;">in</span><span style="color: #000000;"> f2
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\test.py</span><span style="color: #800000;">"</span>, line 10, <span style="color: #0000ff;">in</span><span style="color: #000000;"> f
+</span><span style="color: #800080;">__main__</span>.MyError: This <span style="color: #0000ff;">is</span> my error!</pre>
+</div>
+<p>（可以观察到finally是无论如何都会在最后被执行的！）</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong><span style="text-decoration: underline;">try...except</span></strong></span></p>
+<p>错误一般由底层代码抛出，通常是&ldquo;他人的代码&rdquo;，所以更经常写的是try...except别人抛出的错误。</p>
+<p>那么如何自己来处理错误呢？当位于合适的层次的时候我们用&ldquo;try...except&rdquo;来处理错误：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi1</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 被打印</span>
+
+<span style="color: #0000ff;">try</span><span style="color: #000000;">:
+    f3()
+</span><span style="color: #0000ff;">except</span><span style="color: #000000;"> Exception as e:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">a:</span><span style="color: #800000;">'</span><span style="color: #000000;">, e)
+</span><span style="color: #0000ff;">finally</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi2</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 错误被处理了，程序继续执行</span></pre>
+</div>
+<p>输出情况：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">hi1
+a: This </span><span style="color: #0000ff;">is</span><span style="color: #000000;"> my error!
+b
+hi2</span></pre>
+</div>
+<p>测试证明except 父类错误就可以捕获子类错误。</p>
+<p>在try的内部一但raise了错误，如果有except语句将其捕获，那么try语句块的剩余语句是不会被执行的,因此try语句块要设定合适的范围，而不是一次try大量的语块：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Error1(Exception):
+    </span><span style="color: #0000ff;">pass</span>
+
+<span style="color: #0000ff;">try</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">raise</span> Error1(<span style="color: #800000;">'</span><span style="color: #800000;">Error1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 不被执行</span>
+    <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">3</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 不被执行</span>
+<span style="color: #0000ff;">except</span><span style="color: #000000;"> Exception as e:
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(e)
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">continue execute</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>1<span style="color: #000000;">
+Error1
+</span><span style="color: #0000ff;">continue</span> execute</pre>
+</div>
+<p>&nbsp;对于捕获多个错误的情况：</p>
+<p>并不是多个错误都会被捕获，因为一旦raise了第一个错误，try语句块的程序就不会再继续执行了，所以同时抛出多个错误的情况是不存在的，书写多个except语句只是为了逐级排查最终捕获一个错误！</p>
+<p>&nbsp;</p>
+<p>Python的except语句还可以加上else，如果没有错误将会执行else内的语句。</p>
+<p><span style="color: #ff0000;">&nbsp;</span></p>
+<p><span style="color: #ff0000;"><strong><span style="text-decoration: underline;">logging</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">!/usr/bin/env python3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> logging
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Error1(Exception):
+    </span><span style="color: #0000ff;">pass</span>
+
+<span style="color: #0000ff;">try</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">raise</span> Error1(<span style="color: #800000;">'</span><span style="color: #800000;">I make a mistake</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 不被执行</span>
+    <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">3</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 不被执行</span>
+<span style="color: #0000ff;">except</span><span style="color: #000000;"> Exception as e:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">4</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    logging.exception(e)
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">5</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">continue execute</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>1
+4<span style="color: #000000;">
+ERROR:root:I make a mistake
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">test.py</span><span style="color: #800000;">"</span>, line 10, <span style="color: #0000ff;">in</span> &lt;module&gt;
+    <span style="color: #0000ff;">raise</span> Error1(<span style="color: #800000;">'</span><span style="color: #800000;">I make a mistake</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+Error1: I make a mistake
+</span>5
+<span style="color: #0000ff;">continue</span> execute</pre>
+</div>
+<p>今天遇到了一个问题卡了好一会儿：TabError: inconsistent use of tabs and spaces in indentation。原因是混用了空格和tab（可能是copy代码带来的）。最后删掉重输了一遍就解决了。</p>
+<p>&nbsp;</p>
+<p><strong><a name="2"></a></strong><span style="color: #ff00ff;">【调试】</span></p>
+<p>debug的方法：</p>
+<p>1、<strong><span style="color: #ff0000;">print</span></strong></p>
+<p>2、<strong><span style="color: #ff0000;">断言</span></strong>：print的升级版。</p>
+<p>3、<strong><span style="color: #ff0000;">logging</span></strong>：既可以输出到console，也可以输出到文件、不打断程序执行。</p>
+<p>在使用logging之前还需要在程序头添加一行配置：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> logging
+logging.basicConfig(level</span>=logging.WARNING)</pre>
+</div>
+<p>level指定了记录信息的级别，分为DEBUG、INFO、WARNING、ERROR。当level指定为DEBUG，记录debug及以上的logging信息，当level指定为INFO，记录info及以上的logging信息，以此类推：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> logging
+logging.basicConfig(level</span>=<span style="color: #000000;">logging.DEBUG)
+
+</span><span style="color: #0000ff;">print</span>(1<span style="color: #000000;">)
+logging.debug(</span><span style="color: #800000;">'</span><span style="color: #800000;">debug:hi</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+logging.info(</span><span style="color: #800000;">'</span><span style="color: #800000;">info:hi</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+logging.warning(</span><span style="color: #800000;">'</span><span style="color: #800000;">warning:hi</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+logging.error(</span><span style="color: #800000;">'</span><span style="color: #800000;">error</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(2)</pre>
+</div>
+<p>输出：</p>
+<div class="cnblogs_code">
+<pre>1<span style="color: #000000;">
+DEBUG:root:debug:hi
+INFO:root:info:hi
+WARNING:root:warning:hi
+ERROR:root:error
+</span>2</pre>
+</div>
+<p>继续修改level的等级：</p>
+<div class="cnblogs_code">
+<pre>logging.basicConfig(level=logging.INFO)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>1<span style="color: #000000;">
+INFO:root:info:hi
+WARNING:root:warning:hi
+ERROR:root:error
+</span>2</pre>
+</div>
+<p>...</p>
+<div class="cnblogs_code">
+<pre>logging.basicConfig(level=logging.WARNING)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>1<span style="color: #000000;">
+WARNING:root:warning:hi
+ERROR:root:error
+</span>2</pre>
+</div>
+<p>...</p>
+<div class="cnblogs_code">
+<pre>logging.basicConfig(level=logging.ERROR)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>1<span style="color: #000000;">
+ERROR:root:error
+</span>2</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、<strong><span style="color: #ff0000;">pdb</span></strong></p>
+<p>在命令行下开启dubug模式（参数要加在文件名前面）&nbsp;：</p>
+<div class="cnblogs_code">
+<pre>$ python -m pdb test.py</pre>
+</div>
+<p>输入<strong>n</strong>单步执行代码：</p>
+<div class="cnblogs_code">
+<pre>$ python -<span style="color: #000000;">m pdb test.py
+</span>&gt; d:\labs\test.py(3)&lt;module&gt;<span style="color: #000000;">()
+</span>-&gt; n =<span style="color: #000000;"> 0
+(Pdb) n
+</span>&gt; d:\labs\test.py(4)&lt;module&gt;<span style="color: #000000;">()
+</span>-&gt; <span style="color: #0000ff;">print</span>(1<span style="color: #000000;">)
+(Pdb) n
+</span>1
+&gt; d:\labs\test.py(5)&lt;module&gt;<span style="color: #000000;">()
+</span>-&gt; n = n + 1<span style="color: #000000;">
+(Pdb)</span></pre>
+</div>
+<p>随时可以用<strong> p 变量名</strong>查看变量：</p>
+<div class="cnblogs_code">
+<pre>&gt; $ test.py(9)&lt;module&gt;<span style="color: #000000;">()
+</span>-&gt; n = n + 1<span style="color: #000000;">
+(Pdb) p n
+</span>2</pre>
+</div>
+<p>使用<strong>q</strong>来退出。</p>
+<p>&nbsp;最后，<strong>从某处开始debug</strong>的方法：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #0000ff;">import</span><span style="color: #000000;"> pdb
+
+</span></strong><span style="color: #0000ff;">print</span>(1<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(2<span style="color: #000000;">)
+<strong>pdb.set_trace()</strong> </span><span style="color: #008000;">#</span><span style="color: #008000;"> 从这里开始进入debug模式。</span>
+<span style="color: #0000ff;">print</span>(3<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(4<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(5)</pre>
+</div>
+<p>直接运行.py程序就可以了。</p>
+<p>ps：一直执行n命令将循环运行程序。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong><a name="3"></a></strong>【单元测试】</span></p>
+<p>Q1：什么是单元测试？</p>
+<p>Q2：如何进行单元测试？</p>
+<p>&nbsp;</p>
+<p>A1：单元测试是指对一个模块、一个函数或者一个类来进行正确性检验的测试。</p>
+<p>&nbsp;</p>
+<p>A2：例如我要检测自己写的sum()函数好不好用。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> sum(x, y):
+    </span><span style="color: #0000ff;">return</span> x + y</pre>
+</div>
+<p>1、首先需要编写测试用例，这需要用到Python自带的unittest模块：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> unittest
+
+</span><span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span> sum</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> TestSum(unittest.TestCase):
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> test_func(self):
+        self.assertEqual(sum(</span>1, 2), 3<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1, -2), -1<span style="color: #000000;">)
+        self.assertEqual(sum(</span>100, -2), 98<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1001, 110), 1111)</pre>
+</div>
+<p>assertEqual是用于判定两个参数是否相等的函数，unittest模块中还有很多用于检测正确性的函数。 凡是test_xxx在测试的时候都会被运行。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> unittest
+
+</span><span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> sum
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> TestSum(unittest.TestCase):
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> test_func(self):
+        self.assertEqual(sum(</span>1, 2), 3<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1, -2<span style="color: #000000;">), 0)
+        self.assertEqual(sum(</span>100, -2), 98<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1001, 110), 1111<span style="color: #000000;">)
+    
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> test_func2(self):
+        self.assertEqual(sum(</span>1, 2), 3<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1, -2<span style="color: #000000;">), 0)
+        self.assertEqual(sum(</span>100, -2), 90<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1001, 110), 1111<span style="color: #000000;">)
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> test_func3(self):
+        self.assertEqual(sum(</span>1, 2), 3<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1, -2), -1<span style="color: #000000;">)
+        self.assertEqual(sum(</span>100, -2), 98<span style="color: #000000;">)
+        self.assertEqual(sum(</span>1001, 110), 1111<span style="color: #000000;">)
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> test_func4(self):
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">hi~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">#$@#%@#$^%%#$^@@#$^&amp;*</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、运行测试用例：</p>
+<div class="cnblogs_code">
+<pre>$ python -<span style="color: #000000;">m unittest sum_test.py
+.
+</span>----------------------------------------------------------------------<span style="color: #000000;">
+Ran </span>1 test <span style="color: #0000ff;">in</span><span style="color: #000000;"> 0.000s
+
+OK</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="background-color: #ffff99; color: #ff0000;"><strong>$ python -</strong></span><span style="color: #000000;"><span style="background-color: #ffff99; color: #ff0000;"><strong>m unittest sum_test.py</strong></span>
+FF.hi</span>~
+<span style="color: #008000;">#</span><span style="color: #008000;">$@#%@#$^%%#$^@@#$^&amp;*</span>
+<span style="color: #000000;">.
+</span>======================================================================<span style="color: #000000;">
+FAIL: test_func (sum_test.TestSum)
+</span>----------------------------------------------------------------------<span style="color: #000000;">
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\sum_test.py</span><span style="color: #800000;">"</span>, line 9, <span style="color: #0000ff;">in</span><span style="color: #000000;"> test_func
+    self.assertEqual(sum(</span>1, -2<span style="color: #000000;">), 0)
+AssertionError: </span>-1 !=<span style="color: #000000;"> 0
+
+</span>======================================================================<span style="color: #000000;">
+FAIL: test_func2 (sum_test.TestSum)
+</span>----------------------------------------------------------------------<span style="color: #000000;">
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:\labs\sum_test.py</span><span style="color: #800000;">"</span>, line 15, <span style="color: #0000ff;">in</span><span style="color: #000000;"> test_func2
+    self.assertEqual(sum(</span>1, -2<span style="color: #000000;">), 0)
+AssertionError: </span>-1 !=<span style="color: #000000;"> 0
+
+</span>----------------------------------------------------------------------<span style="color: #000000;">
+Ran </span>4 tests <span style="color: #0000ff;">in</span><span style="color: #000000;"> 0.000s
+
+FAILED (failures</span>=2)</pre>
+</div>
+<p>&nbsp;有时候可能会期待是不是抛出一些错误，可以这么写：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> test_attrerror(self):
+    d </span>=<span style="color: #000000;"> Dict()
+    <span style="background-color: #ffff99; color: #ff0000;">with</span> self.assertRaises(AttributeError):
+        value </span>= d.empty <span style="color: #008000;">#</span><span style="color: #008000;"> raise AttributeError()</span></pre>
+</div>
+<p>&nbsp;在测试用例中还可以添加setUp和tearDown函数，这两个函数分别在测试开始时和测试结束时被调用。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong><a name="4"></a></strong>【文档测试】</span></p>
+<p>1、搭建测试环境。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> sum(x, y):
+    </span><span style="background-color: #ffff99;"><span style="color: #800000;">'''</span><span style="color: #800000;">
+
+    test my sum funtion
+    
+    
+    </span><span style="color: #800000;">'''</span></span>
+    <span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y
+
+</span><span style="background-color: #ffff99;"><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">import</span><span style="color: #000000;"> doctest
+    doctest.testmod()</span></span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ python test.py
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 无输出</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、编写测试代码</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> sum(x, y):
+    </span><span style="color: #800000;">'''</span><span style="color: #800000;">
+
+    test my sum funtion
+    
+<span style="background-color: #ffff99;">    &gt;&gt;&gt; sum(2, 3)
+    5
+    &gt;&gt;&gt; sum(1, 9)
+    10
+
+    </span></span><span style="color: #800000;">'''</span>
+    <span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">import</span><span style="color: #000000;"> doctest
+    doctest.testmod()</span></pre>
+</div>
+<p>如果代码测试无误就不会有输出。</p>
+<p>如果有错则有类似输出如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ python test.py
+</span>**********************************************************************<span style="color: #000000;">
+File </span><span style="color: #800000;">"</span><span style="color: #800000;">test.py</span><span style="color: #800000;">"</span>, line 8, <span style="color: #0000ff;">in</span> <span style="color: #800080;">__main__</span><span style="color: #000000;">.sum
+Failed example:
+    sum(</span>1, 9<span style="color: #000000;">)
+Expected:
+    </span>9<span style="color: #000000;">
+Got:
+    </span>10
+**********************************************************************
+1<span style="color: #000000;"> items had failures:
+   </span>1 of   2 <span style="color: #0000ff;">in</span> <span style="color: #800080;">__main__</span><span style="color: #000000;">.sum
+</span>***Test Failed*** 1 failures.</pre>
+</div>
+<p>&nbsp;</p>

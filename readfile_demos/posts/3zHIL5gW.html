@@ -1,0 +1,132 @@
+<p>有些场景下只能基于 XML 来定义切面。</p>
+<h3>【Spring 之定义切面尝试】</h3>
+<p>1、<strong>XML 下定义切面</strong>（首先是要有一个对应的类。。。显然要比基于注解的麻烦）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+       xmlns:context</span><span style="color: #0000ff;">="http://www.springframework.org/schema/context"</span><span style="color: #ff0000;">
+       xmlns:aop</span><span style="color: #0000ff;">="http://www.springframework.org/schema/aop"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 启用 Aspectj 自动代理 不启动也能用？？？</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspectj-autoproxy </span><span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="audience"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="concert.Audience"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspect </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="audience"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:before </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="silenceCellPhones"</span><span style="color: #ff0000;">
+                        pointcut</span><span style="color: #0000ff;">="execution(* concert.Performance.perform(..))"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:before </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="takeSeats"</span><span style="color: #ff0000;">
+                        pointcut</span><span style="color: #0000ff;">="execution(* concert.Performance.perform(..))"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:after-returning </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="applause"</span><span style="color: #ff0000;">
+                        pointcut</span><span style="color: #0000ff;">="execution(* concert.Performance.perform(..))"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:after-throwing </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="demandRefund"</span><span style="color: #ff0000;">
+                        pointcut</span><span style="color: #0000ff;">="execution(* concert.Performance.perform(..))"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:aspect</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="theShow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="concert.TheShow"</span> <span style="color: #0000ff;">/&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>使用 <strong>&lt;aop:pointcut&gt;</strong> 定义命名切点</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+       xmlns:context</span><span style="color: #0000ff;">="http://www.springframework.org/schema/context"</span><span style="color: #ff0000;">
+       xmlns:aop</span><span style="color: #0000ff;">="http://www.springframework.org/schema/aop"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 启用 Aspectj 自动代理 不启动也能用？？？</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspectj-autoproxy </span><span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="audience"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="concert.Audience"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspect </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="audience"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:pointcut </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="performance"</span><span style="color: #ff0000;"> expression</span><span style="color: #0000ff;">="execution(* concert.Performance.perform(..))"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:before </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="silenceCellPhones"</span><span style="color: #ff0000;">
+                        pointcut-ref</span><span style="color: #0000ff;">="performance"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:before </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="takeSeats"</span><span style="color: #ff0000;">
+                        pointcut-ref</span><span style="color: #0000ff;">="performance"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:after-returning </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="applause"</span><span style="color: #ff0000;">
+                                 pointcut-ref</span><span style="color: #0000ff;">="performance"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:after-throwing </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="demandRefund"</span><span style="color: #ff0000;">
+                                pointcut-ref</span><span style="color: #0000ff;">="performance"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:aspect</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="theShow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="concert.TheShow"</span> <span style="color: #0000ff;">/&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>修改为<strong>环绕通知：</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> concert;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.aspectj.lang.ProceedingJoinPoint;
+</span><span style="color: #0000ff;">import</span> org.aspectj.lang.annotation.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Audience {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> performance() {}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> watchPerformance(ProceedingJoinPoint jp) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            System.out.println(</span>"Silencing cell phones"<span style="color: #000000;">);
+            System.out.println(</span>"Taking seats"<span style="color: #000000;">);
+            jp.proceed();
+            System.out.println(</span>"CLAP CLAP CLAP!!!AP CLAP!!!AP CLAP!!!AP CLAP!!!"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Throwable e) {
+            System.out.println(</span>"Demanding a refund"<span style="color: #000000;">);
+        }
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+       xmlns:context</span><span style="color: #0000ff;">="http://www.springframework.org/schema/context"</span><span style="color: #ff0000;">
+       xmlns:aop</span><span style="color: #0000ff;">="http://www.springframework.org/schema/aop"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspectj-autoproxy </span><span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="audience"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="concert.Audience"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:aspect </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="audience"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:pointcut </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="performance"</span><span style="color: #ff0000;"> expression</span><span style="color: #0000ff;">="execution(* concert.Performance.perform(..))"</span> <span style="color: #0000ff;">/&gt;</span>
+
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:around </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="watchPerformance"</span><span style="color: #ff0000;">
+                        pointcut-ref</span><span style="color: #0000ff;">="performance"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:aspect</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">aop:config</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="theShow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="concert.TheShow"</span> <span style="color: #0000ff;">/&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>2、测试所定义的切面</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> concert;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.ApplicationContext;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.support.ClassPathXmlApplicationContext;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 导入配置</span>
+        ApplicationContext ctx = <span style="color: #0000ff;">new</span> ClassPathXmlApplicationContext("concert-config.xml"<span style="color: #000000;">);
+
+        Performance performance </span>= (Performance) ctx.getBean("theShow"<span style="color: #000000;">);
+        performance.perform();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;一切正常。。。</p>

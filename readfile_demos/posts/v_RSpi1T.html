@@ -1,0 +1,33 @@
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;<span style="color: #000000;">
+
+hi()
+{
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">hello world!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    hi();
+
+    </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> hi();
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, i);
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 没有void的时候默认返回值为int, 结果i = 13 ???!!!??!?!?! </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>&nbsp;code 2:</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">int</span> result(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x)
+{
+    result </span>= x *<span style="color: #000000;"> x; 　　　　　　　　　　//&nbsp;c语言不支持这种写法哦~,改为return(x * x);
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> x = <span style="color: #800080;">4</span><span style="color: #000000;">;
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, result(x));
+}</span></pre>
+</div>
+<p>&nbsp;</p>

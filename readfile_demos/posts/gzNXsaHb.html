@@ -1,0 +1,70 @@
+<h2>样例输入</h2>
+<p>11Xo</p>
+<p>6*E</p>
+<h2>样例输出</h2>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202102/1042431-20210227152959860-544995042.png" alt="" width="155" height="296" loading="lazy" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202102/1042431-20210227153026703-414894637.png" alt="" width="80" height="155" loading="lazy" /></p>
+<h2>代码</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+<span style="color: #0000ff;">#define</span> MAX 80 
+
+<span style="color: #0000ff;">char</span><span style="color: #000000;"> buf[MAX][MAX];
+</span><span style="color: #0000ff;">void</span> mySwap(<span style="color: #0000ff;">int</span>&amp; a, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> b)
+{
+    </span><span style="color: #0000ff;">int</span> temp =<span style="color: #000000;"> a;
+    a </span>=<span style="color: #000000;"> b;
+    b </span>=<span style="color: #000000;"> temp;
+}
+</span><span style="color: #0000ff;">void</span> drawLine(<span style="color: #0000ff;">int</span> x1, <span style="color: #0000ff;">int</span> y1, <span style="color: #0000ff;">int</span> x2, <span style="color: #0000ff;">int</span> y2, <span style="color: #0000ff;">char</span><span style="color: #000000;"> ch)
+{
+    </span><span style="color: #0000ff;">if</span> (x1 ==<span style="color: #000000;"> x2) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 画直线 </span>
+        <span style="color: #0000ff;">if</span> (y1 &gt;<span style="color: #000000;"> y2) mySwap(y1, y2);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = y1; j &lt;= y2; ++<span style="color: #000000;">j) {
+            buf[x1][j] </span>=<span style="color: #000000;"> ch;
+        }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 画竖线</span>
+        <span style="color: #0000ff;">if</span> (x1 &gt;<span style="color: #000000;"> x2) mySwap(x1, x2);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = x1; i &lt;= x2; ++<span style="color: #000000;">i) {
+            buf[i][y1] </span>=<span style="color: #000000;"> ch;
+        }         
+    }
+}
+</span><span style="color: #0000ff;">void</span> drawCircle(<span style="color: #0000ff;">int</span> si, <span style="color: #0000ff;">int</span> sj, <span style="color: #0000ff;">int</span> width, <span style="color: #0000ff;">char</span><span style="color: #000000;"> ch)
+{
+    drawLine(si, sj, si, sj </span>+ width - <span style="color: #800080;">1</span><span style="color: #000000;">, ch);
+    drawLine(si, sj </span>+ width - <span style="color: #800080;">1</span>, si + width - <span style="color: #800080;">1</span>, sj + width - <span style="color: #800080;">1</span><span style="color: #000000;">, ch);
+    drawLine(si, sj, si </span>+ width - <span style="color: #800080;">1</span><span style="color: #000000;">, sj, ch);    
+    drawLine(si </span>+ width - <span style="color: #800080;">1</span>, sj, si + width - <span style="color: #800080;">1</span>, si + width - <span style="color: #800080;">1</span><span style="color: #000000;">, ch);    
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> width;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> a, b; 
+    
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;width) !=<span style="color: #000000;"> EOF) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c%c</span><span style="color: #800000;">"</span>, &amp;b, &amp;<span style="color: #000000;">a);
+        </span><span style="color: #0000ff;">int</span> x = <span style="color: #800080;">0</span>, y = <span style="color: #800080;">0</span>, cur =<span style="color: #000000;"> a;
+        
+        </span><span style="color: #0000ff;">int</span> tmpWidth =<span style="color: #000000;"> width;
+        </span><span style="color: #0000ff;">while</span> (tmpWidth &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            drawCircle(x</span>++, y++<span style="color: #000000;">, tmpWidth, cur);
+            tmpWidth </span>-= <span style="color: #800080;">2</span><span style="color: #000000;">;
+            cur </span>= (cur == a ?<span style="color: #000000;"> b : a);
+        }
+        
+        buf[</span><span style="color: #800080;">0</span>][<span style="color: #800080;">0</span>] = buf[width - <span style="color: #800080;">1</span>][width - <span style="color: #800080;">1</span>] = buf[<span style="color: #800080;">0</span>][width - <span style="color: #800080;">1</span>] = buf[width - <span style="color: #800080;">1</span>][<span style="color: #800080;">0</span>] = <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= width - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt;= width - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j) {
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf[i][j]);
+            }
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

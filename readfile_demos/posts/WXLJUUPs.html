@@ -1,0 +1,73 @@
+<h2>例子1</h2>
+<p>效果：</p>
+<p>&nbsp;<img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211029121347453-702434679.jpg" alt="" width="219" height="487" loading="lazy" /></p>
+<p>代码：</p>
+<p>main.dart</p>
+<div class="cnblogs_code">
+<pre>import 'package:flutter/material.dart'<span style="color: #000000;">;
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> MaterialApp(
+      title: </span>'dasldjalsdjasldj'<span style="color: #000000;">,
+      home: Scaffold(
+        appBar: </span><span style="color: #0000ff;">new</span> AppBar(title: <span style="color: #0000ff;">new</span> Text('new texrdasdasd'<span style="color: #000000;">),),
+        body: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListView(
+          children: [
+            </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListTile(
+              leading: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Icon(Icons.access_alarm),
+              title: </span><span style="color: #0000ff;">new</span> Text('access_alarm'<span style="color: #000000;">),
+            ),
+            </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListTile(
+              leading: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Icon(Icons.ad_units),
+              title: </span><span style="color: #0000ff;">new</span> Text('ad_units'<span style="color: #000000;">),
+            ),
+            </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListTile(
+              leading: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Icon(Icons.adb_rounded),
+              title: </span><span style="color: #0000ff;">new</span> Text('adb_rounded'<span style="color: #000000;">),
+            ),            
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main() {
+  runApp(MyApp());
+}</span></pre>
+</div>
+<h2>例子2</h2>
+<p>效果：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211029121438375-1408311896.jpg" alt="" width="186" height="413" loading="lazy" />或者<img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211029121527069-1111619117.jpg" alt="" width="186" height="413" loading="lazy" /></p>
+<p>代码：</p>
+<p>main.dart</p>
+<div class="cnblogs_code">
+<pre>import 'package:flutter/material.dart'<span style="color: #000000;">;
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> MaterialApp(
+      title: </span>'dasldjalsdjasldj'<span style="color: #000000;">,
+      home: Scaffold(
+        appBar: </span><span style="color: #0000ff;">new</span> AppBar(title: <span style="color: #0000ff;">new</span> Text('new texrdasdasd'<span style="color: #000000;">),),
+        body: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListView(
+          children: [
+            </span><span style="color: #0000ff;">new</span> Image.network('http://pic1.krmanhua.com:8001/krmh3/12/12136/v1.jpg'<span style="color: #000000;">),
+            </span><span style="color: #0000ff;">new</span> Image.network('http://pic1.krmanhua.com:8001/krmh3/12/12136/v1.jpg'<span style="color: #000000;">),
+            </span><span style="color: #0000ff;">new</span> Image.network('http://pic1.krmanhua.com:8001/krmh3/12/12136/v1.jpg'<span style="color: #000000;">),
+            </span><span style="color: #0000ff;">new</span> Image.network('http://pic1.krmanhua.com:8001/krmh3/12/12136/v1.jpg'<span style="color: #000000;">),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main() {
+  runApp(MyApp());
+}</span></pre>
+</div>
+<p>&nbsp;</p>

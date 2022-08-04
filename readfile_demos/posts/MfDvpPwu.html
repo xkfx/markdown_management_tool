@@ -1,0 +1,98 @@
+<p>事实上可以分为简单的三个步骤：</p>
+<ol>
+<li><a href="#a2">下载 JDK 压缩包</a></li>
+<li><a href="#a4">解压压缩包</a></li>
+<li><a href="#a5">配置环境变量</a></li>
+</ol>
+<p>需要注意的是：</p>
+<ul>
+<li>所有命令默认在 root 权限下进行！</li>
+<li>演示环境是&nbsp;<strong>Debian 8.8 64位</strong> （阿里云学生机）</li>
+</ul>
+<p>&nbsp;</p>
+<p>1、确认服务器上没有默认安装 JDK</p>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:~# <strong>java -</strong><span style="color: #000000;"><strong>version</strong>
+bash: java: command not found
+root@iZwz9f8i2ttdoht64eezprZ:</span>~<span style="color: #000000;"># <strong>javac</strong>
+bash: javac: command not found</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><a name="a2"></a>2、在<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank">官网</a>下载合适的 JDK&nbsp;</strong></p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201709/1042431-20170921152655040-2116319079.png" alt="" width="729" height="118" /></p>
+<p>&nbsp;</p>
+<p>3、通过 FTP 等手段将压缩包传到服务器</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201709/1042431-20170921153501290-732869482.png" alt="" width="855" height="165" /></p>
+<p>&nbsp;</p>
+<p><strong><a name="a4"></a>4、将压缩包在当前目录解压</strong></p>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:/usr/local/java# <strong><span style="color: #0000ff;">tar</span> xvzf jdk-8u144-linux-x64.<span style="color: #0000ff;">tar</span>.gz</strong></pre>
+</div>
+<p>&nbsp;确认成功了没有：</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201709/1042431-20170921154252259-838767853.png" alt="" width="783" height="65" /></p>
+<p>&nbsp;</p>
+<p><strong><a name="a5"></a>5、配置环境变量</strong></p>
+<p>到现在，已经能够在 jdk1.8.0_144/bin 下使用 java / javac 命令了，但是为了能够全局使用，我们需要把&nbsp;jdk1.8.0_144/bin 添加到<strong>环境变量 PATH</strong> 中。</p>
+<p>我们可以通过<strong> env</strong> 命令查看所有环境变量：</p>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:/usr/local/java/jdk1.<span style="color: #800080;">8</span>.0_144/bin# <span style="color: #0000ff;">env</span><span style="color: #000000;">
+SHELL</span>=/bin/<span style="color: #000000;">bash
+TERM</span>=<span style="color: #000000;">xterm
+SSH_CLIENT</span>=<span style="color: #000000;">
+OLDPWD</span>=/usr/local/java/jdk1.<span style="color: #800080;">8</span><span style="color: #000000;">.0_144 # 仅在当前目录下存在！
+SSH_TTY</span>=/dev/pts/<span style="color: #800080;">0</span><span style="color: #000000;">
+USER</span>=<span style="color: #000000;">root
+<strong>PATH</strong></span><strong>=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/</strong><span style="color: #000000;"><strong>bin</strong>
+MAIL</span>=/var/mail/<span style="color: #000000;">root
+PWD</span>=/usr/local/java/jdk1.<span style="color: #800080;">8</span>.0_144/<span style="color: #000000;">bin
+LANG</span>=en_US.UTF-<span style="color: #800080;">8</span><span style="color: #000000;">
+HOME</span>=/<span style="color: #000000;">root
+SHLVL</span>=<span style="color: #800080;">2</span><span style="color: #000000;">
+LOGNAME</span>=<span style="color: #000000;">root
+SSH_CONNECTION</span>=<span style="color: #000000;">
+_</span>=/usr/bin/<span style="color: #0000ff;">env</span></pre>
+</div>
+<p>&nbsp;将&nbsp;jdk1.8.0_144/bin 中的命令添加到环境变量 PATH 中：</p>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:/# <strong>export PATH=<span style="color: #800000;">"</span><span style="color: #800000;">$PATH:/usr/local/java/jdk1.8.0_144/bin</span><span style="color: #800000;">"</span></strong><span style="color: #000000;">
+root@iZwz9f8i2ttdoht64eezprZ:</span>/# <strong><span style="color: #0000ff;">echo</span><span style="color: #000000;"> $PATH 
+</span></strong>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:<strong>/usr/local/java/jdk1.<span style="color: #800080;">8</span>.0_144/bin</strong></pre>
+</div>
+<p><strong>&nbsp;echo $PATH</strong> 命令可以查看环境变量 PATH 中的内容，变量内容由 : 作为分割，添加的时候千万不能漏掉<strong> "$PATH: ..."</strong>，这是原始变量内容！</p>
+<p>如果希望增加一个环境变量 JAVA_HOME 可以参考：<a href="http://www.wikihow.com/Install-Oracle-Java-JDK-on-Ubuntu-Linux" target="_blank"><span id="hdr_prefix">wikiHow to Install Oracle Java JDK on Ubuntu Linux</span></a></p>
+<p>&nbsp;</p>
+<p>6、验证并测试。</p>
+<p>重复步骤一：</p>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:~# java -<span style="color: #000000;">version
+java version </span><span style="color: #800000;">"</span><span style="color: #800000;">1.8.0_144</span><span style="color: #800000;">"</span><span style="color: #000000;">
+Java(TM) SE Runtime Environment (build </span><span style="color: #800080;">1.8</span>.0_144-<span style="color: #000000;">b01)
+Java HotSpot(TM) </span><span style="color: #800080;">64</span>-Bit Server VM (build <span style="color: #800080;">25.144</span>-b01, mixed mode)</pre>
+</div>
+<p>如看到上述输出（或者类似输出）则意味着成功配置环境变量。</p>
+<p>随手编写一个 Hello World 程序进行测试：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyTest {
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+                System.out.println(</span>"Hello JDK."<span style="color: #000000;">);
+        }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>root@iZwz9f8i2ttdoht64eezprZ:~<span style="color: #000000;"># <strong>vim MyTest.java</strong>
+root@iZwz9f8i2ttdoht64eezprZ:</span>~<span style="color: #000000;"># <strong>javac MyTest.java</strong> 
+root@iZwz9f8i2ttdoht64eezprZ:</span>~<span style="color: #000000;"># <strong>java MyTest</strong>
+<strong>Hello JDK.</strong></span></pre>
+</div>
+<p>&nbsp;注意：vim 是在 Linux 编辑文本文件的主要工具！倘若不会使用请自行在网上搜索教程！~</p>
+<p>&nbsp;</p>
+<p>主要参考：</p>
+<ul>
+<li>《 Linux shell 脚本攻略》</li>
+</ul>
+<p>相关阅读：</p>
+<ul>
+<li>
+<p class="page-title"><span class="field field--name-title field--type-string field--label-hidden"><a href="https://alvinalexander.com/linux/vi-vim-editor-syntax-highlighting" target="_blank">vim editor: How do I enable and disable vim syntax highlighting?</a></span></p>
+</li>
+</ul>

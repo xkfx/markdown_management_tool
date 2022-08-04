@@ -1,0 +1,70 @@
+<p><a href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries" target="_blank">Document of Dictionaries&nbsp;</a></p>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/10min.html" target="_blank">10 Minutes to pandas</a></p>
+<p>&nbsp;</p>
+<h4>tutorialspoint</h4>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+data </span>= [[<span style="color: #800000;">'</span><span style="color: #800000;">Alex</span><span style="color: #800000;">'</span>,10],[<span style="color: #800000;">'</span><span style="color: #800000;">Bob</span><span style="color: #800000;">'</span>,12],[<span style="color: #800000;">'</span><span style="color: #800000;">Clarke</span><span style="color: #800000;">'</span>,13<span style="color: #000000;">]]
+df </span>= pd.DataFrame(data,columns=[<span style="color: #800000;">'</span><span style="color: #800000;">Name</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">Age</span><span style="color: #800000;">'</span>],dtype=<span style="color: #000000;">float)
+</span><span style="color: #0000ff;">print</span> df</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">      Name     Age
+0     Alex     </span>10.0
+1     Bob      12.0
+2     Clarke   13.0</pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="font-size: 1em;">Series 和 DataFrame 的创建</span></h4>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+
+s </span>= pd.Series([1, 2, 5, np.nan, 6, 8]) <span style="color: #008000;">#</span><span style="color: #008000;"> 类似于 numpy 的 array 不过是一维的，仅限一维哦</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(s)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0    1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1    2.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2    5.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3    NaN # not a number 表示无穷或者非数值</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4    6.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5    8.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> dtype: float64</span>
+<span style="color: #000000;">
+
+dates </span>= pd.date_range(<span style="color: #800000;">'</span><span style="color: #800000;">20180116</span><span style="color: #800000;">'</span>, periods=3) <span style="color: #008000;">#</span><span style="color: #008000;"> 创建 16 17 18 等 3 个日期，待会儿作为行</span>
+<span style="color: #000000;">
+df </span>= pd.DataFrame(np.random.randn(3,4), index=dates, columns=list(<span style="color: #800000;">'</span><span style="color: #800000;">ABCD</span><span style="color: #800000;">'</span>)) <span style="color: #008000;">#</span><span style="color: #008000;"> 这是二维的，类似于一个表！</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 通过 numpy 随机了一个 3 * 4 的数据，这和行数、列数是相对应的</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -0.139759  0.857653  0.754470  0.224313</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  1.565070  0.521973 -1.265168 -0.278524</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18 -0.668574 -0.527155  0.877785 -1.123334</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 直接通过一个字典也是可以创建 dataFrame 的。</span>
+df2 = pd.DataFrame({<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> : 1<span style="color: #000000;">.,
+                    </span><span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span> : pd.Timestamp(<span style="color: #800000;">'</span><span style="color: #800000;">20130102</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+                    </span><span style="color: #800000;">'</span><span style="color: #800000;">C</span><span style="color: #800000;">'</span> : pd.Series(1,index=list(range(4)),dtype=<span style="color: #800000;">'</span><span style="color: #800000;">float32</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+                    </span><span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span> : np.array([3] * 4,dtype=<span style="color: #800000;">'</span><span style="color: #800000;">int32</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+                    </span><span style="color: #800000;">'</span><span style="color: #800000;">E</span><span style="color: #800000;">'</span> : pd.Categorical([<span style="color: #800000;">"</span><span style="color: #800000;">test</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">train</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">test</span><span style="color: #800000;">"</span>,<span style="color: #800000;">"</span><span style="color: #800000;">train</span><span style="color: #800000;">"</span><span style="color: #000000;">]),
+                    </span><span style="color: #800000;">'</span><span style="color: #800000;">F</span><span style="color: #800000;">'</span> : <span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span><span style="color: #000000;"> })
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> print(df2)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">      A          B    C  D      E    F</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  1.0 2013-01-02  1.0  3   test  foo</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  1.0 2013-01-02  1.0  3  train  foo</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  1.0 2013-01-02  1.0  3   test  foo</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3  1.0 2013-01-02  1.0  3  train  foo</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 取得具体的类型</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df2.dtypes)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> A           float64</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> B    datetime64[ns]</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> C           float32</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> D             int32</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> E          category</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> F            object</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> dtype: object</span></pre>
+</div>
+<p>&nbsp;</p>

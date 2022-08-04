@@ -1,0 +1,50 @@
+<p>1、servlet的存在就是要为客户服务。servlet的任务就是得到一个用户的请求，再发回一些响应。</p>
+<ul>
+<li>请求可能很复杂，也可能很简单，例如，&ldquo;为我的购物车结账&rdquo;，这个请求携带了一些重要的数据，你必须知道如何获取这些数据；相应的，响应也可能需要携带一些东西，你必须知道怎样把这些附加信息写入响应。</li>
+<li>servlet既可以直接输出响应给Web容器，也可以转发请求给JSP</li>
+</ul>
+<p>&nbsp;</p>
+<p>2、Web容器（例如Tomcat）全盘控制着servlet的一生。</p>
+<ol>
+<li>用户点击一个<strong>URL</strong>，这个URL指向一个<strong>servlet</strong></li>
+<li>容器&ldquo;看出&rdquo;URL指向一个servlet，于是创建两个对象：<strong>HttpServletRequest</strong>、<strong>HttpServletResponse</strong></li>
+<li>容器为对应的servlet<strong>创建线程</strong>，并将两个对象传入<strong>service(</strong><span style="color: #888888;">HttpServletRequest req，&nbsp;HttpServletResponse resp</span><strong>)</strong></li>
+<li>service方法根据客户发过来的HTTP方法（GET、POST等）调用servlet的对应方法（<strong>doGet(</strong><span style="color: #888888;">HttpServletRequest req，&nbsp;HttpServletResponse resp</span><strong>)</strong>、<strong>doPost(</strong><span style="color: #888888;">HttpServletRequest req，&nbsp;HttpServletResponse resp</span><strong>)</strong>等）</li>
+<li>servlet通过响应对象将响应写给客户，容器传回响应给客户。</li>
+<li>service()线程结束，保留或是清理响应的对象，客户得到响应。</li>
+</ol>
+<p>&nbsp;</p>
+<p>3、mark 一下tomcat的官方文档&nbsp;<a href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/" target="_blank">Servlet API Documentation</a>&nbsp;以及head first系列&nbsp;<a href="https://www.google.co.jp/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=3&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwi1y7vP8O7TAhUFmpQKHaX1DQsQFgg9MAI&amp;url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FHead_First_(book_series)&amp;usg=AFQjCNG-JqLO8yZuBdQMqiPiPmhh8r82kQ&amp;sig2=kMf6NfEq2B5Z9cbKYw4oUA" data-href="https://en.wikipedia.org/wiki/Head_First_(book_series)">Head First (book series)&nbsp;</a></p>
+<p>&nbsp;</p>
+<p>4、HttpServlet的继承树、接口</p>
+<ul>
+<li><strong>java.lang.Object&nbsp;</strong></li>
+</ul>
+<p><strong>　　　　<img src="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/resources/inherit.gif" alt="extended by" />javax.servlet.GenericServlet</strong></p>
+<p><strong>　　　　　　<img src="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/resources/inherit.gif" alt="extended by" />javax.servlet.http.HttpServlet</strong></p>
+<p><strong>　　　　　　　　<img src="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/resources/inherit.gif" alt="extended by" />MyServlet　</strong>　　　</p>
+<ul>
+<li><strong>All Implemented Interfaces:</strong>java.io.Serializable,&nbsp;<a title="interface in javax.servlet" href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/Servlet.html">Servlet</a>,&nbsp;<a title="interface in javax.servlet" href="https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/ServletConfig.html">ServletConfig</a></li>
+</ul>
+<p>Servlet接口：包括三个<span style="color: #ff0000;"><strong>生命周期方法</strong></span></p>
+<p>GenericServlet：抽象类，包括大部分基本servlet行为，基本不扩展这个类</p>
+<p>HttpServlet：强调servlet的HTTP特性</p>
+<p>MyServlet：覆盖所需的HTTP方法，例如doPost等</p>
+<p>&nbsp;</p>
+<p>5、每个请求都在一个单独的<strong>线程</strong>运行（不是进程），<strong>servlet类不会有多个实例！<strong>servlet类不会有多个实例！</strong></strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170514121345160-251101012.png" alt="" width="506" height="491" /></p>
+<p>&nbsp;</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170514120901363-984770242.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><strong>6、servlet类的加载和实例化到底是什么时候开始的？基本上是在容器启动时，有例外，但是一定是在第一个客户请求提供服务之前。</strong></p>
+<p>&nbsp;</p>
+<p>7、在init()之前，还只是个普通的对象，当且仅当一个对象具备&ldquo;servlet特性&rdquo;的时候，才能被称作servlet</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170514125203660-1205889395.png" alt="" width="438" height="187" /></p>
+<p>&nbsp;</p>
+<p>8、在构造函数和init()之间，servlet处于一种 介于生与死之间的状态&nbsp;<a href="https://en.wikipedia.org/wiki/Schr%C3%B6dinger%27s_cat">Schr&ouml;dinger's cat - Wikipedia</a></p>
+<p>&nbsp;</p>
+<p>9、ServletConfig和ServletContext。每一个servlet都有一个ServletConfig对象，用处就是字面上的意思；每个Web应用都有个ServletContext（应该叫做AppContext），相当于应用中的一个公告栏。</p>
+<p>&nbsp;</p>
+<p><strong>10、最后，servlet的真正任务是处理请求，这才是servlet存在的意义，请求和响应是其中的关键。</strong></p>
+<p><strong><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170514152101566-424319891.png" alt="" /></strong></p>
+<p>&nbsp;</p>

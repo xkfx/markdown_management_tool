@@ -1,0 +1,15 @@
+<p>饮水思源：<a class="navbar-brand" href="http://jinxuliang.com/">金老师的自学网站</a></p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201905/1042431-20190501205626141-242026470.gif" alt="" /></p>
+<p>&nbsp;</p>
+<p>C#实现进度条异常简单，因为所有东西都已经封装好了。</p>
+<p>只需要简单的拖拽：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201905/1042431-20190501204158988-234931804.png" alt="" width="664" height="431" /></p>
+<p>写两行代码就完工了：</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> timer1_Tick(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+<strong>            progressBar1.Value </strong></span><strong>+= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (progressBar1.Value == <span style="color: #800080;">100</span>) progressBar1.Value = <span style="color: #800080;">0</span></strong><span style="color: #000000;"><strong>;</strong>
+        }</span></pre>
+</div>
+<p>&nbsp;最后在某处timer1.Start();即可启动进度条。</p>

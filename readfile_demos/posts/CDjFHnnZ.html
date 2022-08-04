@@ -1,0 +1,133 @@
+<p>代码编辑&amp;解释工具：<a id="cb_post_title_url" href="https://www.cnblogs.com/nxld/p/6566380.html">Jupyter Notebook 快速入门</a></p>
+<p>形象说明BP神经网络的用法（图片来自推特）：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201809/1042431-20180924142604798-729251721.png" alt="" /></p>
+<p>Bpnn类最主要的三个方法：</p>
+<ol>
+<li>initialize方法，用于设定神经网络的层数、各层节点数</li>
+<li>predict方法，方便用户应用模型做预测</li>
+<li>train方法，用来训练模型</li>
+</ol>
+<p>所有代码如下（需要导入numpy模块）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> math
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> linear_transformation(matrix, vector):
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vector.dot(matrix)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> vector = np.array([1, 2])</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> matrix = [[1, 2], [3, 4]]</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> vector = linear_transformation(matrix, vector)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print("linear_transformation:", vector)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print("linear_transformation:", type(vector))</span>
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> active(vector, f):
+    </span><span style="color: #0000ff;">return</span> np.array(list(map(<span style="color: #0000ff;">lambda</span><span style="color: #000000;"> x: f(x), vector)))
+
+</span><span style="color: #0000ff;">def</span> sigmoid(x): <span style="color: #008000;">#</span><span style="color: #008000;"> 激活函数</span>
+    <span style="color: #0000ff;">return</span> 1.0 / (1.0 + math.exp(-<span style="color: #000000;">x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> result = active(vector, sigmoid)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print("active:", result)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print("active:", type(result))</span>
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Bpnn:
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> model是一个list，例如[2, 2, 3, 1]表示输入结点2个，第一个隐含层有2个节点，第二个隐含层有3个节点，输出结点1个</span>
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> initialize(self, model):
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 随机生成模型对应的矩阵（网络权重）和偏置</span>
+        self.matrixs =<span style="color: #000000;"> []
+        self.biases </span>=<span style="color: #000000;"> []
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(model) - 1): <span style="color: #008000;">#</span><span style="color: #008000;"> 矩阵个数为总层数减1，例如4层的网络只需要3个矩阵就可以了           </span>
+            self.matrixs.append(np.random.randn(model[i], model[i + 1])) <span style="color: #008000;">#</span><span style="color: #008000;"> 矩阵的列数是对应输入节点的个数，矩阵的行数对应输出节点的个数</span>
+        
+        <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(model) - 1<span style="color: #000000;">):
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 列表中的每个np数组代表一整层节点的偏置</span>
+            self.biases.append(np.random.randn(model[i + 1<span style="color: #000000;">]))
+    
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> predict(self, vector):
+        result </span>=<span style="color: #000000;"> np.array(vector)
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(self.matrixs)): <span style="color: #008000;">#</span><span style="color: #008000;"> 其实就是对一个向量做多次线性变换</span>
+            result = linear_transformation(self.matrixs[i], result) +<span style="color: #000000;"> self.biases[i]
+            result </span>=<span style="color: #000000;"> active(result, sigmoid)
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result
+    
+    </span><span style="color: #0000ff;">def</span> neural_net_output(self, feature): <span style="color: #008000;">#</span><span style="color: #008000;"> 记录各层的输出</span>
+        result =<span style="color: #000000;"> []
+        output </span>= active(linear_transformation(self.matrixs[0], np.array(feature)) +<span style="color: #000000;"> self.biases[0], sigmoid)
+        result.append(output)
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(self.matrixs) - 1<span style="color: #000000;">):
+            output </span>= active(linear_transformation(self.matrixs[i + 1], output) + self.biases[i + 1<span style="color: #000000;">], sigmoid)
+            result.append(output)
+        </span><span style="color: #0000ff;">return</span> result <span style="color: #008000;">#</span><span style="color: #008000;"> 格式为[[代表第1层输出的向量], [代表第2层输出的向量], ...,[代表最终输出的向量]]，所有向量都是一维的np.array，向量长度为该层节点数</span>
+    
+    <span style="color: #0000ff;">def</span> compute_error(self, prediction, actual): <span style="color: #008000;">#</span><span style="color: #008000;"> 计算各层的误差,actual是样本标记值（期望获得的值）</span>
+        result =<span style="color: #000000;"> []
+        prediction </span>= prediction[:] <span style="color: #008000;">#</span><span style="color: #008000;"> 后面的处理都不影响原始数组</span>
+        prediction.reverse() <span style="color: #008000;">#</span><span style="color: #008000;"> 转置便于处理</span>
+        error = prediction[0] * (1 - prediction[0]) * (actual - prediction[0]) <span style="color: #008000;">#</span><span style="color: #008000;"> 计算最终输出的误差</span>
+<span style="color: #000000;">        result.append(error)
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(self.matrixs) - 1): <span style="color: #008000;">#</span><span style="color: #008000;"> 计算每层的误差，可以通过转置矩阵计算上一层误差的一个因子</span>
+            error = prediction[i + 1] * (1- prediction[i + 1]) * linear_transformation(self.matrixs[-1 -<span style="color: #000000;"> i].T, error) 
+            result.append(error)
+        result.reverse()
+        </span><span style="color: #0000ff;">return</span> result <span style="color: #008000;">#</span><span style="color: #008000;"> 格式为[[代表第1层输出误差的向量], [代表第2层输出误差的向量], ...,[代表最终输出误差的向量]]，所有向量都是一维的np.array，向量长度为该层节点数数</span>
+
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> update_network(self, feature, prediction, error, LEARING_RATE):
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 更新权重（手算凑出来的计算方法&darr;）</span>
+        temp =<span style="color: #000000;"> np.ones_like(self.matrixs[0]) 
+        temp </span>= temp * LEARING_RATE *<span style="color: #000000;"> error[0]
+        temp </span>= temp.T *<span style="color: #000000;"> np.array(feature)
+        temp </span>=<span style="color: #000000;"> temp.T
+        self.matrixs[0] </span>+=<span style="color: #000000;"> temp;
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(self.matrixs) - 1<span style="color: #000000;">):
+            temp </span>= np.ones_like(self.matrixs[i + 1<span style="color: #000000;">]) 
+            temp </span>= temp * LEARING_RATE * error[i + 1<span style="color: #000000;">]
+            temp </span>= temp.T *<span style="color: #000000;"> prediction[i]
+            temp </span>=<span style="color: #000000;"> temp.T
+            self.matrixs[i </span>+ 1] +=<span style="color: #000000;"> temp;            
+        
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 更新偏置</span>
+        <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(len(self.biases)):
+            self.biases[i] </span>+= LEARING_RATE *<span style="color: #000000;"> error[i]
+    
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> train(self, get_batch, MAX_ITERATION, LEARING_RATE, MAX_LOSS):
+        loss </span>= MAX_LOSS =<span style="color: #000000;"> abs(MAX_LOSS)
+        count </span>=<span style="color: #000000;"> MAX_ITERATION
+        </span><span style="color: #0000ff;">while</span> abs(loss) &gt;= MAX_LOSS <span style="color: #0000ff;">and</span> count &gt;<span style="color: #000000;"> 0:
+            batch </span>=<span style="color: #000000;"> get_batch()
+            </span><span style="color: #0000ff;">for</span> example <span style="color: #0000ff;">in</span><span style="color: #000000;"> batch:
+                prediction </span>=<span style="color: #000000;"> self.neural_net_output(example.feature)
+                error </span>=<span style="color: #000000;"> self.compute_error(prediction, example.label)
+                self.update_network(example.feature, prediction, error, LEARING_RATE)
+            loss </span>= abs(np.mean(error[-1])) <span style="color: #008000;">#</span><span style="color: #008000;"> 取最后一次迭代最终输出的平均值作为本批次的误差</span>
+            count = count - 1
+        <span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">迭代次数:</span><span style="color: #800000;">"</span>, MAX_ITERATION -<span style="color: #000000;"> count)
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">误差:</span><span style="color: #800000;">"</span><span style="color: #000000;">, loss)
+        
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> LabeledExample:
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, feature, label):
+        self.feature </span>=<span style="color: #000000;"> feature
+        self.label </span>=<span style="color: #000000;"> label
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 训练一个类似于异或（xor）运算的函数，相同为假，相异为真</span>
+labeled_examples = [LabeledExample([0, 0], [0]), LabeledExample([0, 1], [1]), LabeledExample([1, 0], [1]), LabeledExample([1, 1<span style="color: #000000;">], [0])]
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> full_batch():
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> labeled_examples
+
+
+bpnn </span>=<span style="color: #000000;"> Bpnn()
+bpnn.initialize([</span>2, 2, 1]) <span style="color: #008000;">#</span><span style="color: #008000;"> 构造一个三层的神经网络，输入节点2个，隐含层节点2个，输出节点1个</span>
+bpnn.train(full_batch, 10000, 0.6, 0.01) <span style="color: #008000;">#</span><span style="color: #008000;"> 学习因子为0.6, 最大允许误差0.01</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">输入层与隐含层权值</span><span style="color: #800000;">"</span><span style="color: #000000;">, bpnn.matrixs[0])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">隐含层权值与输出层权值</span><span style="color: #800000;">"</span>, bpnn.matrixs[1<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">隐含层阈值</span><span style="color: #800000;">"</span><span style="color: #000000;">, bpnn.biases[0])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">输出层阈值</span><span style="color: #800000;">"</span>, bpnn.biases[1<span style="color: #000000;">])
+sample1 </span>= [0.05, 0.1<span style="color: #000000;">]
+sample2 </span>= [0.2, 0.9<span style="color: #000000;">]
+sample3 </span>= [0.86, 0.95<span style="color: #000000;">]
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">预测样本</span><span style="color: #800000;">"</span>, sample1, <span style="color: #800000;">"</span><span style="color: #800000;">的结果是:</span><span style="color: #800000;">"</span><span style="color: #000000;">, bpnn.predict(sample1))
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">预测样本</span><span style="color: #800000;">"</span>, sample2, <span style="color: #800000;">"</span><span style="color: #800000;">的结果是:</span><span style="color: #800000;">"</span><span style="color: #000000;">, bpnn.predict(sample2))
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">预测样本</span><span style="color: #800000;">"</span>, sample3, <span style="color: #800000;">"</span><span style="color: #800000;">的结果是:</span><span style="color: #800000;">"</span>, bpnn.predict(sample3))</pre>
+</div>
+<p>&nbsp;</p>

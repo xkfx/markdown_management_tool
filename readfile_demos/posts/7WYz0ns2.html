@@ -1,0 +1,92 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">参考</a></li>
+<li><a href="#anchor1">Making All Loggers Asynchronous</a>
+<ul>
+<li><a href="#anchor2">第一步，添加相应的disruptor库</a></li>
+<li><a href="#anchor3">第二步，设置系统属性log4j2.contextSelector</a></li>
+<li><a href="#anchor4">第三步，检验！</a></li>
+</ul>
+</li>
+</ol></ul>
+</div>
+<h2><a name="anchor0"></a>参考</h2>
+<ul>
+<li><a href="https://www.jianshu.com/p/9f0c67facbe2">Log4j2简介和异步日志梳理 - 简书</a></li>
+</ul>
+<ul>
+<li><strong><a href="https://logging.apache.org/log4j/2.x/manual/async.html">Log4j &ndash; Log4j 2 Lock-free Asynchronous Loggers for Low-Latency Logging - Apache Log4j 2</a></strong></li>
+</ul>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/36554554">Log4j2与Slf4j的最佳实践 - 知乎</a></li>
+</ul>
+<ul>
+<li><a href="https://dzone.com/articles/asynchronous-logging-with-log4j-2">Asynchronous Logging With Log4J Part 2 - DZone Performance</a></li>
+</ul>
+<ul>
+<li><a href="https://stackoverflow.com/questions/27154558/log4j2-location-for-setting-log4jcontextselector-system-property-for-asynchrono">java - log4j2: Location for setting Log4jContextSelector system property for asynchronous logging - Stack Overflow</a></li>
+</ul>
+<h2><a name="anchor1"></a>Making All Loggers Asynchronous</h2>
+<p>将原本的log4j2同步日志转化为&ldquo;完全异步日志模式&rdquo;。官方文档：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e6ba102b-d33d-4c13-94d5-f895293762ed')"><img id="code_img_closed_e6ba102b-d33d-4c13-94d5-f895293762ed" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_e6ba102b-d33d-4c13-94d5-f895293762ed" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('e6ba102b-d33d-4c13-94d5-f895293762ed',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_e6ba102b-d33d-4c13-94d5-f895293762ed" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">This is simplest to configure and gives the best performance. To make all loggers asynchronous, add the disruptor jar to the classpath and set the system property log4j2.contextSelector to org.apache.logging.log4j.core.async.AsyncLoggerContextSelector.
+
+Log4j-2.9 and higher require disruptor-3.3.4.jar or higher on the classpath. Prior to Log4j-2.9, disruptor-3.0.0.jar or higher was required.</span></pre>
+</div>
+<span class="cnblogs_code_collapse">document ...</span></div>
+<h3><a name="anchor2"></a>第一步，添加相应的disruptor库</h3>
+<p>各个依赖包的版本需要对应。如下：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('ffe76fb5-d65e-464d-ae32-0763caefb2a6')"><img id="code_img_closed_ffe76fb5-d65e-464d-ae32-0763caefb2a6" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_ffe76fb5-d65e-464d-ae32-0763caefb2a6" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('ffe76fb5-d65e-464d-ae32-0763caefb2a6',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_ffe76fb5-d65e-464d-ae32-0763caefb2a6" class="cnblogs_code_hide">
+<pre>        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.logging.log4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>log4j-core<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.8.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.logging.log4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>log4j-api<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.8.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.logging.log4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>log4j-slf4j-impl<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.8.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-web </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.logging.log4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>log4j-web<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.8.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> https://mvnrepository.com/artifact/com.lmax/disruptor </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Asynchronous Loggers internally use the Disruptor, a lock-free
+        inter-thread communication library, instead of queues, resulting in
+        higher throughput and lower latency.</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.lmax<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>disruptor<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>3.4.2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">pom.xml</span></div>
+<h3><a name="anchor3"></a>第二步，设置系统属性log4j2.contextSelector</h3>
+<p>一种简便的方式是在相应classpath下创建一个叫<strong>log4j2.component.properties</strong>的文件（maven项目直接放在main/resources就好），内容如下：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('ec9d9573-0c41-43d7-b43a-2f46ea88b78c')"><img id="code_img_closed_ec9d9573-0c41-43d7-b43a-2f46ea88b78c" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_ec9d9573-0c41-43d7-b43a-2f46ea88b78c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('ec9d9573-0c41-43d7-b43a-2f46ea88b78c',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_ec9d9573-0c41-43d7-b43a-2f46ea88b78c" class="cnblogs_code_hide">
+<pre>Log4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector</pre>
+</div>
+<span class="cnblogs_code_collapse">log4j2.component.properties</span></div>
+<p>PS. Log4jContextSelector的第一个字母必须大写</p>
+<h3><a name="anchor4"></a>第三步，检验！</h3>
+<p>首先你需要允许log4j2输出自身的debug信息，log4j2.xml：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Configuration </span><span style="color: #ff0000;">status</span><span style="color: #0000ff;">="DEBUG"</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>然后启动你的web项目，在ide或者catalina.out里观察debug信息，类似下面这样就说明成功：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181127204016182-1710896094.png" alt="" width="914" height="93" /></p>

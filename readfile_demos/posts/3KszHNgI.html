@@ -1,0 +1,64 @@
+<h3>【环境与Profile】</h3>
+<p>暂略</p>
+<h3>【条件化的bean】</h3>
+<p>暂略</p>
+<h3>【处理自动装配歧义性】</h3>
+<p>暂略</p>
+<h3>【 bean 的作用域】</h3>
+<p>在 @Componen 、 @Bean 下以及 XML 中的声明方式如下所示，</p>
+<div class="cnblogs_code">
+<pre>@Component("LonelyHeartsClub"<span style="color: #000000;">)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Singleton 作用域是默认的，Prototype 作用域需要特别声明，每次注入都会创建一个新的 Bean 实例</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> SgtPeppers <span style="color: #0000ff;">implements</span> CompactDisc {}</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> CompactDisc compactDisc() {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> SgtPeppers();
+    }</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="compactDisc"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="soundsystem.bean.BlankDisc"</span><span style="color: #ff0000;">
+          scope</span><span style="color: #0000ff;">="prototype"</span><span style="color: #ff0000;">
+          c:_0</span><span style="color: #0000ff;">="..."</span><span style="color: #ff0000;">
+          c:_1</span><span style="color: #0000ff;">="...."</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>...<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>....<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">value</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">constructor-arg</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>需要注意的是， 声明 <strong>Session 作用域</strong>和 <strong>Request 作用域</strong>必须先在<strong> web.xml</strong> 中添加如下<strong> listener</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="3.1"</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #ff0000;"><strong>    &lt;listener&gt;
+        &lt;listener-class&gt;org.springframework.web.context.request.RequestContextListener&lt;/listener-class&gt;
+    &lt;/listener&gt;</strong></span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong>代理模式</strong>需要根据 bean 对应的是接口还是具体类而改动。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Component
+@Scope(value </span>= WebApplicationContext.SCOPE_SESSION, proxyMode =<span style="color: #000000;"> ScopedProxyMode.INTERFACES )
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> BlankDisc <span style="color: #0000ff;">implements</span><span style="color: #000000;"> CompactDisc { }
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> @Bean 下的声明类似</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cart"</span><span style="color: #ff0000;">
+          class</span><span style="color: #0000ff;">="shopping.ShoppingCart"</span><span style="color: #ff0000;">
+          scope</span><span style="color: #0000ff;">="session"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">aop:scoped-proxy </span><span style="color: #ff0000;">proxy-target-class</span><span style="color: #0000ff;">="false"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

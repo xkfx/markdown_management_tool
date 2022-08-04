@@ -1,0 +1,76 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+ *     
+ *
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+#include</span>&lt;stdio.h&gt;<span style="color: #000000;">
+#include</span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include</span>&lt;time.h&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> tmp;
+    
+    </span><span style="color: #0000ff;">int</span> in_hand[<span style="color: #800080;">21</span>] = {<span style="color: #800080;">0</span><span style="color: #000000;">};
+    
+    </span><span style="color: #0000ff;">char</span> name[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    
+    </span><span style="color: #0000ff;">char</span> tarot[<span style="color: #800080;">21</span>][<span style="color: #800080;">50</span>] =<span style="color: #000000;"> {
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[0]---&gt;(The Fool, 0)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[1]---&gt;(The Magician, I)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[2]---&gt;(The High Priestess, II)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[3]---&gt;(The Empress, III)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[4]---&gt;(The Emperor, IV)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[5]---&gt;(The Hierophant, or the Pope, V)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[6]---&gt;(The Lovers, VI)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[7]---&gt;(The Chariot, VII)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[8]---&gt;(Strength, VIII)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[9]---&gt;(The Hermit, IX)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[10]---&gt;(The Wheel of Fortune, X)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[11]---&gt;(Justice, XI)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[12]---&gt;(The Hanged Man, XII)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[13]---&gt;(Death, XIII)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[14]---&gt;(Temperance, XIV)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[15]---&gt;(The Devil, XV)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[16]---&gt;(The Tower, XVI)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[17]---&gt;(The Star, XVII)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[18]---&gt;(The Moon, XVIII)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[19]---&gt;(The Sun, XIX)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[20]---&gt;(Judgement, XX)</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">[21]---&gt;(The World, XXI)</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    };
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">TAROT.\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Enter your name:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    gets(name);
+    
+    </span><span style="color: #0000ff;">int</span> left_cards = <span style="color: #800080;">21</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">for</span>(;left_cards &gt; <span style="color: #800080;">0</span><span style="color: #000000;">;){
+        
+        srand((</span><span style="color: #0000ff;">int</span>)time(<span style="color: #800080;">0</span><span style="color: #000000;">));
+        
+        tmp </span>= rand()%<span style="color: #800080;">21</span><span style="color: #000000;">;
+        
+        </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">in_hand[tmp]){
+            
+            in_hand[tmp] </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+            
+            </span><span style="color: #0000ff;">if</span>(left_cards &gt; <span style="color: #800080;">1</span><span style="color: #000000;">)
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s \n</span><span style="color: #800000;">"</span><span style="color: #000000;">, tarot[tmp]);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">YOUR CARD:%s \n</span><span style="color: #800000;">"</span><span style="color: #000000;">, tarot[tmp]);
+            
+            left_cards </span>--<span style="color: #000000;">;
+        }
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>TAROT.<br />Enter your name:xkfx<br />[18]---&gt;(The Moon, XVIII)<br />[1]---&gt;(The Magician, I)<br />[4]---&gt;(The Emperor, IV)<br />[7]---&gt;(The Chariot, VII)<br />[10]---&gt;(The Wheel of Fortune, X)<br />[14]---&gt;(Temperance, XIV)<br />[17]---&gt;(The Star, XVII)<br />[20]---&gt;(Judgement, XX)<br />[3]---&gt;(The Empress, III)<br />[6]---&gt;(The Lovers, VI)<br />[9]---&gt;(The Hermit, IX)<br />[12]---&gt;(The Hanged Man, XII)<br />[16]---&gt;(The Tower, XVI)<br />[19]---&gt;(The Sun, XIX)<br />[8]---&gt;(Strength, VIII)<br />[11]---&gt;(Justice, XI)<br />[0]---&gt;(The Fool, 0)<br />[13]---&gt;(Death, XIII)<br />[2]---&gt;(The High Priestess, II)<br />[5]---&gt;(The Hierophant, or the Pope, V)<br />YOUR CARD:[15]---&gt;(The Devil, XV)</p>

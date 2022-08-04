@@ -1,0 +1,19 @@
+<p><span style="background-color: #ffff99;">p273~p276</span>：</p>
+<p>1、获取异常的更多信息：e.getMessage()。</p>
+<p>&nbsp;</p>
+<p>2、得到异常的实际类型：e.getClass().getName()。</p>
+<p>&nbsp;</p>
+<p>3、当异常之间不存在子类关系，并且异常的处理机制（handler code）是相同时，可以用一个</p>
+<p>catch子句捕获这些异常，这样会更<strong>高效</strong>。例如：catch(FileNotFoundException | UnknownHostException e)</p>
+<p>&nbsp;</p>
+<p>4、在 catch子句中可以抛出一个异常。这样做的原因可能是：只是想记录一个异常，重新将它抛出，而不做任何改变，</p>
+<p>或者子系统抛给父系统处理异常。</p>
+<p>&nbsp;</p>
+<p>5、finally子句。无论是否有异常，该子句中的代码都会被执行。</p>
+<p>如果一切正常，执行顺序为：try{}中的语句&mdash;&mdash;&gt;finally{}中的语句&mdash;&mdash;&gt;之后的语句</p>
+<p>如果有异常，执行顺序为：try{}&mdash;&mdash;&gt;catch{}&mdash;&mdash;&gt;finally{}</p>
+<p>&nbsp;</p>
+<p>6、<strong>try语句可以没有 catch只有 finally。</strong></p>
+<p>&nbsp;</p>
+<p>7、在方法内，finally将在return之前执行。</p>
+<p>&nbsp;</p>

@@ -1,0 +1,49 @@
+<h2>INDEX</h2>
+<ul>
+<li>
+<p><a href="#a1">Introducing ML</a></p>
+</li>
+<li>
+<p class="devsite-page-title"><a href="#a2">Framing</a>&nbsp; &nbsp;</p>
+</li>
+<li>
+<p><a href="#a3">Fundamental machine learning terminology</a></p>
+</li>
+</ul>
+<h2><a name="a1"></a>Introducing ML</h2>
+<p>What you learn here will allow you, as a software engineer, to do three things better.</p>
+<ul>
+<li>First, it gives you a tool to reduce the time you spend programming.</li>
+<li>Second, it will allow you to customize your products,&nbsp;making them better for specific groups of people.</li>
+<li>Third, machine learning lets you solve problems that you, as a programmer,&nbsp;have no idea how to do by hand.</li>
+</ul>
+<p>Now, besides these three practical reasons for mastering machine learning,&nbsp;there's a philosophical reason: machine learning changes the way you think about a problem.</p>
+<p>we use assertions to prove properties of our program are correct.&nbsp;With machine learning, the focus shifts from a mathematical science to a natural science:&nbsp;we're making observations about an uncertain world,&nbsp;running experiments, and using statistics, not logic, to analyze the results of the experiment.&nbsp;The ability to think like a scientist&nbsp;will expand your horizons and open up new areas that you couldn't explore without it.</p>
+<h2 class="devsite-page-title"><a name="a2"></a>Framing&nbsp; &nbsp;</h2>
+<p>Hi, my name is D. Sculley.<br />I'm one of the people who is coming to you from Google in order to present this Machine Learning Crash Course with TensorFlow APIs.<br />Now, before we dive in, let's take a second to remind ourselves of the basic framework that we are talking about in this class.<br />And that basic framework is supervised machine learning.<br />In supervised machine learning, we are learning to create models that combine inputs, to produce useful predictions even on previously unseen data.<br />Now, where we're training that model, we're providing it with labels.<br />And in the case of, say, email spam filtering, that label might be something like 'spam or not spam'.<br />It's the target that we're trying to predict.<br />The features are the way that we represent our data.<br />So features might be drawn from an email as, say, words in the email or "to and from addresses", various pieces of routing or header information, any piece of information that we might extract from that email. to represent it for our machine learning system.<br />An example, is one piece of data.<br />For example, one email.<br />Now that could be a labeled example in which we have both feature information, represented in that email, and the label value, of 'spam or not spam'.<br />Maybe that's come from a user who has provided that to us.<br />Or we could have an unlabeled example, such as a piece of email for which we have feature information, but we don't yet know whether it is spam or not spam.<br />And likely what we are going to do is classify that to put it in the user's inbox or spam folder.<br />Finally, we have a model and that model is the thing that is doing the predicting.<br />It's something that we're going to try and create through a process of learning from data.</p>
+<h2><a name="a3"></a>Fundamental machine learning terminology</h2>
+<h3 id="labels" class="hide-from-toc">Labels</h3>
+<p>label 是我们所预测的东西。例如，在垃圾邮件过滤系统中，label 是类似于&ldquo;垃圾邮件或非垃圾邮件&rdquo;的东西。</p>
+<p>用 y 来表示它。</p>
+<h3 id="features" class="hide-from-toc">Features</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180419232506148-1774375544.png" alt="" width="185" height="44" /></p>
+<p>feature 是输入的变量。在垃圾邮件过滤系统中，feature 可以包括：邮件文本中的单词、发送者地址、发送时间等。</p>
+<p>一个简单的机器学习系统可能只用一个 feature，但是对于复杂的机器学习系统而言，可能用到上百万个 feature 。</p>
+<h3 class="hide-from-toc">Examples</h3>
+<p>example 是数据的特定实例。它分为两种：labeled examples 和&nbsp;unlabeled examples 。&nbsp;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180419232825946-1631766694.png" alt="" width="537" height="50" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180419232855617-504162294.png" alt="" width="539" height="42" /></p>
+<p>在垃圾邮件过滤系统中，labeled example 就是&ldquo;已经被确切标记为垃圾或者非垃圾&rdquo;的邮件，unlabeled examples 则是&ldquo;没有被确切标记为垃圾或者非垃圾&rdquo;的邮件。</p>
+<p>我们通过 labeled examples 训练模型，再通过模型来分类尚未标记的邮件。</p>
+<h3>Models</h3>
+<p>model 定义了 feature 和 label 之间的关系。在垃圾邮件过滤系统中， 特定的 feature 可能和垃圾邮件关联起来。</p>
+<p>model 生命周期的两个阶段：</p>
+<ul>
+<li>训练（英：Training 或 learning the model）。通俗而言，就是把已经分类好的 labeled example 呈现给模型，使得模型渐渐学会 feature 和 label 之间的关系。</li>
+<li>推断意味用已经训练好的模型来预测未分类的 unlabeled example 。</li>
+
+
+</ul>
+<h3 class="hide-from-toc">Regression vs. classification</h3>
+<p>regression 模型预测连续的值。例如：明天气温多少度？北京的房价是多少？</p>
+<p>classification 模型预测离散的值。例如：图片上是猫还是狗？垃圾邮件或者非垃圾邮件？</p>

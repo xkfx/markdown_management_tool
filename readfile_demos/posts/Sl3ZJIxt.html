@@ -1,0 +1,68 @@
+<p><span style="background-color: #ffff99;">p124~p126：</span></p>
+<p><span style="background-color: #ffff99;">算数运算符</span></p>
+<p>1、形如+ -（一元） * / % + -（二元）为算数运算符。</p>
+<p>&nbsp;</p>
+<p>2、所有算数运算符都满足<strong>左结合律</strong>。</p>
+<p>&nbsp;</p>
+<p>3、算数运算符的运算对象和求值结果都是<strong>右值</strong>。</p>
+<p>&nbsp;</p>
+<p>4、在表达式求值之前，所有运算对象最终会转换成<strong>同一类型</strong>。</p>
+<p>&nbsp;</p>
+<p>5、整数相除的结果还是整数，如果商含有小数部分直接舍去，没有四舍五a入的说法！</p>
+<p>&nbsp;</p>
+<p>6、取余运算：参与运算的运算对象必须是整数类型。暂时记住，<strong>%运算结果的正负与除数无关</strong>。</p>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p><span style="background-color: #ffff99;">练习 4.4</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main() {
+    std::cout </span>&lt;&lt; <span style="color: #800080;">12</span> / <span style="color: #800080;">3</span> * <span style="color: #800080;">4</span> + <span style="color: #800080;">5</span> * <span style="color: #800080;">15</span> + <span style="color: #800080;">24</span> % <span style="color: #800080;">4</span> / <span style="color: #800080;">2</span> &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 16 + 75 + 0 = 91</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.5</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main() {
+    cout </span>&lt;&lt; -<span style="color: #800080;">30</span> * <span style="color: #800080;">3</span> + <span style="color: #800080;">21</span> / <span style="color: #800080;">5</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> -90 + 4 = -86</span>
+    cout &lt;&lt; -<span style="color: #800080;">30</span> + <span style="color: #800080;">3</span> * <span style="color: #800080;">21</span> / <span style="color: #800080;">5</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> -30 + 12 = -18</span>
+    cout &lt;&lt; <span style="color: #800080;">30</span> / <span style="color: #800080;">3</span> * <span style="color: #800080;">21</span> % <span style="color: #800080;">5</span>  &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 210 % 5 = 0</span>
+    cout &lt;&lt; -<span style="color: #800080;">30</span> / <span style="color: #800080;">3</span> * <span style="color: #800080;">21</span> % <span style="color: #800080;">4</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> -210 % 4 = -2</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.6</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main() {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    cin </span>&gt;&gt;<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">if</span> (n % <span style="color: #800080;">2</span> == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> n为偶数</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> n为奇数</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.7</span></p>
+<p><em>书上的例子（假设某个机器的short占16位）</em></p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">short</span> a = <span style="color: #800080;">32767</span><span style="color: #000000;">;
+    a </span>+= <span style="color: #800080;">1</span>;</pre>
+</div>
+<p><em>其它基本数据类型同理。</em></p>
+<p>&nbsp;</p>

@@ -1,0 +1,71 @@
+<p>实际应用中经常会用到二维平面上的点，点的操作包括设置点的位置( pointT setPoint(double x , double y ) )，显示第n个点的位置( void showPoint(pointT *p，int n) )， 计算两个点的距离double distPoint(pointT pt1, pointT pt2)，并将点的坐标以及距离保存到文件Info.txt中void saveInfo (pointT pt1, pointT pt2, char *filename) 。试定义平面上点的数据类型pointT，并实现这些函数，自行编写main函数测试这些函数。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;<span style="color: #000000;">
+#include</span>&lt;math.h&gt;
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> pointT{
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> y;
+};
+
+</span><span style="color: #0000ff;">struct</span> pointT setPoint(<span style="color: #0000ff;">double</span> x, <span style="color: #0000ff;">double</span><span style="color: #000000;"> y)
+{
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> pointT temp;
+    
+    temp.x </span>=<span style="color: #000000;"> x;
+    temp.y </span>=<span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> temp;
+}
+
+</span><span style="color: #0000ff;">void</span> showPoint(<span style="color: #0000ff;">struct</span> pointT *p, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+{
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">point%d(%.1f , %.1f)</span><span style="color: #800000;">"</span>, n, (p+n-<span style="color: #800080;">1</span>)-&gt;x, (p+n-<span style="color: #800080;">1</span>)-&gt;<span style="color: #000000;">y);
+} 
+
+</span><span style="color: #0000ff;">double</span> distPoint(<span style="color: #0000ff;">struct</span> pointT pt1, <span style="color: #0000ff;">struct</span><span style="color: #000000;"> pointT pt2)
+{
+    </span><span style="color: #0000ff;">return</span> sqrt((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*((pt1.y -<span style="color: #000000;"> pt2.y)));
+}
+
+</span><span style="color: #0000ff;">void</span> saveInfo(<span style="color: #0000ff;">struct</span> pointT pt1, <span style="color: #0000ff;">struct</span> pointT pt2, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">filename)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">打开文件</span>
+    FILE *<span style="color: #000000;">fp;
+    fp </span>= fopen(filename , <span style="color: #800000;">"</span><span style="color: #800000;">a</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">操作</span>
+    fprintf(fp, <span style="color: #800000;">"</span><span style="color: #800000;">point1(%.1f , %.1f), point2(%.1f , %.1f)\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, pt1.x, pt1.y, pt2.x, pt2.y);
+    fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">dist between point1 and point2 is %.1f\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, distPoint(pt1 , pt2));
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">关闭文件</span>
+<span style="color: #000000;">    fclose(fp);
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> test</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">struct</span> pointT pt[<span style="color: #800080;">3</span><span style="color: #000000;">];
+    
+    pt[</span><span style="color: #800080;">0</span>] = setPoint(<span style="color: #800080;">0</span> , <span style="color: #800080;">0</span><span style="color: #000000;">);
+    pt[</span><span style="color: #800080;">1</span>] = setPoint(<span style="color: #800080;">4</span> , <span style="color: #800080;">0</span><span style="color: #000000;">);
+    pt[</span><span style="color: #800080;">2</span>] = setPoint(<span style="color: #800080;">4</span> , <span style="color: #800080;">3</span><span style="color: #000000;">);
+    
+    showPoint(pt , </span><span style="color: #800080;">2</span><span style="color: #000000;">);
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">dist between point1 and point2 is %.1f\n</span><span style="color: #800000;">"</span>, distPoint(pt[<span style="color: #800080;">0</span>] , pt[<span style="color: #800080;">2</span><span style="color: #000000;">]));
+    
+    </span><span style="color: #0000ff;">char</span> *filename = <span style="color: #800000;">"</span><span style="color: #800000;">Info.txt</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    saveInfo(pt[</span><span style="color: #800080;">0</span>], pt[<span style="color: #800080;">2</span><span style="color: #000000;">], filename);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;补充说明：</p>
+<p>代码是按c89写的,这个标准里必须使用</p>
+<pre>struct pointT pt1</pre>
+<p>声明，而不能使用</p>
+<pre>pointT pt</pre>
+<p>如果必要,自行修改。</p>
+<p>&nbsp;</p>
+<p>（本人用的编译器比较旧）</p>
+<p>&nbsp;</p>

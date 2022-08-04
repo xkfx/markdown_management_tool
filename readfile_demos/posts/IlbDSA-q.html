@@ -1,0 +1,76 @@
+<h4>索引</h4>
+<ul>
+<li><a href="#a1">查看表.文档操作</a></li>
+<li><a href="#a2">检索必须知道的两件事</a></li>
+<li><a href="#a3">数据演示由谁负责</a></li>
+<li><a href="#a4">通配符.非必要不用</a></li>
+<li><a href="#a5">检索不同的行</a></li>
+<li><a href="#a6">限制结果集.分页查找</a></li>
+<li><a href="#a7">运用数据库.表全名</a></li>
+<li>命令后加分号对于很多 DBMS 都不是必要的，但是加了也没有坏处</li>
+</ul>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a1"></a>Learning About Databases and Tables&nbsp;</span></h4>
+<p class="docText"><span class="docEmphStrong">Learning More About <tt>SHOW</tt> In the <tt>mysql</tt> command-line utility, execute command <tt>HELP SHOW;</tt> to display a list of allowed <tt>SHOW</tt> statements.</span></p>
+<p class="docText"><span class="docEmphStrong">查看表结构.创建表信息</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DESC</span><span style="color: #000000;"> table_name;
+SHOW </span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span> table_name;</pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a2"></a>The SELECT Statement</span></h4>
+<p class="docText">To use <tt>SELECT</tt> to retrieve table data you must, at a minimum, specify two pieces of information<span style="color: #ff00ff;"><strong> what</strong></span> you want to select, and<span style="color: #ff00ff;"><strong> from where</strong> </span>you want to select it.</p>
+<p><a><img alt="" width="1" height="1" border="0" /></a></p>
+<h4><span style="text-decoration: underline;"><span class="docEmphStrong"><a name="a3"></a>Presentation of Data</span></span></h4>
+<p><span class="docEmphStrong">SQL statements typically return<strong><span style="color: #ff6600;"> raw, unformatted data.</span></strong> Data formatting is a presentation issue, not a retrieval issue. Therefore, presentation (for example, alignment and displaying the price values as currency amounts with the currency symbol and commas) <strong>is typically specified in the application</strong> that displays the data. Actual raw retrieved data (without application-provided formatting) is rarely displayed as is.</span></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><span class="docEmphStrong"><a name="a4"></a>Using Wildcards&nbsp;</span></span></h4>
+<p><span class="docEmphStrong"><span class="docEmphStrong">As&nbsp;a rule, you are better off not using the <tt>*</tt> wildcard unless you really do need every column in the table. Even though use of wildcards might save you the time and effort needed to list the desired columns explicitly, retrieving unnecessary columns usually <strong>slows down</strong> the performance of your retrieval and your application.</span></span></p>
+<p>&nbsp;</p>
+<h4 class="docSection1Title"><span style="text-decoration: underline;"><a name="a5"></a>Retrieving Distinct Rows</span></h4>
+<p>在表中，可能会包含重复值。这并不成问题，不过，有时您也许希望仅仅列出不同（distinct）的值。</p>
+<p><tt>SELECT DISTINCT vend_id</tt> tells MySQL to only return distinct (unique) <tt>vend_id</tt> rows, and so only 4 rows are returned, as seen in the following output. If used, the <tt>DISTINCT</tt> keyword must be placed directly in front of the column names.</p>
+<p class="docText"><span class="docEmphStrong"><span class="docEmphasis"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180327194303296-139900060.png" alt="" /></span></span></p>
+<pre><span style="color: #0000ff;"><strong>select distinct name, id from A</strong></span></pre>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180327194319909-1060207656.png" alt="" /></p>
+<p>&nbsp;更多详细内容可以参阅&nbsp;<a href="https://blog.csdn.net/lmy86263/article/details/73612020" target="_blank">MySQL中distinct的使用方法</a></p>
+<p>&nbsp;</p>
+<h4><strong><span style="text-decoration: underline;"><a name="a6"></a>Limiting Results</span></strong></h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <strong>LIMIT <span style="color: #800000;">3</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name            <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #808080;">|</span> 至不死的你            <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span> 烙印勇士              <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span> 幸福（happiness）     <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <strong>LIMIT <span style="color: #800000;">3</span>,<span style="color: #800000;">3</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name      <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span> 东京食尸鬼      <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1004</span> <span style="color: #808080;">|</span> dasda           <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span> 2asdasds        <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------+</span><span style="color: #800000; font-weight: bold;"><br /></span></pre>
+</div>
+<p>返回的行是第 4， 5 ，6 行。</p>
+<p><span class="docEmphStrong">When There Aren't Enough Rows The number of rows to retrieve specified in <tt>LIMIT</tt> is the <span class="docEmphasis">maximum number to retrieve. If there aren't enough rows (for example, you specified <tt>LIMIT 10,5</tt>, but there were only 13 rows), MySQL returns as many as it can.</span></span></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a7"></a>Using Fully Qualified Table Names</span></h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga.manga_id
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> mangast.manga;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span></pre>
+</div>
+<p>在某些情况下应用全名是必要的。</p>

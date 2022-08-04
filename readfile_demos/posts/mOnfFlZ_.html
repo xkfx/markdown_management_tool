@@ -1,0 +1,54 @@
+<p>Environment: debian 8</p>
+<h3>Installing MySQL</h3>
+<p>Reference material:&nbsp;<a href="https://linode.com/docs/databases/mysql/how-to-install-mysql-on-debian-8/" target="_blank">https://linode.com/docs/databases/mysql/how-to-install-mysql-on-debian-8/</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> mysql-<span style="color: #000000;">server
+</span><span style="color: #0000ff;">sudo</span><span style="color: #000000;"> mysql_secure_installation # 进行一些初始化设置
+mysql </span>-u root -p </pre>
+</div>
+<h3>&nbsp;Installing the Default JRE/JDK</h3>
+<p>Reference material:&nbsp;<a href="https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-debian-8" target="_blank">https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-debian-8</a></p>
+<p>1. Installing the Default JRE/JDK：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> apt-<span style="color: #000000;">get update
+</span><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> default-<span style="color: #000000;">jre
+</span><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> default-jdk</pre>
+</div>
+<p id="managing-java">2. Managing Java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> update-alternatives --config java # 同时可以看到 Java 被安装的位置</pre>
+</div>
+<p id="setting-the-java_home-environment-variable">3. Setting the JAVA_HOME Environment Variable：</p>
+<div class="cnblogs_code">
+<pre>root@i:~# <span style="color: #0000ff;">sudo</span> update-alternatives --<span style="color: #000000;">config java
+There is only one alternative </span><span style="color: #0000ff;">in</span> link group java (providing /usr/bin/java): /usr/lib/jvm/java-<span style="color: #800080;">7</span>-openjdk-amd64/jre/bin/java <span style="color: #ff0000;"># copy this Path!</span><span style="color: #000000;">
+Nothing to configure.
+root@i:</span>~# <span style="color: #0000ff;">sudo</span> vim /etc/<span style="color: #000000;">environment
+root@i:</span>~# source /etc/<span style="color: #000000;">environment<span style="color: #ff0000;"> # reload</span>
+root@i:</span>~# <span style="color: #0000ff;">echo</span><span style="color: #000000;"> $JAVA_HOME
+</span>/usr/lib/jvm/java-<span style="color: #800080;">7</span>-openjdk-amd64/jre/bin/java</pre>
+</div>
+<p>Contents of&nbsp;&nbsp;<em>/etc/environment </em>:</p>
+<div class="cnblogs_code">
+<pre>JAVA_HOME=<span style="color: #800000;">"</span><span style="color: #800000;">/usr/lib/jvm/java-8-oracle</span><span style="color: #800000;">"</span> <span style="color: #ff0000;"># your own copied path</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>ps. apt-get install 的默认安装目录</p>
+<div class="cnblogs_code">
+<pre>     <span style="color: #800080;">1</span><span style="color: #000000;">.下载的软件存放位置
+       </span>/var/cache/apt/<span style="color: #000000;">archives
+
+     </span><span style="color: #800080;">2</span><span style="color: #000000;">.安装后软件默认位置
+    </span>/usr/<span style="color: #000000;">share
+
+     </span><span style="color: #800080;">3</span><span style="color: #000000;">.可执行文件位置 
+    </span>/usr/<span style="color: #000000;">bin
+
+     </span><span style="color: #800080;">4</span><span style="color: #000000;">.配置文件位置
+     </span>/<span style="color: #000000;">etc
+
+    </span><span style="color: #800080;">5</span><span style="color: #000000;">.lib文件位置
+   </span>/usr/lib </pre>
+</div>
+<p>-------- by csdn <a id="uid" href="http://blog.csdn.net/u012124564" target="_blank">流火j</a></p>

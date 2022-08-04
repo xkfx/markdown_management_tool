@@ -1,0 +1,162 @@
+<p>记文档还是相当重要的！</p>
+<h4><span style="text-decoration: underline;">索引</span></h4>
+<ol>
+<li><a href="#a1">假名的三个用途</a></li>
+<li><a href="#a2">自交（Self Joins）</a></li>
+<li><a href="#a3">自然交（Natural Joins）</a></li>
+<li><a href="#a4">Outer Joins</a></li>
+</ol>
+<p>&nbsp;</p>
+<h3><span style="text-decoration: underline;"><a name="a1"></a>Using Table Aliases</span></h3>
+<ul>
+<li>Using aliases for column names and calculated fields</li>
+<li>
+<p class="docList">To shorten the SQL syntax</p>
+</li>
+<li>
+<p class="docList">To enable multiple us<span style="color: #ff0000;">es o<strong>f the same table w</strong>ithin a single </span><tt><span style="color: #ff0000;">S</span>ELECT</tt> statement</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<h3><span style="text-decoration: underline;"><a name="a2"></a>自交</span></h3>
+<p>像下面这样的叫做&ldquo;自交&rdquo; &darr;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> p1.prod_id, p1.prod_name
+</span><span style="color: #0000ff;">FROM</span> products <span style="color: #0000ff;">AS</span> p1, products <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p2
+</span><span style="color: #0000ff;">WHERE</span> p1.vend_id <span style="color: #808080;">=</span><span style="color: #000000;"> p2.vend_id
+  </span><span style="color: #808080;">AND</span> p2.prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">DTNTR</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p><span class="docEmphStrong"><strong>Self Joins Instead of Subqueries</strong> Self&nbsp;joins are often used to replace statements using subqueries that retrieve data from the same table as the outer statement. Although the end result is the same, sometimes these joins execute far more quickly than they do subqueries. I<strong>t is us</strong><span style="color: #ff0000;"><strong>ually worth experimenti</strong>ng with both to determine which performs better.</span></span></p>
+<p>接下来用于实验的两张表：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #808080;">-- master <br />+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-------------+</span>
+<span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span> master_name <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-------------+</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000;">1001</span> <span style="color: #808080;">|</span> 王二牠       <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000;">1002</span> <span style="color: #808080;">|</span> 李明顠       <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000;">1003</span> <span style="color: #808080;">|</span> 田中吠       <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000;">1004</span> <span style="color: #808080;">|</span> 陆大襠       <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-------------+</span></strong></pre>
+</div>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #808080;">-- pet<br />+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+----------+-----------+</span></strong></pre>
+</div>
+<p>&nbsp;无约束自交，原来 3 条 结果 3 &times; 3 &darr;</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span> pet <span style="color: #0000ff;">AS</span> p1, pet <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p2;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+----------+-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+----------+-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+----------+-----------+--------+----------+----------+-----------+</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><span style="text-decoration: underline;"><span class="docEmphStrong"><a name="a3"></a>自然交。。</span></span></h3>
+<p><span class="docEmphStrong">就是可以自动消除相同字段的一种交，但是 MySQL 并没有实现这种交，如果你 像下面这样查 就会看到好多相同字段：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+<span style="color: #0000ff;">FROM</span> customers <span style="color: #0000ff;">AS</span> c, orders <span style="color: #0000ff;">AS</span> o, orderitems <span style="color: #0000ff;">AS</span><span style="color: #000000;"> oi
+</span><span style="color: #0000ff;">WHERE</span> c.cust_id <span style="color: #808080;">=</span><span style="color: #000000;"> o.cust_id
+  </span><span style="color: #808080;">AND</span> oi.order_num <span style="color: #808080;">=</span><span style="color: #000000;"> o.order_num
+  </span><span style="color: #808080;">AND</span> prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">FB</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p><span style="color: #ff0000;">| cust_id |</span> cust_name | cust_address | cust_city | cust_state | cust_zip | cust_country | cust_contact | cust_email | order_num | order_date<span style="color: #ff0000;"> | cust_id |</span> order_num | order_item | prod_id | quantity | item_price |</p>
+<p>所以，要实现自然交就 只能自己具体指明字段了：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> c.<span style="color: #808080;">*</span><span style="color: #000000;">, o.order_num, o.order_date,
+       oi.prod_id, oi.quantity, OI.item_price
+</span><span style="color: #0000ff;">FROM</span> customers <span style="color: #0000ff;">AS</span> c, orders <span style="color: #0000ff;">AS</span> o, orderitems <span style="color: #0000ff;">AS</span><span style="color: #000000;"> oi
+</span><span style="color: #0000ff;">WHERE</span> c.cust_id <span style="color: #808080;">=</span><span style="color: #000000;"> o.cust_id
+  </span><span style="color: #808080;">AND</span> oi.order_num <span style="color: #808080;">=</span><span style="color: #000000;"> o.order_num
+  </span><span style="color: #808080;">AND</span> prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">FB</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>MySQL 不实现自然交：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span> master <span style="color: #0000ff;">AS</span> m, pet <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> m.master_id <span style="color: #808080;">=</span><span style="color: #000000;"> p.master_id;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-------------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span> master_name <span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-------------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span> 王二牠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span> 李明顠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span> 田中吠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+-------------+--------+----------+----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>实现自然交：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> master_name, p.<span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span> master <span style="color: #0000ff;">AS</span> m, pet <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> m.master_id <span style="color: #808080;">=</span><span style="color: #000000;"> p.master_id;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> master_name <span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> 王二牠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 李明顠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 田中吠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span></pre>
+</div>
+<p>PS. FROM 里面 AS 的假名在 SELECT 中是可以用的。</p>
+<p>&nbsp;</p>
+<h3><span style="text-decoration: underline;"><a name="a4"></a>Outer Joins</span></h3>
+<p>The join includes t<span style="color: #ff0000;">able rows that h<strong>ave no associated ro</strong>ws in the related table.</span> This type of join is called an <span class="docEmphasis">outer join. But unlike inner joins, which relate rows in both tables, outer joins also include rows with no related rows.</span></p>
+<p>&nbsp;在讲到 OUTER JOIN 的同时就不得不提到 INNER JOIN ，推荐阅读这篇文章&nbsp;<a href="https://www.diffen.com/difference/Inner_Join_vs_Outer_Join" target="_blank">Inner Join vs. Outer Join</a></p>
+<h4><span style="color: #ff00ff;">&nbsp;真 &middot; INNER JOIN &darr;</span></h4>
+<div class="cnblogs_code">
+<pre><strong>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> master_name, p.<span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span> master <span style="color: #0000ff;">AS</span> m<span style="color: #ff0000;"> INNER JOIN </span>pet <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ON</span> m.master_id <span style="color: #808080;">=</span><span style="color: #000000;"> p.master_id;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> master_name <span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> 王二牠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 李明顠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 田中吠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span></pre>
+</div>
+<p>因为我个人认为没有人会需要 X * X 的 那种表 所以 自己 把 那种 不加 ON 后面的相等约束 的 表 叫 伪 &middot; INNER JOIN&nbsp;</p>
+<h4><span style="color: #ff00ff;"><strong>LEFT OUTER JOIN &darr;</strong></span></h4>
+<div class="cnblogs_code">
+<pre><strong>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> master_name, p.<span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span> master <span style="color: #0000ff;">AS</span> m <span style="color: #ff0000;">LEFT OUTER JOIN </span>pet <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ON</span> m.master_id <span style="color: #808080;">=</span><span style="color: #000000;"> p.master_id;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> master_name <span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> 王二牠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 李明顠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 田中吠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 陆大襠       <span style="color: #808080;">|</span>   <span style="color: #0000ff;">NULL</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span>      <span style="color: #0000ff;">NULL</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span></pre>
+</div>
+<h4><span style="color: #ff00ff;"><strong>RIGHT OUTER JOIN &darr;</strong></span></h4>
+<div class="cnblogs_code">
+<pre><strong>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> master_name, p.<span style="color: #808080;">*</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span> master <span style="color: #0000ff;">AS</span> m<span style="color: #ff0000;"> RIGHT OUTER JOIN </span>pet <span style="color: #0000ff;">AS</span><span style="color: #000000;"> p
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ON</span> m.master_id <span style="color: #808080;">=</span><span style="color: #000000;"> p.master_id;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> master_name <span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span>
+<span style="color: #808080;">|</span> 王二牠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 飿&iexcl;&para;        <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 李明顠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 小白     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> 田中吠       <span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 老黄     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------+--------+----------+----------+-----------+</span></pre>
+</div>
+<p>PS.&nbsp; the two types of outer join can be used interchangeably, and the decision about which one i<span style="color: #ff0000;">s used is based purely on convenience.</span></p>
+<p>&nbsp;</p>

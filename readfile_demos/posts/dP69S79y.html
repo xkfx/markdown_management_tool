@@ -1,0 +1,867 @@
+<p>关于启用debug模式：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.auto-configuration.replacing" target="_blank">https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.auto-configuration.replacing</a></p>
+<p>Spring Boot应用生命周期：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.application-events-and-listeners" target="_blank">https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.application-events-and-listeners</a></p>
+<p>一个简单的、只有Spring Web依赖的Spring Boot程序</p>
+<h2>INFO级别的启动日志（略作删改）</h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e6190fc1-bd3c-4a50-9b68-59bb8264c514')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_e6190fc1-bd3c-4a50-9b68-59bb8264c514" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_e6190fc1-bd3c-4a50-9b68-59bb8264c514" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_e6190fc1-bd3c-4a50-9b68-59bb8264c514" class="cnblogs_code_hide">
+<pre>INFO 7896 -<span style="color: #000000;"> [main] 【main函数所在类全名】 : 正在使用Java1.8在xx上启动【main函数所在类名】且PID是7896 (【用户名】在【java包所在目录】启动了【jar全名】)
+INFO </span>7896 - [main] 【main函数所在类全名】 : No active profile set, falling back to 1 <span style="color: #0000ff;">default</span> profile: "default"<span style="color: #000000;">
+INFO </span>7896 - [main] 【main函数所在类全名】 : 未设置活动配置文件，返回到1个默认profile：&ldquo;<span style="color: #0000ff;">default</span><span style="color: #000000;">&rdquo;
+INFO </span>7896 - [main] 【嵌入式汤姆猫Web服务器类全名】 : Tomcat已初始化端口：8080<span style="color: #000000;">（http）
+INFO </span>7896 - [main] 【卡特琳娜.核心.Apr生命周期监听器】 : 安装了Apache Tomcat本机库的较旧版本[1.2.19]，而Tomcat建议使用[1.2.30<span style="color: #000000;">]的最低版本
+INFO </span>7896 - [main] 【卡特琳娜.核心.Apr生命周期监听器】 : 使用APR版本[1.6.5]加载了Apache Tomcat本机库[1.2.19<span style="color: #000000;">]
+INFO </span>7896 - [main] 【卡特琳娜.核心.Apr生命周期监听器】 : APR能力: IPv6 [<span style="color: #0000ff;">true</span>], sendfile [<span style="color: #0000ff;">true</span>], accept filters [<span style="color: #0000ff;">false</span>], random [<span style="color: #0000ff;">true</span>], UDS [<span style="color: #0000ff;">false</span><span style="color: #000000;">].
+INFO </span>7896 - [main] 【卡特琳娜.核心.Apr生命周期监听器】 : APR/OpenSSL配置: useAprConnector [<span style="color: #0000ff;">false</span>], useOpenSSL [<span style="color: #0000ff;">true</span><span style="color: #000000;">]
+INFO </span>7896 - [main] 【卡特琳娜.核心.Apr生命周期监听器】 : OpenSSL已成功初始化[OpenSSL 1.0.2q 20 Nov 2018<span style="color: #000000;">]
+INFO </span>7896 -<span style="color: #000000;"> [main] 【卡特琳娜.核心.标准服务】 : 正在启动服务[Tomcat]
+INFO </span>7896 - [main] 【卡特琳娜.核心.标准引擎】 : 正在启动Servlet引擎：[ApacheTomcat/9.0.58<span style="color: #000000;">]
+INFO </span>7896 - [main] o.a.c.c.C.[Tomcat].[localhost].[/<span style="color: #000000;">]: 初始化Spring嵌入式WebApplicationContext
+INFO </span>7896 -<span style="color: #000000;"> [main] w.s.c.【ServletWeb服务器应用上下文】 : Root WebApplicationContext: 初始化在2406毫秒内完成
+INFO </span>7896 - [main] 【嵌入式汤姆猫Web服务器类全名】 : Tomcat在端口8080（http）上启动，上下文路径为""<span style="color: #000000;">
+INFO </span>7896 - [main] 【main函数所在类全名】 : 在3.363秒内启动【main函数所在类名】（JVM运行时间为3.869）</pre>
+</div>
+<span class="cnblogs_code_collapse">log</span></div>
+<h2>DEBUG级别启动日志（略作删改）</h2>
+<p>执行：</p>
+<div class="cnblogs_code">
+<pre>java -jar demo-<span style="color: #800080;">0.0</span>.<span style="color: #800080;">1</span>-SNAPSHOT.jar <strong><span style="color: #ff0000;">--debug</span></strong></pre>
+</div>
+<p>输出如下（原文852行）：</p>
+<h3>第一部分</h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show('2d2b31e7-fe64-4c10-b7d2-7c1ee6429852')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_2d2b31e7-fe64-4c10-b7d2-7c1ee6429852" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_2d2b31e7-fe64-4c10-b7d2-7c1ee6429852" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_2d2b31e7-fe64-4c10-b7d2-7c1ee6429852" class="cnblogs_code_hide">
+<pre>56.606<span style="color: #000000;">【INFO级】【main函数所在类】: 同INFO级启动信息，正在启动【main函数所在类】
+</span>56.621<span style="color: #000000;">【INFO级】【main函数所在类】: 同INFO级启动信息
+</span>56<span style="color: #000000;">.621调试信息【SpringApplication应用】:加载源类【main函数所在类】
+</span>56<span style="color: #000000;">.700调试信息【配置ServletWeb服务器应用程序上下文类】:正在刷新【boot.web.servlet上下文注解类】【配置ServletWeb服务器应用程序上下文类】@4909b8da
+</span>58<span style="color: #000000;">.106调试信息【汤姆猫ServletWeb服务器工厂】: Code archive: 【我的jar包绝对路径】
+</span>58<span style="color: #000000;">.106调试信息【汤姆猫ServletWeb服务器工厂】: Code archive: 【我的jar包绝对路径】
+</span>58.106调试信息【汤姆猫ServletWeb服务器工厂】: None of the document roots [src/main/webapp, <span style="color: #0000ff;">public</span>, <span style="color: #0000ff;">static</span><span style="color: #000000;">] point to a directory and will be ignored.
+</span>58.153<span style="color: #000000;">【INFO级】【TomcatWebServer】: 同INFO级启动信息
+</span>58.153<span style="color: #000000;">【INFO级】【AprLifecycleListener】: 同INFO级启动信息
+</span>58.153<span style="color: #000000;">【INFO级】【AprLifecycleListener】: 同INFO级启动信息
+</span>58.153<span style="color: #000000;">【INFO级】【AprLifecycleListener】: 同INFO级启动信息
+</span>58.153<span style="color: #000000;">【INFO级】【AprLifecycleListener】: 同INFO级启动信息
+</span>59.215<span style="color: #000000;">【INFO级】【AprLifecycleListener】: 同INFO级启动信息
+</span>59.231<span style="color: #000000;">【INFO级】StandardService:同INFO级启动信息
+</span>59.231<span style="color: #000000;">【INFO级】StandardEngine:同INFO级启动信息
+</span>59.356【INFO级】o.a.c.c.C.[Tomcat].[localhost].[/<span style="color: #000000;">]:同INFO级启动信息
+</span>59<span style="color: #000000;">.356调试信息【ServletWeb服务器应用上下文】: 已将Root WebApplicationContext发布为名为[xx]的ServletContext属性
+</span>59.372【INFO级】【ServletWeb服务器应用上下文】: Root WebApplicationContext: initialization completed in 2672<span style="color: #000000;"> ms
+</span>59.387调试信息【Servlet上下文初始化器beans】: Mapping filters: characterEncodingFilter urls=[<span style="color: #008000;">/*</span><span style="color: #008000;">] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+59.387调试信息【Servlet上下文初始化器beans】: Mapping servlets: dispatcherServlet urls=[/]
+59.434调试信息【更老的请求上下文过滤器】: Filter 'requestContextFilter' configured for use
+59.434调试信息【更老的CharacterEncoding过滤器】: Filter 'characterEncodingFilter' configured for use
+59.434调试信息【更老的某种过滤器】: Filter 'formContentFilter' configured for use
+59.700调试信息【请求映射处理程序适配器】: ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+59.887调试信息【请求映射处理程序映射】: 2 mappings in 'requestMappingHandlerMapping'
+59.919调试信息【简单的Url处理程序映射】: Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+59.934调试信息【异常处理程序异常解析器】: ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+00.059【INFO级】【TomcatWebServer】: Tomcat started on port(s): 8080 (http) with context path ''
+00.091调试信息【条件评估报告日志侦听器】:</span></pre>
+</div>
+<span class="cnblogs_code_collapse">log.part-1</span></div>
+<h3>第二部分&mdash;&mdash;条件评估报告（不一一翻译..）</h3>
+<p><strong><span style="color: #0000ff;">描述了当前应用的auto-configuration（默认的自动配置）以及原因。可以很好地了解相关依赖的应用状况。</span></strong></p>
+<h4>①正匹配</h4>
+<div class="cnblogs_code" onclick="cnblogs_code_show('3abfaf6f-1163-4c7e-ab33-c2fb73a61727')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_3abfaf6f-1163-4c7e-ab33-c2fb73a61727" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_3abfaf6f-1163-4c7e-ab33-c2fb73a61727" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_3abfaf6f-1163-4c7e-ab33-c2fb73a61727" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">Aop[自动配置]匹配:
+</span>- @[以属性为条件](spring.aop.auto=<span style="color: #0000ff;">true</span><span style="color: #000000;">)匹配 (以属性为条件)
+
+Aop[自动配置].ClassProxyingConfiguration匹配:
+</span>- @[以类缺失为条件]没有发现不想要的类'org.aspectj.weaver.Advice'<span style="color: #000000;"> (OnClassCondition)
+</span>- @[以属性为条件](spring.aop.proxy-target-<span style="color: #0000ff;">class</span>=<span style="color: #0000ff;">true</span><span style="color: #000000;">)匹配 (以属性为条件)
+
+DispatcherServlet[自动配置]匹配:
+</span>- @[以类为条件]找到所需的类'org.springframework.web.servlet.DispatcherServlet'<span style="color: #000000;"> (OnClassCondition)
+</span>-<span style="color: #000000;"> 找到&ldquo;会话&rdquo;范围(OnWebApplicationCondition)
+
+DispatcherServlet[自动配置].DispatcherServletConfiguration匹配:
+</span>- @[以类为条件]找到所需的类'javax.servlet.ServletRegistration'<span style="color: #000000;"> (OnClassCondition)
+</span>-<span style="color: #000000;"> 默认DispatcherServlet未找到dispatcher servlet bean(DispatcherServlet[自动配置].DefaultDispatcherServletCondition)
+
+DispatcherServlet[自动配置].DispatcherServletRegistrationConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'javax.servlet.ServletRegistration'<span style="color: #000000;"> (OnClassCondition)
+</span>-<span style="color: #000000;"> DispatcherServlet Registration did not find servlet registration bean (DispatcherServlet[自动配置].DispatcherServletRegistrationCondition)
+
+DispatcherServlet[自动配置].DispatcherServletRegistrationConfiguration#dispatcherServletRegistration匹配:
+</span>- @[以Bean为条件](names: dispatcherServlet types: org.springframework.web.servlet.DispatcherServlet; SearchStrategy: all) found bean 'dispatcherServlet'<span style="color: #000000;"> (OnBeanCondition)
+
+EmbeddedWebServerFactoryCustomizer[自动配置]匹配:
+</span>- @[以WebApplication为条件](required) found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+
+EmbeddedWebServerFactoryCustomizer[自动配置].TomcatWebServerFactoryCustomizerConfiguration匹配:
+</span>- @[以类为条件]found required classes 'org.apache.catalina.startup.Tomcat', 'org.apache.coyote.UpgradeProtocol'<span style="color: #000000;"> (OnClassCondition)
+
+ErrorMvc[自动配置]匹配:
+</span>- @[以类为条件]found required classes 'javax.servlet.Servlet', 'org.springframework.web.servlet.DispatcherServlet'<span style="color: #000000;"> (OnClassCondition)
+</span>- found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+
+ErrorMvc[自动配置]#basicErrorController匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.web.servlet.error.ErrorController; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+ErrorMvc[自动配置]#errorAttributes匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.web.servlet.error.ErrorAttributes; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+ErrorMvc[自动配置].DefaultErrorViewResolverConfiguration#conventionErrorViewResolver匹配:
+</span>- @[以Bean为条件](types: org.springframework.web.servlet.DispatcherServlet; SearchStrategy: all) found bean 'dispatcherServlet'<span style="color: #000000;">; @[以Bean缺失为条件](types: org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+ErrorMvc[自动配置].WhitelabelErrorViewConfiguration匹配:
+</span>-<span style="color: #000000;"> @[以属性为条件](server.error.whitelabel.enabled)匹配 (以属性为条件)
+</span>-<span style="color: #000000;"> ErrorTemplate Missing did not find error template view (ErrorMvc[自动配置].ErrorTemplateMissingCondition)
+
+ErrorMvc[自动配置].WhitelabelErrorViewConfiguration#beanNameViewResolver匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.servlet.view.BeanNameViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+ErrorMvc[自动配置].WhitelabelErrorViewConfiguration#defaultErrorView匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](names: error; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+GenericCacheConfiguration匹配:
+</span>-<span style="color: #000000;"> Cache org.springframework.boot.autoconfigure.cache.GenericCacheConfiguration automatic cache type (CacheCondition)
+
+HttpEncoding[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.web.filter.CharacterEncodingFilter'<span style="color: #000000;"> (OnClassCondition)
+</span>- found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+</span>-<span style="color: #000000;"> @[以属性为条件](server.servlet.encoding.enabled)匹配 (以属性为条件)
+
+HttpEncoding[自动配置]#characterEncodingFilter匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.filter.CharacterEncodingFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+HttpMessageConverters[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.http.converter.HttpMessageConverter'<span style="color: #000000;"> (OnClassCondition)
+</span>- NoneNestedConditions 0匹配 1<span style="color: #000000;"> did not; NestedCondition on HttpMessageConverters[自动配置].NotReactiveWebApplicationCondition.ReactiveWebApplication did not find reactive web application classes (HttpMessageConverters[自动配置].NotReactiveWebApplicationCondition)
+
+HttpMessageConverters[自动配置]#messageConverters匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.autoconfigure.http.HttpMessageConverters; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+HttpMessageConverters[自动配置].StringHttpMessageConverterConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.http.converter.StringHttpMessageConverter'<span style="color: #000000;"> (OnClassCondition)
+
+HttpMessageConverters[自动配置].StringHttpMessageConverterConfiguration#stringHttpMessageConverter匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.http.converter.StringHttpMessageConverter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+Jackson[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'com.fasterxml.jackson.databind.ObjectMapper'<span style="color: #000000;"> (OnClassCondition)
+
+Jackson[自动配置].Jackson2ObjectMapperBuilderCustomizerConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.http.converter.json.Jackson2ObjectMapperBuilder'<span style="color: #000000;"> (OnClassCondition)
+
+Jackson[自动配置].JacksonObjectMapperBuilderConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.http.converter.json.Jackson2ObjectMapperBuilder'<span style="color: #000000;"> (OnClassCondition)
+
+Jackson[自动配置].JacksonObjectMapperBuilderConfiguration#jacksonObjectMapperBuilder匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.http.converter.json.Jackson2ObjectMapperBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+Jackson[自动配置].JacksonObjectMapperConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.http.converter.json.Jackson2ObjectMapperBuilder'<span style="color: #000000;"> (OnClassCondition)
+
+Jackson[自动配置].JacksonObjectMapperConfiguration#jacksonObjectMapper匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+Jackson[自动配置].ParameterNamesModuleConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'com.fasterxml.jackson.module.paramnames.ParameterNamesModule'<span style="color: #000000;"> (OnClassCondition)
+
+Jackson[自动配置].ParameterNamesModuleConfiguration#parameterNamesModule匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: com.fasterxml.jackson.module.paramnames.ParameterNamesModule; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+JacksonHttpMessageConvertersConfiguration.MappingJackson2HttpMessageConverterConfiguration匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'com.fasterxml.jackson.databind.ObjectMapper'<span style="color: #000000;"> (OnClassCondition)
+</span>- @[以属性为条件](spring.mvc.converters.preferred-json-mapper=<span style="color: #000000;">jackson)匹配 (以属性为条件)
+</span>- @[以Bean为条件](types: com.fasterxml.jackson.databind.ObjectMapper; SearchStrategy: all) found bean 'jacksonObjectMapper'<span style="color: #000000;"> (OnBeanCondition)
+
+JacksonHttpMessageConvertersConfiguration.MappingJackson2HttpMessageConverterConfiguration#mappingJackson2HttpMessageConverter匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.http.converter.json.MappingJackson2HttpMessageConverter ignored: org.springframework.hateoas.server.mvc.TypeConstrainedMappingJackson2HttpMessageConverter,org.springframework.data.rest.webmvc.alps.AlpsJsonHttpMessageConverter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+Lifecycle[自动配置]#defaultLifecycleProcessor匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](names: lifecycleProcessor; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+Multipart[自动配置]匹配:
+</span>- @[以类为条件]found required classes 'javax.servlet.Servlet', 'org.springframework.web.multipart.support.StandardServletMultipartResolver', 'javax.servlet.MultipartConfigElement'<span style="color: #000000;"> (OnClassCondition)
+</span>- found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+</span>-<span style="color: #000000;"> @[以属性为条件](spring.servlet.multipart.enabled)匹配 (以属性为条件)
+
+Multipart[自动配置]#multipartConfigElement匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: javax.servlet.MultipartConfigElement,org.springframework.web.multipart.commons.CommonsMultipartResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+Multipart[自动配置]#multipartResolver匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.multipart.MultipartResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+NoOpCacheConfiguration匹配:
+</span>-<span style="color: #000000;"> Cache org.springframework.boot.autoconfigure.cache.NoOpCacheConfiguration automatic cache type (CacheCondition)
+
+PropertyPlaceholder[自动配置]#propertySourcesPlaceholderConfigurer匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.context.support.PropertySourcesPlaceholderConfigurer; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+RestTemplate[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.web.client.RestTemplate'<span style="color: #000000;"> (OnClassCondition)
+</span>- NoneNestedConditions 0匹配 1<span style="color: #000000;"> did not; NestedCondition on RestTemplate[自动配置].NotReactiveWebApplicationCondition.ReactiveWebApplication did not find reactive web application classes (RestTemplate[自动配置].NotReactiveWebApplicationCondition)
+
+RestTemplate[自动配置]#restTemplateBuilder匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.web.client.RestTemplateBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+RestTemplate[自动配置]#restTemplateBuilderConfigurer匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.autoconfigure.web.client.RestTemplateBuilderConfigurer; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+ServletWebServerFactory[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'javax.servlet.ServletRequest'<span style="color: #000000;"> (OnClassCondition)
+</span>- found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+
+ServletWebServerFactory[自动配置]#tomcatServletWebServerFactoryCustomizer匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.apache.catalina.startup.Tomcat'<span style="color: #000000;"> (OnClassCondition)
+
+ServletWebServerFactoryConfiguration.EmbeddedTomcat匹配:
+</span>- @[以类为条件]found required classes 'javax.servlet.Servlet', 'org.apache.catalina.startup.Tomcat', 'org.apache.coyote.UpgradeProtocol'<span style="color: #000000;"> (OnClassCondition)
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.web.servlet.server.ServletWebServerFactory; SearchStrategy: current) did not find any beans (OnBeanCondition)
+
+SimpleCacheConfiguration匹配:
+</span>-<span style="color: #000000;"> Cache org.springframework.boot.autoconfigure.cache.SimpleCacheConfiguration automatic cache type (CacheCondition)
+
+SqlInitialization[自动配置]匹配:
+</span>-<span style="color: #000000;"> @[以属性为条件](spring.sql.init.enabled)匹配 (以属性为条件)
+</span>- NoneNestedConditions 0匹配 1 did not; NestedCondition on SqlInitialization[自动配置].SqlInitializationModeCondition.ModeIsNever @[以属性为条件](spring.sql.init.mode=never) did not find property 'mode'<span style="color: #000000;"> (SqlInitialization[自动配置].SqlInitializationModeCondition)
+
+TaskExecution[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor'<span style="color: #000000;"> (OnClassCondition)
+
+TaskExecution[自动配置]#applicationTaskExecutor匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: java.util.concurrent.Executor; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+TaskExecution[自动配置]#taskExecutorBuilder匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.task.TaskExecutorBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+TaskScheduling[自动配置]匹配:
+</span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler'<span style="color: #000000;"> (OnClassCondition)
+
+TaskScheduling[自动配置]#taskSchedulerBuilder匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.boot.task.TaskSchedulerBuilder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置]匹配:
+</span>- @[以类为条件]found required classes 'javax.servlet.Servlet', 'org.springframework.web.servlet.DispatcherServlet', 'org.springframework.web.servlet.config.annotation.WebMvcConfigurer'<span style="color: #000000;"> (OnClassCondition)
+</span>- found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置]#formContentFilter匹配:
+</span>-<span style="color: #000000;"> @[以属性为条件](spring.mvc.formcontent.filter.enabled)匹配 (以属性为条件)
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.filter.FormContentFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置].EnableWebMvcConfiguration#flashMapManager匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](names: flashMapManager; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置].EnableWebMvcConfiguration#localeResolver匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](names: localeResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置].EnableWebMvcConfiguration#themeResolver匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](names: themeResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置].WebMvc[自动配置]Adapter#defaultViewResolver匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.servlet.view.InternalResourceViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置].WebMvc[自动配置]Adapter#requestContextFilter匹配:
+</span>-<span style="color: #000000;"> @[以Bean缺失为条件](types: org.springframework.web.context.request.RequestContextListener,org.springframework.web.filter.RequestContextFilter; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebMvc[自动配置].WebMvc[自动配置]Adapter#viewResolver匹配:
+</span>- @[以Bean为条件](types: org.springframework.web.servlet.ViewResolver; SearchStrategy: all) found beans 'defaultViewResolver', 'beanNameViewResolver', 'mvcViewResolver'<span style="color: #000000;">; @[以Bean缺失为条件](names: viewResolver types: org.springframework.web.servlet.view.ContentNegotiatingViewResolver; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+WebSocketServlet[自动配置]匹配:
+</span>- @[以类为条件]found required classes 'javax.servlet.Servlet', 'javax.websocket.server.ServerContainer'<span style="color: #000000;"> (OnClassCondition)
+</span>- found 'session'<span style="color: #000000;"> scope (OnWebApplicationCondition)
+
+WebSocketServlet[自动配置].TomcatWebSocketConfiguration匹配:
+</span>- @[以类为条件]found required classes 'org.apache.catalina.startup.Tomcat', 'org.apache.tomcat.websocket.server.WsSci'<span style="color: #000000;"> (OnClassCondition)
+
+WebSocketServlet[自动配置].TomcatWebSocketConfiguration#websocketServletWebServerCustomizer匹配:
+</span>- @[以Bean缺失为条件](names: websocketServletWebServerCustomizer; SearchStrategy: all) did not find any beans (OnBeanCondition)</pre>
+</div>
+<span class="cnblogs_code_collapse">log.part-2</span></div>
+<h4>②不匹配</h4>
+<div class="cnblogs_code" onclick="cnblogs_code_show('5e78b056-2847-4ace-81f9-fd95ed26a54e')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_5e78b056-2847-4ace-81f9-fd95ed26a54e" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_5e78b056-2847-4ace-81f9-fd95ed26a54e" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_5e78b056-2847-4ace-81f9-fd95ed26a54e" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">   ActiveMQ[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.jms.ConnectionFactory'<span style="color: #000000;"> (OnClassCondition)
+
+   Aop[自动配置].AspectJAutoProxyingConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.aspectj.weaver.Advice'<span style="color: #000000;"> (OnClassCondition)
+
+   Artemis[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.jms.ConnectionFactory'<span style="color: #000000;"> (OnClassCondition)
+
+   Batch[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.batch.core.launch.JobLauncher'<span style="color: #000000;"> (OnClassCondition)
+
+   Cache[自动配置]:
+      不匹配:
+         </span>-<span style="color: #000000;"> @[以Bean为条件](types: org.springframework.cache.interceptor.CacheAspectSupport; SearchStrategy: all) did not find any beans of type org.springframework.cache.interceptor.CacheAspectSupport (OnBeanCondition)
+      Matched:
+         </span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.cache.CacheManager'<span style="color: #000000;"> (OnClassCondition)
+
+   Cache[自动配置].CacheManagerEntityManagerFactoryDependsOnPostProcessor:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean'<span style="color: #000000;"> (OnClassCondition)
+         </span>-<span style="color: #000000;"> Ancestor org.springframework.boot.autoconfigure.cache.Cache[自动配置] did not match (ConditionEvaluationReport.AncestorsMatchedCondition)
+
+   CaffeineCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.github.benmanes.caffeine.cache.Caffeine'<span style="color: #000000;"> (OnClassCondition)
+
+   Cassandra[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.datastax.oss.driver.api.core.CqlSession'<span style="color: #000000;"> (OnClassCondition)
+
+   CassandraData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.datastax.oss.driver.api.core.CqlSession'<span style="color: #000000;"> (OnClassCondition)
+
+   CassandraReactiveData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.datastax.oss.driver.api.core.CqlSession'<span style="color: #000000;"> (OnClassCondition)
+
+   CassandraReactiveRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.cassandra.ReactiveSession'<span style="color: #000000;"> (OnClassCondition)
+
+   CassandraRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.datastax.oss.driver.api.core.CqlSession'<span style="color: #000000;"> (OnClassCondition)
+
+   ClientHttpConnector[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.function.client.WebClient'<span style="color: #000000;"> (OnClassCondition)
+
+   Codecs[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.function.client.WebClient'<span style="color: #000000;"> (OnClassCondition)
+
+   Couchbase[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.couchbase.client.java.Cluster'<span style="color: #000000;"> (OnClassCondition)
+
+   CouchbaseCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.couchbase.client.java.Cluster'<span style="color: #000000;"> (OnClassCondition)
+
+   CouchbaseData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.couchbase.client.java.Bucket'<span style="color: #000000;"> (OnClassCondition)
+
+   CouchbaseReactiveData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.couchbase.client.java.Cluster'<span style="color: #000000;"> (OnClassCondition)
+
+   CouchbaseReactiveRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.couchbase.client.java.Cluster'<span style="color: #000000;"> (OnClassCondition)
+
+   CouchbaseRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.couchbase.client.java.Bucket'<span style="color: #000000;"> (OnClassCondition)
+
+   DataSource[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType'<span style="color: #000000;"> (OnClassCondition)
+
+   DataSourceInitializationConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.jdbc.datasource.init.DatabasePopulator'<span style="color: #000000;"> (OnClassCondition)
+
+   DataSourceTransactionManager[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.jdbc.core.JdbcTemplate'<span style="color: #000000;"> (OnClassCondition)
+
+   DispatcherServlet[自动配置].DispatcherServletConfiguration#multipartResolver:
+      不匹配:
+         </span>-<span style="color: #000000;"> @[以Bean为条件](types: org.springframework.web.multipart.MultipartResolver; SearchStrategy: all) did not find any beans of type org.springframework.web.multipart.MultipartResolver (OnBeanCondition)
+
+   EhCacheCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'net.sf.ehcache.Cache'<span style="color: #000000;"> (OnClassCondition)
+
+   ElasticsearchData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate'<span style="color: #000000;"> (OnClassCondition)
+
+   ElasticsearchRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.elasticsearch.client.Client'<span style="color: #000000;"> (OnClassCondition)
+
+   ElasticsearchRestClient[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.elasticsearch.client.RestClientBuilder'<span style="color: #000000;"> (OnClassCondition)
+
+   EmbeddedLdap[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.unboundid.ldap.listener.InMemoryDirectoryServer'<span style="color: #000000;"> (OnClassCondition)
+
+   EmbeddedMongo[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.MongoClientSettings'<span style="color: #000000;"> (OnClassCondition)
+
+   EmbeddedWebServerFactoryCustomizer[自动配置].JettyWebServerFactoryCustomizerConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required classes 'org.eclipse.jetty.server.Server', 'org.eclipse.jetty.util.Loader', 'org.eclipse.jetty.webapp.WebAppContext'<span style="color: #000000;"> (OnClassCondition)
+
+   EmbeddedWebServerFactoryCustomizer[自动配置].NettyWebServerFactoryCustomizerConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'reactor.netty.http.server.HttpServer'<span style="color: #000000;"> (OnClassCondition)
+
+   EmbeddedWebServerFactoryCustomizer[自动配置].UndertowWebServerFactoryCustomizerConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required classes 'io.undertow.Undertow', 'org.xnio.SslClientAuthMode'<span style="color: #000000;"> (OnClassCondition)
+
+   ErrorWebFlux[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.config.WebFluxConfigurer'<span style="color: #000000;"> (OnClassCondition)
+
+   Flyway[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.flywaydb.core.Flyway'<span style="color: #000000;"> (OnClassCondition)
+
+   FreeMarker[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'freemarker.template.Configuration'<span style="color: #000000;"> (OnClassCondition)
+
+   GroovyTemplate[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'groovy.text.markup.MarkupTemplateEngine'<span style="color: #000000;"> (OnClassCondition)
+
+   Gson[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.google.gson.Gson'<span style="color: #000000;"> (OnClassCondition)
+
+   GsonHttpMessageConvertersConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.google.gson.Gson'<span style="color: #000000;"> (OnClassCondition)
+
+   H2Console[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.h2.server.web.WebServlet'<span style="color: #000000;"> (OnClassCondition)
+
+   Hazelcast[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.hazelcast.core.HazelcastInstance'<span style="color: #000000;"> (OnClassCondition)
+
+   HazelcastCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.hazelcast.core.HazelcastInstance'<span style="color: #000000;"> (OnClassCondition)
+
+   HazelcastJpaDependency[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.hazelcast.core.HazelcastInstance'<span style="color: #000000;"> (OnClassCondition)
+
+   HibernateJpa[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.persistence.EntityManager'<span style="color: #000000;"> (OnClassCondition)
+
+   HttpHandler[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.DispatcherHandler'<span style="color: #000000;"> (OnClassCondition)
+
+   Hypermedia[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.hateoas.EntityModel'<span style="color: #000000;"> (OnClassCondition)
+
+   InfinispanCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.infinispan.spring.embedded.provider.SpringEmbeddedCacheManager'<span style="color: #000000;"> (OnClassCondition)
+
+   InfluxDb[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.influxdb.InfluxDB'<span style="color: #000000;"> (OnClassCondition)
+
+   Integration[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.integration.config.EnableIntegration'<span style="color: #000000;"> (OnClassCondition)
+
+   JCacheCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.cache.Caching'<span style="color: #000000;"> (OnClassCondition)
+
+   JacksonHttpMessageConvertersConfiguration.MappingJackson2XmlHttpMessageConverterConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.fasterxml.jackson.dataformat.xml.XmlMapper'<span style="color: #000000;"> (OnClassCondition)
+
+   JdbcRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration'<span style="color: #000000;"> (OnClassCondition)
+
+   JdbcTemplate[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.jdbc.core.JdbcTemplate'<span style="color: #000000;"> (OnClassCondition)
+
+   Jersey[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.glassfish.jersey.server.spring.SpringComponentProvider'<span style="color: #000000;"> (OnClassCondition)
+
+   Jms[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.jms.Message'<span style="color: #000000;"> (OnClassCondition)
+
+   Jmx[自动配置]:
+      不匹配:
+         </span>- @[以属性为条件](spring.jmx.enabled=<span style="color: #0000ff;">true</span>) did not find property 'enabled'<span style="color: #000000;"> (以属性为条件)
+      Matched:
+         </span>- @[以类为条件]found required <span style="color: #0000ff;">class</span> 'org.springframework.jmx.export.MBeanExporter'<span style="color: #000000;"> (OnClassCondition)
+
+   JndiConnectionFactory[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.jms.core.JmsTemplate'<span style="color: #000000;"> (OnClassCondition)
+
+   JndiDataSource[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType'<span style="color: #000000;"> (OnClassCondition)
+
+   Jooq[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.jooq.DSLContext'<span style="color: #000000;"> (OnClassCondition)
+
+   JpaRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.jpa.repository.JpaRepository'<span style="color: #000000;"> (OnClassCondition)
+
+   Jsonb[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.json.bind.Jsonb'<span style="color: #000000;"> (OnClassCondition)
+
+   JsonbHttpMessageConvertersConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.json.bind.Jsonb'<span style="color: #000000;"> (OnClassCondition)
+
+   Jta[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.transaction.Transaction'<span style="color: #000000;"> (OnClassCondition)
+
+   Kafka[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.kafka.core.KafkaTemplate'<span style="color: #000000;"> (OnClassCondition)
+
+   Ldap[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.ldap.core.ContextSource'<span style="color: #000000;"> (OnClassCondition)
+
+   LdapRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.ldap.repository.LdapRepository'<span style="color: #000000;"> (OnClassCondition)
+
+   Liquibase[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'liquibase.change.DatabaseChange'<span style="color: #000000;"> (OnClassCondition)
+
+   MailSender[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.mail.internet.MimeMessage'<span style="color: #000000;"> (OnClassCondition)
+
+   MailSenderValidator[自动配置]:
+      不匹配:
+         </span>- @ConditionalOnSingleCandidate did not find required type 'org.springframework.mail.javamail.JavaMailSenderImpl'<span style="color: #000000;"> (OnBeanCondition)
+
+   MessageSource[自动配置]:
+      不匹配:
+         </span>-<span style="color: #000000;"> ResourceBundle did not find bundle with basename messages (MessageSource[自动配置].ResourceBundleCondition)
+
+   Mongo[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.client.MongoClient'<span style="color: #000000;"> (OnClassCondition)
+
+   MongoData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.client.MongoClient'<span style="color: #000000;"> (OnClassCondition)
+
+   MongoReactive[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.reactivestreams.client.MongoClient'<span style="color: #000000;"> (OnClassCondition)
+
+   MongoReactiveData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.reactivestreams.client.MongoClient'<span style="color: #000000;"> (OnClassCondition)
+
+   MongoReactiveRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.reactivestreams.client.MongoClient'<span style="color: #000000;"> (OnClassCondition)
+
+   MongoRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.mongodb.client.MongoClient'<span style="color: #000000;"> (OnClassCondition)
+
+   Mustache[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.samskivert.mustache.Mustache'<span style="color: #000000;"> (OnClassCondition)
+
+   Neo4j[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.neo4j.driver.Driver'<span style="color: #000000;"> (OnClassCondition)
+
+   Neo4jData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.neo4j.driver.Driver'<span style="color: #000000;"> (OnClassCondition)
+
+   Neo4jReactiveData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.neo4j.driver.Driver'<span style="color: #000000;"> (OnClassCondition)
+
+   Neo4jReactiveRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.neo4j.driver.Driver'<span style="color: #000000;"> (OnClassCondition)
+
+   Neo4jRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.neo4j.driver.Driver'<span style="color: #000000;"> (OnClassCondition)
+
+   Netty[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.netty.util.NettyRuntime'<span style="color: #000000;"> (OnClassCondition)
+
+   OAuth2Client[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.config.annotation.web.configuration.EnableWebSecurity'<span style="color: #000000;"> (OnClassCondition)
+
+   OAuth2ResourceServer[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken'<span style="color: #000000;"> (OnClassCondition)
+
+   PersistenceExceptionTranslation[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor'<span style="color: #000000;"> (OnClassCondition)
+
+   ProjectInfo[自动配置]#buildProperties:
+      不匹配:
+         </span>- @ConditionalOnResource did not find resource '${spring.info.build.location:classpath:META-INF/build-info.properties}'<span style="color: #000000;"> (OnResourceCondition)
+
+   ProjectInfo[自动配置]#gitProperties:
+      不匹配:
+         </span>-<span style="color: #000000;"> GitResource did not find git info at classpath:git.properties (ProjectInfo[自动配置].GitResourceAvailableCondition)
+
+   Quartz[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.quartz.Scheduler'<span style="color: #000000;"> (OnClassCondition)
+
+   R2dbc[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.r2dbc.spi.ConnectionFactory'<span style="color: #000000;"> (OnClassCondition)
+
+   R2dbcData[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.r2dbc.core.R2dbcEntityTemplate'<span style="color: #000000;"> (OnClassCondition)
+
+   R2dbcInitializationConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required classes 'io.r2dbc.spi.ConnectionFactory', 'org.springframework.r2dbc.connection.init.DatabasePopulator'<span style="color: #000000;"> (OnClassCondition)
+
+   R2dbcRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.r2dbc.spi.ConnectionFactory'<span style="color: #000000;"> (OnClassCondition)
+
+   R2dbcTransactionManager[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.r2dbc.connection.R2dbcTransactionManager'<span style="color: #000000;"> (OnClassCondition)
+
+   RSocketMessaging[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.rsocket.RSocket'<span style="color: #000000;"> (OnClassCondition)
+
+   RSocketRequester[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.rsocket.RSocket'<span style="color: #000000;"> (OnClassCondition)
+
+   RSocketSecurity[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.rsocket.core.SecuritySocketAcceptorInterceptor'<span style="color: #000000;"> (OnClassCondition)
+
+   RSocketServer[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.rsocket.core.RSocketServer'<span style="color: #000000;"> (OnClassCondition)
+
+   RSocketStrategies[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.netty.buffer.PooledByteBufAllocator'<span style="color: #000000;"> (OnClassCondition)
+
+   Rabbit[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.rabbitmq.client.Channel'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveElasticsearchRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.elasticsearch.client.reactive.ReactiveElasticsearchClient'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveElasticsearchRestClient[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'reactor.netty.http.client.HttpClient'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveMultipart[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.config.WebFluxConfigurer'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveOAuth2Client[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'reactor.core.publisher.Flux'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveOAuth2ResourceServer[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveSecurity[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'reactor.core.publisher.Flux'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveUserDetailsService[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.authentication.ReactiveAuthenticationManager'<span style="color: #000000;"> (OnClassCondition)
+
+   ReactiveWebServerFactory[自动配置]:
+      不匹配:
+         </span>-<span style="color: #000000;"> @[以WebApplication为条件]did not find reactive web application classes (OnWebApplicationCondition)
+
+   Redis[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.redis.core.RedisOperations'<span style="color: #000000;"> (OnClassCondition)
+
+   RedisCacheConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.redis.connection.RedisConnectionFactory'<span style="color: #000000;"> (OnClassCondition)
+
+   RedisReactive[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'reactor.core.publisher.Flux'<span style="color: #000000;"> (OnClassCondition)
+
+   RedisRepositories[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.redis.repository.configuration.EnableRedisRepositories'<span style="color: #000000;"> (OnClassCondition)
+
+   RepositoryRestMvc[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration'<span style="color: #000000;"> (OnClassCondition)
+
+   Saml2RelyingParty[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository'<span style="color: #000000;"> (OnClassCondition)
+
+   Security[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.authentication.DefaultAuthenticationEventPublisher'<span style="color: #000000;"> (OnClassCondition)
+
+   SecurityFilter[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.config.http.SessionCreationPolicy'<span style="color: #000000;"> (OnClassCondition)
+
+   SendGrid[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'com.sendgrid.SendGrid'<span style="color: #000000;"> (OnClassCondition)
+
+   ServletWebServerFactory[自动配置].ForwardedHeaderFilterConfiguration:
+      不匹配:
+         </span>- @[以属性为条件](server.forward-headers-strategy=framework) did not find property 'server.forward-headers-strategy'<span style="color: #000000;"> (以属性为条件)
+
+   ServletWebServerFactoryConfiguration.EmbeddedJetty:
+      不匹配:
+         </span>- @[以类为条件]did not find required classes 'org.eclipse.jetty.server.Server', 'org.eclipse.jetty.util.Loader', 'org.eclipse.jetty.webapp.WebAppContext'<span style="color: #000000;"> (OnClassCondition)
+
+   ServletWebServerFactoryConfiguration.EmbeddedUndertow:
+      不匹配:
+         </span>- @[以类为条件]did not find required classes 'io.undertow.Undertow', 'org.xnio.SslClientAuthMode'<span style="color: #000000;"> (OnClassCondition)
+
+   Session[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.session.Session'<span style="color: #000000;"> (OnClassCondition)
+
+   Solr[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.apache.solr.client.solrj.impl.CloudSolrClient'<span style="color: #000000;"> (OnClassCondition)
+
+   SpringApplicationAdminJmx[自动配置]:
+      不匹配:
+         </span>- @[以属性为条件](spring.application.admin.enabled=<span style="color: #0000ff;">true</span>) did not find property 'enabled'<span style="color: #000000;"> (以属性为条件)
+
+   SpringDataWeb[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.data.web.PageableHandlerMethodArgumentResolver'<span style="color: #000000;"> (OnClassCondition)
+
+   TaskScheduling[自动配置]#taskScheduler:
+      不匹配:
+         </span>-<span style="color: #000000;"> @[以Bean为条件](names: org.springframework.context.annotation.internalScheduledAnnotationProcessor; SearchStrategy: all) did not find any beans named org.springframework.context.annotation.internalScheduledAnnotationProcessor (OnBeanCondition)
+
+   Thymeleaf[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.thymeleaf.spring5.SpringTemplateEngine'<span style="color: #000000;"> (OnClassCondition)
+
+   Transaction[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.transaction.PlatformTransactionManager'<span style="color: #000000;"> (OnClassCondition)
+
+   UserDetailsService[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.security.authentication.AuthenticationManager'<span style="color: #000000;"> (OnClassCondition)
+
+   Validation[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.validation.executable.ExecutableValidator'<span style="color: #000000;"> (OnClassCondition)
+
+   WebClient[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.function.client.WebClient'<span style="color: #000000;"> (OnClassCondition)
+
+   WebFlux[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.reactive.config.WebFluxConfigurer'<span style="color: #000000;"> (OnClassCondition)
+
+   WebMvc[自动配置]#hiddenHttpMethodFilter:
+      不匹配:
+         </span>- @[以属性为条件](spring.mvc.hiddenmethod.filter.enabled) did not find property 'enabled'<span style="color: #000000;"> (以属性为条件)
+
+   WebMvc[自动配置].ResourceChainCustomizerConfiguration:
+      不匹配:
+         </span>- @ConditionalOnEnabledResourceChain did not find <span style="color: #0000ff;">class</span><span style="color: #000000;"> org.webjars.WebJarAssetLocator (OnEnabledResourceChainCondition)
+
+   WebMvc[自动配置].WebMvc[自动配置]Adapter#beanNameViewResolver:
+      不匹配:
+         </span>- @[以Bean缺失为条件](types: org.springframework.web.servlet.view.BeanNameViewResolver; SearchStrategy: all) found beans of type 'org.springframework.web.servlet.view.BeanNameViewResolver'<span style="color: #000000;"> beanNameViewResolver (OnBeanCondition)
+
+   WebServiceTemplate[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.oxm.Marshaller'<span style="color: #000000;"> (OnClassCondition)
+
+   WebServices[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.ws.transport.http.MessageDispatcherServlet'<span style="color: #000000;"> (OnClassCondition)
+
+   WebSessionIdResolver[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'reactor.core.publisher.Mono'<span style="color: #000000;"> (OnClassCondition)
+
+   WebSocketMessaging[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer'<span style="color: #000000;"> (OnClassCondition)
+
+   WebSocketReactive[自动配置]:
+      不匹配:
+         </span>-<span style="color: #000000;"> @[以WebApplication为条件]did not find reactive web application classes (OnWebApplicationCondition)
+
+   WebSocketServlet[自动配置].Jetty10WebSocketConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required classes 'org.eclipse.jetty.websocket.javax.server.internal.JavaxWebSocketServerContainer', 'org.eclipse.jetty.websocket.server.JettyWebSocketServerContainer'<span style="color: #000000;"> (OnClassCondition)
+
+   WebSocketServlet[自动配置].JettyWebSocketConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer'<span style="color: #000000;"> (OnClassCondition)
+
+   WebSocketServlet[自动配置].UndertowWebSocketConfiguration:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'io.undertow.websockets.jsr.Bootstrap'<span style="color: #000000;"> (OnClassCondition)
+
+   XADataSource[自动配置]:
+      不匹配:
+         </span>- @[以类为条件]did not find required <span style="color: #0000ff;">class</span> 'javax.transaction.TransactionManager' (OnClassCondition)</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h4>③排除</h4>
+<p><span style="color: #ff0000;">None</span></p>
+<h4>④无条件的类</h4>
+<p>org.springframework.boot.autoconfigure.context.ConfigurationProperties[自动配置]</p>
+<p>org.springframework.boot.autoconfigure.context.Lifecycle[自动配置]</p>
+<p>org.springframework.boot.autoconfigure.context.PropertyPlaceholder[自动配置]</p>
+<p>org.springframework.boot.autoconfigure.availability.ApplicationAvailability[自动配置]</p>
+<p>org.springframework.boot.autoconfigure.info.ProjectInfo[自动配置]</p>
+<h3>第三部分</h3>
+<p>00.106【INFO级】【main函数所在类】: Started DemoApplication in 3.966 seconds (JVM running for 4.476)<br />00.122调试信息【应用可用性bean】:应用程序可用性状态LivenessState更改为CORRECT<br />00.122调试信息【应用可用性bean】:应用程序可用性状态ReadinessState更改为ACCEPTING_TRAFFIC（接受流量）</p>

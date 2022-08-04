@@ -1,0 +1,68 @@
+<p>&nbsp;</p>
+<ul>
+<li>物理目录结构与虚拟目录结构的差异</li>
+<li>WAR 实际上就是 JAR</li>
+<li>什么东西应该放在 WEB-INF 文件夹下？</li>
+</ul>
+<ul>
+<li><span class="tag">&lt;<span class="tag-name">mime-mapping<span class="tag">&gt; 相关</span></span></span></li>
+<li><span class="tag"><span class="tag-name"><span class="tag">&lt;env-entry&gt; 相关</span></span></span></li>
+</ul>
+<p>【传统 web.xml 参考】</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1"&gt;
+
+    &lt;!-- Define servlets that are included in the web application --&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;jack&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;sample.Jack&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;dog&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;sample.Dog&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;2&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+    
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;jack&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/abc/*&lt;/url-pattern&gt; &lt;!-- 目录匹配 --&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;dog&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/abc/3&lt;/url-pattern&gt; &lt;!-- 绝对匹配 --&gt;
+    &lt;/servlet-mapping&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;dog&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;*.do&lt;/url-pattern&gt; &lt;!-- 扩展名匹配 --&gt;
+    &lt;/servlet-mapping&gt; &lt;!-- 容器优先查找绝对匹配，然后依次是目录匹配、扩展名匹配，如果有冲突总是取最特定的匹配，也就是路径更长的 --&gt;
+
+    &lt;!-- 启动容器就加载 servlet 不是默认行为！！！原因是!@$@$@$@%#$（自己想） --&gt;
+
+    &lt;error-page&gt;
+        &lt;!-- Throwable 是所有异常与错误的父类 --&gt;
+        &lt;exception-type&gt;java.lang.Throwable&lt;/exception-type&gt;
+        &lt;location&gt;/WEB-INF/jsp/exception/common-exception.jsp&lt;/location&gt;
+    &lt;/error-page&gt;
+    &lt;error-page&gt;
+        &lt;error-code&gt;404&lt;/error-code&gt;
+        &lt;location&gt;/WEB-INF/jsp/exception/404-exception.jsp&lt;/location&gt;
+    &lt;/error-page&gt;
+
+    &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+        &lt;welcome-file&gt;abc/3&lt;/welcome-file&gt;
+        &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt; &lt;!-- 与容器匹配规则不相同，文件名前不能放斜线！ --&gt;
+        &lt;!-- 每个目录可能有各自的 index.html ！--&gt;
+        &lt;!-- 容器先查 servlet 映射，没有才会找欢迎文件 --&gt;
+    &lt;/welcome-file-list&gt;
+    
+&lt;/web-app&gt;
+</pre>
+</div>
+<p>　　ps：路径冲突的意思是，例如输入的路径是 /a/b/c/d ，而匹配的 url-pattern 却有两个： /a/* 和 /a/b/* ，那么这个时候最终匹配的资源将是 &nbsp;/a/b/* （更 长/精确 的那个）</p>

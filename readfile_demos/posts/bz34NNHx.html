@@ -1,0 +1,287 @@
+<p>// 实验存档。。。</p>
+<p>效果图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201906/1042431-20190612174142952-29124254.png" alt="" width="562" height="315" /></p>
+<p>完整程序：https://pan.baidu.com/s/1-d1J90dkEtM0WKkABu0K0Q&nbsp;</p>
+<p>提取码：hcnm&nbsp;</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('7dd0a208-13fd-4155-82e4-884ef50eb818')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_7dd0a208-13fd-4155-82e4-884ef50eb818" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_7dd0a208-13fd-4155-82e4-884ef50eb818" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_7dd0a208-13fd-4155-82e4-884ef50eb818" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">DATABASE</span><span style="color: #000000;"> jee_ex10;
+</span><span style="color: #0000ff;">USE</span><span style="color: #000000;"> jee_ex10;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> book (
+    id </span><span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> AUTO_INCREMENT,
+    name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    isbn </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    author </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    press </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    num </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (id)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> student (
+    id </span><span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> AUTO_INCREMENT,
+    name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    sex </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    id_card </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    birth </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (id)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> lending_record (
+    id </span><span style="color: #0000ff;">BIGINT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> AUTO_INCREMENT,
+    book_id </span><span style="color: #0000ff;">BIGINT</span><span style="color: #000000;">,
+    stu_id </span><span style="color: #0000ff;">BIGINT</span><span style="color: #000000;">,
+    num </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (id)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> SET NAMES gbk;</span>
+<span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> book(name, isbn, author, press, num)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+  ("book1", "ASDXZC1DSA23123", "尼采", "长江出版社", </span><span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+  ("book2", "ASDXZC1DSA23123", "尼采", "长江出版社", </span><span style="color: #800000; font-weight: bold;">30</span><span style="color: #000000;">);
+
+
+</span><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> student(name, sex, id_card, birth)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+  ("张三", "男", "</span><span style="color: #800000; font-weight: bold;">350824199210233922</span><span style="color: #000000;">", "92年10月23日"),
+  ("李四", "女", "</span><span style="color: #800000; font-weight: bold;">350824199312233922</span>", "92年12月23日");</pre>
+</div>
+<span class="cnblogs_code_collapse">mysql_create</span></div>
+<p>DAO层代码由MyBatis Generator生成，仅补充若干自定义代码。主要的代码只有下面这个：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.book;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.book.dao.BookMapper;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.book.dao.StudentMapper;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.book.dao.lendingRecordMapper;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.book.model.Book;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.book.model.Student;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.book.model.lendingRecord;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.mybatis.spring.annotation.MapperScan;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.beans.factory.annotation.Autowired;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.CommandLineRunner;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.autoconfigure.SpringBootApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.transaction.annotation.Transactional;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+
+@SpringBootApplication
+@MapperScan(</span>"com.book.dao"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyApplication <span style="color: #0000ff;">implements</span><span style="color: #000000;"> CommandLineRunner {
+
+    @Autowired
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> BookMapper bookMapper;
+
+    @Autowired
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> StudentMapper studentMapper;
+
+    @Autowired
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> lendingRecordMapper lendingRecordMapper;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication.run(MyApplication.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">, args);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> run(String... strings) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        serve();
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> serve() {
+        Scanner scan </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> command;
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            System.out.println(</span>"=======分===割===线================"<span style="color: #000000;">);
+            System.out.println(</span>"请问你要干嘛？"<span style="color: #000000;">);
+            System.out.println(</span>"1、管理书"<span style="color: #000000;">);
+            System.out.println(</span>"2、管理用户"<span style="color: #000000;">);
+            System.out.println(</span>"3、借书"<span style="color: #000000;">);
+            System.out.println(</span>"4、还书"<span style="color: #000000;">);
+            System.out.println(</span>"5、退出程序"<span style="color: #000000;">);
+            command </span>=<span style="color: #000000;"> scan.nextInt();
+            </span><span style="color: #0000ff;">if</span> (command == 1<span style="color: #000000;">) {
+                System.out.println(</span>"请问你下一步要干嘛？"<span style="color: #000000;">);
+                System.out.println(</span>"1、增书"<span style="color: #000000;">);
+                System.out.println(</span>"2、改书"<span style="color: #000000;">);
+                System.out.println(</span>"3、删书"<span style="color: #000000;">);
+                System.out.println(</span>"4、查书"<span style="color: #000000;">);
+                System.out.println(</span>"5、浏览书"<span style="color: #000000;">);
+                command </span>=<span style="color: #000000;"> scan.nextInt();
+                </span><span style="color: #0000ff;">if</span> (command == 1<span style="color: #000000;">) {
+                    System.out.println(</span>"1、请你依次输入书的书名、作者、出版社、ISBN号、数量"<span style="color: #000000;">);
+                    System.out.println(</span>"注意一行一个："<span style="color: #000000;">);
+                    scan.nextLine();
+                    String name </span>=<span style="color: #000000;"> scan.nextLine();
+                    System.out.println(</span>"书名" + name + "已录入。"<span style="color: #000000;">);
+                    String author </span>=<span style="color: #000000;"> scan.nextLine();
+                    String press </span>=<span style="color: #000000;"> scan.nextLine();
+                    String isbn </span>=<span style="color: #000000;"> scan.nextLine();
+                    </span><span style="color: #0000ff;">int</span> num =<span style="color: #000000;"> scan.nextInt();
+                    Book book </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Book(name, author, press, isbn, num);
+                    bookMapper.insert(book);
+                    System.out.println(book </span>+ "已录入！！！"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 2<span style="color: #000000;">) {
+                    System.out.println(</span>"想改书？请填入书的id以及欲改字段"<span style="color: #000000;">);
+                    System.out.print(</span>"书的id："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">long</span> id =<span style="color: #000000;"> scan.nextLong();
+                    System.out.print(</span>"书名："<span style="color: #000000;">);
+                    String name </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"作者："<span style="color: #000000;">);
+                    String author </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"出版社："<span style="color: #000000;">);
+                    String press </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"isbn："<span style="color: #000000;">);
+                    String isbn </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"数量："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">int</span> num =<span style="color: #000000;"> scan.nextInt();
+                    Book book </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Book(name, author, press, isbn, num);
+                    book.setId(id);
+                    System.out.println(book </span>+ "修改成功！！！"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">                bookMapper.updateByPrimaryKeySelective();</span>
+                } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 3<span style="color: #000000;">) {
+                    System.out.println(</span>"你想删书？请直接输入书的id："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">long</span> id =<span style="color: #000000;"> scan.nextLong();
+                    System.out.println(</span>"恭喜你，删除成功！！！"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 4<span style="color: #000000;">) {
+                    System.out.println(</span>"你想查书？请直接输入书的id："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">long</span> id =<span style="color: #000000;"> scan.nextLong();
+                    Book book </span>=<span style="color: #000000;"> bookMapper.selectByPrimaryKey(id);
+                    </span><span style="color: #0000ff;">if</span> (book == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                        System.out.println(</span>"不好意思没有这本书"<span style="color: #000000;">);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        System.out.println(</span>"找到这本书了，信息如下："<span style="color: #000000;">);
+                        System.out.println(book);
+                    }
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 5<span style="color: #000000;">) {
+                    List</span>&lt;Book&gt; list =<span style="color: #000000;"> bookMapper.selectAll();
+                    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Book x : list) {
+                        System.out.println(x);
+                    }
+                }
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 2<span style="color: #000000;">) {
+                System.out.println(</span>"请问你下一步要干嘛？"<span style="color: #000000;">);
+                System.out.println(</span>"1、增用户"<span style="color: #000000;">);
+                System.out.println(</span>"2、改用户"<span style="color: #000000;">);
+                System.out.println(</span>"3、删用户"<span style="color: #000000;">);
+                System.out.println(</span>"4、查用户"<span style="color: #000000;">);
+                System.out.println(</span>"5、浏览用户"<span style="color: #000000;">);
+                command </span>=<span style="color: #000000;"> scan.nextInt();
+                </span><span style="color: #0000ff;">if</span> (command == 1<span style="color: #000000;">) {
+                    System.out.println(</span>"1、请你依次输入用户的身份证号码、姓名、出生年月、性别"<span style="color: #000000;">);
+                    System.out.println(</span>"注意一行一个："<span style="color: #000000;">);
+                    scan.nextLine();
+                    String idCard </span>=<span style="color: #000000;"> scan.nextLine();
+                    System.out.println(</span>"idCard" + idCard + "已录入。"<span style="color: #000000;">);
+                    String name </span>=<span style="color: #000000;"> scan.nextLine();
+                    String birth </span>=<span style="color: #000000;"> scan.nextLine();
+                    String sex </span>=<span style="color: #000000;"> scan.nextLine();
+                    Student student </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Student(name, sex, idCard, birth);
+                    studentMapper.insert(student);
+                    System.out.println(student </span>+ "已录入！！！"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 2<span style="color: #000000;">) {
+                    System.out.println(</span>"想改用户？请填入用户的id以及欲改字段"<span style="color: #000000;">);
+                    System.out.print(</span>"用户的id："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">long</span> id =<span style="color: #000000;"> scan.nextLong();
+                    System.out.print(</span>"身份证号码："<span style="color: #000000;">);
+                    String idCard </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"姓名："<span style="color: #000000;">);
+                    String name </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"性别："<span style="color: #000000;">);
+                    String sex </span>=<span style="color: #000000;"> scan.next();
+                    System.out.print(</span>"出生年月："<span style="color: #000000;">);
+                    String birth </span>=<span style="color: #000000;"> scan.next();
+                    Student student </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Student(name, sex, idCard, birth);
+                    student.setId(id);
+                    System.out.println(student </span>+ "修改成功！！！"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">                bookMapper.updateByPrimaryKeySelective();</span>
+                } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 3<span style="color: #000000;">) {
+                    System.out.println(</span>"你想删用户？请直接输入用户的id："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">long</span> id =<span style="color: #000000;"> scan.nextLong();
+                    System.out.println(</span>"恭喜你，删除成功！！！"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 4<span style="color: #000000;">) {
+                    System.out.println(</span>"你想查用户？请直接输入用户的id："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">long</span> id =<span style="color: #000000;"> scan.nextLong();
+                    Student student </span>=<span style="color: #000000;"> studentMapper.selectByPrimaryKey(id);
+                    </span><span style="color: #0000ff;">if</span> (student == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                        System.out.println(</span>"不好意思没有这个用户"<span style="color: #000000;">);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        System.out.println(</span>"找到这个用户了，信息如下："<span style="color: #000000;">);
+                        System.out.println(student);
+                    }
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 5<span style="color: #000000;">) {
+                    List</span>&lt;Student&gt; list =<span style="color: #000000;"> studentMapper.selectAll();
+                    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Student x : list) {
+                        System.out.println(x);
+                    }
+                }
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 3<span style="color: #000000;">) {
+                System.out.print(</span>"读者id："<span style="color: #000000;">);
+                Long uid </span>=<span style="color: #000000;"> scan.nextLong();
+                System.out.print(</span>"书的id："<span style="color: #000000;">);
+                Long bookId </span>=<span style="color: #000000;"> scan.nextLong();
+                System.out.print(</span>"借书本数："<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">int</span> num =<span style="color: #000000;"> scan.nextInt();
+                borrowBooks(uid, bookId, num);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 4<span style="color: #000000;">) {
+                System.out.print(</span>"读者id："<span style="color: #000000;">);
+                Long uid </span>=<span style="color: #000000;"> scan.nextLong();
+                System.out.print(</span>"书的id："<span style="color: #000000;">);
+                Long bookId </span>=<span style="color: #000000;"> scan.nextLong();
+                returnBooks(uid, bookId);
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (command == 5<span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+    }
+
+    @Transactional
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> borrowBooks(Long uid, Long bookId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> num) {
+        Student student </span>=<span style="color: #000000;"> studentMapper.selectByPrimaryKey(uid);
+        </span><span style="color: #0000ff;">if</span> (student == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            System.out.println(</span>"读者身份有错！！！请检查一遍再重新输入"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        Book book </span>=<span style="color: #000000;"> bookMapper.selectByPrimaryKey(bookId);
+        </span><span style="color: #0000ff;">if</span> (book == <span style="color: #0000ff;">null</span> || book.getNum() &lt;<span style="color: #000000;"> num) {
+            System.out.println(</span>"书籍不存在或者数量不够！！！"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        book.setNum(book.getNum() </span>-<span style="color: #000000;"> num);
+        bookMapper.updateByPrimaryKey(book);
+        System.out.println(</span>"书籍数量已更新"<span style="color: #000000;">);
+        lendingRecord record </span>=<span style="color: #000000;"> lendingRecordMapper.selectByUidAndBookId(uid, bookId);
+        </span><span style="color: #0000ff;">if</span> (record != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果借过同类的书，那就更新记录</span>
+            record.setNum(record.getNum() +<span style="color: #000000;"> num);
+            lendingRecordMapper.updateByPrimaryKey(record);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果没有，创建新记录</span>
+            record = <span style="color: #0000ff;">new</span><span style="color: #000000;"> lendingRecord(uid, bookId, num);
+            lendingRecordMapper.insert(record);
+        }
+        System.out.println(</span>"恭喜你！借书成功！"<span style="color: #000000;">);
+    }
+
+    @Transactional
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> returnBooks(Long uid, Long bookId) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 可能出现Expected one result (or null) to be returned by selectOne(), but found: 2
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 需要保证数据干净</span>
+        lendingRecord record =<span style="color: #000000;"> lendingRecordMapper.selectByUidAndBookId(uid, bookId);
+        </span><span style="color: #0000ff;">if</span> (record == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            System.out.println(</span>"不好意思，查不到该条借书记录~"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 增加库存</span>
+            Book book =<span style="color: #000000;"> bookMapper.selectByPrimaryKey(bookId);
+            book.setNum(book.getNum() </span>+<span style="color: #000000;"> record.getNum());
+            bookMapper.updateByPrimaryKey(book);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 删除记录</span>
+<span style="color: #000000;">            lendingRecordMapper.deleteByPrimaryKey(record.getId());
+            System.out.println(</span>"恭喜你，还书成功~~~"<span style="color: #000000;">);
+            System.out.println(</span>"^o^"<span style="color: #000000;">);
+        }
+    }
+}</span></pre>
+</div>

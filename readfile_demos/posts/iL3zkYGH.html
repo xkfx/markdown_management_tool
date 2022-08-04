@@ -1,0 +1,113 @@
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5;">1、复习了一下昨天的内容 while(std::cin &gt;&gt; value) 扫描【标准输入】</span></p>
+<p>&nbsp;</p>
+<p>2、在网上下载Sales_item.h 代码如下</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">#ifndef SALESITEM_H
+</span><span style="color: #0000ff;">#define</span> SALESITEM_H<span style="color: #000000;">
+#include </span>&lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Sales_item
+{
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+ Sales_item(</span><span style="color: #0000ff;">const</span> std::<span style="color: #0000ff;">string</span> &amp;book):isbn(book),units_sold(<span style="color: #800080;">0</span>),revenue(<span style="color: #800080;">0.0</span><span style="color: #000000;">){}
+ Sales_item(std::istream </span>&amp;<span style="color: #0000ff;">is</span>){ <span style="color: #0000ff;">is</span> &gt;&gt; *<span style="color: #0000ff;">this</span><span style="color: #000000;">;}
+ friend std::istream</span>&amp; <span style="color: #0000ff;">operator</span>&gt;&gt;(std::istream &amp;,Sales_item &amp;<span style="color: #000000;">);
+ friend std::ostream</span>&amp; <span style="color: #0000ff;">operator</span>&lt;&lt;(std::ostream &amp;,<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">);
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+ Sales_item </span>&amp; <span style="color: #0000ff;">operator</span>+=(<span style="color: #0000ff;">const</span> Sales_item&amp;<span style="color: #000000;">);
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+ </span><span style="color: #0000ff;">double</span> avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+ </span><span style="color: #0000ff;">bool</span> same_isbn(<span style="color: #0000ff;">const</span> Sales_item &amp;rhs)<span style="color: #0000ff;">const</span><span style="color: #000000;">
+ {
+  </span><span style="color: #0000ff;">return</span> isbn ==<span style="color: #000000;"> rhs.isbn;
+ }
+ Sales_item():units_sold(</span><span style="color: #800080;">0</span>),revenue(<span style="color: #800080;">0.0</span><span style="color: #000000;">){}
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+ std::</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> isbn;
+ unsigned units_sold;
+ </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> revenue;
+};
+
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::istream;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::ostream;
+Sales_item </span><span style="color: #0000ff;">operator</span>+(<span style="color: #0000ff;">const</span> Sales_item &amp;,<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">);
+inline </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>==(<span style="color: #0000ff;">const</span> Sales_item &amp;lhs,<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">rhs)
+{
+ </span><span style="color: #0000ff;">return</span> lhs.units_sold == rhs.units_sold &amp;&amp; lhs.revenue == rhs.revenue &amp;&amp;<span style="color: #000000;"> lhs.same_isbn(rhs);
+}
+inline </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>!=(<span style="color: #0000ff;">const</span> Sales_item &amp;lhs,<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">rhs)
+{
+ </span><span style="color: #0000ff;">return</span> !(lhs ==<span style="color: #000000;"> rhs);
+}
+
+inline Sales_item </span>&amp; Sales_item::<span style="color: #0000ff;">operator</span> +=(<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">rhs)
+{
+ units_sold </span>+=<span style="color: #000000;"> rhs.units_sold;
+ revenue </span>+=<span style="color: #000000;"> rhs.revenue;
+ </span><span style="color: #0000ff;">return</span> *<span style="color: #0000ff;">this</span><span style="color: #000000;">;
+}
+inline Sales_item </span><span style="color: #0000ff;">operator</span>+(<span style="color: #0000ff;">const</span> Sales_item &amp;lhs,<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">rhs)
+{
+ Sales_item ret(lhs);
+ ret </span>+=<span style="color: #000000;"> rhs;
+ </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ret;
+}
+inline istream</span>&amp; <span style="color: #0000ff;">operator</span>&gt;&gt;(istream &amp;<span style="color: #0000ff;">in</span>,Sales_item &amp;<span style="color: #000000;">s)
+{
+ </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> price;
+ </span><span style="color: #0000ff;">in</span> &gt;&gt; s.isbn &gt;&gt; s.units_sold &gt;&gt;<span style="color: #000000;"> price;
+ </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">in</span><span style="color: #000000;">)
+  s.revenue </span>= s.units_sold *<span style="color: #000000;"> price;
+ </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+  s </span>=<span style="color: #000000;"> Sales_item();
+ </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">in</span><span style="color: #000000;">;
+}
+inline ostream</span>&amp; <span style="color: #0000ff;">operator</span>&lt;&lt;(ostream &amp;<span style="color: #0000ff;">out</span>,<span style="color: #0000ff;">const</span> Sales_item &amp;<span style="color: #000000;">s)
+{
+ </span><span style="color: #0000ff;">out</span> &lt;&lt; s.isbn &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\t</span><span style="color: #800000;">"</span> &lt;&lt;s.units_sold &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\t</span><span style="color: #800000;">"</span> &lt;&lt; s.revenue &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\t</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> s.avg_price();
+ </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">out</span><span style="color: #000000;">;
+}
+inline </span><span style="color: #0000ff;">double</span> Sales_item::avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;">
+{
+ </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(units_sold)
+  </span><span style="color: #0000ff;">return</span> revenue/<span style="color: #000000;">units_sold;
+ </span><span style="color: #0000ff;">else</span>
+  <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">#endif</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、使用文件重定向, 例如：$ prog1&lt;input.txt&gt;output.txt</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>遇到的问题：</p>
+<p>&nbsp;1、在c++primer e5里， 访问isbn用的是 item1.isbn()，</p>
+<p>而在我下载的头文件里 isbn直接就被定义为public 而没有写isdn()这个函数。因此在下面的代码里就直接用item1.isdn访问对象的isdn。</p>
+<p>&nbsp;</p>
+<p>2、另外， std::cerr &lt;&lt; "xxx" 不受重定向影响，xxx 直接输出在 cmd 界面</p>
+<p>&nbsp;</p>
+<p>练习1.19</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    std::cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Enter two numbers:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">int</span> v1 = <span style="color: #800080;">0</span>, v2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    std::cin </span>&gt;&gt; v1 &gt;&gt;<span style="color: #000000;"> v2;
+    </span><span style="color: #0000ff;">int</span> temp = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span>(v1 &gt;<span style="color: #000000;"> v2){
+        temp </span>=<span style="color: #000000;"> v1;
+        v1 </span>=<span style="color: #000000;"> v2;
+        v2 </span>=<span style="color: #000000;"> temp;
+    }
+    </span><span style="color: #0000ff;">for</span>(;v1 &lt;= v2; ++<span style="color: #000000;">v1){
+        std::cout </span>&lt;&lt; v1 &lt;&lt;<span style="color: #000000;"> std::endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,16 @@
+<p><span style="line-height: 1.5;">1、熟悉cpp文件的编译运行</span></p>
+<p><br />2、初步认识输入输出</p>
+<p>	值得关注的地方是: 流的概念。endl除了结束当前行外，还有刷新缓冲区的功能。以及对</p>
+<p>输入输出运算符(&lt;&lt; 、&gt;&gt;)所构成的表达式(expression)的重新理解：运算结果就是左侧对象！(表达式的值)。</p>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p><strong>遇到的问题：</strong></p>
+<p>	1、遇到的某一个编译错误：error: 'endln' is not a member of 'std'&nbsp;</p>
+<p>	2、形如这样的程序是错误的</p>
+<div class="cnblogs_code">
+<pre>std::cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">The sum of </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> v1;
+    </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;"> and </span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> v2;
+    </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;"> is </span><span style="color: #800000;">"</span> &lt;&lt; v1 + v2 &lt;&lt; std::endln;</pre>
+</div>
+<p>因为根本编译不出来</p>
+<p> error: expected primary-expression before '&lt;&lt;' token<br />  	<br />	意思是表达式缺少前操作数(我猜的。。)</p>
+<p>&nbsp;</p>

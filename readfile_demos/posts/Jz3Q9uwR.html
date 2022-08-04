@@ -1,0 +1,105 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<ul>
+<li><a href="#anchor0">一、本地开发与测试相关脚本</a>
+<ul>
+<li><a href="#anchor1">1、startup.sh</a></li>
+<li><a href="#anchor2">2、shutdown.sh</a></li>
+<li><a href="#anchor3">3、catalina-out.sh</a></li>
+<li><a href="#anchor4">4、localhost_access_log.sh</a></li>
+<li><a href="#anchor5">5、上传本地文件到服务器指定目录</a></li>
+</ul>
+</li>
+<li><a href="#anchor6">二、服务端部署与日志查看</a>
+<ul>
+<li><a href="#anchor7">1、nginx配置以及日志查看</a></li>
+<li><a href="#anchor8">2、定制程度较高的一个脚本。。。</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</div>
+<p>// 留着备用</p>
+<h2><a name="anchor0"></a>一、本地开发与测试相关脚本</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201904/1042431-20190427111418839-1312161994.png" alt="" width="285" height="172" /></p>
+<p>个人习惯在项目的根目录下建立一个script文件夹用来存放各种自定义的脚本，</p>
+<p>这样在根目录下不仅可以使用mvn命令和还可以很方便地执行自定义脚本（通过sh scripts/xxx.sh）。</p>
+<h3><a name="anchor1"></a>1、startup.sh</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">cp</span> target/你的应用名.war /d/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">8</span>/webapps/<span style="color: #000000;">test.war
+</span><span style="color: #0000ff;">sh</span> /d/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">8</span>/bin/startup.<span style="color: #0000ff;">sh</span></pre>
+</div>
+<p>说明：将maven项目部署到本地tomcat，并启动本地tomcat。</p>
+<p>备注：路径需要自定义。</p>
+<h3><a name="anchor2"></a>2、shutdown.sh</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sh</span> /d/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">8</span>/bin/shutdown.<span style="color: #0000ff;">sh</span></pre>
+</div>
+<p>说明：关闭本地tomcat。</p>
+<p>备注：路径需要自定义。</p>
+<h3><a name="anchor3"></a>3、catalina-out.sh</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">tail</span> -f -n <span style="color: #800080;">20</span> /d/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">8</span>/logs/catalina.out</pre>
+</div>
+<p>说明：在终端实时观察本地tomcat的输出日志（相当于集成环境的控制台）。</p>
+<p>备注：路径需要自定义。</p>
+<h3><a name="anchor4"></a>4、localhost_access_log.sh</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">tail</span> -f -n <span style="color: #800080;">20</span> /d/apache-tomcat-<span style="color: #800080;">9.0</span>.<span style="color: #800080;">8</span>/logs/localhost_access_log.`<span style="color: #0000ff;">date</span> +%F`.txt</pre>
+</div>
+<p>说明：在终端实时观察本地tomcat的访问日志（查看请求方IP、请求响应时间等）</p>
+<p>备注：路径需要自定义。</p>
+<h3><a name="anchor5"></a>5、上传本地文件到服务器指定目录</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">scp</span> ./target/simple-shop-<span style="color: #800080;">1.0</span>-SNAPSHOT.war root@***.**.**.**:/root/scripts/projects/simpleshop</pre>
+</div>
+<p>备注：ip、路径需要自定义</p>
+<h2><a name="anchor6"></a>二、服务端部署与日志查看</h2>
+<h3><a name="anchor7"></a>1、nginx配置以及日志查看</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">tail</span> -f -n <span style="color: #800080;">20</span> /var/log/nginx/<span style="color: #000000;">access.log
+vim </span>/etc/nginx/<span style="color: #000000;">nginx.conf
+</span><span style="color: #0000ff;">tail</span> -f -n <span style="color: #800080;">20</span> /var/log/nginx/<span style="color: #000000;">error.log
+nginx </span>-s reload</pre>
+</div>
+<p>备注：路径需要自定义。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201905/1042431-20190524151206461-1597486778.png" alt="" width="726" height="38" /></p>
+<p>实际中，我将几个指令分别写成shell脚本，方便调用。</p>
+<h3><a name="anchor8"></a>2、定制程度较高的一个脚本。。。</h3>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+# arg1: war </span><span style="color: #0000ff;">file</span><span style="color: #000000;"> name, arg2: jdbc password
+
+# </span><span style="color: #800080;">1</span><span style="color: #000000;">. shutdown all cats
+</span><span style="color: #0000ff;">sh</span> /opt/tomcat/cat_7070/bin/shutdown.<span style="color: #0000ff;">sh</span>
+<span style="color: #0000ff;">sh</span> /opt/tomcat/cat_9090/bin/shutdown.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+
+# </span><span style="color: #800080;">2</span><span style="color: #000000;">. save
+</span><span style="color: #0000ff;">mv</span> $<span style="color: #800080;">1</span> `<span style="color: #0000ff;">date</span> +%<span style="color: #000000;">F`.war
+
+# </span><span style="color: #800080;">3</span>. <span style="color: #0000ff;">unzip</span> 
+<span style="color: #0000ff;">unzip</span> -oq `<span style="color: #0000ff;">date</span> +%F`.war -<span style="color: #000000;">d shop1
+
+# </span><span style="color: #800080;">4</span><span style="color: #000000;">. config
+</span><span style="color: #0000ff;">pwd</span>=$<span style="color: #800080;">2</span>
+<span style="color: #0000ff;">sed</span> <span style="color: #800000;">"</span><span style="color: #800000;">s/^password=.*$/password=${pwd}/</span><span style="color: #800000;">"</span> shop1/WEB-INF/classes/hikari.properties -i &gt; /dev/<span style="color: #0000ff;">null</span><span style="color: #000000;">
+
+# </span><span style="color: #800080;">5</span><span style="color: #000000;">. deploy
+</span><span style="color: #0000ff;">rm</span> -rf /opt/tomcat/cat_7070/webapps/<span style="color: #000000;">shop1
+</span><span style="color: #0000ff;">rm</span> -rf /opt/tomcat/cat_9090/webapps/<span style="color: #000000;">shop1
+</span><span style="color: #0000ff;">cp</span> -rf shop1 /opt/tomcat/cat_7070/<span style="color: #000000;">webapps
+</span><span style="color: #0000ff;">cp</span> -rf shop1 /opt/tomcat/cat_9090/<span style="color: #000000;">webapps
+
+# </span><span style="color: #800080;">6</span><span style="color: #000000;">. start all cats
+</span><span style="color: #0000ff;">sh</span> /opt/tomcat/cat_7070/bin/startup.<span style="color: #0000ff;">sh</span>
+<span style="color: #0000ff;">sh</span> /opt/tomcat/cat_9090/bin/startup.<span style="color: #0000ff;">sh</span></pre>
+</div>
+<p>说明：脚本含义见注释，对于普通tomcat项目，习惯在服务端建立一个中央仓库（中转站），进行配置的更改、服务端环境的调试。所以就有了上面的脚本。</p>
+<p>备注：该脚本以数据库密码作为参数。</p>
+<p>再比如，类似于：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sed</span> <span style="color: #800000;">"</span><span style="color: #800000;">s/^const BASE_URL.*$/const BASE_URL=\"http:\/\/***.**.**.**\/shop1\/api\/v1\"/</span><span style="color: #800000;">"</span> static/shop1/resources/js/utils/customUtils.js -i</pre>
+</div>
+<p>更改一些静态文件里的配置信息，避免每次上传都手动改。</p>
+<p>当然现在很多技术可以避免这个，不过暂时还没空去学。。</p>

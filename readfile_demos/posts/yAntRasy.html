@@ -1,0 +1,142 @@
+<p>留着备用。</p>
+<p>js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">            class MaxSub {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 解法1：动态规划 -- O(n)            </span>
+<span style="color: #000000;">                static solve(arr, start, end) {
+                    let s </span>= []; <span style="color: #008000;">//</span><span style="color: #008000;"> s[n]保存arr[start:n+1]的最大子段和</span>
+                    let b = []; <span style="color: #008000;">//</span><span style="color: #008000;"> b[n]保存由从arr[n]开始到arr[start]的逆向最大和</span>
+                    s[start] =<span style="color: #000000;"> {
+                        sum: arr[start],
+                        start: start,
+                        end: start </span>+ 1<span style="color: #000000;">
+                    }; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当数组只有一个元素的时候，最大子段和只能是这个元素                    </span>
+                    b[start] =<span style="color: #000000;"> CommonUtil.lightCopy(s[start]);
+                    
+                    </span><span style="color: #0000ff;">for</span> (let i = start + 1; i != end; ++<span style="color: #000000;">i) {
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> b[i] = max(b[i-1]+arr[i], arr[i])</span>
+                        <span style="color: #0000ff;">if</span> (b[i - 1].sum + arr[i] &gt;<span style="color: #000000;"> arr[i]) {                
+                            b[i] </span>= CommonUtil.lightCopy(b[i - 1<span style="color: #000000;">]);                            
+                            b[i].sum </span>+=<span style="color: #000000;"> arr[i];
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            b[i] </span>=<span style="color: #000000;"> {sum: arr[i], start: i};
+                        }        
+                        b[i].end </span>= i + 1<span style="color: #000000;">;
+                        
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> s[i] = max(s[i-1], b[i])</span>
+                        s[i] =<span style="color: #000000;"> CommonUtil.lightCopy(
+                            s[i </span>- 1].sum &gt;= b[i].sum ? s[i - 1<span style="color: #000000;">] : b[i]
+                        );    
+                    }
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 证明：假设s[n]是截至arr[n]的最大子段和（包括arr[n]）</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 当考察s[n+1]时，相当于往原序列添加一个新元素arr[n+1] </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 结果是生成了arr[0..n+1],arr[1..n+1]等n+1个新序列</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 我们选取这些新序列中最大的,即从arr[n+1]开始的"逆向最大和",</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 与旧序列的最大子段和s[n]比较，s[n+1]取两者中更大的一个</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> （其实就是在新和旧之间决策），因为考虑了所有可能的情况，</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 并且是大中选大，所以s[n+1]是截至arr[n+1]的最大子段和。            </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 思路：先考虑一个元素的情况，显然最大子段和只能是那个元素</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 然后考虑2个元素的情况（在原基础上增加1个），要么仍是第</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 一个元素，要么就是逆向最大和，继续增加元素考虑，发现都是</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 反复在做同样的决策....                    </span>
+                    <span style="color: #0000ff;">return</span> s[end - 1<span style="color: #000000;">];                    
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 解法2：暴力求解 -- O(n^2)    </span>
+<span style="color: #000000;">                static solve2(arr, start, end) {
+                    let result </span>=<span style="color: #000000;"> {
+                        sum: </span>-<span style="color: #000000;">Infinity,
+                        start: start,
+                        end: end
+                    };
+                    
+                    </span><span style="color: #0000ff;">for</span> (let i = start; i != end; ++<span style="color: #000000;">i) {
+                        let temp </span>=<span style="color: #000000;"> {
+                            sum: </span>0<span style="color: #000000;">,
+                            start: i
+                        };
+                        </span><span style="color: #0000ff;">for</span> (let j = i; j != end; ++<span style="color: #000000;">j) {
+                            temp.sum </span>+=<span style="color: #000000;"> arr[j];
+                            temp.end </span>= j + 1<span style="color: #000000;">; 
+                            </span><span style="color: #0000ff;">if</span> (temp.sum &gt;<span style="color: #000000;"> result.sum) {
+                                result </span>=<span style="color: #000000;"> CommonUtil.lightCopy(temp);
+                            }
+                        }
+                    }
+                    
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 解法3：递归（分治） -- O(nlgn),来自算法导论</span>
+<span style="color: #000000;">                static solve3(arr, start, end) {
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> findMaxCrossingSubarray(arr, start, mid, end) {
+                        let leftSum </span>= -<span style="color: #000000;">Infinity;
+                        let sum </span>= 0<span style="color: #000000;">;
+                        let maxLeft; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 开始下标</span>
+                        <span style="color: #0000ff;">for</span> (let i = mid - 1; i &gt;= start; --<span style="color: #000000;">i) {
+                            sum </span>= sum +<span style="color: #000000;"> arr[i];
+                            </span><span style="color: #0000ff;">if</span> (sum &gt;<span style="color: #000000;"> leftSum) {
+                                leftSum </span>=<span style="color: #000000;"> sum;
+                                maxLeft </span>=<span style="color: #000000;"> i;
+                            }
+                        }
+                        
+                        let rightSum </span>= -<span style="color: #000000;">Infinity;
+                        sum </span>= 0<span style="color: #000000;">;
+                        let maxRight; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 结束下标</span>
+                        <span style="color: #0000ff;">for</span> (let j = mid; j != end; ++<span style="color: #000000;">j) {
+                            sum </span>= sum +<span style="color: #000000;"> arr[j];
+                            </span><span style="color: #0000ff;">if</span> (sum &gt;<span style="color: #000000;"> rightSum) {
+                                rightSum </span>=<span style="color: #000000;"> sum;
+                                maxRight </span>=<span style="color: #000000;"> j;
+                            }
+                        }
+                        
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                            sum: leftSum </span>+<span style="color: #000000;"> rightSum,
+                            start: maxLeft,
+                            end: maxRight </span>+ 1<span style="color: #000000;">
+                        };
+                    }
+                    
+                    </span><span style="color: #0000ff;">if</span> (start + 1 == end) { <span style="color: #008000;">//</span><span style="color: #008000;"> base case</span>
+                        <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                            sum: arr[start],
+                            start: start,
+                            end: end
+                        };
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        let mid </span>= Math.floor((start + end) / 2<span style="color: #000000;">);
+                        let leftResult </span>=<span style="color: #000000;"> MaxSub.solve3(arr, start, mid);
+                        let rightResult </span>=<span style="color: #000000;"> MaxSub.solve3(arr, mid, end);
+                        let crossResult </span>=<span style="color: #000000;"> findMaxCrossingSubarray(arr, start, mid, end);
+                        
+                        let finalResult </span>=<span style="color: #000000;"> {
+                            sum: </span>-<span style="color: #000000;">Infinity,
+                        };
+                        
+                        </span><span style="color: #0000ff;">if</span> (leftResult.sum &gt; finalResult.sum) finalResult =<span style="color: #000000;"> CommonUtil.lightCopy(leftResult);
+                        </span><span style="color: #0000ff;">if</span> (rightResult.sum &gt; finalResult.sum) finalResult =<span style="color: #000000;"> CommonUtil.lightCopy(rightResult);
+                        </span><span style="color: #0000ff;">if</span> (crossResult.sum &gt; finalResult.sum) finalResult =<span style="color: #000000;"> CommonUtil.lightCopy(crossResult);
+                        
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> finalResult;
+                    }
+                }
+                
+                static run(data) {
+                    let arr </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    let result </span>= MaxSub.solve(arr, 0<span style="color: #000000;">, arr.length);
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> console.log(result);</span>
+<span style="color: #000000;">                    console.log(arr.slice(result.start, result.end));
+                    console.log(`max_sum </span>=<span style="color: #000000;"> ${result.sum}`);
+                }
+            }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>数组长度为20实测（各跑100次）&darr;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201810/1042431-20181005171107883-847535540.png" alt="" /></p>
+<p>数组长度为100实测（各跑100次）&darr;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201810/1042431-20181005171318845-1096248449.png" alt="" /></p>
+<p>数组长度为500实测（各跑100次）&darr;</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201810/1042431-20181005171449820-905670120.png" alt="" /></p>
+<p>&nbsp;</p>

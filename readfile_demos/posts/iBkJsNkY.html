@@ -1,0 +1,32 @@
+<p>p270~p272</p>
+<p>1、创建异常类。</p>
+<p>步骤：1）定义一个派生于（继承）Exception或者其子类的类。</p>
+<p>2）添加两个构造方法：一个是默认构造器，另一个是带有详细描述信息的构造器。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">import java.io.IOException;
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Created by xkfx on 2017/2/16.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyException extends IOException{
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> MyException() {}
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> MyException(String gripe) {
+        super(gripe);
+    }
+}</span></pre>
+</div>
+<p><span style="line-height: 1.5;">补充：</span><a style="line-height: 1.5;" href="http://www.cnblogs.com/Gaojiecai/p/4004782.html" target="_blank">继承中的构造方法</a>（不写默认的有个隐式的构造方法）</p>
+<p>&nbsp;</p>
+<p>2、捕获异常。</p>
+<p>要想捕获一个异常，必须设置try/catch语句块。示例如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+     </span><span style="color: #008000;">//</span><span style="color: #008000;"> code
+     </span><span style="color: #008000;">//</span><span style="color: #008000;"> more code                         </span>
+} <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ExceptionType e) {
+     </span><span style="color: #008000;">//</span><span style="color: #008000;"> handler for this Exception</span>
+}</pre>
+</div>
+<p>如果在try语句块的任何代码抛出了一个在 catch子句中说明的异常，那么</p>
+<p>1）程序跳过 try语句块的剩余代码。2）执行 catch中的处理器代码。</p>
+<p>&nbsp;</p>

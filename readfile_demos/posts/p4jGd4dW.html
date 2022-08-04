@@ -1,0 +1,97 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">【入】指的是到内存里,【出】指的是到内存外</span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyReadFile{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">第一步，定位数据源&amp;&amp;目标文件</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            File f </span>= <span style="color: #0000ff;">new</span> File("D:/lab_2/test.txt"<span style="color: #000000;">);
+            File f2 </span>= <span style="color: #0000ff;">new</span> File("D:/lab_2/test2.txt"<span style="color: #000000;">);
+            
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">第二步，建立输入&amp;&amp;输出管道</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            FileInputStream fis </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(f);
+            FileOutputStream fos </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileOutputStream(f2);
+            
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">第三步，操作管道</span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">for</span>(;fis.available() &gt; 0<span style="color: #000000;">;)
+                fos.write(fis.read());
+            
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+    }
+}</span></pre>
+</div>
+<p>&nbsp;由于是一个字节一个字节的读写，在文件稍微大一点的时候（大于1MB）时，速度会非常的慢。</p>
+<p>稍作修改即可，每次1000个字节读写。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">　　　　　　　byte</span>[] tmp = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[1000<span style="color: #000000;">];
+            </span><span style="color: #0000ff;">for</span>(;fis.available() &gt; 0<span style="color: #000000;">;)
+                fis.read(tmp);
+                fos.write(tmp);</span></pre>
+</div>
+<p>据说2的n次方计算机处理效率会更快。</p>
+<div class="cnblogs_code">
+<pre>            <span style="color: #0000ff;">byte</span>[] tmp = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[8192<span style="color: #000000;">];
+            </span><span style="color: #0000ff;">for</span>(;fis.available() &gt; 0<span style="color: #000000;">;)
+                fis.read(tmp);
+                fos.write(tmp);                                    </span></pre>
+</div>
+<p>&nbsp;最后是标准版。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">第三步，操作管道</span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">byte</span>[] tmp = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[8192<span style="color: #000000;">];
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">处理大部分内容</span>
+            <span style="color: #0000ff;">int</span> length = fis.available()/8192<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0; i &lt; length; i ++<span style="color: #000000;">){
+                fis.read(tmp);
+                fos.write(tmp);
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">处理最后剩下的内容</span>
+            <span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> fis.read(tmp);
+            fos.write(tmp, </span>0, size);<br />/*<br /><br /></pre>
+<pre>*/</pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyReadFile{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">定位数据源&amp;&amp;定位目标文件</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            File f </span>= <span style="color: #0000ff;">new</span> File("D:/lab_2/test.txt"<span style="color: #000000;">);
+            File f_copy </span>= <span style="color: #0000ff;">new</span> File("D:/lab_2/test2.txt"<span style="color: #000000;">);
+            
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">建立将数据从硬盘输入到内存的管道
+            &amp;&amp;建立将数据从内存输出到硬盘的管道</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            FileInputStream fis </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileInputStream(f);
+            FileOutputStream fos </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> FileOutputStream(f_copy);
+            
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">操作管道----&gt;传输数据</span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">byte</span>[] tmp = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[8192<span style="color: #000000;">]; 
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">建立一个临时的array用于一次性大量读写,提高读写大文件的效率</span><span style="color: #008000;">*/</span>
+            
+            <span style="color: #008000;">/**</span><span style="color: #008000;">*******复制大部分数据******假设总共有8192+1024byte****</span><span style="color: #008000;">*/</span>
+            
+            <span style="color: #0000ff;">int</span> length = fis.available()/8192;                 <span style="color: #008000;">/*</span><span style="color: #008000;">根据假设length = 1</span><span style="color: #008000;">*/</span> 
+            
+            <span style="color: #008000;">/*</span><span style="color: #008000;">这里除完后会有余数(长度小于8192),也就是会剩下一段数据读不到，
+              如果int length = fis.available()/8192 + 1;多读一次的话，
+              结果复制的文件会比源文件大，因为实际剩余的长度不足8192。</span><span style="color: #008000;">*/</span>
+            
+            <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0; i &lt; length; i ++<span style="color: #000000;">){
+                fis.read(tmp);
+                fos.write(tmp);
+            }                                                </span><span style="color: #008000;">/*</span><span style="color: #008000;">根据假设复制了8192byte</span><span style="color: #008000;">*/</span>
+            
+            <span style="color: #008000;">/**</span><span style="color: #008000;">********复制剩下的数据**********根据假设还有1024byte**********</span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">int</span> left_length = fis.available();                <span style="color: #008000;">/*</span><span style="color: #008000;">根据假设left_length = 1024</span><span style="color: #008000;">*/</span><span style="color: #000000;"> 
+            
+            fis.read(tmp, </span>0<span style="color: #000000;">, left_length);
+            fos.write(tmp, </span>0, left_length);                    <span style="color: #008000;">/*</span><span style="color: #008000;">根据假设复制了1024byte</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+            
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

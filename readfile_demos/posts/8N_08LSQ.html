@@ -1,0 +1,663 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p>Notes</p>
+<ol>
+<li><a href="#a1">js创建正则表达式的两种方式</a></li>
+<li><a href="#a2">js正则匹配方式（1）</a></li>
+<li><a href="#a3">字符集合</a></li>
+<li><a href="#a4">重复匹配</a></li>
+<li><a href="#a5">分组（子表达式）</a></li>
+<li><a href="#a6">js正则匹配方式（2）</a></li>
+<li><a href="#a7">The Date class</a></li>
+<li><a href="#a8">匹配整个字符串</a></li>
+<li><a href="#a9">Choice patterns</a></li>
+<li><a href="#a10">正则匹配的机制</a></li>
+<li><a href="#a11">回溯Backtracking</a></li>
+<li><a href="#a12">Replace</a></li>
+<li><a href="#a13">贪婪匹配Greed</a></li>
+<li><a href="#a14">动态构建正则表达式</a></li>
+<li><a href="#a15">Search</a></li>
+<li><a href="#a16">The lastIndex property</a></li>
+<li><a href="#a17">遍历匹配项</a></li>
+<li><a href="#a18">解析INI文件</a></li>
+<li><a href="#a19">国际字符</a></li>
+</ol></li>
+<li>
+<p>Exercise</p>
+<ol>
+<li><a href="#b1">Regexp golf</a></li>
+<li><a href="#b2">Quoting style</a></li>
+<li><a href="#b3">Numbers again</a></li>
+</ol></li>
+</ul>
+</div>
+<h2>Notes</h2>
+<p><a name="a1"></a>1、正则表达式帮助我们在字符串中寻找特定模式。</p>
+<p>js创建正则表达式的两种等价写法：</p>
+<div class="cnblogs_code">
+<pre>let re1 = <span style="color: #0000ff;">new</span> RegExp("abc"<span style="color: #000000;">);
+let re2 </span>= /abc/;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、应用正则表达式</p>
+<div class="cnblogs_code">
+<pre>console.log(/abc/.test("abcde"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(/abc/.test("abxde"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、字符集合</p>
+<table>
+<tbody>
+<tr>
+<td><code>\d</code></td>
+<td>Any digit character</td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>An alphanumeric character (&ldquo;word character&rdquo;)</td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td>Any whitespace character (space, tab, newline, and similar)</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>A character that is&nbsp;<em>not</em>&nbsp;a digit</td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td>A nonalphanumeric character</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>A nonwhitespace character</td>
+</tr>
+<tr>
+<td><code>.</code></td>
+<td>Any character except for newline</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr>
+<td><code>/abc/</code></td>
+<td>A sequence of characters</td>
+</tr>
+<tr>
+<td><code>/[abc]/</code></td>
+<td>Any character from a set of characters</td>
+</tr>
+<tr>
+<td><code>/[^abc]/</code></td>
+<td>Any character&nbsp;<em>not</em>&nbsp;in a set of characters</td>
+</tr>
+<tr>
+<td><code>/[0-9]/</code></td>
+<td>Any character in a range of characters</td>
+</tr>
+<tr>
+<td><code>/x+/</code></td>
+<td>One or more occurrences of the pattern&nbsp;<code>x</code></td>
+</tr>
+<tr>
+<td><code>/x+?/</code></td>
+<td>One or more occurrences, nongreedy</td>
+</tr>
+<tr>
+<td><code>/x*/</code></td>
+<td>Zero or more occurrences</td>
+</tr>
+<tr>
+<td><code>/x?/</code></td>
+<td>Zero or one occurrence</td>
+</tr>
+<tr>
+<td><code>/x{2,4}/</code></td>
+<td>Two to four occurrences</td>
+</tr>
+<tr>
+<td><code>/(abc)/</code></td>
+<td>A group</td>
+</tr>
+<tr>
+<td><code>/a|b|c/</code></td>
+<td>Any one of several patterns</td>
+</tr>
+<tr>
+<td><code>/\d/</code></td>
+<td>Any digit character</td>
+</tr>
+<tr>
+<td><code>/\w/</code></td>
+<td>An alphanumeric character (&ldquo;word character&rdquo;)</td>
+</tr>
+<tr>
+<td><code>/\s/</code></td>
+<td>Any whitespace character</td>
+</tr>
+<tr>
+<td><code>/./</code></td>
+<td>Any character except newlines</td>
+</tr>
+<tr>
+<td><code>/\b/</code></td>
+<td>A word boundary</td>
+</tr>
+<tr>
+<td><code>/^/</code></td>
+<td>Start of input</td>
+</tr>
+<tr>
+<td><code>/$/</code></td>
+<td>End of input</td>
+</tr>
+</tbody>
+</table>
+<p>\d等转移字符可以放在 [ ] 里而不丧失含义，但是 . 和+ 之类的特殊符号不行，会变为普通的符号。</p>
+<p>整体取反，非0非1：</p>
+<div class="cnblogs_code">
+<pre>let notBinary = /[^01]/<span style="color: #000000;">;
+console.log(notBinary.test(</span>"1100100010100110"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(notBinary.test("1100100010200110"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、重复匹配</p>
+<p><strong><span style="color: #ff00ff;">+</span> </strong>one or more，<strong><span style="color: #ff00ff;">*</span></strong> zero or more</p>
+<div class="cnblogs_code">
+<pre>console.log(/'\d+'/.test("'123'"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(/'\d+'/.test("''"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(/'\d*'/.test("'123'"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(/'\d*'/.test("''"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p><strong><span style="color: #ff00ff;">?</span> </strong>zero or one</p>
+<div class="cnblogs_code">
+<pre>let neighbor = /neighbou?r/<span style="color: #000000;">;
+console.log(neighbor.test(</span>"neighbour"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(neighbor.test("neighbor"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p><strong><span style="color: #ff00ff;">{2}&nbsp;</span></strong>a pattern should occur a precise number of times，It is also possible to specify a range this way:&nbsp;<strong><span style="color: #ff00ff;"><code>{2,4}</code>&nbsp;</span></strong>means the element must occur at least twice and at most four times.</p>
+<div class="cnblogs_code">
+<pre>let dateTime = /\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{2}/<span style="color: #000000;">;
+console.log(dateTime.test(</span>"1-30-2003 8:45"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;You can also specify open-ended ranges when using braces by omitting the number after the comma. So,&nbsp;<span style="color: #ff00ff;"><strong><code>{5,}</code>&nbsp;</strong></span>means five or more times.</p>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、分组（子表达式）</p>
+<p>括号内的n个元素被视作一个整体元素（分组，子表达式）：</p>
+<div class="cnblogs_code">
+<pre>let cartoonCrying = /boo+(hoo+)+/<span style="color: #000000;"><strong>i</strong>;
+console.log(cartoonCrying.test(</span>"Boohoooohoohooo"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>i表示该表达式大小写不敏感。</p>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6、进行正则匹配的另外一种方式</p>
+<p>可以让我们获取额外的信息：</p>
+<div class="cnblogs_code">
+<pre>let match = /\d+/.exec("one two 100"<span style="color: #000000;">);
+console.log(match);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["100"]</span>
+<span style="color: #000000;">console.log(match.index);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 8</span></pre>
+</div>
+<p>exec的返回值：匹配失败为null，成功则如上所示。</p>
+<p>等价写法：</p>
+<div class="cnblogs_code">
+<pre>console.log("one two 100".match(/\d+/<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["100"]</span></pre>
+</div>
+<p>含括号表达式的情况：</p>
+<div class="cnblogs_code">
+<pre>let quotedText = /'([^']*)'/<span style="color: #000000;">;
+console.log(quotedText.exec(</span>"she said 'hello'"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["'hello'", "hello"]</span>
+<span style="color: #000000;">
+console.log(</span>/bad(ly)?/.exec("bad"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["bad", undefined]</span>
+console.log(/(\d)+/.exec("123"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["123", "3"]</span></pre>
+</div>
+<p>返回数组的第一个元素为整个正则表达式匹配的字符串，而第二元素为() 内正则（子表达式）匹配的字符串（没有就是undefined，多个就取最后一个）。容易知道，第二个元素几乎总是第一个元素的子集。</p>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、The Date class</p>
+<div class="cnblogs_code">
+<pre>console.log(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Date());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Sat Sep 01 2018 13:54:43 GMT+0800 (中国标准时间)</span>
+<span style="color: #000000;">
+console.log(</span><span style="color: #0000ff;">new</span> Date(2009, 11, 9<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Wed Dec 09 2009 00:00:00 GMT+0800 (中国标准时间)</span>
+console.log(<span style="color: #0000ff;">new</span> Date(2009, 11, 9, 12, 59, 59, 999<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Wed Dec 09 2009 12:59:59 GMT+0800 (中国标准时间)</span>
+<span style="color: #000000;">
+console.log(</span><span style="color: #0000ff;">new</span> Date(1997, 10, 19<span style="color: #000000;">).getTime());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 879868800000</span>
+console.log(<span style="color: #0000ff;">new</span> Date(1387407600000<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Thu Dec 19 2013 07:00:00 GMT+0800 (中国标准时间)</span>
+<span style="color: #000000;">
+console.log(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Date().getTime());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1535781283593</span>
+<span style="color: #000000;">console.log(Date.now());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1535781283593</span></pre>
+</div>
+<p>通过正则表达式，由String创建日期：</p>
+<div class="cnblogs_code">
+<pre>"use strict"<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> getDate(string) {
+  let [_, month, day, year] </span>=
+    /(\d{1,2})-(\d{1,2})-(\d{4})/<span style="color: #000000;">.exec(string);
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Date(year, month - 1<span style="color: #000000;">, day);
+}
+console.log(getDate(</span>"1-30-2003"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Thu Jan 30 2003 00:00:00 GMT+0100 (CET)</span></pre>
+</div>
+<p>PS. 下划线除了用来占位外没有其它含义。</p>
+<p>&nbsp;</p>
+<p><a name="a8"></a>8、强制匹配整个字符串</p>
+<p>利用 ^ 和 $ 。例如/^\d+$/匹配完全由数字构成的字符串，<code>/^!/</code>&nbsp;匹配由！开头的字符串，而<code>/x^/</code>&nbsp;啥也匹配不了。</p>
+<p>用 \b 标注单词边界：</p>
+<div class="cnblogs_code">
+<pre>console.log(/cat/.test("con<strong>cat</strong>enate"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(/\bcat\b/.test("con<strong>cat</strong>enate"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(/\bcat\b/.test("xx<strong> cat </strong>xx"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a9"></a>9、Choice patterns</p>
+<div class="cnblogs_code">
+<pre>let animalCount = /\b\d+ (pig|cow|chicken)s?\b/<span style="color: #000000;">;
+console.log(animalCount.test(</span>"15 pigs"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(animalCount.test("15 pigchickens"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a10"></a>10、正则匹配的机制</p>
+<p>当你进行正则匹配时（test或者exec），正则引擎将从所给字符串的开头开始尝试匹配，接着是第二个字符，第三个字符... 试图在所给字符串中寻找一个匹配，直到找到一个匹配项或者到达字符串末尾结束。要么返回第一个匹配，要么什么都匹配不到。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 模拟用正则\b\d+ (pig|cow|chicken)s?\b
+ * 匹配"the 3 pigs"
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+const str </span>= "the 3 pigs"<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> simulateRegex(str, start) {
+    const digits </span>= [0, 1, 2, 3, 4, 5, 6, 7, 8, 9<span style="color: #000000;">];
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 逐个字符尝试匹配，直到找到一个匹配项或者到达字符串尾结束</span>
+    <span style="color: #0000ff;">for</span>(let currentPosition = start; currentPosition != str.length; ++<span style="color: #000000;">currentPosition) {
+        let tempPosition </span>=<span style="color: #000000;"> currentPosition;
+        </span><span style="color: #0000ff;">if</span>(tempPosition == 0 || str[tempPosition - 1] == " ") {} <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 匹配单词边界通过，前面是标点也是可以的。。            </span>
+        <span style="color: #0000ff;">if</span>(!str[tempPosition++] <span style="color: #0000ff;">in</span> digits) <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 至少匹配一个数字通过</span>
+        <span style="color: #0000ff;">while</span>(str[tempPosition] <span style="color: #0000ff;">in</span><span style="color: #000000;"> digits) {
+            tempPosition</span>++<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 尝试继续匹配数字</span>
+<span style="color: #000000;">        }
+        </span><span style="color: #0000ff;">if</span>(str[tempPosition++] != " ") <span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 匹配一个空格通过</span>
+<span style="color: #000000;">        let tempWord;
+        </span><span style="color: #0000ff;">if</span>(str.slice(tempPosition, tempPosition + "pig".length) === (tempWord = "pig") ||<span style="color: #000000;">
+            str.slice(tempPosition, tempPosition </span>+ "cow".length) === (tempWord = "cow") ||<span style="color: #000000;">
+            str.slice(tempPosition, tempPosition </span>+ "chicken".length) === (tempWord = "chicken"<span style="color: #000000;">)) {
+            tempPosition </span>+=<span style="color: #000000;"> tempWord.length;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 单词匹配成功</span>
+        <span style="color: #0000ff;">if</span>(str[tempPosition] == "s") tempPosition++<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 有没s都可以</span>
+        <span style="color: #0000ff;">if</span>(tempPosition == str.length || str[tempPosition] == " "<span style="color: #000000;">) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 最后的单词边界</span>
+            let match = [str.slice(currentPosition, tempPosition + 1<span style="color: #000000;">)];
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> match;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+}
+
+let match </span>= simulateRegex(str, 4<span style="color: #000000;">);
+console.log(match);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["3 pigs"]</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a11"></a>11、回溯Backtracking</p>
+<p>正则引擎在进行分支匹配（|）或重复匹配（+ *）时，如果发现无法继续再继续往下匹配，就会进行&ldquo;回溯&rdquo;。</p>
+<p>在进行分支匹配时，如果第一个分支就匹配成功，就不再匹配其它分支，如果不成功就会回溯到分支的入口，进入到另外一个分支继续匹配。</p>
+<p>而进行重复匹配时，例如说/^.*x/用匹配"abcxe"，.*会首先把所有字符消费干净，当正则引擎发现最后还需要一个x时，*操作符会尝试少匹配一个字符，但是仍然没发现x，于是继续回溯，直到发现x，最终得到字符串abc。</p>
+<p>&nbsp;</p>
+<p><a name="a12"></a>12、The replace method</p>
+<p>replace配合正则：</p>
+<div class="cnblogs_code">
+<pre>console.log("papa".replace("p", "m"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; mapa</span>
+<span style="color: #000000;">
+console.log(</span>"Borobudur".replace(/[ou]/, "a"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Barobudur</span>
+console.log("Borobudur".replace(/[ou]/g, "a")); <span style="color: #008000;">//</span><span style="color: #008000;"> g代表global全部</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; Barabadar</span></pre>
+</div>
+<p>replace的真正强大之处在于可以用&ldquo;$数字&rdquo;引用匹配字符串：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">console.log(
+  </span>"Liskov, Barbara\nMcCarthy, John\nWadler, Philip"<span style="color: #000000;">
+    .replace(</span>/(\w+), (\w+)/g, "$2 $1"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Barbara Liskov</span><span style="color: #008000;">
+//</span><span style="color: #008000;">   John McCarthy</span><span style="color: #008000;">
+//</span><span style="color: #008000;">   Philip Wadler</span>
+
+
+"hello, word, every, one".replace(/(\w+),/g, "$1 "); <span style="color: #008000;">//</span><span style="color: #008000;"> &ldquo;$+数字&rdquo;引用匹配中的分组</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; "hello  word  every  one"</span>
+"hello, word, every, one".replace(/one/g, "$&amp; $&amp;"); <span style="color: #008000;">//</span><span style="color: #008000;"> &ldquo;$&amp;&rdquo;引用整个匹配</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; "hello, word, every, one one"</span></pre>
+</div>
+<p>还可以传入函数：</p>
+<div class="cnblogs_code">
+<pre>"hello, word, every, one".replace(/(\w+),/g, str =&gt;<span style="color: #000000;"> str.toUpperCase()); 
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; "HELLO, WORD, EVERY, one"</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>let stock = "1 lemon, 2 cabbages, and 101 eggs"<span style="color: #000000;">;
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> minusOne(match, amount, unit) {
+  amount </span>= Number(amount) - 1<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">if</span> (amount == 1) { <span style="color: #008000;">//</span><span style="color: #008000;"> only one left, remove the 's'</span>
+    unit = unit.slice(0, unit.length - 1<span style="color: #000000;">);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (amount == 0<span style="color: #000000;">) {
+    amount </span>= "no"<span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">return</span> amount + " " +<span style="color: #000000;"> unit;
+}
+console.log(stock.replace(</span>/(\d+) (\w+)/<span style="color: #000000;">g, minusOne));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; no lemon, 1 cabbage, and 100 eggs</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a13"></a>13、贪婪Greed</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> stripComments(code) {
+  </span><span style="color: #0000ff;">return</span> code.replace(/\/\/.*|\/\*[^]*\*\//g, ""<span style="color: #000000;">);
+}
+console.log(stripComments(</span>"1 + /* 2 */3"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1 + 3</span>
+console.log(stripComments("x = 10;// ten!"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; x = 10;</span>
+console.log(stripComments("1 /* a */+/* b */ 1"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1  1</span></pre>
+</div>
+<p>可以用replace来去掉代码中的所有注释。</p>
+<p>[^]可以匹配任何字符，因为 /**/可能跨多行，句点 . 无法匹配换行符号。</p>
+<p>然而上面最后一行代码结果却出错了，这是为什么呢？</p>
+<p>因为(<code>+</code>,&nbsp;<code>*</code>,&nbsp;<code>?</code>, and&nbsp;<code>{}</code>) 这些操作符号都是贪婪的，就像&ldquo;回溯&rdquo;里面提到的，它们总是先尽可能地消费字符，直到无路可走才会回头，这样理所当然会匹配到更长的那一个。解决方案就是在这些符号后面加问号&nbsp;(<code>+?</code>,&nbsp;<code>*?</code>,&nbsp;<code>??</code>,&nbsp;<code>{}?</code>)，这样它们就会匹配尽可能少的字符串。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> stripComments(code) {
+  </span><span style="color: #0000ff;">return</span> code.replace(/\/\/.*|\/\*[^]*?\*\//g, ""<span style="color: #000000;">);
+}
+console.log(stripComments(</span>"1 /* a */+/* b */ 1"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1 + 1</span></pre>
+</div>
+<p>当要用到重复匹配符时，先考虑用非贪婪版本的。</p>
+<p>&nbsp;</p>
+<p><a name="a14"></a>14、动态构建正则表达式</p>
+<p>利用new&nbsp;RegExp(拼接字符串， "gi")构建，gi表示global替换全部和大小写不敏感。</p>
+<div class="cnblogs_code">
+<pre>let name = "harry"<span style="color: #000000;">;
+let text </span>= "Harry is a suspicious character."<span style="color: #000000;">;
+let regexp </span>= <span style="color: #0000ff;">new</span> RegExp("\\b(" + name + ")\\b", "gi"<span style="color: #000000;">);
+console.log(text.replace(regexp, </span>"_$1_"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; _Harry_ is a suspicious character.</span>
+<span style="color: #000000;">
+let name </span>= "dea+hl[]rd"<span style="color: #000000;">;
+let text </span>= "This dea+hl[]rd guy is super annoying."<span style="color: #000000;">;
+let escaped </span>= name.replace(/[\\[.+*?(){|^$]/g, "\\$&amp;"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> escaped &rarr; "dea\+hl\[]rd"</span>
+let regexp = <span style="color: #0000ff;">new</span> RegExp("\\b" + escaped + "\\b", "gi"<span style="color: #000000;">);
+console.log(text.replace(regexp, </span>"_$&amp;_"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; This _dea+hl[]rd_ guy is super annoying.</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a15"></a>15、Search</p>
+<p>正则版indexof：</p>
+<div class="cnblogs_code">
+<pre>console.log("  word".search(/\S/<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 2</span>
+console.log("    ".search(/\S/<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; -1</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a16"></a>16、The lastIndex property</p>
+<p>需求：设置从字符串的某个字符开始匹配</p>
+<p>问题：没有方便的办法</p>
+<p>理由：不方便正是js的特性。。。。</p>
+<p>解决方案：在【严格的条件】下用lastIndex设定起始位置</p>
+<p>严格的条件：表达式必须开启g（global）或者s（sticky）选项，<strong>并且</strong>必须通过exec方式执行匹配。</p>
+<p>lastIndex：正则对象的一个属性，数字，决定了下一个匹配从第几个字符开始。在严格条件 &uarr; 下设定才有效。非严格条件下改变该值是<strong>毫无作用</strong>的。</p>
+<div class="cnblogs_code">
+<pre>let pattern = /y/<span style="color: #000000;">g;
+pattern.lastIndex </span>= 3<span style="color: #000000;">;
+let match </span>= pattern.exec("xyzzy"<span style="color: #000000;">);
+console.log(match.index);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 4</span>
+<span style="color: #000000;">console.log(pattern.lastIndex);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 5</span></pre>
+</div>
+<p>仅global：匹配成功，<strong>自动</strong>更新lastIndex为匹配成功位置的下一个位置（如上），匹配失败，lastIndex重新设置为0。</p>
+<p>global：从str[lastIndex]<strong>开始向后搜索</strong>匹配</p>
+<p>sticky：从str[lastIndex]<strong>直接开始</strong>匹配，不向后搜索。</p>
+<div class="cnblogs_code">
+<pre>let global = /abc/<span style="color: #000000;">g;
+console.log(global.exec(</span>"xyz abc"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["abc"]</span>
+let sticky = /abc/<span style="color: #000000;">y;
+console.log(sticky.exec(</span>"xyz abc"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; null</span></pre>
+</div>
+<p>&nbsp;所以只需简单调整一下lastIndex就可以让上面成功的失败、失败的成功：</p>
+<div class="cnblogs_code">
+<pre>let global = /abc/<span style="color: #000000;">g;
+global.lastIndex </span>= 6; <span style="color: #008000;">//</span><span style="color: #008000;"> 从c开始向后搜索匹配</span>
+console.log(global.exec("xyz abc"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; null</span>
+let sticky = /abc/<span style="color: #000000;">y;
+sticky.lastIndex </span>= 4; <span style="color: #008000;">//</span><span style="color: #008000;"> 从a开始匹配</span>
+console.log(sticky.exec("xyz abc"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["abc"]</span></pre>
+</div>
+<p>因为在global启用时，LastIndex在匹配完之后是要自动更新的，所以，当<strong>用一个正则对象匹配多次</strong>的时候就会出现坑爹的结果：</p>
+<div class="cnblogs_code">
+<pre>let digit = /\d/<span style="color: #000000;">g;
+console.log(digit.exec(</span>"here it is: 1"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["1"]</span>
+console.log(digit.exec("and now: 1"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; null</span></pre>
+</div>
+<p>在s启用，或者啥也不启用时不会有这方面的顾虑。</p>
+<p>global的另外一方面影响在于，它改变了match的行为：</p>
+<div class="cnblogs_code">
+<pre>console.log("Banana".match(/an/<span style="color: #000000;">g));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["an", "an"]</span>
+console.log(/an/g.exec("Banana"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["an", index: 1, input: "Banana", groups: undefined] </span><span style="color: #008000;">
+//</span><span style="color: #008000;"> global改变了match的行为，本来上述两个</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 输出应该相同的（等价操作），而且["an", "an"]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 后者本应该是子表达式匹配的字符串，前者的子集</span></pre>
+</div>
+<p>总结。。慎用global</p>
+<p>&nbsp;</p>
+<p><a name="a17"></a>17、遍历匹配项</p>
+<p>利用global模式下的lastIndex机制应该是最简便的方法。</p>
+<div class="cnblogs_code">
+<pre>let input = "A string with 3 numbers in it... 42 and 88."<span style="color: #000000;">;
+let number </span>= /\b\d+\b/<span style="color: #000000;">g;
+let match;
+</span><span style="color: #0000ff;">while</span> (match =<span style="color: #000000;"> number.exec(input)) {
+  console.log(</span>"Found", match[0], "at"<span style="color: #000000;">, match.index);
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Found 3 at 14</span><span style="color: #008000;">
+//</span><span style="color: #008000;">   Found 42 at 33</span><span style="color: #008000;">
+//</span><span style="color: #008000;">   Found 88 at 40</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a18"></a>18、解析INI文件</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> parseINI(string) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Start with an object to hold the top-level fields</span>
+    let result =<span style="color: #000000;"> {};
+    let section </span>=<span style="color: #000000;"> result;
+    string.split(</span>/\r?\n/).forEach(line =&gt;<span style="color: #000000;"> {
+        let match;
+        </span><span style="color: #0000ff;">if</span>(match = line.match(/^(\w+)=(.*)$/<span style="color: #000000;">)) {
+            section[match[</span>1]] = match[2<span style="color: #000000;">];
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(match = line.match(/^\[(.*)\]$/<span style="color: #000000;">)) {
+            section </span>= result[match[1]] =<span style="color: #000000;"> {};
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(!/^\s*(;.*)?$/<span style="color: #000000;">.test(line)) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("Line '" + line + "' is not valid."<span style="color: #000000;">);
+        }
+    });
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+console.log(parseINI(`
+searchengine</span>=https:<span style="color: #008000;">//</span><span style="color: #008000;">duckduckgo.com/?q=$1</span>
+spitefulness=9.7<span style="color: #000000;">
+
+; comments are preceded by a semicolon...
+; each section concerns an individual enemy
+[larry]
+fullname</span>=<span style="color: #000000;">Larry Doe
+type</span>=<span style="color: #000000;">kindergarten bully
+website</span>=http:<span style="color: #008000;">//</span><span style="color: #008000;">www.geocities.com/CapeCanaveral/11451</span>
+<span style="color: #000000;">
+[davaeorn]
+fullname</span>=<span style="color: #000000;">Davaeorn
+type</span>=<span style="color: #000000;">evil wizard
+outputdir</span>=/home/marijn/enemies/<span style="color: #000000;">davaeorn`));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; davaeorn:  { fullname: "Davaeorn", type: "evil wizard", outputdir: "/home/marijn/enemies/davaeorn" }​</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> larry:  { fullname: "Larry Doe", type: "kindergarten bully", website: "http://www.geocities.com/CapeCanaveral/11451" }​</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> searchengine: "https://duckduckgo.com/?q=$1"​</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> spitefulness: "9.7"</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a19"></a>19、国际字符</p>
+<div class="cnblogs_code">
+<pre>console.log(/🍎{3}/.test("🍎🍎🍎"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(/&lt;.&gt;/.test("&lt;🌹&gt;"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(/&lt;.&gt;/u.test("&lt;🌹&gt;"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>🍎可以视为两个字符，🍎{3} 后面的量词实际针对的是构成🍎的第二个字符，解决方法是在正则后添加u（for Unicode）。然而这可能导致原有的匹配出现问题。</p>
+<p>因此，需要在添加u的前提下，继续添加\p{Property=Value}：</p>
+<div class="cnblogs_code">
+<pre>console.log(/\p{Script=Greek}/u.test("&alpha;"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(/\p{Script=Arabic}/u.test("&alpha;"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(/\p{Alphabetic}/u.test("&alpha;"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(/\p{Alphabetic}/u.test("!"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="b1"></a>①&nbsp;Regexp golf</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Fill in the regular expressions</span>
+<span style="color: #000000;">
+verify(</span>/ca[rt]/<span style="color: #000000;">,
+       [</span>"my car", "bad cats"<span style="color: #000000;">],
+       [</span>"camper", "high art"<span style="color: #000000;">]);
+
+verify(</span>/pr?op/<span style="color: #000000;">,
+       [</span>"pop culture", "mad props"<span style="color: #000000;">],
+       [</span>"plop", "prrrop"<span style="color: #000000;">]);
+
+verify(</span>/ferr(et|y|ari)/<span style="color: #000000;">,
+       [</span>"ferret", "ferry", "ferrari"<span style="color: #000000;">],
+       [</span>"ferrum", "transfer A"<span style="color: #000000;">]);
+
+verify(</span>/ious\b/<span style="color: #000000;">,
+       [</span>"how delicious", "spacious room"<span style="color: #000000;">],
+       [</span>"ruinous", "consciousness"<span style="color: #000000;">]);
+
+verify(</span>/\s[.,:;]/<span style="color: #000000;">,
+       [</span>"bad punctuation ."<span style="color: #000000;">],
+       [</span>"escape the period"<span style="color: #000000;">]);
+
+verify(</span>/\w{7}/<span style="color: #000000;">,
+       [</span>"hottentottententen"<span style="color: #000000;">],
+       [</span>"no", "hotten totten tenten"<span style="color: #000000;">]);
+
+verify(</span>/\b[^\We]+\b/<span style="color: #000000;">i,
+       [</span>"red platypus", "wobbling nest"<span style="color: #000000;">],
+       [</span>"earth bed", "learning ape", "BEET"<span style="color: #000000;">]);
+
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> verify(regexp, yes, no) {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> Ignore unfinished exercises</span>
+  <span style="color: #0000ff;">if</span> (regexp.source == "...") <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+  </span><span style="color: #0000ff;">for</span> (let str of yes) <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">regexp.test(str)) {
+    console.log(`Failure to match </span>'${str}'<span style="color: #000000;">`);
+  }
+  </span><span style="color: #0000ff;">for</span> (let str of no) <span style="color: #0000ff;">if</span><span style="color: #000000;"> (regexp.test(str)) {
+    console.log(`Unexpected match </span><span style="color: #0000ff;">for</span> '${str}'<span style="color: #000000;">`);
+  }
+}</span></pre>
+</div>
+<p>-&mdash;&mdash;&mdash;&mdash;&mdash;&mdash; -- -&mdash;&mdash;-&mdash;&mdash; -- - -----&mdash;&mdash;&mdash;&mdash;------------ -- --&nbsp; &nbsp; &nbsp;-- - -- &mdash;</p>
+<p><a name="b2"></a>②&nbsp;Quoting style</p>
+<div class="cnblogs_code">
+<pre>let text = "'I'm the cook,' he said, 'it's my job.'"<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Change this call.</span>
+console.log(text.replace(/'|([\w]'[\w])/g, str =&gt; str == "'" ? '"'<span style="color: #000000;"> : str));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; "I'm the cook," he said, "it's my job."</span></pre>
+</div>
+<p>课本解答：</p>
+<div class="cnblogs_code">
+<pre>let text = "'I'm the cook,' he said, 'it's my job.'"<span style="color: #000000;">;
+
+console.log(text.replace(</span>/(^|\W)'|'(\W|$)/g, '$1"$2'<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; "I'm the cook," he said, "it's my job."</span></pre>
+</div>
+<p>-&mdash;&mdash;&mdash;&mdash;&mdash;&mdash; -- -&mdash;&mdash;-&mdash;&mdash; -- - -----&mdash;&mdash;&mdash;&mdash;------------ -- --&nbsp; &nbsp; &nbsp;-- - -- &mdash;</p>
+<p><a name="b3"></a>③&nbsp;Numbers again</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Fill in this regular expression.</span>
+let number = /<strong>^[+-]?(\d+\.?\d*|\d*\.?\d+)([eE][+-]?\d+)?$</strong>/<span style="color: #000000;">;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Tests:</span>
+<span style="color: #0000ff;">for</span> (let str of ["1", "-1", "+15", "1.55", ".5", "5."<span style="color: #000000;">,
+                 </span>"1.3e2", "1E-4", "1e+12"<span style="color: #000000;">]) {
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">number.test(str)) {
+    console.log(`Failed to match </span>'${str}'<span style="color: #000000;">`);
+  }
+}
+</span><span style="color: #0000ff;">for</span> (let str of ["1a", "+-1", "1.2.3", "1+1", "1e4.5"<span style="color: #000000;">,
+                 </span>".5.", "1f5", "."<span style="color: #000000;">]) {
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (number.test(str)) {
+    console.log(`Incorrectly accepted </span>'${str}'<span style="color: #000000;">`);
+  }
+}</span></pre>
+</div>
+<p>课本答案（-号最好转义？）：</p>
+<div class="cnblogs_code">
+<pre>let number = /<strong>^[+\-]?(\d+(\.\d*)?|\.\d+)([eE][+\-]?\d+)?$</strong>/;</pre>
+</div>
+<p>&nbsp;</p>

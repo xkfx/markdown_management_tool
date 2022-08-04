@@ -1,0 +1,45 @@
+<p>1、文件。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;<span style="color: #000000;">
+#include </span>&lt;ctime&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">char</span> *ch = <span style="color: #800000;">"</span><span style="color: #800000;">qwertyuiopasdfghjklzxcvbnm</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">void</span> setOut(<span style="color: #0000ff;">string</span><span style="color: #000000;"> dataType) {
+    </span><span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span> = dataType + <span style="color: #800000;">"</span><span style="color: #800000;">.data</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    freopen(</span><span style="color: #0000ff;">out</span>.c_str(), <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">, stdout);
+}
+
+</span><span style="color: #0000ff;">char</span> *Random(<span style="color: #0000ff;">char</span>*<span style="color: #000000;"> word) {
+    </span><span style="color: #0000ff;">int</span> len = rand() % <span style="color: #800080;">99</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != len; ++<span style="color: #000000;">i) 
+        word[i] </span>= ch[rand()%<span style="color: #800080;">26</span> + <span style="color: #800080;">1</span><span style="color: #000000;">];
+    word[len] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> word;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> make() {
+    srand(unsigned(time(</span><span style="color: #800080;">0</span><span style="color: #000000;">)));
+    </span><span style="color: #0000ff;">char</span> word[<span style="color: #800080;">100</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">10000</span>; ++<span style="color: #000000;">i) {
+        cout </span>&lt;&lt; Random(word) &lt;&lt;<span style="color: #000000;"> endl;         
+    }
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main() {
+    setOut(</span><span style="color: #800000;">"</span><span style="color: #800000;">Random</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    make();
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>从文件读，写入文件：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">void</span> setIO(<span style="color: #0000ff;">string</span> <span style="color: #0000ff;">in</span>, <span style="color: #0000ff;">string</span> <span style="color: #0000ff;">out</span><span style="color: #000000;">) {
+    freopen(</span><span style="color: #0000ff;">in</span>.c_str(), <span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span><span style="color: #000000;">, stdin);
+    freopen(</span><span style="color: #0000ff;">out</span>.c_str(), <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">, stdout);
+}</span></pre>
+</div>

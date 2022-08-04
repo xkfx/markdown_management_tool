@@ -1,0 +1,43 @@
+<p><span style="color: #ff00ff;">【包：库单元】</span></p>
+<p><strong><span style="text-decoration: underline;">编译单元的概念。</span></strong></p>
+<p>一个.java文件就是一个编译单元，一个编译单元只能有一个public类，编译单元中的非public类一般是用于为public类提供支持的，这些类在包外不可见。</p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">import语句。</span></strong></p>
+<p>当编译器碰到import语句的时候，就开始在CLASSPATH所指定的目录中查找对应的package。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【Java访问权限修饰词】</span></p>
+<p><strong><span style="text-decoration: underline;">包访问权限</span></strong><br />1、当某个类没有添加访问修饰符的时候，这个类默认在包内可见（可见的含义就是可以随意使用这个类来创建对象），但对于包外的类而言，这个类是private的（不可见的）。</p>
+<p>&nbsp;</p>
+<p>2、取得某个类的信任的方式：将该类改成public、将该类与想使用该类的类放在同一个包内、继承自这个类（前提是这个类不是private）</p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">public：接口访问权限</span></strong><br />1、如果一个方法没有加上访问修饰符号，那么同样是默认包内可见，这意味其他类（非本包的类）即便创建了这个类的对象（这个类假设是public的），也无法通过这个对象调用这个方法。</p>
+<p>&nbsp;</p>
+<p>2、即使没有明确写出&ldquo;package+包名&rdquo;，同一目录下的类仍属于同一个包！</p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">private:你无法访问</span></strong></p>
+<p>1、默认包访问权限通常提供了足够充足的隐藏措施。不要不加考虑的将类声明为public！！！</p>
+<p>例如，用如下结构创建类：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170406215943363-685383749.png" alt="" width="225" height="107" /></p>
+<p>其中package com.xkfx中的A是<span style="background-color: #ffff99; color: #ff0000;">具有默认包访问权限的</span>，而B是public的：</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170406220059269-427418988.png" alt="" width="202" height="110" /><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170406220116925-1321018558.png" alt="" width="288" height="148" /></p>
+<p>可以看到，&ldquo;同胞&rdquo;类B是可以访问A的，但是如果尝试在packageTest（包外类）中尝试new B：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170406220318160-477383389.png" alt="" width="554" height="160" /></p>
+<p>&nbsp;结果是无法访问的，所以，不要不加考虑的将类声明为public！！！</p>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">protect：继承访问权限</span></strong><br />1、方法没有添加访问修饰符也默认设置为&ldquo;包访问权限&rdquo;，即便所属类是public的。</p>
+<p>&nbsp;</p>
+<p>2、包访问权限可以理解为：同包可见。</p>
+<p>&nbsp;</p>
+<p>3、一旦某个类的属性设置为private，即使是子类也无法直接访问（&ldquo;super.属性&rdquo;等一切途径都不可访问）。子类继承父类，子类具备private属性，但是却无法直接访问（可以通过父类的public方法间接访问），然而如果将父类的private属性修改为protect，那么子类就可以通过&ldquo;.属性&rdquo;直接访问这个属性。protect的缺点就是一旦设置为protect，除了子类同包类也可随便new 该类，然后通过&ldquo;.属性&rdquo;访问该属性。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【接口和实现】</span></p>
+<p>将public（接口）放在前面，private放在后面会让代码好读一些。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【类的访问权限】</span></p>
+<p>1、类的访问权限仅有两种 选择 ：包访问权限 或 public。</p>
+<p>2、可以通过将构造器指定为private来阻止直接创建类的实例，然后通过静态方法调用这个构造器。（这对限制数量，记录数量大有裨益）</p>
+<p>3、单例（singleton）将对象作为一个static private成员，通过静态方法返回它的引用，这样创建的对象有且仅有一个。（例如可以通过这样创建管理一个固定数组）</p>
+<p>4、相同目录下所有不具备package声明的文件，都被视为该目录下默认包的一部分。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【小结】</span></p>
+<p>访问权限的设定主要从类创建者和类使用者的角度考虑（常常需要扮演两种角色），哪些东西是需要暴露给类使用者的？</p>

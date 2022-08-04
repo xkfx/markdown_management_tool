@@ -1,0 +1,263 @@
+<p>个人笔记 &psi;(._. )&gt;</p>
+<p>&nbsp;</p>
+<p>既是总结也是目录， IDEA 环境下创建 web 项目的基本流程：</p>
+<ol>
+<li><a href="#a1">创建 web 项目（没异议吧）..</a></li>
+<li><a href="#a2">配置运行环境，部署并运行（当然，是在有默认文件的情况下）</a></li>
+<li><a href="#a3">重新组织项目结构</a></li>
+<li><a href="#a4">添加必要的依赖</a></li>
+<li><a href="#a5">形成最小.原生态.轻量级可用 MVC 结构（JSP&amp; Servlet）&nbsp;</a></li>
+<li>打包成 war 部署发布</li>
+<li>迭代开发，完成后回到 6</li>
+<li>补充：项目管理</li>
+<li>补充：优化流程</li>
+<li>补充：后续</li>
+</ol>
+<p>&nbsp;</p>
+<h2><a name="a1"></a>创建 web 项目</h2>
+<p><span style="font-family: 'courier new', courier;">打开 IDEA</span></p>
+<p><span style="font-family: 'courier new', courier;">&rarr; Create New Project </span></p>
+<p><span style="font-family: 'courier new', courier;">&rarr; Java / Java EE / WebApplication 左边打勾，下面不用选（现在不都用 SSM 嘛）</span></p>
+<p><span style="font-family: 'courier new', courier;">&rarr; Create web.xml 左边打勾 &rarr; Next </span></p>
+<p><span style="font-family: 'courier new', courier;">&rarr; 修改项目名、路径 &rarr; Finish</span></p>
+<p>&nbsp;</p>
+<h2><a name="a2"></a>配置运行环境，部署并运行（当然，是在有默认文件的情况下）</h2>
+<h3>1、配置运行环境与部署</h3>
+<p><span style="font-family: 'courier new', courier;">点击菜单栏 Run</span></p>
+<p><span style="font-family: 'courier new', courier;">&rarr;&nbsp; Edit Configurations...&nbsp;&rarr; Run/Debug Configurations 窗口&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier;">&rarr; 左上角绿色的小加号&nbsp;&rarr; Tomcat Server / Local&nbsp;&rarr;&nbsp;</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331214812287-1663280144.png" alt="" width="513" height="214" /></p>
+<p><span style="font-family: 'courier new', courier;">之后需要在这个窗口里做两件事情（配置本地 tomcat 以及部署 web 应用）：</span></p>
+<p><span style="font-family: 'courier new', courier;">1、选择 Server &rarr;&nbsp;Configure... &rarr; 绿色加号&nbsp;&nbsp;&rarr;&nbsp;</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331215714467-445906282.png" alt="" width="348" height="187" /></p>
+<p><span style="font-family: 'courier new', courier;">添加本地 tomcat 路径</span></p>
+<p><span style="font-family: 'courier new', courier;">2、选择 Deployment&nbsp;&rarr; 右上角绿色小加号&nbsp;&rarr; Artifact&nbsp;&rarr;&nbsp;</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331220144510-651010096.png" alt="" width="395" height="138" /></p>
+<p><span style="font-family: 'courier new', courier;">看到形如上面的窗口 &rarr; Apply &rarr; OK</span></p>
+<h3>2、运行</h3>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331222337998-1836009050.png" alt="" width="352" height="119" /></p>
+<p><span style="font-family: 'courier new', courier;">点击菜单栏 Run &rarr; 第一个绿色的小三角 Run 'xxxxxx'</span></p>
+<p>&rarr; <span style="font-family: 'courier new', courier;">一切正常的话，我们就可以通过浏览器访问默认创建的 index.jsp 页面了</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331223534036-1293951296.png" alt="" width="327" height="140" /></p>
+<h3>&nbsp;3、相关资料</h3>
+<p><a id="cb_post_title_url" href="http://www.cnblogs.com/cynchanpin/p/7151912.html" target="_blank">Intellijidea建javaWeb以及Servlet简单实现</a></p>
+<p>&nbsp;</p>
+<h2><a name="a3"></a>重新组织项目结构</h2>
+<p><span style="font-family: 'courier new', courier;">PS. 以下内容纯属个人偏好，仅供参考！</span></p>
+<h3>1、基本项目结构</h3>
+<p><span style="font-family: 'courier new', courier;">在 Project Structure &rarr; Modules 里配置文件会方便一些：</span></p>
+<p><span style="font-family: 'courier new', courier;"><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180510202539980-570184100.png" alt="" width="188" height="196" /></span></p>
+<p><span style="font-family: 'courier new', courier;">最开始先设置成这样就够用了：</span></p>
+<p><span style="font-family: 'courier new', courier;"><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180510203620316-743511672.png" alt="" width="293" height="286" /></span></p>
+<p><span style="font-family: 'courier new', courier;">由上至下各个文件夹的功能：</span></p>
+<p><span style="font-family: 'courier new', courier;">src 用来放未编译的源代码（&nbsp;.java 文件）；</span></p>
+<p><span style="font-family: 'courier new', courier;">src\main\java 用来放主程序源代码；</span></p>
+<p><span style="font-family: 'courier new', courier;">src\main\sql 用来放 DDL；</span></p>
+<p><span style="font-family: 'courier new', courier;">src\test\java 用来放测试程序源代码 ；</span></p>
+<p><span style="font-family: 'courier new', courier;">web 文件夹最终会被放到服务器的 tomcat 目录下；</span></p>
+<p><span style="font-family: 'courier new', courier;">web 目录下但不在 WEB-INF 内的文件可以通过 URL 直接访问；</span></p>
+<p><span style="font-family: 'courier new', courier;">web\WEB-INF 内的文件无法通过 URL 直接访问，通常在外面放一个 入口.html （或者 jsp）就可以了；</span></p>
+<p><span style="font-family: 'courier new', courier;">web\WEB-INF\views 各种 .jsp 文件（MVC 模式中的 view）；</span></p>
+<p><span style="font-family: 'courier new', courier;">web\WEB-INF\classes 存放源代码编译后的 .class 字节码；</span></p>
+<p><span style="font-family: 'courier new', courier;">web\WEB-INF\lib 源代码用到的各种依赖包（.jar）；</span></p>
+<h3>2、配置 lib</h3>
+<p><span style="font-family: 'courier new', courier;">如果这个时候把&nbsp; jar 包放在&nbsp;web\WEB-INF\lib 是没办法找到这些包的，需要把 lib 添加为 Jar Directory：</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331210404404-1096997509.png" alt="" width="665" height="159" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180511193942107-1745430309.png" alt="" width="367" height="137" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180331210537357-937730881.png" alt="" width="257" height="237" /></p>
+<h3>3、存放其他多媒体资源（例如图片、视频等）</h3>
+<p><span class="ask-title ">好多网站似乎都是 img js css 分布式存储的。。例如图片放在 img.sample.com ，js 放在 js.sample.com&nbsp;</span></p>
+<p>事实上全部放在外面已经整体上形成一个 github page 了。 所有 东西 都是 静态的， 我转念一想 这样 又 何尝不可？？？？！！！【从头开始理清思路】</p>
+<p>进化路径难道不是 静态网 --&gt;&nbsp; 动态网 后台仅 提供 返 json 的接口</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180310203721424-1024549869.png" alt="" width="296" height="223" /><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180310203828816-18738594.png" alt="" width="357" height="178" /></p>
+<p>博客园的 图片 确实 是这样存的，但是真的就这样完全开源了， 可是这样，本质 上 js css html 本来就是 完全对 客户公开的 本来就是 要发到 客户端运行的！&nbsp;</p>
+<h3>4、相关资料</h3>
+<p><span style="font-family: 'courier new', courier;"><a href="https://zhidao.baidu.com/question/290907610.html" target="_blank"><span class="ask-title ">为什么要防止用户直接访问jsp页面</span></a></span></p>
+<p><span style="font-family: 'courier new', courier;"><a href="https://baike.baidu.com/item/web-inf/4476359?fr=aladdin" target="_blank">关于 web-inf 目录</a></span></p>
+<p><span style="font-family: 'courier new', courier;"><a href="http://blog.csdn.net/gsycwh/article/details/52098097" target="_blank">WEB-INF下的jsp文件如何访问css和js文件</a></span></p>
+<p><span class="ask-title " style="font-family: 'courier new', courier;"><a href="https://zhidao.baidu.com/question/369554936160938124.html" target="_blank">jsp,html,css,js 等文件放在 web 根目录以外 怎么引用?&nbsp;</a>&nbsp;</span></p>
+<p>&nbsp;</p>
+<h2><a name="a4"></a>添加必要的依赖</h2>
+<p>&nbsp;</p>
+<h2><a name="a5"></a>形成最小.原生态.轻量级可用 MVC 结构（JSP&amp; Servlet）&nbsp;</h2>
+<p><span style="font-family: 'courier new', courier;">参考：<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_2" class="entrylistItemTitle" href="http://www.cnblogs.com/xkxf/p/8318481.html" target="_blank">杂货箱 #01# MVC 相关资料收集</a></span></p>
+<p><span style="font-family: 'courier new', courier;"><a id="cb_post_title_url" href="http://www.cnblogs.com/xkxf/p/6848036.html" target="_blank">【Head First Servlets and JSP】笔记2：MVC迷你教程</a></span></p>
+<p><span style="font-family: 'courier new', courier;">思路是这样的：先写一个参考模式，之后照着写就可以了。依然使用书上的 BeerSelect ，示例程序如下：</span></p>
+<p><span style="font-family: 'courier new', courier;">index.html</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="{CHARSET}"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>form.html<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">在html看来，SelectBeer.do就是要调用的servlet</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">align</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;</span>Beer Selection Page<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">method</span><span style="color: #0000ff;">="post"</span><span style="color: #ff0000;"> action</span><span style="color: #0000ff;">="SelectBeer.do"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>select beer characteristics<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+  Color:
+  </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="color"</span><span style="color: #ff0000;"> size</span><span style="color: #0000ff;">="1"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>light<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>amber<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>brown<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>dark<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br </span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>/</p>
+<p><span style="font-family: 'courier new', courier;">web.xml</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="3.1"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>Ch3 Beer<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>org.sample.web.SampleController<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>Ch3 Beer<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/SelectBeer.do<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>/</p>
+<p><span style="font-family: 'courier new', courier;">SampleController.java</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.service.SampleService;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.service.impl.SampleServiceImpl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.RequestDispatcher;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> SampleController <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.doGet(req, resp);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1</span>
+        String color = req.getParameter("color"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2</span>
+        SampleService sampleService = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SampleServiceImpl();
+        List result </span>=<span style="color: #000000;"> sampleService.getBrands(color);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3</span>
+        req.setAttribute("styles", result); <span style="color: #008000;">//</span><span style="color: #008000;"> 为请求增加一个属性，供JSP使用。</span>
+        RequestDispatcher view = req.getRequestDispatcher("WEB-INF/views/result.jsp"); <span style="color: #008000;">//</span><span style="color: #008000;"> 为JSP实例化一个请求分派器</span>
+        view.forward(req, resp); <span style="color: #008000;">//</span><span style="color: #008000;"> 使用请求分派器要求容器准备好JSP，并向JSP发送请求和响应</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>&nbsp;/</p>
+<p><span style="font-family: 'courier new', courier;">SampleService.java</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.service;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> SampleService {
+
+    List getBrands(String color);
+}</span></pre>
+</div>
+<p>/</p>
+<p><span style="font-family: 'courier new', courier;">SampleServiceImpl.java</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.service.impl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.service.SampleService;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> SampleServiceImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> SampleService {
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> List getBrands(String color) {
+        List brands </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayList();
+        </span><span style="color: #0000ff;">if</span> (color.equals("amber"<span style="color: #000000;">)) {
+            brands.add(</span>"Jack Amber"<span style="color: #000000;">);
+            brands.add(</span>"Red Moose"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            brands.add(</span>"Jail Pale Ale"<span style="color: #000000;">);
+            brands.add(</span>"Gout Stout"<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> brands;
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p><span style="font-family: 'courier new', courier;">result.jsp</span></p>
+<div class="cnblogs_code">
+<pre><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page import</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java.util.*</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">align</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;</span>Beer Recommendations JSP<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">
+            List styles </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> (List)request.getAttribute(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">styles</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+            Iterator it </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> styles.iterator();
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">while</span><span style="background-color: #f5f5f5; color: #000000;"> (it.hasNext()) {
+                out.print(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">&lt;br&gt;try: </span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> it.next());
+            }
+        </span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 'courier new', courier;">&nbsp;结构如下所示：</span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512152502039-334102494.png" alt="" width="288" height="262" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512152615064-1595331830.png" alt="" /></p>
+<p><span style="font-family: 'courier new', courier;">&nbsp;当然， dao 层其实是空的， BeerSelect 程序中并没有&ldquo;落地&rdquo;数据。</span></p>
+<p>&nbsp;对于包结构的解释 &darr;</p>
+<p>web 层只做三件事：获取用户参数、调 Service、将数据传给相应 JSP</p>
+<p>dao 层仅做一件事情：读写数据库</p>
+<p>service 层</p>
+<p>&nbsp;</p>
+<p>dao 层：对应 model 层，唯一的职责就是提供数据</p>
+<p>service 层：业务逻辑</p>
+<p>web 层：，高度简洁</p>
+<p>&nbsp;流程分析：</p>
+<p>&nbsp;</p>
+<p>JSP 模式 VS. AJAX 模式</p>
+<p>对 url 发起 http get 请求 --&gt; web.xml mapper --&gt; 分派给servlet --&gt; servlet取得http请求调用对应方法（get.. post等） 【处理】 返回一个http response （可能type 是html也可能不是）</p>
+<p>jsp 本质上也是 servlet ，这种关系 就和 scss 和 css 的关系一样</p>
+<p>我所知道的另外一种结构</p>
+<p>&nbsp;以第一种 结构作为 基础 引入 ajax 向 url 发起请求得到 json 再用 json 数据 改变视图。</p>
+<p>以登陆为例子：</p>
+<p>用 jsp&amp; servlet ：登陆按钮必然是一个提交表单的input 指向某个 url， 点击后 发送一个 http post 请求， 收到一个新的 http页面，或者 刷新为 错误页面</p>
+<p>用 ajax &amp; json：登陆按钮可以是任何 东西， 点击 后 发送 ajax异步请求 ，客户端 通过返回的信息决定怎么做。</p>
+<p>在服务端看来 两者都是 发起了一个 http 请求， 只不过一个返回 json数据 一个返回一个更新过的 .html</p>
+<p>在客户端看来 第一种比较轻松， 完全 不用管其它，所有操作就是 发送请求， 更新页面就好了，&nbsp; 发 http 请求 ，接 html （不要在意url）不需要 javascript</p>
+<p>第二种的话， 发 http 请求，接 json，根据 json 内容做相应动作，例如抛出错误， 关键字是 ajax</p>
+<p>&nbsp;</p>
+<h2><a name="a6"></a>打包成 war 部署发布</h2>
+<p>&nbsp;前提是需要有一台能用的 VPS ，可以在阿里云、腾讯云租用便宜的学生机。</p>
+<h3>IntelliJ IDEA 将 web 项目导出为 war 包</h3>
+<p>Project Structure &rarr; Artifacts &rarr; 点击绿色的小加号添加新的制品</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512161449399-980773540.png" alt="" width="319" height="165" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512162542434-622202868.png" alt="" width="396" height="161" /></p>
+<p>&nbsp;在 Apply 之后，构建制品：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512162806747-627838722.png" alt="" width="319" height="199" /></p>
+<p>在 out 目录下可以找到构建的 war 包：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512162836770-1057036204.png" alt="" width="279" height="126" /></p>
+<p>&nbsp;之后想办法将这个 war 包上传到 VPS 的相应目录（例如汤姆猫的&nbsp;webapps 目录）后，就可以在因特网上访问了这个 web 程序了。</p>
+<h3>Windows 手动传输</h3>
+<p>下载 XShell 5 &rarr; 连接相应的 VPS &rarr; 借助 XShell 5 内置的 Xftp 可以方便的下载/上传文件</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180512163804637-154097622.png" alt="" width="288" height="97" /></p>
+<p>&nbsp;</p>

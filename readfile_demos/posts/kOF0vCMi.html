@@ -1,0 +1,131 @@
+<p>之前&nbsp;manipulate 表里的数据，现在则是&nbsp;manipulate 表本身。</p>
+<h2>INDEX</h2>
+<ul>
+<li><a href="#a1">创建多列构成的主键</a></li>
+<li><a href="#a2">自动增长的规定</a></li>
+<li><a href="#a3">查看上一次插入的自增 id&nbsp;</a></li>
+<li><a href="#a4">尽量用默认值替代 NULL</a></li>
+<li><a href="#a5">外键不可以跨引擎</a></li>
+<li>
+<p class="docText"><a href="#a6">添加字段与删除字段 &amp; 定义外键</a></p>
+</li>
+<li>
+<p><strong><span style="background-color: #ffff99; color: #ff0000;"><a href="#a7"><span style="background-color: #ffff99; color: #ff0000;">复杂表结构的修改</span></a></span></strong></p>
+</li>
+<li><strong><span style="color: #ff0000;"><a href="#a8"><span style="color: #ff0000;">删除表与修改表名</span></a></span></strong></li>
+</ul>
+<p>非常工整的 。 。模范脚本：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customers
+(
+  cust_id      </span><span style="color: #0000ff;">int</span>       <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> AUTO_INCREMENT,
+  cust_name    </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">50</span>)  <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_address </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">50</span>)  <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_city    </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">50</span>)  <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_state   </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">5</span>)   <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_zip     </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">10</span>)  <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_country </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">50</span>)  <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_contact </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">50</span>)  <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  cust_email   </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">255</span>) <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (cust_id)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB;</pre>
+</div>
+<p>但是官方文档里长这个样子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> t1 (
+    year_col  </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+    some_data </span><span style="color: #0000ff;">INT</span><span style="color: #000000;">
+)</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="a1"></a>To create a primary key made up of multiple columns</h2>
+<p class="docText">Simply specify the column names as a comma delimited list, as seen in this example:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> orderitems
+(
+  order_num  </span><span style="color: #0000ff;">int</span>          <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  order_item </span><span style="color: #0000ff;">int</span>          <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  prod_id    </span><span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">10</span>)     <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  quantity   </span><span style="color: #0000ff;">int</span>          <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  item_price </span><span style="color: #0000ff;">decimal</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> ,
+  </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_num, order_item)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB;</pre>
+</div>
+<h2><a name="a2"></a>自动增长的规定</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> `manga` (
+  `manga_id` </span><span style="color: #0000ff;">bigint</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> AUTO_INCREMENT COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画id</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  `manga_name` </span><span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">40</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画名字</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  `manga_discription` </span><span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">120</span>) <span style="color: #0000ff;">DEFAULT</span> <span style="color: #0000ff;">NULL</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画描述</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  `manga_status` </span><span style="color: #0000ff;">tinyint</span>(<span style="color: #800000; font-weight: bold;">4</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">0</span><span style="color: #ff0000;">'</span> COMMENT <span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画描述</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+  </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (`manga_id`)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1012</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8 COMMENT<span style="color: #808080;">=</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">漫画表</span><span style="color: #ff0000;">'</span>  </pre>
+</div>
+<p>每个表只允许有一个自增列，并且它必须被索引（例如，把它设置为主键）</p>
+<h2><a name="a3"></a>查看上一次插入的自增 id ，</h2>
+<p>必须是自增的！自定义插入的不算！</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> (manga_name) <span style="color: #0000ff;">VALUES</span> (<span style="color: #ff0000;">'</span><span style="color: #ff0000;">what</span><span style="color: #ff0000;">'</span><span style="color: #000000;">);
+Query OK, </span><span style="color: #800000; font-weight: bold;">1</span> row affected (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> last_insert_id();
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+</span>
+<span style="color: #808080;">|</span> last_insert_id() <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+</span>
+<span style="color: #808080;">|</span>             <span style="color: #800000; font-weight: bold;">1012</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">----------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<h2><span class="docEmphStrong"><a name="a4"></a>Using <tt>DEFAULT</tt> Instead of <tt>NULL</tt> Values</span></h2>
+<p class="docText"><span class="docEmphStrong"> Many database developers use <tt>DEFAULT</tt> values instead of <tt>NULL</tt> columns, especially in columns that will be used in calculations or data groupings.</span></p>
+<h2 class="docText"><span class="docEmphStrong"><a name="a5"></a>Foreign Keys Can't Span Engines&nbsp;</span></h2>
+<p class="docText"><span class="docEmphStrong">There is one big downside to mixing engine types. Foreign keys (used to enforce referential integrity, as explained in <a class="docLink">Chapter 1</a>, "Understanding SQL") cannot span engines. That is, a table using one engine cannot have a foreign key referring to a table that uses another engine.</span></p>
+<h2 class="docText">&nbsp;<a name="a6"></a>添加字段与删除字段 &amp; 定义外键</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> vendors
+</span><span style="color: #0000ff;">ADD</span> vend_phone <span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">20</span>);</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> Vendors
+</span><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">COLUMN</span> vend_phone;</pre>
+</div>
+<p>修改表这一操作经常被用来定义外键：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> orderitems
+</span><span style="color: #0000ff;">ADD</span> <span style="color: #0000ff;">CONSTRAINT</span><span style="color: #000000;"> fk_orderitems_orders
+</span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span> (order_num) <span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> orders (order_num);
+</span><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> orderitems
+</span><span style="color: #0000ff;">ADD</span> <span style="color: #0000ff;">CONSTRAINT</span> fk_orderitems_products <span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (prod_id)
+</span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> products (prod_id);
+
+</span><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> orders
+</span><span style="color: #0000ff;">ADD</span> <span style="color: #0000ff;">CONSTRAINT</span> fk_orders_customers <span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (cust_id)
+</span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> customers (cust_id);
+
+</span><span style="color: #0000ff;">ALTER</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> products
+</span><span style="color: #0000ff;">ADD</span> <span style="color: #0000ff;">CONSTRAINT</span><span style="color: #000000;"> fk_products_vendors
+</span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span> (vend_id) <span style="color: #0000ff;">REFERENCES</span> vendors (vend_id);</pre>
+</div>
+<p>语法：ALTER TABLE table_name ADD CONSTRAINT fk_id FOREIGN KEY (外键字段名) REFERENCES 外表表明（外表中对应的主键字段名）;</p>
+<p>FK_ID 是外键的名称。更多外键相关的内容请参考<a href="http://www.cnblogs.com/xkxf/p/8601380.html#a5" target="_blank"><span style="text-decoration: underline;">&nbsp;外键约束</span></a></p>
+<h2>&nbsp;<a name="a7"></a>复杂表结构的修改</h2>
+<p class="docText">Complex table structure changes usually require a manual move process involving these steps:</p>
+<ol>
+<li>Create a new table with the new column layout.</li>
+<li>Use the <tt>INSERT SELECT</tt> statement (see <a class="docLink">Chapter 19</a>, "Inserting Data," for details of this statement) to copy the data from the old table to the new table. Use conversion functions and calculated fields, if needed.</li>
+<li>Verify that the new table contains the desired data.</li>
+<li>Rename the old table (or delete it, if you are really brave).</li>
+<li>Rename the new table with the name previously used by the old table.</li>
+<li>Re-create any triggers, stored procedures, indexes, and foreign keys as needed.</li>
+</ol>
+<h2>&nbsp;<a name="a8"></a>删除表与修改表名</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TABLE</span> customers2;</pre>
+</div>
+<div class="cnblogs_code">
+<pre>RENAME <span style="color: #0000ff;">TABLE</span> backup_customers <span style="color: #0000ff;">TO</span><span style="color: #000000;"> customers,
+             backup_vendors </span><span style="color: #0000ff;">TO</span><span style="color: #000000;"> vendors,
+             backup_products </span><span style="color: #0000ff;">TO</span> products;</pre>
+</div>
+<p>&nbsp;</p>

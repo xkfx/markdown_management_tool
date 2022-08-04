@@ -1,0 +1,238 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p>Notes</p>
+<ol>
+<li><a href="#a1">背景问题</a></li>
+<li><a href="#a2">模块Modules</a></li>
+<li><a href="#a3">软件包Packages</a></li>
+<li><a href="#a4">简易模块</a></li>
+<li><a href="#a5">Evaluating data as code</a></li>
+<li><a href="#a6">CommonJS modules</a></li>
+<li><a href="#a7">ECMAScript modules</a></li>
+<li><a href="#a8">Building and bundling</a></li>
+<li><a href="#a9">模块设计建议</a></li>
+</ol></li>
+<li>
+<p>Exercises</p>
+<ol>
+<li><a href="#b1">A modular robot</a></li>
+<li><a href="#b2">Roads module</a></li>
+<li><a href="#b3">Circular dependencies</a></li>
+</ol></li>
+</ul>
+</div>
+<h2>Notes</h2>
+<p><a name="a1"></a>1、背景问题</p>
+<p>理想的程序：类似于乐高玩具。它具有<span>清晰的结构，</span><span>工作方式很容易解释，每个部分都扮演着明确的角色。</span></p>
+<p>现实的程序：<span>有机地增长。</span><span>随着新需求的出现，新功能被添加。结构化和维持结构化是服务于未来的工作，因此很容易忽略它并逐渐让程序的各个部分变得非常纠结。</span></p>
+<p><span>造成的问题：首先，理解这样的一个系统很困难。其次，无法对系统的某部分功能重用，与其把该功能从上下文提取出来，不如重写。简而言之就是高度耦合。</span></p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、模块Modules</p>
+<p><span>目的：解决高度耦合的问题</span></p>
+<p><span>模块的定义：a piece of program，指明了自身所依赖的程序，以及它向外部所提供的功能（interface），其余部分保密。</span></p>
+<p><span>模块间的关系：依赖（dependencies）。当模块的依赖被定义在它自身时，就可以使用它来确定需要存在哪些其他模块才能使用给定模块并自动加载依赖项。</span></p>
+<p><span>如何实现模块化：首先需要程序员有这个意识，其次需要实际编程上的一些辅助措施。</span></p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、软件包Packages</p>
+<p>定义：一大块可以发布（复制和安装）的代码。<span>它可能包含一个或多个模块，并且包含有关其所依赖的其他软件包的信息。</span><span>一个软件包通常还附带文档来解释它的功能，以便那些没有编写它的人仍然可以使用它。</span></p>
+<p>针对的问题：我们可以通过Copy代码来复用一些函数、功能，但是当这些函数、功能更新，就不得不在每一处修改它。<span>如果在程序包中发现问题或添加了新功能，则</span><span>依赖它的程序（也可能是包）只需要更新程序包就可以了。</span></p>
+<p><span>基础设施：<span><span>以这种方式工作需要基础设施。</span><span>我们需要一个存储和查找包的地方以及安装和升级它们的便捷方式。</span><span>在JavaScript世界中，此基础结构由NPM（</span></span><a href="https://npmjs.org/"><em><span><span>https://npmjs.org</span></span></em></a><span><span>）提供。</span></span></span></p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、简易模块</p>
+<p><span><span><span>把js代码放在不同文件中不能满足需求，不同的文件同样共享相同的全局命名空间。它们之间会相互影响，并且代码的依赖结构不够清晰。</span></span></span></p>
+<p>直到2015年js都没有内建的模块系统。所以最初的模块系统都是自己设计的：</p>
+<div class="cnblogs_code">
+<pre>const weekDay = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+  const names </span>= ["Sunday", "Monday", "Tuesday", "Wednesday"<span style="color: #000000;">,
+                 </span>"Thursday", "Friday", "Saturday"<span style="color: #000000;">];
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    name(number) { </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> names[number]; },
+    number(name) { </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> names.indexOf(name); }
+  };
+}();
+
+console.log(weekDay.name(weekDay.number(</span>"Sunday"<span style="color: #000000;">)));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Sunday</span></pre>
+</div>
+<p>如上，该模块的接口包括weekDay.name和weekDay.number，局部绑定被隐藏在函数作用域里。</p>
+<p>这种方式提供了一定程度的独立性，但它只指明了向外部提供的功能（interface），并没有指明自身需要的依赖，只是期望于外部环境能够提供这些依赖，更别说什么自动加载了。（当然这里的例子并不需要其它依赖）</p>
+<p>很长一段时间，这是Web编程中使用的主要方法，但现在它已经过时了。</p>
+<p>理想的模块系统应该类似于Java里的包系统，可以通过import指明所需的依赖以及控制依赖的加载。</p>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、Evaluating data as code</p>
+<p>如果我们希望依赖关系成为代码的一部分（可以类比Java的import），就必须用代码来控制依赖的加载。做到这一点需要能够<strong>把字符串（或者说数据）作为代码执行</strong>【？？？】</p>
+<p>首先是一种不推荐方式&mdash;&mdash;特殊运算符<strong>eval</strong>，它容易破坏scope中原有的一种属性（就是缺乏封闭性）：</p>
+<div class="cnblogs_code">
+<pre>const x = 1<span style="color: #000000;">;
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> evalAndReturnX(code) {
+  eval(code);
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+}
+
+console.log(evalAndReturnX(</span>"var x = 2"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 2</span>
+<span style="color: #000000;">console.log(x);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1</span></pre>
+</div>
+<p>采用<strong>Function的构造器</strong>是一种风险较低的方法，它把代码包装在函数值里，这样它就有自己的作用域（scope）而不会影响别的作用域了：</p>
+<div class="cnblogs_code">
+<pre>let plusOne = Function("n", "return n + 1;"<span style="color: #000000;">);
+console.log(plusOne(</span>4<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 5</span></pre>
+</div>
+<p>这正是我们的模块系统所需要的，我们可以把模块代码包装在一个函数里，函数的作用域即是模块的作用域。</p>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6、CommonJS modules</p>
+<p>CommonJS modules是最常用的用于规范化js模块的模块。</p>
+<p>CommonJS modules的核心概念是一个叫require的函数，当你传入一个模块名并调用这个函数时，它确保模块已经被加载并返回该模块提供的接口。</p>
+<p>下面是一个模块实现示例（直接脑补成java里的import package就很好懂了）：</p>
+<div class="cnblogs_code">
+<pre>const ordinal = require("ordinal"); <span style="color: #008000;">//</span><span style="color: #008000;"> 模块的依赖</span>
+const {days, months} = require("date-names"); <span style="color: #008000;">//</span><span style="color: #008000;"> 模块的依赖</span>
+<span style="color: #000000;">
+exports.formatDate </span>= <span style="color: #0000ff;">function</span>(date, format) { <span style="color: #008000;">//</span><span style="color: #008000;"> 模块对外提供的接口，可以是一个函数，也可以是像date-names一样多个函数</span>
+  <span style="color: #0000ff;">return</span> format.replace(/YYYY|M(MMM)?|Do?|dddd/g, tag =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (tag == "YYYY") <span style="color: #0000ff;">return</span><span style="color: #000000;"> date.getFullYear();
+    </span><span style="color: #0000ff;">if</span> (tag == "M") <span style="color: #0000ff;">return</span><span style="color: #000000;"> date.getMonth();
+    </span><span style="color: #0000ff;">if</span> (tag == "MMMM") <span style="color: #0000ff;">return</span><span style="color: #000000;"> months[date.getMonth()];
+    </span><span style="color: #0000ff;">if</span> (tag == "D") <span style="color: #0000ff;">return</span><span style="color: #000000;"> date.getDate();
+    </span><span style="color: #0000ff;">if</span> (tag == "Do") <span style="color: #0000ff;">return</span><span style="color: #000000;"> ordinal(date.getDate());
+    </span><span style="color: #0000ff;">if</span> (tag == "dddd") <span style="color: #0000ff;">return</span><span style="color: #000000;"> days[date.getDay()];
+  });
+};</span></pre>
+</div>
+<p>模块把它的接口函数绑定到exports上，以便其它模块可以访问它：</p>
+<div class="cnblogs_code">
+<pre>const {formatDate} = require("./format-date"); <span style="color: #008000;">//</span><span style="color: #008000;"> 访问刚定义的formatDate模块</span>
+<span style="color: #000000;">
+console.log(formatDate(</span><span style="color: #0000ff;">new</span> Date(2017, 9, 13<span style="color: #000000;">),
+                       </span>"dddd the Do"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Friday the 13th</span></pre>
+</div>
+<p>我们可以自定义一个轻量级的require：</p>
+<div class="cnblogs_code">
+<pre>require.cache = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> require(name) {
+    </span><span style="color: #0000ff;">if</span>(!(name <span style="color: #0000ff;">in</span> require.cache)) { <span style="color: #008000;">//</span><span style="color: #008000;"> 防止重复加载</span>
+        let code = readFile(name); <span style="color: #008000;">//</span><span style="color: #008000;"> readFile并非标准函数，需要自定义</span>
+        let module =<span style="color: #000000;"> {
+            exports: {}
+        }; </span>
+        require.cache[name] =<span style="color: #000000;"> module;
+        let wrapper </span>= Function("require, exports, module", code); <span style="color: #008000;">//</span><span style="color: #008000;"> 加载代码</span>
+        wrapper(require, module.exports, module); <span style="color: #008000;">//</span><span style="color: #008000;"> 这样模块接口就被绑定到module.exports了</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span> require.cache[name].exports; <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; module.exports</span>
+}</pre>
+</div>
+<p>举个例子（模拟）：</p>
+<div class="cnblogs_code">
+<pre>const codeOfPlusOne = "exports.plusOne = n =&gt; n + 1;"<span style="color: #000000;">;
+const readFile </span>= (name) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (name == "plusOne") <span style="color: #0000ff;">return</span><span style="color: #000000;"> codeOfPlusOne;
+}
+
+require.cache </span>= Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> require(name) {
+    </span><span style="color: #0000ff;">if</span>(!(name <span style="color: #0000ff;">in</span> require.cache)) { <span style="color: #008000;">//</span><span style="color: #008000;"> 防止重复加载</span>
+        let code = readFile(name); <span style="color: #008000;">//</span><span style="color: #008000;"> readFile并非标准函数，需要自定义</span>
+        let module =<span style="color: #000000;"> {
+            exports: {}
+        }; 
+        require.cache[name] </span>=<span style="color: #000000;"> module;
+        let wrapper </span>= Function("require, exports, module", code); <span style="color: #008000;">//</span><span style="color: #008000;"> 加载代码</span>
+        wrapper(require, module.exports, module); <span style="color: #008000;">//</span><span style="color: #008000;"> 这样模块接口就被绑定到module.exports了</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span> require.cache[name].exports; <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; module.exports</span>
+<span style="color: #000000;">}
+
+const {plusOne} </span>= require("plusOne"<span style="color: #000000;">);
+console.log(plusOne(</span>5<span style="color: #000000;">));
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 1、检查"plusOne"是否是require.cache的一个属性
+ * 2、如果是，直接返回require.cache["plusOne"].exports
+ * 3、如果不是，通过readFile读取plusOne模块的代码
+ * 4、require.cache["plusOne"]绑定module（含有一个空对象的exports）
+ * 5、wrapper实际变成下面那样：加载-&gt; 函数绑定到require.cache["plusOne"]
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>对wrapper的分析：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 1.构造wrapper，加载代码</span>
+let wrapper = (require, exports, module) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 模块内容&darr;</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> const ordinal = require("ordinal"); </span>
+    exports.plusOne = n =&gt; n + 1<span style="color: #000000;">;
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 2.调用wrapper，实际绑定</span>
+<span style="color: #000000;">wrapper(require, module.exports, module);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> exports.plusOne = f(x);</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> =&gt; ... module.exports = f(x);</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、ECMAScript modules（since 2015）</p>
+<p>虽然CommonJS modules已经足够好用，但还是有那么一点瑕疵，例如：你添加到exports的东西在局部作用域居然不可用<code>。</code></p>
+<p>这就是为什么js要推出自己的模块系统：</p>
+<div class="cnblogs_code">
+<pre>import ordinal from "ordinal"<span style="color: #000000;">;
+import {days, months} from </span>"date-names"<span style="color: #000000;">;
+
+export </span><span style="color: #0000ff;">function</span> formatDate(date, format) { <span style="color: #008000;">/*</span><span style="color: #008000;"> ... </span><span style="color: #008000;">*/</span> }</pre>
+</div>
+<p>主要概念保持不变，但是细节有些不同。<span><span>符号现在已整合到语言中。</span><span>您可以使用特殊</span></span><code>import</code><span><span>关键字</span><span>，而不是调用函数来访问依赖项。</span></span></p>
+<p>export的不再是函数，而是一系列的绑定。</p>
+<p>把模块import到没有{ }包围的绑定时，返回模块的default绑定（需要自定义）：</p>
+<div class="cnblogs_code">
+<pre>export <span style="color: #0000ff;">default</span> ["Winter", "Spring", "Summer", "Autumn"];</pre>
+</div>
+<p>还可以对模块进行重命名：</p>
+<div class="cnblogs_code">
+<pre>import {days as dayNames} from "date-names"<span style="color: #000000;">;
+
+console.log(dayNames.length);</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a8"></a>8、Building and bundling</p>
+<p>很多js代码其实不是用js写的，而是其它语言编译过来的。</p>
+<p>因为单个文件传输比较快，因此程序员通常会在发布代码前用一种被叫做bundlers的工具把n个js文件压缩成一个js文件。</p>
+<p>除了文件数量，文件大小同样影响传输速率，可以通过叫minifiers的工具去除空格和注释。</p>
+<p>总而言之: Just be aware that the JavaScript code you run is often not the code as it was written.</p>
+<p>&nbsp;</p>
+<p><a name="a9"></a>9、模块设计建议</p>
+<ul>
+<li>良好的程序设计是主观的 - 涉及权衡和品味问题。</li>
+<li>模块设计的一个方面是易于使用，这可能意味着遵循现有的惯例，模仿标准功能或广泛使用的软件包是一个好主意。</li>
+<li>保持模块功能单一。&ldquo;Even if there&rsquo;s no standard function or widely used package to imitate, you can keep your modules predictable by using simple data structures and doing a single, focused thing.&nbsp;&rdquo;，而且模块的功能越是单一、通用，越是易于和其它模块组合。</li>
+<li>有时定义状态对象是有用的，但如果函数足够，就用一个函数。&ldquo;您​​首先创建一个对象，然后将该文件加载到您的对象中，最后使用专门的方法来获得结果。这种东西在面向对象的传统中很常见，而且很糟糕。您不能调用单个函数并继续前进，而是<strong>必须执行将对象移动到各种状态的仪式</strong>。因为数据被包装在一个专门的对象类型中，所以与它交互的代码必须知道该类型，从而产生不必要的相互依赖性。&rdquo;</li>
+<li>通常无法避免定义新的数据结构，但是当一个数组足够时，使用一个数组。</li>
+</ul>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="b1"></a>① A modular robot</p>
+<p>我会怎么做：把各个函数变得更加通用、独立。。</p>
+<p>------- --------&nbsp; &mdash;&mdash;&mdash;&mdash; -- &mdash;&mdash; &mdash;&mdash;- --&nbsp; -- - -- - -</p>
+<p><a name="b2"></a>② Roads module</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Add dependencies and exports</span>
+const {buildGraph} = require("./graph"<span style="color: #000000;">); 
+
+const roads </span>=<span style="color: #000000;"> [
+    </span>"Alice's House-Bob's House", "Alice's House-Cabin"<span style="color: #000000;">,
+    </span>"Alice's House-Post Office", "Bob's House-Town Hall"<span style="color: #000000;">,
+    </span>"Daria's House-Ernie's House", "Daria's House-Town Hall"<span style="color: #000000;">,
+    </span>"Ernie's House-Grete's House", "Grete's House-Farm"<span style="color: #000000;">,
+    </span>"Grete's House-Shop", "Marketplace-Farm"<span style="color: #000000;">,
+    </span>"Marketplace-Post Office", "Marketplace-Shop"<span style="color: #000000;">,
+    </span>"Marketplace-Town Hall", "Shop-Town Hall"<span style="color: #000000;">
+];
+
+exports.roadGraph </span>= buildGraph(roads.map(r =&gt; r.split("-")));</pre>
+</div>
+<p>------- --------&nbsp; &mdash;&mdash;&mdash;&mdash; -- &mdash;&mdash; &mdash;&mdash;- --&nbsp; -- - -- - -</p>
+<p><a name="b3"></a>③ Circular dependencies</p>
+<p>暂略。</p>
+<p>&nbsp;</p>

@@ -1,0 +1,115 @@
+<p>1、过滤器的执行顺序： &lt;url-pattern&gt; 为第一梯队， <span>&lt;<span style="color: #000080; font-weight: bold;">servlet-name<span>&gt; </span></span><span>为第二梯队，梯队内的执行顺序和 DD 里的声明顺序相同。</span></span></p>
+<div class="cnblogs_code">
+<pre>When the container recives a request, it first finds all the filter mappings with a &lt;url-pattern&gt; that matches the request URI. This becomes the first <span style="color: #0000ff;">set</span> of filters <span style="color: #0000ff;">in</span> the filter chain.Next it finds all the filter mappings with a &lt;servlet-name&gt; that matches the request URI. This becomes the second <span style="color: #0000ff;">set</span> of filters <span style="color: #0000ff;">in</span> the filter chain.In both the sets the filters are executed <span style="color: #0000ff;">in</span> the order <span style="color: #0000ff;">in</span> which they are declared <span style="color: #0000ff;">in</span> the D.D.</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、可以对服务器中传递的请求进行过滤。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #888888;">    &lt;filter&gt;
+        &lt;filter-name&gt;BeerRequest&lt;/filter-name&gt;
+        &lt;filter-class&gt;sample.BeerRequestFilter&lt;/filter-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;LogFileName&lt;/param-name&gt;
+            &lt;param-value&gt;Userlog.txt&lt;/param-value&gt;
+        &lt;/init-param&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;BeerRequest&lt;/filter-name&gt;
+        &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;
+        &lt;servlet-name&gt;jack&lt;/servlet-name&gt;</span>
+<strong>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>REQUEST<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 当一个也没有设置时，它是默认值 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>INCLUDE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>FORWARD<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>ERROR<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span></strong>
+ <span style="color: #888888;">   &lt;/filter-mapping&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、过滤器应用实例</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.PrintWriter;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Servlet <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        PrintWriter printWriter </span>=<span style="color: #000000;"> resp.getWriter();
+        printWriter.println(</span>"calls doGet(req, resp)"<span style="color: #000000;">);
+        printWriter.println(</span>"测试能否输出中文"<span style="color: #000000;">);
+        printWriter.close();
+    }
+}</span></pre>
+</div>
+<p>filter ：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> sample;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Filter <span style="color: #0000ff;">implements</span><span style="color: #000000;"> javax.servlet.Filter{
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> visited;
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> init(FilterConfig filterConfig) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException {
+
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException, ServletException {
+        servletResponse.setContentType(</span>"text/html"<span style="color: #000000;">);
+        servletResponse.setCharacterEncoding(</span>"utf-8"<span style="color: #000000;">);
+        visited </span>++<span style="color: #000000;">;
+        filterChain.doFilter(servletRequest, servletResponse);
+        System.out.println(</span>"visited = " +<span style="color: #000000;"> visited);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> destroy() {
+
+    }
+}</span></pre>
+</div>
+<p>web.xml</p>
+<div class="cnblogs_code">
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"<span style="color: #000000;">
+         xmlns:xsi</span>="http://www.w3.org/2001/XMLSchema-instance"<span style="color: #000000;">
+         xsi:schemaLocation</span>="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"<span style="color: #000000;">
+         version</span>="3.1"&gt;
+
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;servlet&lt;/servlet-name&gt;
+        &lt;servlet-<span style="color: #0000ff;">class</span>&gt;sample.Servlet&lt;/servlet-<span style="color: #0000ff;">class</span>&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;servlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/<span style="color: #0000ff;">do</span>&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;filter&gt;
+        &lt;filter-name&gt;filter&lt;/filter-name&gt;
+        &lt;filter-<span style="color: #0000ff;">class</span>&gt;sample.Filter&lt;/filter-<span style="color: #0000ff;">class</span>&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;filter&lt;/filter-name&gt;
+        &lt;servlet-name&gt;servlet&lt;/servlet-name&gt;
+    &lt;/filter-mapping&gt;
+
+&lt;/web-app&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、包装器略。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span><span> <br /></span></span></p>

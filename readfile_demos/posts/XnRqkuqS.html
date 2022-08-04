@@ -1,0 +1,23 @@
+<p>mark一篇09年的《Thinking in Java》笔记：<a href="https://lawrence-zxc.github.io/2009/11/07/thinking-in-java/" target="_blank">here</a> --&gt; https://lawrence-zxc.github.io/2009/11/07/thinking-in-java/</p>
+<p>1、复用类的方式有四种：创建这个类的对象、组合、继承、代理（*略）</p>
+<p>2、有时候无法创建一个类的对象（当这个类的构造器被设置为private的时候）</p>
+<p>3、运用<span style="color: #ff0000;"><strong>组合</strong></span>这个复用策略，首先要考虑的是成员对象的访问权限及成员对象的初始化和清理。设置访问权限就是去考虑和客户程序员的关系，哪些接口是需要暴露出来的？；成员对象的初始化方式有4种（实际应该超过4种）：在定义对象的时候初始化（在Core Java里称作实例域初始化）、在构造器中初始化、惰性初始化、初始化块初始化。（不完全<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/xkxf/p/6181125.html">对象初始化语块执行顺序</a>）值得一提的是惰性初始化：意思就是在要使用这个对象的时候才初始化。</p>
+<p>4、<strong><span style="color: #ff0000;">继承</span></strong>，首先要考虑的是如何对基类的成员进行初始化，唯一方式就是通过super调用基类的构造器。（而且必须作为在导出类构造器中要做的第一件事）。其次是要考虑基类成员的清理，多数时候让垃圾回收机完成就可以了，但是在一些特殊的情况需要手动处理（有时候，清理不一定是指把对象清出内存，也可以是把对象恢复到初始状态），如何写清理方法？--&ldquo;执行类的所有特定清理动作，其顺序同生成顺序相反；然后同示范的那样调用基类的清理方法&rdquo;。</p>
+<p>5、代理，暂略。</p>
+<p>6、进一步理解继承和组合：继承是取得基类的接口，组合是使用子对象的功能。</p>
+<p>7、<strong><span style="color: #ff0000;">protected</span></strong>：例如，等于HttpServlet来说，唯一需要暴露出来的接口只是service方法，其他doGet、doPost方法都相当于&ldquo;辅助方法&rdquo;，但是设置为private话会导致子类无法继承，因此就需要介于两者之间的protected.允许子类和朋友继承（/访问）。</p>
+<p>8、<span style="color: #000000;">主要从效率和设计上考虑考虑使用<strong>final。</strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> val = 1; <span style="color: #008000;">//</span><span style="color: #008000;"> 1</span>
+<span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> val = 1; <span style="color: #008000;">//</span><span style="color: #008000;"> 2</span>
+<span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> VAL = 1; <span style="color: #008000;">//</span><span style="color: #008000;"> 3</span></pre>
+</div>
+<p>上面的代码中2和3都是编译时常量，效率上：把固定不变的基本数据类型声明成final减轻了运行时的负担。设计上：2和3在效果上是没有区别的（都是编译时常量），添加static完全是为了强调&ldquo;只有一份&rdquo;。</p>
+<p><strong>注意点</strong>：但是并不是所有声明成final的都是编译时常量，例如下面代码只有在运行时才能得到值：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> INT 5 = rand.nextInt(20)</pre>
+</div>
+<p>使用static final通常是为了强调这是一个只有一份的常量，<strong>命名规则</strong>是&ldquo;全部大写&rdquo;。</p>
+<p>9、包括继承在内的初始化全过程。了解这个的价值在于：1继承其实是无处不在的，所有类都继承自object类；2对于所发生的一切有一个全局性的把握。这个过程，概括而言就是：从根基类的static到最后导出的那个类的构造器。作为一个语言的使用者，暂时就理解到这里。。。。（想到一个摸清楚所有细节的途径，自己实现一套jvm javac。。）</p>
+<p>10、向上转型。</p>
+<p>&nbsp;</p>

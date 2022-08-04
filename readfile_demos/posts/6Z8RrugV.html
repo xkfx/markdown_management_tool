@@ -1,0 +1,96 @@
+<h3>【关于IoC的几点认识】</h3>
+<p>1、面向接口编程 --&gt; 每层只向上层提供接口</p>
+<p>2、<a title="Inversion of control" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a>&nbsp;(IoC) &nbsp;--&gt;<a href="http://baike.baidu.com/link?url=hSYdtu_Nt6wADo7afTC10Zso6u8DZUW7ugevrc-PJk9ic9b98bUFkdTo9J1f88iecZ2fPn0egNyDT4LpSqiYBRSrOblASielh2zfp6SzA-C6ALimKq4sgtrCpNfl_OJyqpMVoIBggmJVPqqrlL-0GZGuQNwIZ2lfTOLIA2mP6X3" target="_blank">&nbsp;参考百度百科</a></p>
+<p>3、DI是IoC的一种实现方式</p>
+<h3>【通过Java代码装配 bean】</h3>
+<p>由于自动化装配有一些<span style="text-decoration: underline;"><strong>无法避免的缺陷</strong></span>（例如无法装配第三方库中的组件</p>
+<p>所以不得不采用显示装配的方式，按照书上的说法，显示装配有两种可选方案：Java和XML，</p>
+<p>JavaConfig是更好的选择（更加强大、安全），XML属于历史遗留问题。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170711085143118-1537123923.png" alt="" width="386" height="134" /></p>
+<p>1、用 <strong>配置</strong> 代替 <strong>扫描。</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.Bean;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.ComponentScan;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.Configuration;
+
+@Configuration
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> CDPlayerConfig {
+    @Bean
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> CompactDisc sgtPeppers() {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> SgtPeppers();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回一个对象，该对象将注册为Spring应用上下文中的bean，bean的ID默认与方法名相同
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 默认情况下该bean为单例</span>
+<span style="color: #000000;">    }
+
+    @Bean
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> CompactDisc randomBeatlesCD() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 可以各种 if else ，尽情发挥Java的所有功能，
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只要最终返回一个 CompactDisc实例既可
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 带有 @Bean 注解的方法可以采用任何必要的Java功能来产生 bean实例</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> SgtPeppers();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;Java 显式创建 bean 的两个注解是类级别的 @Configuration 注解和方法级别的 @bean 注解，最后需要把这个配置类导入到根配置文件中。</p>
+<p>&nbsp;</p>
+<p>2、最简单的<strong>注入（装配）方式。&mdash;&mdash;直接在JavaConfig中装配</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.Bean;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.ComponentScan;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.context.annotation.Configuration;
+
+@Configuration
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> CDPlayerConfig {
+    @Bean
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> CompactDisc randomBeatlesCD() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 可以各种 if else ，尽情发挥Java的所有功能，
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只要最终返回一个 CompactDisc实例既可
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 带有 @Bean 注解的方法可以采用任何必要的Java功能来产生 bean实例</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> SgtPeppers();
+    }
+
+<span style="color: #ff0000;"><strong>    @Bean
+    </strong></span></span><span style="color: #ff0000;"><strong>public CDPlayer cdPlayer() {
+        return new</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong> CDPlayer(randomBeatlesCD());
+    }</strong></span>
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、<strong>无法解决歧义的注入（装配）方式。&mdash;&mdash; @ Autowired <span style="text-decoration: line-through;">（不算用Java代码装配 bean，只是用Java代码配置 bean！）</span></strong></p>
+<p>如果配置形如 1 ，将由于歧义无法完成装配。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> soundsystem;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span> org.junit.Assert.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Rule;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.runner.RunWith;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.beans.factory.annotation.Autowired;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.context.ContextConfiguration;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+@RunWith(SpringJUnit4ClassRunner.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">)
+@ContextConfiguration(classes </span>= CDPlayerConfig.<span style="color: #0000ff;">class</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> CDPlayerTest {
+
+<strong><span style="color: #ff0000;">    @Autowired
+    </span></strong></span><span style="color: #0000ff;">private</span><span style="color: #000000;"> CompactDisc cd;
+
+<strong><span style="color: #ff0000;">    @Autowired
+    </span></strong></span><span style="color: #0000ff;">private</span><span style="color: #000000;"> CDPlayer cdPlayer;
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> cdAndCdPlayerShouldNotBeNull() {
+        assertNotNull(cd);
+        assertNotNull(cdPlayer);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、正确的<strong>注入姿势。</strong></p>
+<p>&nbsp;暂略</p>

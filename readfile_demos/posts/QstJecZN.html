@@ -1,0 +1,167 @@
+<h2>1、使用 TensorFlow 的建议</h2>
+<p>Which API(s) should you use? You should use the highest level of abstraction that solves the problem. The higher levels of abstraction are easier to use, but are also (by design) less flexible. We recommend you <span style="text-decoration: underline;">start with the highest-level API first and get everything working.</span> <span style="text-decoration: underline;">If you need additional flexibility for some special modeling concerns, move one level lower.</span> Note that <span style="text-decoration: underline;">each level is built using the APIs in lower levels,</span> so dropping down the hierarchy should be reasonably straightforward.</p>
+<h2><a href="https://colab.research.google.com/notebooks/mlcc/intro_to_pandas.ipynb?hl=en#scrollTo=TIFJ83ZTBctl" target="_blank">2、pandas 快速入门</a></h2>
+<p>比官方文档更简明、易懂、实用！</p>
+<p>首先介绍基本概念，由 csv 文件导入数据，用 dataFrame 装载、抽象数据（dataFrame 可以理解为一个二维表）。接着讲述如何访问数据，Python 中访问 dict/list 的方式普遍适用于 dataFrame 。再之后讲解如何操作数据，除了直接使用 NumPy 函数外，还有个特别有用的&nbsp;Series.apply 。最后是若干个练习。 。&nbsp;第一题，插入列、对列的整体运算；第二题，关于 reindex ，可以通过对索引排序来改变整个数据的排序。</p>
+<h2>3、<a href="https://colab.research.google.com/notebooks/mlcc/first_steps_with_tensor_flow.ipynb?hl=en" target="_blank">First Steps with TensorFlow</a></h2>
+<p>通过一个很简单的实例（根据一个输入特征：城市街区的粒度，使用 TensorFlow 中的 LinearRegressor 类预测中位数房价）介绍如何使用 TensorFlow ，包括从导入数据到训练模型、调整参数的整个<span style="background-color: #ff00ff;"><strong>流程</strong></span>。首先需要<a id="cb_post_title_url" href="http://www.cnblogs.com/xkxf/p/8933730.html" target="_blank">搭建机器学习环境</a></p>
+<h3>导入 &amp; 检查数据</h3>
+<p>在运行代码前，先将 csv 文件下载到本地并放到 .py 文件的同一目录下。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> In this first cell, we'll load the necessary libraries.</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> math
+
+</span><span style="color: #0000ff;">from</span> IPython <span style="color: #0000ff;">import</span><span style="color: #000000;"> display
+</span><span style="color: #0000ff;">from</span> matplotlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> cm
+</span><span style="color: #0000ff;">from</span> matplotlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> gridspec
+</span><span style="color: #0000ff;">from</span> matplotlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> pyplot as plt
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+</span><span style="color: #0000ff;">from</span> sklearn <span style="color: #0000ff;">import</span><span style="color: #000000;"> metrics
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> tensorflow as tf
+</span><span style="color: #0000ff;">from</span> tensorflow.python.data <span style="color: #0000ff;">import</span><span style="color: #000000;"> Dataset
+
+tf.logging.set_verbosity(tf.logging.ERROR)
+pd.options.display.max_rows </span>= 10<span style="color: #000000;">
+pd.options.display.float_format </span>= <span style="color: #800000;">'</span><span style="color: #800000;">{:.1f}</span><span style="color: #800000;">'</span><span style="color: #000000;">.format
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Next, we'll load our data set.</span>
+<span style="color: #000000;">
+california_housing_dataframe </span>= pd.read_csv(<span style="color: #800000;">"</span><span style="color: #800000;">california_housing_train.csv</span><span style="color: #800000;">"</span>, sep=<span style="color: #800000;">"</span><span style="color: #800000;">,</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+california_housing_dataframe </span>=<span style="color: #000000;"> california_housing_dataframe.reindex(
+    np.random.permutation(california_housing_dataframe.index))
+california_housing_dataframe[</span><span style="color: #800000;">"</span><span style="color: #800000;">median_house_value</span><span style="color: #800000;">"</span>] /= 1000.0<span style="color: #000000;">
+california_housing_dataframe
+
+</span><span style="color: #0000ff;">print</span>(california_housing_dataframe.describe())</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180425164136317-699790386.png" alt="" width="730" height="365" /></p>
+<p>longitude 经度<br />latitude  纬度<br />housing median age 住房中位数年龄<br />total rooms  房子总数<br />total bedrooms 卧室总数<br />population 人口<br />households 户数<br />median income 收入<br />median house value&nbsp;房价中位数</p>
+<h3>构建第一个模型</h3>
+<p>我们的目标是预测&nbsp;median house value （某个街区的房价中位数），输入是 total rooms （某个街区的房子总数）。</p>
+<p>为了训练我们的模型，将用到&nbsp;TensorFlow <a href="https://www.tensorflow.org/get_started/estimator" target="_blank">Estimator</a>&nbsp;提供的&nbsp;<a href="https://www.tensorflow.org/api_docs/python/tf/estimator/LinearRegressor" target="_blank">LinearRegressor</a>&nbsp;接口。&nbsp;这个 API 负责处理大量低级模型管道，并提供便捷的方法来执行模型训练，评估和推理（也就是预测）。</p>
+<h4 class="text-cell-section-header">第 1 步：定义特征 &amp; 配置特征列</h4>
+<p>&nbsp;为了将训练数据导入到 tensorflow 中，我们需要指明每个特征所包含的数据类型。有两种主要的数据类型将在本次或者未来的练习中用到：</p>
+<ul>
+<li>分类数据：文本数据。在这个练习中，数据集并没有包含任何分类数据。例如家庭风格，房地产广告中的字词。</li>
+<li>数值数据：数字，或者你想把它作为数字处理的数据。有时候你会想将某些数值数据（例如邮政编码）视为一种分类。</li>
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+<p>在 tensorflow 中，我们用一种称为&ldquo;<strong>特征列</strong>&rdquo;的构造指明一个<strong>特征</strong>的数据类型。特征列仅存储对于特征数据的描述，它们本身并不包含特征数据。</p>
+<p>首先，我们将仅仅使用一个数值特征作为输入，房子总数 total_rooms。以下代码从 dataframe 中提取 total_rooms 数据，并用 numeric_column 定义&ldquo;特征列&rdquo;，指明该列数据是数值类型：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Define the input feature: total_rooms.</span>
+my_feature = california_housing_dataframe[[<span style="color: #800000;">"</span><span style="color: #800000;">total_rooms</span><span style="color: #800000;">"</span><span style="color: #000000;">]]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Configure a numeric feature column for total_rooms.</span>
+feature_columns = [tf.feature_column.numeric_column(<span style="color: #800000;">"</span><span style="color: #800000;">total_rooms</span><span style="color: #800000;">"</span>)]</pre>
+</div>
+<p>PS. 注意分辨 特征 my_feature 与 特征列 featute_columns</p>
+<h4>第 2 步：定义目标</h4>
+<p>接下来，我们将定义我们的目标，也就是 房价中位数&nbsp;median_house_value 。 同样，我们可以把它从 dataframe 中提取出来：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Define the label.</span>
+targets = california_housing_dataframe[<span style="color: #800000;">"</span><span style="color: #800000;">median_house_value</span><span style="color: #800000;">"</span>]</pre>
+</div>
+<h4>第 3 步：配置线性回归器</h4>
+<p>我们将用&nbsp;LinearRegressor 配置一个线性回归模型。我们用&nbsp;<code>GradientDescentOptimizer（梯度下降优化器）</code>来训练此模型，它实现了Mini-Batch&nbsp;SGD（小批量随机梯度下降，每次迭代随机选择 10 ~ 1000 个 example）。学习速率&nbsp;<code>learning_rate&nbsp;</code>控制了梯度步长的大小（梯度 * 学习速率 = 下一点点距离上一点的距离）。</p>
+<p>注意：为了安全起见，我们还用到了梯度裁剪&nbsp;<code>clip_gradients_by_norm</code>，它确保了训练期间梯度不会变得太过大，从而导致梯度下降失败。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Use gradient descent as the optimizer for training the model.</span>
+my_optimizer=tf.train.GradientDescentOptimizer(learning_rate=0.0000001<span style="color: #000000;">)
+my_optimizer </span>= tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Configure the linear regression model with our feature columns and optimizer.</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Set a learning rate of 0.0000001 for Gradient Descent.</span>
+linear_regressor =<span style="color: #000000;"> tf.estimator.LinearRegressor(
+    feature_columns</span>=<span style="color: #000000;">feature_columns,
+    optimizer</span>=<span style="color: #000000;">my_optimizer
+)</span></pre>
+</div>
+<h4>第 4 步：定义输入函数</h4>
+<p>为了将加州住房数据导入到我们的 LinearRegressor 中，我们需要定义一个输入函数（input function），它指明了 TensorFlow 应当如何<strong>预处理数据</strong>，以及如何在模型训练期间进行批处理，洗牌（打乱数据）和重复。</p>
+<p>首先，我们将 Pandas 特征数据转化成 Numpy 数组的字典。之后我们可以通过&nbsp;TensorFlow 的 Dataset API 用这些数据构造一个 dataset 对象，然后把我们的数据拆分成每批次大小为 batch_size 的小批次，以针对指定的 num_epochs 进行重复。</p>
+<p>注意：当 num_epochs 为默认值时，输入的数据将被重复无限次。</p>
+<p>接下来，如果 shuffle 被设置为 True ， 我们将对数据进行&ldquo;混洗&rdquo;以便它在训练期间被随机地传递给模型，buffer_size 参数指定了 shuffle 将随机采样的数据集大小。</p>
+<p>最后，我们的输入函数为 dataset 构造了一个迭代器，并将下一批次的数据返回给 LinearRegressor。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span> my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=<span style="color: #000000;">None):
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">Trains a linear regression model of one feature.
+  
+    Args:
+      features: pandas DataFrame of features
+      targets: pandas DataFrame of targets
+      batch_size: Size of batches to be passed to the model
+      shuffle: True or False. Whether to shuffle the data.
+      num_epochs: Number of epochs for which data should be repeated. None = repeat indefinitely
+    Returns:
+      Tuple of (features, labels) for next data batch
+    </span><span style="color: #800000;">"""</span>
+  
+    <span style="color: #008000;">#</span><span style="color: #008000;"> Convert pandas data into a dict of np arrays.</span>
+    features = {key:np.array(value) <span style="color: #0000ff;">for</span> key,value <span style="color: #0000ff;">in</span><span style="color: #000000;"> dict(features).items()}                                           
+ 
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> Construct a dataset, and configure batching/repeating.</span>
+    ds = Dataset.from_tensor_slices((features,targets)) <span style="color: #008000;">#</span><span style="color: #008000;"> warning: 2GB limit</span>
+    ds =<span style="color: #000000;"> ds.batch(batch_size).repeat(num_epochs)
+    
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> Shuffle the data, if specified.</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> shuffle:
+      ds </span>= ds.shuffle(buffer_size=10000<span style="color: #000000;">)
+    
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> Return the next batch of data.</span>
+    features, labels =<span style="color: #000000;"> ds.make_one_shot_iterator().get_next()
+    </span><span style="color: #0000ff;">return</span> features, labels</pre>
+</div>
+<h4>&nbsp;第 5 步：训练模型</h4>
+<div class="cnblogs_code">
+<pre>_ =<span style="color: #000000;"> linear_regressor.train(
+    input_fn </span>= <span style="color: #0000ff;">lambda</span><span style="color: #000000;">:my_input_fn(my_feature, targets),
+    steps</span>=100<span style="color: #000000;">
+)</span></pre>
+</div>
+<h4>&nbsp;第 6 步：评估模型</h4>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create an input function for predictions.</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Note: Since we're making just one prediction for each example, we don't </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> need to repeat or shuffle the data here.</span>
+prediction_input_fn =<span style="color: #0000ff;">lambda</span>: my_input_fn(my_feature, targets, num_epochs=1, shuffle=<span style="color: #000000;">False)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Call predict() on the linear_regressor to make predictions.</span>
+predictions = linear_regressor.predict(input_fn=<span style="color: #000000;">prediction_input_fn)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Format predictions as a NumPy array, so we can calculate error metrics.</span>
+predictions = np.array([item[<span style="color: #800000;">'</span><span style="color: #800000;">predictions</span><span style="color: #800000;">'</span>][0] <span style="color: #0000ff;">for</span> item <span style="color: #0000ff;">in</span><span style="color: #000000;"> predictions])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print Mean Squared Error and Root Mean Squared Error.</span>
+mean_squared_error =<span style="color: #000000;"> metrics.mean_squared_error(predictions, targets)
+root_mean_squared_error </span>=<span style="color: #000000;"> math.sqrt(mean_squared_error)
+</span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">"</span><span style="color: #800000;">Mean Squared Error (on training data): %0.3f</span><span style="color: #800000;">"</span> %<span style="color: #000000;"> mean_squared_error)
+</span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">"</span><span style="color: #800000;">Root Mean Squared Error (on training data): %0.3f</span><span style="color: #800000;">"</span> % root_mean_squared_error)</pre>
+</div>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180426165603815-805891535.png" alt="" width="569" height="108" /></p>
+<p>平局方差错误 MSE 很难解释，我们通常看 根号 MSE 也就是 RMSE ，RMSE 有个非常棒的属性就是可以直接和原始数据进行比对。</p>
+<div class="cnblogs_code">
+<pre>min_house_value = california_housing_dataframe[<span style="color: #800000;">"</span><span style="color: #800000;">median_house_value</span><span style="color: #800000;">"</span><span style="color: #000000;">].min()
+max_house_value </span>= california_housing_dataframe[<span style="color: #800000;">"</span><span style="color: #800000;">median_house_value</span><span style="color: #800000;">"</span><span style="color: #000000;">].max()
+min_max_difference </span>= max_house_value -<span style="color: #000000;"> min_house_value
+
+</span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">"</span><span style="color: #800000;">Min. Median House Value: %0.3f</span><span style="color: #800000;">"</span> %<span style="color: #000000;"> min_house_value)
+</span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">"</span><span style="color: #800000;">Max. Median House Value: %0.3f</span><span style="color: #800000;">"</span> %<span style="color: #000000;"> max_house_value)
+</span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">"</span><span style="color: #800000;">Difference between Min. and Max.: %0.3f</span><span style="color: #800000;">"</span> %<span style="color: #000000;"> min_max_difference)
+</span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">"</span><span style="color: #800000;">Root Mean Squared Error: %0.3f</span><span style="color: #800000;">"</span> % root_mean_squared_error)</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180426170035264-1612547215.png" alt="" width="504" height="107" /></p>
+<p>&nbsp;</p>

@@ -1,0 +1,122 @@
+<p>饮水思源：<a href="https://www.bilibili.com/video/BV1Zy4y1K7SH?p=85&amp;spm_id_from=pageDriver" target="_blank">https://www.bilibili.com/video/BV1Zy4y1K7SH?p=85&amp;spm_id_from=pageDriver</a></p>
+<p>这是一个便于组件之间通信的办法（适合于任意组件之间！），是由程序员总结而来，并非官方的API</p>
+<p>基本原理是借助一个全局对象，进行通信。</p>
+<h2>①效果演示</h2>
+<p>大儿子和小儿子是兄弟组件。</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220209203849891-2081810411.gif" alt="" width="539" height="172" loading="lazy" /></p>
+<h2>②安装全局事件总线</h2>
+<p>main.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<span style="color: #000000;">
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span>
+
+<span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  render: h </span>=&gt;<span style="color: #000000;"> h(App),
+<span style="color: #ff0000;"><strong>  beforeCreate() {
+    Vue.prototype.$bus </strong></span></span><span style="color: #ff0000;"><strong>= this; // 这个$bus可以换其它名字
+</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>  },</strong></span>
+}).$mount(</span>'#app')</pre>
+</div>
+<h2>③使用全局事件总线</h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('4d927c0b-e67d-4473-bd26-ea8a6010929c')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" id="code_img_closed_4d927c0b-e67d-4473-bd26-ea8a6010929c" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" id="code_img_opened_4d927c0b-e67d-4473-bd26-ea8a6010929c" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_4d927c0b-e67d-4473-bd26-ea8a6010929c" class="cnblogs_code_hide">
+<pre>&lt;template&gt;
+  &lt;div&gt;
+    &lt;SonA /&gt;
+    &lt;SonB /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+import SonA from </span>'./components/SonA.vue'<span style="color: #000000;">
+import SonB from </span>'./components/SonB.vue'<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span>'App'<span style="color: #000000;">,
+  components: {
+    SonA,
+    SonB,
+  }
+}
+</span>&lt;/script&gt;
+
+&lt;style&gt;
+
+&lt;/style&gt;</pre>
+</div>
+<span class="cnblogs_code_collapse">App.vue</span></div>
+<p>接听方：</p>
+<div class="cnblogs_code">
+<pre>&lt;template&gt;
+  &lt;div&gt;
+      &lt;h1&gt;大儿子&lt;/h1&gt;
+      &lt;div&gt;收到来自SonaLine的消息：{{msg}}&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span>'SonA'<span style="color: #000000;">,
+  data() {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+          msg: </span>''<span style="color: #000000;">,
+      }
+  },
+<strong>  methods: {
+      handleMsgFromSonaLine(msg) {
+        </strong></span><strong><span style="color: #0000ff;">this</span>.msg =<span style="color: #000000;"> msg
+      },
+  },
+  mounted() {
+    </span><span style="color: #0000ff;">this</span>.$bus.$on('SonaLine', <span style="color: #0000ff;">this</span><span style="color: #000000;">.handleMsgFromSonaLine);    
+  },
+  beforeDestroy() {
+    </span><span style="color: #0000ff;">this</span>.$bus.$off('SonaLine'</strong><span style="color: #000000;"><strong>)
+  },</strong>
+}
+</span>&lt;/script&gt;
+
+&lt;style scoped&gt;<span style="color: #000000;">
+    div {
+        background</span>-<span style="color: #000000;">color: aqua;
+    }
+</span>&lt;/style&gt;</pre>
+</div>
+<p>发送方：</p>
+<div class="cnblogs_code">
+<pre>&lt;template&gt;
+  &lt;div&gt;
+      &lt;h1&gt;小儿子&lt;/h1&gt;
+      &lt;input v-model="msg"&gt;
+      &lt;button @click="sendDataToSonA"&gt;发数据给大儿子&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span>'SonB'<span style="color: #000000;">,
+  data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      msg: </span>''<span style="color: #000000;">,
+    }
+  },
+<strong>  methods: {
+    sendDataToSonA() {
+      </strong></span><strong><span style="color: #0000ff;">this</span>.$bus.$emit('SonaLine', <span style="color: #0000ff;">this</span></strong><span style="color: #000000;"><strong>.msg)
+    } 
+  },</strong>
+}
+</span>&lt;/script&gt;
+
+&lt;style&gt;<span style="color: #000000;">
+    div {
+        background</span>-<span style="color: #000000;">color: yellow;
+        margin</span>-<span style="color: #000000;">top: 20px;
+    }
+</span>&lt;/style&gt;</pre>
+</div>
+<p>最好在beforeDestroy中，解绑当前组件所用到的事件</p>

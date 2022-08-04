@@ -1,0 +1,77 @@
+<p>数据分析的基本步骤：</p>
+<ol>
+<li>了解你的数据（get to know your data），</li>
+<li>做一些统计学处理（像僵尸一样盯着数字不会带给你任何灵感！）</li>
+<li>实现可视化（get a better feeling for your data.）。</li>
+</ol>
+<p>&nbsp;</p>
+<h3>1、numpy 自带生成数据的函数</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180112192715660-42373629.png" alt="" width="526" height="175" /></p>
+<p>&nbsp;</p>
+<h3>2、numpy 具有各种统计学函数</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180112192958894-1734347283.png" alt="" width="415" height="318" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> np_baseball is available</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create np_height from np_baseball</span>
+np_height =<span style="color: #000000;"> np_baseball[:,0]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the mean of np_height</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(np.mean(np_height))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the median of np_height</span>
+<span style="color: #0000ff;">print</span>(np.median(np_height))</pre>
+</div>
+<p>/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> np_baseball is available</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print mean height (first column)</span>
+avg =<span style="color: #000000;"> np.mean(np_baseball[:,0])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Average: </span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str(avg))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print median height. Replace 'None'</span>
+med =<span style="color: #000000;"> np.median(np_baseball[:,0])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Median: </span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str(med))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the standard deviation on height. Replace 'None'</span>
+stddev =<span style="color: #000000;"> np.std(np_baseball[:,0])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Standard Deviation: </span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str(stddev))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out correlation between first and second column. Replace 'None'</span>
+corr = np.corrcoef(np_baseball[:,0], np_baseball[:,1<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Correlation: </span><span style="color: #800000;">"</span> + str(corr))</pre>
+</div>
+<p>&nbsp;/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> heights and positions are available as lists</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Convert positions and heights to numpy arrays: np_positions, np_heights</span>
+np_positions =<span style="color: #000000;"> np.array(positions)
+np_heights </span>=<span style="color: #000000;"> np.array(heights)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Heights of the goalkeepers: gk_heights</span>
+gk_heights = np_heights[np_positions == <span style="color: #800000;">'</span><span style="color: #800000;">GK</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Heights of the other players: other_heights</span>
+other_heights = np_heights[np_positions != <span style="color: #800000;">'</span><span style="color: #800000;">GK</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the median height of goalkeepers. Replace 'None'</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Median height of goalkeepers: </span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str(np.median(gk_heights)))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the median height of other players. Replace 'None'</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Median height of other players: </span><span style="color: #800000;">"</span> + str(np.median(other_heights)))</pre>
+</div>
+<p>&nbsp;</p>
+<h3>3、numpy 貌似不可以做数据可视化&middot;&middot;&middot;&middot;&middot;&middot;</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180112192759894-843226058.png" alt="" width="735" height="63" /></p>
+<p>可视化是从数据中获取灵感、直觉的一种途经！</p>

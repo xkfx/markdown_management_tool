@@ -1,0 +1,151 @@
+<p><span style="color: #ff00ff;">【设计Sales_data类】</span></p>
+<p>&nbsp;1、考虑Sales_data类应该有那些接口。</p>
+<p>&nbsp;isbn、combine、add、read、print...</p>
+<p>&nbsp;&nbsp;</p>
+<p>2、考虑如何使用这些接口。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Sales_data total;
+</span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (read(cin, total)) {
+    Sales_data trans;
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (read(cin, trans)) {
+        </span><span style="color: #0000ff;">if</span> (total.isbn() ==<span style="color: #000000;"> trans.isbn())
+            total.combine(trans);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            print(cout, total) </span>&lt;&lt;<span style="color: #000000;"> endl;
+            total </span>=<span style="color: #000000;"> trans;
+        }
+    }
+    print(cout, total) </span>&lt;&lt;<span style="color: #000000;"> endl;
+} </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?!</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl; 
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">7.1</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data {
+    std::</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> price = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data total;
+    </span><span style="color: #0000ff;">if</span> (std::cin &gt;&gt; total.bookNo &gt;&gt; total.units_sold &gt;&gt;<span style="color: #000000;"> total.price) {
+        Sales_data trans;
+        </span><span style="color: #0000ff;">while</span> (std::cin &gt;&gt; trans.bookNo &gt;&gt; trans.units_sold &gt;&gt;<span style="color: #000000;"> trans.price) {
+            </span><span style="color: #0000ff;">if</span>(total.bookNo ==<span style="color: #000000;"> trans.bookNo) {
+                total.units_sold </span>+=<span style="color: #000000;"> trans.units_sold;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                std::cout </span>&lt;&lt; total.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.price &lt;&lt;<span style="color: #000000;"> std::endl;
+                total </span>=<span style="color: #000000;"> trans;
+            }
+        }
+        std::cout </span>&lt;&lt; total.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.price &lt;&lt;<span style="color: #000000;"> std::endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        std::cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> std::endl;
+        </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">&nbsp;【定义改进的Sales_data类】</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> public部分，对象看起来是怎么样的。</span>
+    std::<span style="color: #0000ff;">string</span> isbn() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span> bookNo; } <span style="color: #008000;">//</span><span style="color: #008000;"> inline function</span>
+    Sales_data&amp; combine(<span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">double</span> avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> private部分，数据成员。</span>
+    std::<span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data的非成员接口函数</span>
+Sales_data add(<span style="color: #0000ff;">const</span> Sales_data&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::ostream </span>&amp;print(std::ostream&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::istream </span>&amp;read(std::istream&amp;, Sales_data&amp;);</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">this与const成员函数</span></p>
+<p>1、可以通过return *this;返回对象本身。</p>
+<p>2、在某个类的成员函数声明（定义）的参数列表之后加上const，意味着该函数所使用的隐式参数T *const this被修改为const T *const this，它们之间的区别在于，前者无法持有常量对象，而后者既可以持有常量对象也可以持有非常量对象。</p>
+<p>因此，const成员函数的引入提高了函数的灵活性，使得const obj可以调用相应的常量成员函数。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">7.2 &amp; 7.3</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data.h</span></strong>
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Sales_data {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> public部分，对象看起来是怎么样的。</span>
+    std::<span style="color: #0000ff;">string</span> isbn() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span> bookNo; } <span style="color: #008000;">//</span><span style="color: #008000;"> inline function</span>
+    Sales_data&amp; combine(<span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">double</span> avg_price() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> private部分，数据成员。</span>
+    std::<span style="color: #0000ff;">string</span><span style="color: #000000;"> bookNo;
+    unsigned units_sold </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span> revenue = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+};
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data的非成员接口函数</span>
+Sales_data add(<span style="color: #0000ff;">const</span> Sales_data&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::ostream </span>&amp;print(std::ostream&amp;, <span style="color: #0000ff;">const</span> Sales_data&amp;<span style="color: #000000;">);
+std::istream </span>&amp;read(std::istream&amp;, Sales_data&amp;<span style="color: #000000;">);
+
+</span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> Sales_data.cpp</span></strong>
+Sales_data&amp; Sales_data::combine(<span style="color: #0000ff;">const</span> Sales_data &amp;<span style="color: #000000;">rhs)
+{
+    units_sold </span>+=<span style="color: #000000;"> rhs.units_sold;
+    revenue </span>+=<span style="color: #000000;"> rhs.revenue;
+    </span><span style="color: #0000ff;">return</span> *<span style="color: #0000ff;">this</span><span style="color: #000000;">;
+}
+
+</span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> main.cpp</span></strong>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Sales_data total;
+    </span><span style="color: #0000ff;">if</span> (std::cin &gt;&gt; total.bookNo &gt;&gt;<span style="color: #000000;"> total.units_sold) {
+        Sales_data trans;
+        </span><span style="color: #0000ff;">while</span> (std::cin &gt;&gt; trans.bookNo &gt;&gt;<span style="color: #000000;"> trans.units_sold) {
+            </span><span style="color: #0000ff;">if</span> (total.isbn() ==<span style="color: #000000;"> trans.isbn())
+                total.combine(trans);
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                std::cout </span>&lt;&lt; total.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span>  &lt;&lt;<span style="color: #000000;"> std::endl;
+                total </span>=<span style="color: #000000;"> trans;
+            }
+        }
+        std::cout </span>&lt;&lt; total.bookNo &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; total.units_sold &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> std::endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cerr </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">No data?!</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl; 
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.4</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Person.h</span>
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Person {
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> address;
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Person.cpp
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> main.cpp</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">7.5</span></p>
+<p>应该加const。因为不论是常量对象还是非常量对象都有权访问自己的姓名和住址，这个操作并没有涉及改变对象的数据成员。</p>
+<p>什么时候不加const?调用者不希望常量对象调用该函数的时候就不加const，例如书上的combine函数。</p>
+<p>当函数只涉及&ldquo;访问&rdquo;而不涉及&ldquo;改变&rdquo;的时候加const，当函数涉及&ldquo;改变&rdquo;的时候不加const。</p>
+<p>&nbsp;</p>

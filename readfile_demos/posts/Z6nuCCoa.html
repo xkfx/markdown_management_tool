@@ -1,0 +1,211 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    int arr[10];
+    int n;
+    int found = 0;
+    int i;
+
+    printf("Please enter 6 numbers:");
+    for(i = 1; i &lt;= 6; i ++){
+        scanf("%d", &amp;arr[i]);
+    }
+    printf("Enter a number:");
+    scanf("%d", &amp;n);
+
+    for(i = 1; i &lt;= 6; i ++)
+        if(arr[i] == n){
+            printf("position = %d\n", i);
+            found = 1;
+            break;
+        }
+    if(found == 0)
+        printf("not found!\n");
+    return 0;
+}
+
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    int arr[100];
+    int n;
+    int i, j;
+    int tmp;
+
+    printf("Enter the length of arr (n&lt;100):");
+    scanf("%d", &amp;n);
+    printf("Enter %d numbers:", n);
+    for(i = 1; i &lt;= n; i ++)
+        scanf("%d", &amp;arr[i]);
+
+    for(i = 1; i &lt;= n; i ++)
+        printf("arr[%d] = %d ", i, arr[i]);
+    printf("\n");
+    
+    i = 1;
+    j = n;
+    for(;i &lt; j;){
+        tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+        i ++;
+        j --;
+    }
+
+    for(i = 1; i &lt;= n; i ++)
+        printf("arr[%d] = %d ", i, arr[i]);
+    printf("\n");
+    return 0;
+}
+
+
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    int arr[100];
+    int n;
+    int k[100] = {0};
+    int x;
+    int i, j;
+
+    j = 0;
+    printf("Enter the length of arr (n&lt;100):");
+    scanf("%d", &amp;n);
+    printf("Enter %d numbers (x&lt;=100):", n);
+    for(i = 1; i &lt;= n; i ++){
+        scanf("%d", &amp;x);
+        if(k[x] == 0){
+            k[x] = 1;
+            j ++;
+            arr[j] = x;
+        }
+    }
+    printf("Output:");
+    for(i = 1; i &lt;= j; i ++){
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+
+
+
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    float student[3][5];
+    float sum, ave;
+
+    for(int i = 0; i &lt; 3; i ++){
+        sum = 0, ave = 0;
+        printf("Enter %d stundent's score (5 numbers):", i+1);
+        for(int j = 0; j &lt; 5; j ++){
+            scanf("%f", &amp;student[i][j]);
+            sum = sum + student[i][j];
+        }
+        ave = sum / 5;
+        printf("sum = %.2f", sum);
+        printf(" ave = %.2f", ave);
+        printf("\n");
+    }
+    return 0;
+}
+
+  
+
+
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    char arr_a[100];
+    char arr_b[100];
+
+    printf("Input the value of array a:");
+    scanf("%s", arr_a);
+    printf("Input the value of array b:");
+    scanf("%s", arr_b);
+
+    printf("The result is:%s%s\n", arr_a, arr_b);
+}
+
+
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    char s[100];
+    char c;
+    int s_length = 0;
+    int i, j;
+    int k = 1;
+
+    while((c = getchar()) != '!'){
+        s_length ++;
+        s[s_length] = c;
+    }
+
+    i = 1;
+    j = s_length;
+    for(;i &lt; j;){
+        if(s[i] != s[j]){
+            k = 0;
+            break;
+        }
+        i ++;
+        j --;
+    }
+    if(k == 1)
+        printf("yes!\n");
+    else
+        printf("no!\n");
+}
+
+#include&lt;stdio.h&gt;
+
+int main()
+{
+    int input;
+    int a;
+    int m, s, r;
+    int i;
+    int output[100];
+    char c;
+    char output_char[100];
+    
+    c = 'A';
+    for(i = 10; i &lt;= 30; i ++){
+        output_char[i] = c;
+        c ++;
+    }
+    printf("输入一个十进制数:");
+    scanf("%d", &amp;input);
+    printf("输入要转化的进制:(30进制以内)");
+    scanf("%d", &amp;a);
+    m = input;
+    i = 0;
+    for(;s != 0;){
+        s = m / a;
+        r = m % a;
+        i ++;
+        output[i] = r;
+        m = s;
+    }
+    printf("output:");
+    for(;i &gt;= 1; i --){
+        if(output[i] &lt;= 9)
+            printf("%d", output[i]);
+        else
+            printf("%c", output_char[output[i]]);
+    }
+    return 0;
+}
+
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>

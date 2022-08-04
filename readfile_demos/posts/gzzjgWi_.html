@@ -1,0 +1,76 @@
+<p><span style="text-decoration: underline;">p170~p172：</span><br />跳转语句：<br />1、break：对while for switch有效！<br />2、continue：中断当前迭代，但是循环还要继续。因此<span style="text-decoration: underline;">对</span>while for有效，对switch无效！<br />3、goto：不要使用！</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">练习：</span></p>
+<p><span style="color: #ff0000;">5.20</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+            输入一组字符串，例如a b c d e e输出为e
+        若输入为a b c d e f输出为&ldquo;没有单词重复出现~&rdquo;
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> word, lastw;
+    cin </span>&gt;&gt; lastw; <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+    <span style="color: #0000ff;">bool</span> has_sameword = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> word) {
+        </span><span style="color: #0000ff;">if</span> (word ==<span style="color: #000000;"> lastw) {
+            cout </span>&lt;&lt; word &lt;&lt;<span style="color: #000000;"> endl;
+            has_sameword </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        } else {<br />　　　　　　　lastw = word;<br />　　　　 }
+    }
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">has_sameword) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">没有单词重复出现~&rdquo;</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.21</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">bool</span> capital_begin(<span style="color: #0000ff;">string</span><span style="color: #000000;"> word) {
+    </span><span style="color: #0000ff;">if</span> (word[<span style="color: #800080;">0</span>] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> &amp;&amp; word[<span style="color: #800080;">0</span>] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+            输入一组字符串，例如a b c d e e输出为&ldquo;没有以大写字母开头的单词重复出现~&rdquo;
+        若输入为a b c d e F F j k则输出为F，这样的话增加一个条件就好了。
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> word, lastw;
+    cin </span>&gt;&gt; lastw; <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+    <span style="color: #0000ff;">bool</span> has_sameword = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">bool</span> lastW = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> word) {
+        </span><span style="color: #0000ff;">if</span> (word == lastw &amp;&amp;<span style="color: #000000;"> capital_begin(word)) {
+            cout </span>&lt;&lt; word &lt;&lt;<span style="color: #000000;"> endl;
+            has_sameword </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            lastw </span>=<span style="color: #000000;"> word;
+        }
+    }
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">has_sameword) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">没有以大写字母开头的单词重复出现~</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.22</span></p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">int</span> sz = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (sz &lt;= <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        sz </span>=<span style="color: #000000;"> get_size();
+    }</span></pre>
+</div>
+<p>&nbsp;</p>

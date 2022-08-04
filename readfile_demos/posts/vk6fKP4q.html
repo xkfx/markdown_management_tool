@@ -1,0 +1,194 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+#include&lt;stdio.h&gt;
+
+int is_prime(int n)
+{
+    for(int i = 2; i &lt;= n/2; i ++)
+        if(n % 2 == 0)
+            return 0;
+    return 1;
+}
+
+int main()
+{
+    int n;
+    
+    printf("Enter a number(exit when n&lt;=1):");
+    scanf("%d", &amp;n);
+    if(is_prime(n) &amp;&amp; n &gt; 1)
+        printf("%d is a prime number", n);
+    else if(n &gt; 1)
+        printf("%d is not a prime number", n);
+    else
+        ;
+    
+    return 0;
+}
+
+
+#include&lt;stdio.h&gt;
+
+int is_prime(int n)
+{
+    for(int i = 2; i &lt;= n/2; i ++)
+        if(n % 2 == 0)
+            return 0;
+    return 1;
+}
+int main()
+
+{
+    int n;
+    
+    printf("Enter a even number(n&gt;=6):");
+    scanf("%d", &amp;n);
+    if(n &lt; 6 || n%2 != 0)
+        printf("error: illegal input\n");
+    else
+        for(int i = 2; i &lt;= n/2; i ++)
+            if(is_prime(i) &amp;&amp; is_prime(n-i))
+                printf("%d = %d + %d\n", n, i, n-i);
+    return 0;
+}
+
+
+
+#include&lt;stdio.h&gt;
+int fac(int x)
+{
+    if(x == 1)
+        return 1;
+    else
+        return x*fac(x-1);
+}
+int main()
+{
+    int n, m;
+    int result;
+    
+    printf("Enter the value of n and m:");
+    scanf("%d %d", &amp;n, &amp;m);
+    result = fac(n)/(fac(n-m)*fac(m));
+    printf("Result is %d\n", result);
+    return 0;
+}
+
+
+#include&lt;stdio.h&gt;
+
+void selectMaxAndMin(int A[][4], int row, int c)
+//int A[][]: array type has incomplete element type ?
+{
+    int max, min;
+    
+    max = min = A[0][0];
+    for(int i = 0; i &lt; row; i ++)
+        for(int j = 0; j &lt; c; j ++){
+            if(A[i][j] &gt; max)
+                max = A[i][j];
+            if(A[i][j] &lt; min)
+                min = A[i][j];
+        }
+    printf("max = %d, min = %d\n", max, min);
+}
+
+void main()
+{
+    int A[4][4] = {1, 5, 3, 6,
+                   2, 4, 5, 7,
+                   3, 9, 8, 0,
+                   4, 1, 9, 5};
+    
+    selectMaxAndMin(A, 4, 4);
+}
+
+
+#include&lt;stdio.h&gt;
+
+char trans(char c)
+{
+    if(c &gt;= 'a' &amp;&amp; c &lt;= 'z' || c &gt;= 'A' &amp;&amp; c &lt;= 'Z')
+        return c+4;
+    else
+        return c;
+}
+void main()
+{
+    char s[100];
+    char c;
+    int i;
+    
+    i = 0;
+    while((c = getchar()) != '\n')
+        s[i++] = trans(c);
+    s[i] = '\0';
+    printf("%s\n", s);
+}
+
+#include&lt;stdio.h&gt;
+#define ROW 2
+#define COL 3
+
+void trans(int arr[100][100])
+//int arr[][100] 无法正常传值？？？？
+{
+    int k = 0;
+    
+    printf("transArr:\n");
+    for(int i = 0; i &lt;= COL; i ++){
+        for(int j = 0; j &lt;= ROW; j ++)
+            printf("%5d", arr[j][i]);
+        printf("\n");
+    }
+} 
+void main()
+{
+    int oriArr[100][100];
+    
+    printf("Enter the value of oreArr:\n");
+    for(int i = 0; i &lt;= ROW; i ++)
+        for(int j = 0; j &lt;= COL; j ++){
+            printf("oriArr[%d][%d]=", i, j);
+            scanf("%d", &amp;oriArr[i][j]);
+        }
+    printf("oriArr:\n");
+    for(int i = 0; i &lt;= ROW; i ++){
+        for(int j = 0; j &lt;= COL; j ++)
+            printf("%5d", oriArr[i][j]);
+        printf("\n");
+    }
+    trans(oriArr);
+}
+
+
+
+#include&lt;stdio.h&gt;
+
+char s[100];
+void My_char(int i)
+{
+    if(i == 0)
+        printf("%c", s[0]);
+    else{
+        printf("%c", s[i]);
+        My_char(i-1);
+    }
+}
+int main()
+{
+    char c;
+    int i;
+    
+    i = 0;
+    printf("Enter a String:\n");
+    while((c = getchar()) != '\n')
+        s[i++] = c;
+    printf("After be reverse:\n");
+    My_char(i-1);
+
+}
+
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>

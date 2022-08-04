@@ -1,0 +1,157 @@
+<p>将数据可视化有许多选择：</p>
+<ol>
+<li>图的类型</li>
+<li>定制化方式</li>
+</ol>
+<p>选择什么样的表现方式通常取决于：</p>
+<ol>
+<li>数据</li>
+<li>你想表达什么</li>
+</ol>
+<p>&nbsp;</p>
+<h3 class="exercise--title">1、Labels</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180116105147178-1813682555.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Basic scatter plot, log scale</span>
+<span style="color: #000000;">plt.scatter(gdp_cap, life_exp)
+plt.xscale(</span><span style="color: #800000;">'</span><span style="color: #800000;">log</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Strings</span>
+xlab = <span style="color: #800000;">'</span><span style="color: #800000;">GDP per Capita [in USD]</span><span style="color: #800000;">'</span><span style="color: #000000;">
+ylab </span>= <span style="color: #800000;">'</span><span style="color: #800000;">Life Expectancy [in years]</span><span style="color: #800000;">'</span><span style="color: #000000;">
+title </span>= <span style="color: #800000;">'</span><span style="color: #800000;">World Development in 2007</span><span style="color: #800000;">'</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Add axis labels</span>
+<span style="color: #000000;">plt.xlabel(xlab)
+plt.ylabel(ylab)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Add title</span>
+<span style="color: #000000;">plt.title(title)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> After customizing, display the plot</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;</p>
+<h3>2、Ticks</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180116105428412-1178385121.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Scatter plot</span>
+<span style="color: #000000;">plt.scatter(gdp_cap, life_exp)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Previous customizations</span>
+plt.xscale(<span style="color: #800000;">'</span><span style="color: #800000;">log</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+plt.xlabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">GDP per Capita [in USD]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.ylabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">Life Expectancy [in years]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.title(</span><span style="color: #800000;">'</span><span style="color: #800000;">World Development in 2007</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Definition of tick_val and tick_lab</span>
+tick_val = [1000,10000,100000<span style="color: #000000;">]
+tick_lab </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">1k</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">10k</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">100k</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Adapt the ticks on the x-axis</span>
+<span style="color: #000000;">plt.xticks(tick_val, tick_lab)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> After customizing, display the plot</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;</p>
+<h3>3、Sizes</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180116110355881-413537135.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy as np</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Store pop as a numpy array: np_pop</span>
+np_pop =<span style="color: #000000;"> np.array(pop)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Double np_pop</span>
+np_pop *= 2
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Update: set s argument to np_pop</span>
+plt.scatter(gdp_cap, life_exp, s =<span style="color: #000000;"> np_pop)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Previous customizations</span>
+plt.xscale(<span style="color: #800000;">'</span><span style="color: #800000;">log</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+plt.xlabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">GDP per Capita [in USD]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.ylabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">Life Expectancy [in years]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.title(</span><span style="color: #800000;">'</span><span style="color: #800000;">World Development in 2007</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.xticks([</span>1000, 10000, 100000],[<span style="color: #800000;">'</span><span style="color: #800000;">1k</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">10k</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">100k</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Display the plot</span>
+plt.show()</pre>
+</div>
+<p>之所以把 pop 换成 np_pop 是因为 np_pop 可以方便的整体数学运算， list 不具备这样的性质。</p>
+<p>&nbsp;</p>
+<h3>5、Colors</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180116112411178-813444210.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Specify c and alpha inside plt.scatter()</span>
+plt.scatter(x = gdp_cap, y = life_exp, s = np.array(pop) * 2,<strong> c = col, alpha = 0.8</strong><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Previous customizations</span>
+plt.xscale(<span style="color: #800000;">'</span><span style="color: #800000;">log</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+plt.xlabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">GDP per Capita [in USD]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.ylabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">Life Expectancy [in years]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.title(</span><span style="color: #800000;">'</span><span style="color: #800000;">World Development in 2007</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.xticks([</span>1000,10000,100000], [<span style="color: #800000;">'</span><span style="color: #800000;">1k</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">10k</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">100k</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Show the plot</span>
+plt.show()</pre>
+</div>
+<p>c 设置颜色， alpha 设置透明度。</p>
+<p>&nbsp;</p>
+<h3>6、定制化补充</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180116113022834-1338273825.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Scatter plot</span>
+plt.scatter(x = gdp_cap, y = life_exp, s = np.array(pop) * 2, c = col, alpha = 0.8<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Previous customizations</span>
+plt.xscale(<span style="color: #800000;">'</span><span style="color: #800000;">log</span><span style="color: #800000;">'</span><span style="color: #000000;">) 
+plt.xlabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">GDP per Capita [in USD]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.ylabel(</span><span style="color: #800000;">'</span><span style="color: #800000;">Life Expectancy [in years]</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.title(</span><span style="color: #800000;">'</span><span style="color: #800000;">World Development in 2007</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.xticks([</span>1000,10000,100000], [<span style="color: #800000;">'</span><span style="color: #800000;">1k</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">10k</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">100k</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Additional customizations</span>
+<strong>plt.text(1550, 71, <span style="color: #800000;">'</span><span style="color: #800000;">India</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.text(</span>5700, 80, <span style="color: #800000;">'</span><span style="color: #800000;">China</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span></strong><span style="color: #008000;">#</span><span style="color: #008000;"> Add grid() call</span>
+<span style="color: #000000;"><strong>plt.grid(True)</strong> 
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Show the plot</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;</p>
+<h3>附加</h3>
+<p>什么时候用对数坐标？来自<a href="https://zhidao.baidu.com/question/492722254.html?qbl=relate_question_1&amp;word=%B6%D4%D7%F8%B1%EA%C8%A1%B6%D4%CA%FD" target="_blank">百度百科</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">一、普通坐标与对数坐标
+</span>1<span style="color: #000000;">、普通坐标的刻度之间的间隔距离与价格成正比。
+即在普通坐标系中，所有当日涨跌相等的
+K 线长度是一样的。
+比如所有自开盘至收盘上涨 </span>1<span style="color: #000000;"> 元钱的 K
+线具有同样的长度。但是在对数坐标系中，坐标刻度之间的间隔距离与价格的对数成正比。即当日涨跌幅（ </span>%<span style="color: #000000;"> ）相等的 K
+线才具有同样的长度。
+如所有自开盘至收盘上涨 </span>10%<span style="color: #000000;"> 的 K
+线在对数坐标中长度是一样的。
+</span>2、对数坐标与普通坐标的区别是：假定股票连续上涨，从 5 元涨到 11 元，每天涨 1<span style="color: #000000;">
+元，在普通坐标中画出的是 </span>6 条一样长的阳线，而在对数坐标中，由于第一根阳线从 5 元到 6 元涨幅为 20% ，最后一根阳线从 10<span style="color: #000000;">
+元到 </span>11 元涨幅为 10%<span style="color: #000000;">
+，所以其最后一根阳线的长度是第一根的一半。我们推荐使用对数坐标系，
+因为对数坐标系能够反映股票的实际盈亏。
+二、普通坐标及对数坐标画线的注意事项
+</span>1<span style="color: #000000;">、画直线必须用对数坐标
+？因为普通坐标表示的是价格变化的绝对值，即今天比昨天涨了多少点，而对数坐标表示的是价格变化的相对强度，即今天比昨天涨了</span>%几。通常情况下，只有在对数坐标上才能看到平行的通道线（比较直观），而在普通坐标上的通道线并不是直线，实际是2个指数函数，是曲线。2<span style="color: #000000;">、画黄金分割线做水平黄金分割线一定要用普通坐标
+，如果用对数坐标的话，做出的是对数坐标的黄金分割，而不是价格的黄金分割趋势线</span>+<span style="color: #000000;">对数坐标的妙用
+趋势线作为技术分析的重要工具,有着非常好的实战效果,但在国人运用过程中,不少人都忽略了一项重要因素:
+其运用于研判比较长时间且价格变化比较大的K图时,应选取对数坐标.
+反之则可用普通坐标.
+主要原因在于对数坐标在反映价格变化时是以比例为基数,而非简单的算术值.这一点,需要引起足够重视,
+而且在对趋势线是否被穿越的观察上,使用对数坐标的K图比普通坐标的K图要敏感得多!尤其是在较长周期和价格变动比较大的情况下!
+简单举例如下(观察两种坐标下趋势线的不同,尤其是跌穿趋势的关键位置和时间点):
+可以很清楚地发现,如果作为中长线的波段交易者,运用对数坐标的趋势线来判断趋势完结和反抽位置要比运用普通坐标来得及时得多.
+由普通坐标与对数坐标的原理可知，短周期内的普通坐标与对数坐标的差异很小，但长周期内普通坐标与对数坐标可能会差异比较大，有些在普通坐标上没有规律的图形到对数坐标上可能极有规律。</span></pre>
+</div>
+<p>&nbsp;</p>

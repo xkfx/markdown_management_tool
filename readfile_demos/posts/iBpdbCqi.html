@@ -1,0 +1,46 @@
+<h3>【常用Mapper XML标签】</h3>
+<p>1、基本的：select、insert、update 等</p>
+<p>2、可读性、方便拼SQL：where、set、trim</p>
+<p>3、减少重复：sql</p>
+<p>4、逻辑控制：if、choose when</p>
+<p>5、映射：collection、association</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170710112234243-1242113050.png" alt="" width="765" height="425" /></p>
+<p>&nbsp;</p>
+<h3>【自动回复之实现随机回复】</h3>
+<p>内容来自 imooc 视屏教程：<a href="http://www.imooc.com/video/4721" target="_blank">http://www.imooc.com/video/4721</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709182753697-392944403.png" alt="" width="525" height="309" /></p>
+<p>言下之意就是发送相同的指令获取不同的回复。</p>
+<p>&nbsp;</p>
+<p>1、最简单的方法就是用一张表存， 把某一指令对应的回复字段 全部查出来，随机选择一个回复过去。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709183017478-539577349.png" alt="" width="602" height="129" /></p>
+<p>&nbsp;</p>
+<p>2、但是这样的表 在设计上不太好 。。不符合范式 。。。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709184317618-742780255.png" alt="" width="434" height="80" /></p>
+<p>类似这种一对多的关系通常需要拆表，一张表专门存指令：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709184455900-828099227.png" alt="" width="451" height="128" /></p>
+<p>另一张表存取指令对应的内容（一条指令可能对应多个</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709184616790-1423824836.png" alt="" width="348" height="81" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709184836947-932069165.png" alt="" />对应多条<img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709184903962-446810515.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>3、&ldquo;一&rdquo;的那个表被称为<strong>主表</strong>，对应的&ldquo;多&rdquo;被称为<strong>子表，相应的，需要在Java代码中为它们添加实体类，如下所示：</strong></p>
+<p>&nbsp;（略。。Command类需要有一个ContentList）</p>
+<p>&nbsp;</p>
+<p>4、修改.xml 与DAO&nbsp;</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="queryCommandList"</span><span style="color: #ff0000;"> parameterType</span><span style="color: #0000ff;">="com.imooc.bean.Command"</span><span style="color: #ff0000;"> resultMap</span><span style="color: #0000ff;">="CommandResult"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    select a.ID, a.NAME, a.DESCRIPTION, b.ID, b.CONTENT, b.COMMAND_ID 
+    from COMMAND a left join COMMAND_CONTENT b
+    on a.ID=b.COMMAND_ID
+    where 1=1
+    </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">if </span><span style="color: #ff0000;">test</span><span style="color: #0000ff;">="name != null and !&amp;quot;&amp;quot;.equals(name.trim())"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+        and a.NAME=#{name}</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">if</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">if </span><span style="color: #ff0000;">test</span><span style="color: #0000ff;">="description != null and !&amp;quot;&amp;quot;.equals(description.trim())"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+        and a.DESCRIPTION like '%' #{description} '%'</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">if</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170710101336650-1836535968.png" alt="" width="1016" height="156" /></p>
+<p>上述内容有错 其中一个id 要起别名 否则会冲突。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170710112030603-1844409135.png" alt="" /><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170710112036478-1635976751.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>5、修改Service...</p>
+<p>&nbsp;</p>

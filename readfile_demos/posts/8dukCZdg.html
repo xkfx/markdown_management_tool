@@ -1,0 +1,155 @@
+<p><span style="background-color: #ffff99;">p135~p140：</span><br />1、<strong>位运算符</strong>。作用于整数类型的运算对象，并把运算对象看成是<strong>二进制的集合</strong>，提供检查和设置二进制位的功能。</p>
+<p>&nbsp;</p>
+<p>2、bitest：一种可表示任意大小的二进制位集合的标准库类型。</p>
+<p>&nbsp;</p>
+<p>3、关于符号位如何处理没有明确的规定，所以强烈建议<strong>仅</strong>将位运算符用于处理<strong>无符号类型</strong>。</p>
+<p>&nbsp;</p>
+<p>4、移位运算符：对运算对象执行基于二进制位的移动操作。（<strong>移向边界的位被舍弃掉</strong>）</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    unsigned </span><span style="color: #0000ff;">int</span> bit1 = <span style="color: #800080;">1</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 00000001</span>
+    cout &lt;&lt; bit1 &lt;&lt; endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 1</span>
+    unsigned <span style="color: #0000ff;">int</span> bit2 = bit1 &lt;&lt; <span style="color: #800080;">1</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 00000010，bit1的值并没有改变</span>
+    cout &lt;&lt; bit2 &lt;&lt; endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 2</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、<strong>位求反运算符</strong>。ps：求无符号类型范围的好办法</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    unsigned </span><span style="color: #0000ff;">int</span> bit1 = <span style="color: #800080;">0</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 00000000...0</span>
+    cout &lt;&lt; bit1 &lt;&lt; endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 0</span>
+    unsigned <span style="color: #0000ff;">int</span> bit2 = ~bit1;    <span style="color: #008000;">//</span><span style="color: #008000;"> 1111111...1</span>
+    cout &lt;&lt; bit2 &lt;&lt; endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 4294967295</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>6、位与，位或，位异或。（相异为1，否则就是0）</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    unsigned </span><span style="color: #0000ff;">int</span> bit1 = <span style="color: #800080;">1</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 00000000..01</span>
+    cout &lt;&lt; bit1 &lt;&lt; endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 1</span>
+    unsigned <span style="color: #0000ff;">int</span> bit2 = <span style="color: #800080;">2</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 00000000..10</span>
+    cout &lt;&lt; bit2 &lt;&lt; endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 2</span>
+    unsigned <span style="color: #0000ff;">int</span> bit3 = bit1 ^ bit2;    <span style="color: #008000;">//</span><span style="color: #008000;"> 00000000..11</span>
+    cout &lt;&lt; bit3 &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">7、p137课本示例。</span>（修改、查看27号同学的及格情况）</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    unsigned </span><span style="color: #0000ff;">long</span> quiz1 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> unsigned long类型在任何机器上至少有32位</span>
+    quiz1 |= <span style="color: #800080;">1UL</span> &lt;&lt; <span style="color: #800080;">27</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 1UL是unsigned long类型的整数字面值1
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 修改为原始值</span>
+    quiz1 &amp;= ~(<span style="color: #800080;">1UL</span> &lt;&lt; <span style="color: #800080;">27</span><span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 检查学生27测试的情况到底怎么样</span>
+    <span style="color: #0000ff;">bool</span> status = quiz1 &amp; (<span style="color: #800080;">1UL</span> &lt;&lt; <span style="color: #800080;">27</span><span style="color: #000000;">);
+    cout </span>&lt;&lt; status &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">p139</span><br />1、sizeof的作用：返回一条表达式或者一个类型名字所占的字节数，返回值类型为<strong>size_t</strong>。</p>
+<p>&nbsp;</p>
+<p>2、具体用法：<strong>sizeof(</strong><em>type</em><strong>)</strong>或者<strong>sizeof </strong><em>expr</em>。</p>
+<p>&nbsp;</p>
+<p>3、特点：1）满足右结合律。2）不实际求运算对象的值。（因此运算对象可以是<strong>解引用无效指针</strong>）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">4、应用实例：求数组中元素的个数。</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> ia[] = {<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span><span style="color: #000000;">};
+    constexpr size_t sz </span>= <span style="text-decoration: underline;"><strong><span style="color: #0000ff; text-decoration: underline;">sizeof</span>(ia)/<span style="color: #0000ff; text-decoration: underline;">sizeof</span>(*</strong></span><span style="color: #000000;"><span style="text-decoration: underline;"><strong>ia)</strong></span>;
+    </span><span style="color: #0000ff;">int</span> arr2[sz];    <span style="color: #008000;">//</span><span style="color: #008000;"> 正确：sizeof返回一个常量表达式</span>
+    cout &lt;&lt; sz &lt;&lt; std::endl;    <span style="color: #008000;">//</span><span style="color: #008000;"> 5</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.25</span><br /><em>'q'：01110001</em><br /><em>~'q'：10001110</em><br /><em>~'q'&lt;&lt;6：10000000</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.26</span></p>
+<p><br /><span style="background-color: #ffff99;">练习 4.27</span><br /><em>ull = 3 // 000...0000011</em><br /><em>ul2 = 7 // 000...0000111</em><br /><em>a 000...0000011</em><br /><em>b 000...0000111</em><br /><em>c 000...0000001</em><br /><em>d 000...0000001</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.28</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout 
+    </span>&lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">bool</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">char</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(wchar_t) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(char16_t) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(char32_t) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">short</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">int</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">long</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">long</span> <span style="color: #0000ff;">long</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">float</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">double</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt; <span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">long</span> <span style="color: #0000ff;">double</span>) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>
+    &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+1
+1
+2
+2
+4
+2
+4
+4
+8
+4
+8
+12
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.29</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> x[<span style="color: #800080;">10</span>]; <span style="color: #0000ff;">int</span> *p =<span style="color: #000000;"> x;
+    cout </span>&lt;&lt; <span style="color: #0000ff;">sizeof</span>(x)/<span style="color: #0000ff;">sizeof</span>(*x) &lt;&lt;<span style="color: #000000;"> endl; // 10
+    cout </span>&lt;&lt; <span style="color: #0000ff;">sizeof</span>(p)/<span style="color: #0000ff;">sizeof</span>(*p) &lt;&lt;<span style="color: #000000;"> endl; // 1
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p><span style="background-color: #ffff99;">&nbsp;</span></p>
+<p><span style="background-color: #ffff99;">练习 4.30</span></p>
+<p><em>a sizeof(x + y)</em></p>
+<p><em>b sizeof(p-&gt;men[i])</em></p>
+<p><em>c (sizeof a) &lt; b</em></p>
+<p><em>d sizeof (f())</em></p>

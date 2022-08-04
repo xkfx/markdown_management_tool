@@ -1,0 +1,482 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p>Notes</p>
+<ol>
+<li><a href="#a1">js与html</a></li>
+<li><a href="#a2">DOM</a></li>
+<li><a href="#a3">在DOM树中移动</a></li>
+<li><a href="#a4">在DOM中寻找元素</a></li>
+<li><a href="#a5">改变Document</a></li>
+<li><a href="#a6">创建节点</a></li>
+<li><a href="#a7">html元素属性</a></li>
+<li><a href="#a8">布局</a></li>
+<li><a href="#a9">style</a></li>
+<li><a href="#a10">CSS选择器</a></li>
+<li><a href="#a11">动画</a></li>
+</ol></li>
+<li>
+<p>Exercises</p>
+<ol>
+<li><a href="#b1">Build a table</a></li>
+<li><a href="#b2">Elements by tag name</a></li>
+<li><a href="#b3">The cat</a></li>
+</ol></li>
+</ul>
+</div>
+<h2>Notes</h2>
+<p><a name="a1"></a>1、js与html</p>
+<p>在html中运行js的3种方式：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">&lt;!--</span><span style="color: #008000;">1</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Testing alert<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">alert(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">hello!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">2</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Testing alert<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="code/hello.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">3</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">onclick</span><span style="color: #0000ff;">="alert('Boom!');"</span><span style="color: #0000ff;">&gt;</span>DO NOT PRESS<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>js在浏览器中解释、运行，浏览器对js具有诸多限制，例如不允许js访问本地文件、不能修改任何和所访问网页无关的东西。因此js仿佛是在一个用钢板围起来的沙盒里活动，而html会被浏览器获取、解析为文档模型（一种特殊的数据结构），浏览器依据这个文档模型来渲染画面，这个文档模型是在js沙盒范围内的东西，js可以自由地读取和修改它。</p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、DOM</p>
+<p>html被解析为一种叫文档对象模型（Document Object Model）的东西，浏览器就是依据它来进行页面渲染的。全局绑定document是我们访问这些文档对象的入口，它的documentElement属性指向html标签所对应的对象，还有head和body属性，分别指向各种对应的对象。DOM是一种树形结构，document.documentElement即是根节点。再比如说document.body也是一个节点，它的孩子可以是元素节点，也可能是一段文本或者评论节点。</p>
+<p>每个DOM节点对象都有一个nodeType属性，该属性包含标识节点类型的编码（数字）。元素的编码为Node.ELEMENT_NODE，该常量的真实值为数字1。 表示文档中一段文本的文本节点编码是3（Node.TEXT_NODE）。注释的编码为8（Node.COMMENT_NODE）。</p>
+<p>DOM的可视化：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201809/1042431-20180908104242026-1060071140.png" alt="" /></p>
+<p>叶子是文本节点，箭头则表明了父子关系。</p>
+<p>DOM并非是专门为js设计的，它最开始是想成为xml一样中立的东西。所以它本身和js集成得并不是特别好。一个典型的例子是childNodes属性，它类似array，却又不是真正的array，而是NodeList类型，所以它并不支持slice和map。再比如，DOM并没有提供一次性创建节点并添加子节点、属性的方法，而是必须要首先创建它，然后一个一个地添加子节点和属性。</p>
+<p>当然，这些缺点都不是致命的，我们显然可以自定义函数来封装一些操作，以便更好地和DOM交互。（已经有许多现成的库做这件事情）</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、在DOM树中移动</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201809/1042431-20180908111950824-1274947015.png" alt="" /></p>
+<p>如果属性对应的节点不存在，则为null。</p>
+<p>有个与childNodes类似的children属性，不过children属性只包含元素子女（编码为1的节点），当你对文本节点不感兴趣的时候这通常是有用的。可以通过递归来遍历DOM树，因为childNodes不是真正的数组，因此只能通过常规的循环来遍历它，不能用for/of循环。</p>
+<div class="cnblogs_code">
+<pre>&lt;!doctype html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;My home page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;My home page&lt;/h1&gt;
+    &lt;p&gt;Hello, I am Marijn and <span style="color: #0000ff;">this</span> is my home page.&lt;/p&gt;
+    &lt;p&gt;I also wrote a book!<span style="color: #000000;"> Read it
+      </span>&lt;a href="http://eloquentjavascript.net"&gt;here&lt;/a&gt;.&lt;/p&gt;
+    
+    &lt;script type="text/javascript"&gt;
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 递归，深度优先搜索DOM树</span>
+        <span style="color: #0000ff;">function</span><span style="color: #000000;"> talksAbout(node, string) {
+          </span><span style="color: #0000ff;">if</span> (node.nodeType ==<span style="color: #000000;"> Node.ELEMENT_NODE) {
+            </span><span style="color: #0000ff;">for</span> (let i = 0; i &lt; node.childNodes.length; i++<span style="color: #000000;">) {
+              </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (talksAbout(node.childNodes[i], string)) {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+              }
+            }
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+          } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (node.nodeType ==<span style="color: #000000;"> Node.TEXT_NODE) {
+              </span><span style="color: #008000;">//</span><span style="color: #008000;"> text节点的nodeValue储存着显示文本</span>
+            <span style="color: #0000ff;">return</span> node.nodeValue.indexOf(string) &gt; -1<span style="color: #000000;">;
+          }
+        }
+        
+        console.log(talksAbout(document.body, </span>"book"<span style="color: #000000;">));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、在DOM中寻找元素</p>
+<p>根据子元素的标签类型：</p>
+<div class="cnblogs_code">
+<pre>let link = document.body.getElementsByTagName("a")[0<span style="color: #000000;">];
+console.log(link.href);</span></pre>
+</div>
+<p>根据id：</p>
+<div class="cnblogs_code">
+<pre>&lt;p&gt;My ostrich Gertrude:&lt;/p&gt;
+&lt;p&gt;&lt;img id="gertrude" src="img/ostrich.png"&gt;&lt;/p&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+  let ostrich </span>= document.getElementById("gertrude"<span style="color: #000000;">);
+  console.log(ostrich.src);
+</span>&lt;/script&gt;</pre>
+</div>
+<p>类似的还有getElementsByClassName</p>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、改变Document&nbsp;</p>
+<p>remove，移除元素：</p>
+<div class="cnblogs_code">
+<pre>        &lt;p&gt;One&lt;/p&gt;
+        &lt;p&gt;Two&lt;/p&gt;
+        &lt;p&gt;Three&lt;/p&gt;
+        
+        &lt;script&gt;<span style="color: #000000;">
+          let paragraphs </span>= document.body.getElementsByTagName("p"<span style="color: #000000;">);
+          paragraphs[</span>0<span style="color: #000000;">].remove();
+          </span><span style="color: #008000;">//</span><span style="color: #008000;"> two/three</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>appendChild，用于插入元素到某个父元素的孩子元素的最后一位：</p>
+<div class="cnblogs_code">
+<pre>        &lt;p&gt;One&lt;/p&gt;
+        &lt;p&gt;Two&lt;/p&gt;
+        &lt;p&gt;Three&lt;/p&gt;
+        
+        &lt;script&gt;<span style="color: #000000;">
+          let paragraphs </span>= document.body.getElementsByTagName("p"<span style="color: #000000;">);
+          document.body.appendChild(paragraphs[</span>1<span style="color: #000000;">]);
+          </span><span style="color: #008000;">//</span><span style="color: #008000;"> One/Three/Two</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>insertBefore，一个节点只能存在于文档中的一个地方，插入段落3会导致它在原来的位置移除，再被插入到相应位置：</p>
+<div class="cnblogs_code">
+<pre>        &lt;p&gt;One&lt;/p&gt;
+        &lt;p&gt;Two&lt;/p&gt;
+        &lt;p&gt;Three&lt;/p&gt;
+        
+        &lt;script&gt;<span style="color: #000000;">
+          let paragraphs </span>= document.body.getElementsByTagName("p"<span style="color: #000000;">);
+          document.body.insertBefore(paragraphs[</span>2], paragraphs[0<span style="color: #000000;">]);
+          </span><span style="color: #008000;">//</span><span style="color: #008000;"> insertBefore插入到某某之前，这里是把three插到one之前</span>
+          <span style="color: #008000;">//</span><span style="color: #008000;"> Three/One/Two</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>【All operations that insert a node somewhere will, as a side effect, cause it to be removed from its current position (if it has one).】</p>
+<p>类似的还有replaceChild ：</p>
+<div class="cnblogs_code">
+<pre>        &lt;p&gt;One&lt;/p&gt;
+        &lt;p&gt;Two&lt;/p&gt;
+        &lt;p&gt;Three&lt;/p&gt;
+        
+        &lt;script&gt;<span style="color: #000000;">
+          let paragraphs </span>= document.body.getElementsByTagName("p"<span style="color: #000000;">);
+          document.body.replaceChild(paragraphs[</span>0], paragraphs[1<span style="color: #000000;">]);
+          </span><span style="color: #008000;">//</span><span style="color: #008000;"> 第一个作为新元素，第二个是被淘汰的旧元素</span>
+          <span style="color: #008000;">//</span><span style="color: #008000;"> One/Three</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6、创建节点</p>
+<p>点击按钮后将所有图片替换成其<code>alt属性中的文字：</code></p>
+<div class="cnblogs_code">
+<pre>        &lt;p&gt;The &lt;img src="img/cat.png" alt="Cat"&gt; <span style="color: #0000ff;">in</span><span style="color: #000000;"> the
+            </span>&lt;img src="img/hat.png" alt="Hat"&gt;.&lt;/p&gt;
+
+        &lt;p&gt;&lt;button <strong>onclick="replaceImages()"</strong>&gt;Replace&lt;/button&gt;&lt;/p&gt;
+
+        &lt;script&gt;
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> replaceImages() {
+<strong>                let images </strong></span><strong>= document.body.getElementsByTagName("img"<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> image的长度内容都是随着document动态变化的</span>
+                <span style="color: #0000ff;">for</span>(let i = images.length - 1; i &gt;= 0; i--<span style="color: #000000;">) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 所以才要从最后一个元素开始替换，这样移除元素</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 的时候才不会影响到访问其余兄弟元素的下标值</span>
+                    let image =<span style="color: #000000;"> images[i];
+                    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(image.alt) {
+                        let text </span>=<span style="color: #000000;"> document.createTextNode(image.alt);
+                        image.parentNode.replaceChild(text, image);
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 必须获得父元素的引用才能替换孩子元素</span>
+<span style="color: #000000;">                    }
+                }
+
+                </span></strong><span style="color: #008000;">//</span><span style="color: #008000;"> 主题无关&darr;：从DOM获取一个静态的数组Array.from</span>
+                let arrayish =<span style="color: #000000;"> {
+                    </span>0: "one"<span style="color: #000000;">,
+                    </span>1: "two"<span style="color: #000000;">,
+                    length: </span>2<span style="color: #000000;">
+                };
+                let array </span>=<span style="color: #000000;"> Array.from(arrayish);
+                console.log(array.map(s </span>=&gt;<span style="color: #000000;"> s.toUpperCase()));
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["ONE", "TWO"]</span>
+<span style="color: #000000;">            }
+        </span>&lt;/script&gt;</pre>
+</div>
+<p>document.createElement(tag name)返回一个相应类型的空元素，示例如下：</p>
+<div class="cnblogs_code">
+<pre>        &lt;blockquote id="quote"&gt;<span style="color: #000000;">
+            No book can ever be finished. While working on it we learn just enough to find it immature the moment we turn away from it.
+        </span>&lt;/blockquote&gt;
+
+        &lt;script&gt;
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个type类型的空元素</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> children是它的孩子节点，</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 该函数可以接受n个参数</span>
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> elt(type, ...children) {
+                let node </span>=<span style="color: #000000;"> document.createElement(type);
+                </span><span style="color: #0000ff;">for</span><span style="color: #000000;">(let child of children) {
+                    </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">typeof</span> child != "string"<span style="color: #000000;">) node.appendChild(child);
+                    </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> node.appendChild(document.createTextNode(child));
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果是string类型就将其转换为一个文本节点再插入</span>
+<span style="color: #000000;">                }
+                </span><span style="color: #0000ff;">return</span> node; <span style="color: #008000;">//</span><span style="color: #008000;"> 返回这个创建好的节点</span>
+<span style="color: #000000;">            }
+
+            document.getElementById(</span>"quote"<span style="color: #000000;">).appendChild(
+                elt(</span>"footer"<span style="color: #008000;">/*</span><span style="color: #008000;">type</span><span style="color: #008000;">*/</span>, "&mdash;"<span style="color: #008000;">/*</span><span style="color: #008000;">child-0</span><span style="color: #008000;">*/</span><span style="color: #000000;">,
+                    elt(</span>"strong", "Karl Popper")<span style="color: #008000;">/*</span><span style="color: #008000;">child-1</span><span style="color: #008000;">*/</span><span style="color: #000000;">,
+                    </span>", preface to the second editon of "<span style="color: #008000;">/*</span><span style="color: #008000;">child-2</span><span style="color: #008000;">*/</span><span style="color: #000000;">,
+                    elt(</span>"em", "The Open Society and Its Enemies")<span style="color: #008000;">/*</span><span style="color: #008000;">child-3</span><span style="color: #008000;">*/</span><span style="color: #000000;">,
+                    </span>", 1950"<span style="color: #008000;">/*</span><span style="color: #008000;">child-4</span><span style="color: #008000;">*/</span><span style="color: #000000;">));
+        </span>&lt;/script&gt;</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201809/1042431-20180908162513581-1002601341.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、html元素属性</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201809/1042431-20180908163412922-1966159868.png" alt="" width="550" height="63" /></p>
+<p>不仅可以在js中设置、获取元素的标准属性，还可以用getAttribute和setAttribute方法设置<strong>自定义的属性</strong></p>
+<p>（诸如alt、href等标准属性，直接node.alt就可以访问）</p>
+<div class="cnblogs_code">
+<pre>        &lt;p data-classified="secret"&gt;The launch code is 00000000.&lt;/p&gt;
+        &lt;p data-classified="unclassified"&gt;I have two feet.&lt;/p&gt;
+
+        &lt;script&gt;<span style="color: #000000;">
+            let paras </span>= document.body.getElementsByTagName("p"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span>(let para of Array.from(paras)) { <span style="color: #008000;">//</span><span style="color: #008000;"> 将动态的nodelist转化为静态的数组</span>
+                <span style="color: #0000ff;">if</span>(para.getAttribute("data-classified") == "secret"<span style="color: #000000;">) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 推荐用前缀修饰自定义属性，这样就不会与标准属性冲突了</span>
+<span style="color: #000000;">                    para.remove();
+                }
+            }
+        </span>&lt;/script&gt;</pre>
+</div>
+<p>getAttribute和setAttribute和属于通用方法，也可以用来访问标准属性。</p>
+<p>&nbsp;</p>
+<p><a name="a8"></a>8、布局</p>
+<p>访问元素所占空间大小：</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="border: 3px solid red"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            I'm boxed in
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+            let para </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.body.getElementsByTagName(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)[</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">];
+            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">clientHeight:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, para.clientHeight); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 21 不包括边框</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">offsetHeight:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, para.offsetHeight); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 27 加上边框 2*3px        </span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>访问元素位置最有效的方法：</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="border: 3px solid red"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            I'm boxed in
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+            let para </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.body.getElementsByTagName(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)[</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">];
+            let boundingClientRect </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> para.getBoundingClientRect();
+            </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> html元素左上角相对于浏览器显示屏的准确位置</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">top:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, boundingClientRect.top); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 16</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">buttom:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, boundingClientRect.buttom); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> undefined</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">left:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, boundingClientRect.left); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 8</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">right:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, boundingClientRect.right);    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 556</span>
+            
+            <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 相对于document的位置，需要加上滚动条位置</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">pageXOffset:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, window.pageXOffset);
+            console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">pageYOffset:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, window.pageYOffset);
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span><span>进行文档布局需要做很多工作。</span><span>为了速度，浏览器引擎不会在每次更改文档时立即重新布局文档，而是尽可能长时间的等待。</span><span>当更改文档的JavaScript程序完成运行时，浏览器才必须计算新的布局以将更改的文档绘制到屏幕上。</span><span>当程序通过诸如offsetHeight或者getBoundingClientRect读取某个东西的大小或者位置时</span></span><span><span>，提供正确的信息也需要计算布局。</span></span>在读取DOM布局信息和更改DOM之间<strong>反复交替</strong>的程序会强制执行大量布局计算，因此运行速度非常慢&darr;</p>
+<div class="cnblogs_code">
+<pre>        &lt;script&gt;
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> time(name, action) {
+                let start </span>= Date.now(); <span style="color: #008000;">//</span><span style="color: #008000;"> Current time in milliseconds</span>
+<span style="color: #000000;">                action();
+                console.log(name, </span>"took", Date.now() - start, "ms"<span style="color: #000000;">);
+            }
+
+            time(</span>"naive", () =&gt;<span style="color: #000000;"> {
+                let target </span>= document.getElementById("one"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">while</span>(target.offsetWidth &lt; 2000<span style="color: #000000;">) {
+                    target.appendChild(document.createTextNode(</span>"X"<span style="color: #000000;">));
+                }
+            });
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; naive took 32 ms</span>
+<span style="color: #000000;">
+            time(</span>"clever", <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+                let target </span>= document.getElementById("two"<span style="color: #000000;">);
+                target.appendChild(document.createTextNode(</span>"XXXXX"<span style="color: #000000;">));
+                let total </span>= Math.ceil(2000 / (target.offsetWidth / 5<span style="color: #000000;">));
+                target.firstChild.nodeValue </span>= "X"<span style="color: #000000;">.repeat(total);
+            });
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; clever took 1 ms</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a9"></a>9、style</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="para"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="color: purple"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            Nice text
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+            let para </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.getElementById(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">para</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+            console.log(para.style.color);
+            para.style.color </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">magenta</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+            para.style[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">color</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">] </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">red</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+            para.style.fontFamily </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">cursive</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a10"></a>10、CSS选择器</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">And if you go chasing
+  </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="animal"</span><span style="color: #0000ff;">&gt;</span>rabbits<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>And you know you're going to fall<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Tell 'em a <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="character"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">hookah smoking
+  </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="animal"</span><span style="color: #0000ff;">&gt;</span>caterpillar<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Has given you the call<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+  <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> count(selector) {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelectorAll(selector).length;
+  }
+  console.log(count(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));           </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> All &lt;p&gt; elements</span>
+  <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 4</span>
+<span style="background-color: #f5f5f5; color: #000000;">  console.log(count(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">.animal</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));     </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> Class animal</span>
+  <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 2</span>
+<span style="background-color: #f5f5f5; color: #000000;">  console.log(count(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p .animal</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));   </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> Animal inside of &lt;p&gt;</span>
+  <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 2</span>
+<span style="background-color: #f5f5f5; color: #000000;">  console.log(count(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p &gt; .animal</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)); </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> Direct child of &lt;p&gt;</span>
+  <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 1</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>querySelectorAll与querySelector后者只返回一个元素（第一个）。</p>
+<p>&nbsp;</p>
+<p><a name="a11"></a>11、动画</p>
+<div class="cnblogs_code">
+<pre>&lt;p&gt;_&lt;/p&gt;
+&lt;p&gt;_&lt;/p&gt;
+&lt;p&gt;_&lt;/p&gt;
+&lt;p&gt;_&lt;/p&gt;
+&lt;p&gt;_&lt;/p&gt;
+&lt;p style="text-align: center"&gt;
+  &lt;img src="img/cat.png" style="position: relative"&gt;
+&lt;/p&gt;
+&lt;script&gt;<span style="color: #000000;">
+  let cat </span>= document.querySelector("img"<span style="color: #000000;">);
+  let angle </span>= Math.PI / 2<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> animate(time, lastTime) {
+    </span><span style="color: #0000ff;">if</span> (lastTime != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+      angle </span>+= (time - lastTime) * 0.001<span style="color: #000000;">;
+    }
+    cat.style.top </span>= (Math.sin(angle) * 20) + "px"<span style="color: #000000;">;
+    cat.style.left </span>= (Math.cos(angle) * 200) + "px"<span style="color: #000000;">;
+    requestAnimationFrame(newTime </span>=&gt;<span style="color: #000000;"> animate(newTime, time));
+  }
+  </span><span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+  requestAnimationFrame(animate);
+</span>&lt;/script&gt;</pre>
+</div>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank">window.requestAnimationFrame</a></p>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="b1"></a>① Build a table</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Mountains<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+        
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="mountains"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+             const MOUNTAINS </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> [
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Kilimanjaro</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">5895</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Tanzania</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Everest</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">8848</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Nepal</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Mount Fuji</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">3776</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Japan</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Vaalserberg</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">323</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Netherlands</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Denali</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">6168</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">United States</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Popocatepetl</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">5465</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Mexico</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+                {name: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Mont Blanc</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, height: </span><span style="background-color: #f5f5f5; color: #000000;">4808</span><span style="background-color: #f5f5f5; color: #000000;">, place: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Italy/France</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">}
+              ];
+        
+              </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> Your code here</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> elt(type, ...children) {
+                let node </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.createElement(type);
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;">(let child of children) {            
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(</span><span style="background-color: #f5f5f5; color: #0000ff;">typeof</span><span style="background-color: #f5f5f5; color: #000000;"> child </span><span style="background-color: #f5f5f5; color: #000000;">!=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">string</span><span style="background-color: #f5f5f5; color: #000000;">"</span> <span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span> <span style="background-color: #f5f5f5; color: #0000ff;">typeof</span><span style="background-color: #f5f5f5; color: #000000;"> child </span><span style="background-color: #f5f5f5; color: #000000;">!=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">number</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">) {
+                        node.appendChild(child);
+                    } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> node.appendChild(document.createTextNode(child));
+                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 如果是string类型就将其转换为一个文本节点再插入</span>
+<span style="background-color: #f5f5f5; color: #000000;">                }
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> node; </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 返回这个创建好的节点</span>
+<span style="background-color: #f5f5f5; color: #000000;">            }
+            
+              let table </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.createElement(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">table</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);    
+              let ths </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.createElement(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">tr</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+              ths.appendChild(elt(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">th</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">name</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));
+              ths.appendChild(elt(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">th</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">height</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));
+              ths.appendChild(elt(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">th</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">place</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));
+              table.appendChild(ths);
+              </span><span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;"> (let mountain of MOUNTAINS) {
+                  let tds </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.createElement(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">tr</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+                  tds.appendChild(elt(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">td</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, mountain[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">name</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">]));
+                  let tdHeight </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> elt(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">td</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, mountain[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">height</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">]);
+                  tdHeight.style.textAlign </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">right</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+                  tds.appendChild(tdHeight);
+                  tds.appendChild(elt(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">td</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, mountain[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">place</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">]));
+                  table.appendChild(tds);
+              }
+        
+              document.getElementById(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">mountains</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).appendChild(table);
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&mdash;&mdash;&mdash;&mdash;--- -- -&nbsp; ---- &mdash;&mdash; &mdash;&mdash;- -- --&nbsp; - -- -&nbsp; --&nbsp; &nbsp;- -- - - - -</p>
+<p><a name="b2"></a>② Elements by tag name</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Heading with a <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>span<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span> element.<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>A paragraph with <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>one<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>, <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>two<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> spans.
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> byTagName(node, tagName) {
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> Your code here.</span>
+<span style="background-color: #f5f5f5; color: #000000;">                let result </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> [];
+                const byTagNameHelper </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> (node, tagName) </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;"> (let child of Array.from(node.children)) {
+                        </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (child.nodeName </span><span style="background-color: #f5f5f5; color: #000000;">==</span><span style="background-color: #f5f5f5; color: #000000;"> tagName.toUpperCase()) {
+                            result.push(child);
+                        }
+                        byTagNameHelper(child, tagName);
+                    }
+                };
+                byTagNameHelper(node, tagName);
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> result;
+            }
+
+            console.log(byTagName(document.body, </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">h1</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).length);
+            </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 1</span>
+<span style="background-color: #f5f5f5; color: #000000;">            console.log(byTagName(document.body, </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">span</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).length);
+            </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 3</span>
+<span style="background-color: #f5f5f5; color: #000000;">            let para </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+            console.log(byTagName(para, </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">span</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).length);
+            </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> &rarr; 2</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&mdash;&mdash;&mdash;&mdash;--- -- -&nbsp; ---- &mdash;&mdash; &mdash;&mdash;- -- --&nbsp; - -- -&nbsp; --&nbsp; &nbsp;- -- - - - -</p>
+<p><a name="b3"></a>③ The cat&rsquo;s hat</p>
+<p>&nbsp;略</p>

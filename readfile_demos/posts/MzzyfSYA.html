@@ -1,0 +1,137 @@
+<h1><a href="https://www.datacamp.com/home" target="_blank">源：DataCamp</a></h1>
+<p>&nbsp;</p>
+<p>datacamp 的 DAILY PRACTICE&nbsp; + 日常收集。</p>
+<p class="exercise--title"><a href="#a1">List of lists</a></p>
+<p><a href="#a2">Subset and conquer</a></p>
+<p><a href="#a3">Slicing and dicing</a></p>
+<p class="vex--title"><a href="#a4">List Manipulation</a></p>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a1"></a>List of lists</h3>
+<p>As a data scientist, you'll often be dealing with a lot of data, and it will make sense to group some of this data.</p>
+<p>Instead of creating a flat list containing strings and floats, representing the names and areas of the rooms in your house, you can create a list of lists. The script on the right can already give you an idea.</p>
+<p>Don't get confused here:&nbsp;<code>"hallway"</code>&nbsp;is a string, while&nbsp;<code>hall</code>&nbsp;is a variable that represents the float&nbsp;<code>11.25</code>&nbsp;you specified earlier.</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> area variables (in square meters)</span>
+hall = 11.25<span style="color: #000000;">
+kit </span>= 18.0<span style="color: #000000;">
+liv </span>= 20.0<span style="color: #000000;">
+bed </span>= 10.75<span style="color: #000000;">
+bath </span>= 9.50
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> house information as list of lists</span>
+house = [[<span style="color: #800000;">"</span><span style="color: #800000;">hallway</span><span style="color: #800000;">"</span><span style="color: #000000;">, hall],
+         [</span><span style="color: #800000;">"</span><span style="color: #800000;">kitchen</span><span style="color: #800000;">"</span><span style="color: #000000;">, kit],
+         [</span><span style="color: #800000;">"</span><span style="color: #800000;">living room</span><span style="color: #800000;">"</span><span style="color: #000000;">, liv],
+         [</span><span style="color: #800000;">"</span><span style="color: #800000;">bedroom</span><span style="color: #800000;">"</span><span style="color: #000000;">, bed],
+         [</span><span style="color: #800000;">"</span><span style="color: #800000;">bathroom</span><span style="color: #800000;">"</span><span style="color: #000000;">, bath]]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out house</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(house)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the type of house</span>
+<span style="color: #0000ff;">print</span>(type(house))</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a2"></a>Subset and conquer</h3>
+<p>一个元素毫无疑问也是一个子集，因此不论是取一段或者随机访问一个元素都叫做 subsetting&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create the areas list</span>
+areas = [<span style="color: #800000;">"</span><span style="color: #800000;">hallway</span><span style="color: #800000;">"</span>, 11.25, <span style="color: #800000;">"</span><span style="color: #800000;">kitchen</span><span style="color: #800000;">"</span>, 18.0, <span style="color: #800000;">"</span><span style="color: #800000;">living room</span><span style="color: #800000;">"</span>, 20.0, <span style="color: #800000;">"</span><span style="color: #800000;">bedroom</span><span style="color: #800000;">"</span>, 10.75, <span style="color: #800000;">"</span><span style="color: #800000;">bathroom</span><span style="color: #800000;">"</span>, 9.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out second element from areas</span>
+<span style="color: #0000ff;">print</span>(areas[1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out last element from areas</span>
+<span style="color: #0000ff;">print</span>(areas[-1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the area of the living room</span>
+<span style="color: #0000ff;">print</span>(areas[5])</pre>
+</div>
+<p class="exercise--title">#Subset and calculate</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create the areas list</span>
+areas = [<span style="color: #800000;">"</span><span style="color: #800000;">hallway</span><span style="color: #800000;">"</span>, 11.25, <span style="color: #800000;">"</span><span style="color: #800000;">kitchen</span><span style="color: #800000;">"</span>, 18.0, <span style="color: #800000;">"</span><span style="color: #800000;">living room</span><span style="color: #800000;">"</span>, 20.0, <span style="color: #800000;">"</span><span style="color: #800000;">bedroom</span><span style="color: #800000;">"</span>, 10.75, <span style="color: #800000;">"</span><span style="color: #800000;">bathroom</span><span style="color: #800000;">"</span>, 9.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Sum of kitchen and bedroom area: eat_sleep_area</span>
+eat_sleep_area = areas[3] + areas[-3<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print the variable eat_sleep_area</span>
+<span style="color: #0000ff;">print</span>(eat_sleep_area)</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a3"></a>Slicing and dicing</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201712/1042431-20171229171532242-1407688186.png" alt="" width="276" height="102" /></p>
+<p>Selecting single values from a list is just one part of the story. It's also possible to&nbsp;<em>slice</em>&nbsp;your list, which means selecting multiple elements from your list. Use the following syntax:</p>
+<div class="cnblogs_code">
+<pre>my_list[start:end]</pre>
+</div>
+<p>&nbsp;The&nbsp;<code>start</code>&nbsp;index will be included, while the&nbsp;<code>end</code>&nbsp;index is&nbsp;<em>not</em>.</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create the areas list</span>
+areas = [<span style="color: #800000;">"</span><span style="color: #800000;">hallway</span><span style="color: #800000;">"</span>, 11.25, <span style="color: #800000;">"</span><span style="color: #800000;">kitchen</span><span style="color: #800000;">"</span>, 18.0, <span style="color: #800000;">"</span><span style="color: #800000;">living room</span><span style="color: #800000;">"</span>, 20.0, <span style="color: #800000;">"</span><span style="color: #800000;">bedroom</span><span style="color: #800000;">"</span>, 10.75, <span style="color: #800000;">"</span><span style="color: #800000;">bathroom</span><span style="color: #800000;">"</span>, 9.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Use slicing to create downstairs</span>
+downstairs = areas[0:6<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Use slicing to create upstairs</span>
+upstairs = areas[6:10<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out downstairs and upstairs</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(downstairs)
+</span><span style="color: #0000ff;">print</span>(upstairs)</pre>
+</div>
+<p>&nbsp;However, it's also possible not to specify these indexes. If you don't specify the&nbsp;<code>begin</code>&nbsp;index, Python figures out that you want to start your slice at the beginning of your list. If you don't specify the&nbsp;<code>end</code>&nbsp;index, the slice will go all the way to the last element of your list.&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create the areas list</span>
+areas = [<span style="color: #800000;">"</span><span style="color: #800000;">hallway</span><span style="color: #800000;">"</span>, 11.25, <span style="color: #800000;">"</span><span style="color: #800000;">kitchen</span><span style="color: #800000;">"</span>, 18.0, <span style="color: #800000;">"</span><span style="color: #800000;">living room</span><span style="color: #800000;">"</span>, 20.0, <span style="color: #800000;">"</span><span style="color: #800000;">bedroom</span><span style="color: #800000;">"</span>, 10.75, <span style="color: #800000;">"</span><span style="color: #800000;">bathroom</span><span style="color: #800000;">"</span>, 9.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Alternative slicing to create downstairs</span>
+downstairs = areas[:6<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Alternative slicing to create upstairs</span>
+upstairs = areas[6:]</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="vex--title"><a name="a4"></a>List Manipulation</h3>
+<p>&nbsp;1、反向选就不用考虑 0 了，数到几就是几</p>
+<p>&nbsp;2、如下操作也可以增加元素</p>
+<div class="cnblogs_code">
+<pre>In [3<span style="color: #000000;">]: x
+Out[</span>3]: [<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">s</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">t</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+In [</span>4]: x[2:] = [<span style="color: #800000;">"</span><span style="color: #800000;">s</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">t</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">hi</span><span style="color: #800000;">"</span><span style="color: #000000;">]
+In [</span>5<span style="color: #000000;">]: x
+Out[</span>5]: [<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">s</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">t</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">hi</span><span style="color: #800000;">'</span>]</pre>
+</div>
+<h4 class="exercise--title">Extend a list</h4>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create the areas list and make some changes</span>
+areas = [<span style="color: #800000;">"</span><span style="color: #800000;">hallway</span><span style="color: #800000;">"</span>, 11.25, <span style="color: #800000;">"</span><span style="color: #800000;">kitchen</span><span style="color: #800000;">"</span>, 18.0, <span style="color: #800000;">"</span><span style="color: #800000;">chill zone</span><span style="color: #800000;">"</span>, 20.0<span style="color: #000000;">,
+         </span><span style="color: #800000;">"</span><span style="color: #800000;">bedroom</span><span style="color: #800000;">"</span>, 10.75, <span style="color: #800000;">"</span><span style="color: #800000;">bathroom</span><span style="color: #800000;">"</span>, 10.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Add poolhouse data to areas, new list is areas_1</span>
+areas_1 = areas + [<span style="color: #800000;">"</span><span style="color: #800000;">poolhouse</span><span style="color: #800000;">"</span>, 24.5<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Add garage data to areas_1, new list is areas_2</span>
+areas_2 = areas_1 + [<span style="color: #800000;">"</span><span style="color: #800000;">garage</span><span style="color: #800000;">"</span>, 15.45]</pre>
+</div>
+<h4 class="exercise--title">Delete list elements</h4>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">del</span>(areas[-4:-2])</pre>
+</div>
+<h4 class="exercise--title">Inner workings of lists</h4>
+<p>Change the second command, that creates the variable&nbsp;<code>areas_copy</code>, such that&nbsp;<code>areas_copy</code>&nbsp;is an explicit copy of&nbsp;<code>areas</code></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create list areas</span>
+areas = [11.25, 18.0, 20.0, 10.75, 9.50<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create areas_copy</span><strong><span style="color: #008000;">
+#</span><span style="color: #008000;"> areas_copy = areas </span>
+areas_copy =<span style="color: #000000;"> list(areas)
+
+</span></strong><span style="color: #008000;">#</span><span style="color: #008000;"> Change areas_copy</span>
+areas_copy[0] = 5.0
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Print areas</span>
+<span style="color: #0000ff;">print</span>(areas)</pre>
+</div>
+<p>&nbsp;areas_copy = areas[:] 也是可以的！</p>

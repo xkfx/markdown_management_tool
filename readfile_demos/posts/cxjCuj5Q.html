@@ -1,0 +1,245 @@
+<p>imooc视频学习笔记 ----&gt; URL：<a href="http://www.imooc.com/learn/154" target="_blank">http://www.imooc.com/learn/154</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170626224106227-519512942.png" alt="" width="445" height="252" /></p>
+<h3>MessageDao.java</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.ibatis.session.SqlSession;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.bean.Message;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.db.DBAccess;
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 
+ * Dao层需求：1对象能与数据库交互 2能执行SQL执行
+ * Mybatis给dao层提供对象&mdash;&mdash;SqlSession
+ * SqlSession的作用：
+ * 1、向SQL语句传入参数
+ * 2、执行SQL语句
+ * 3、获取SQL执行结果
+ * 4、事务的控制
+ * 如何得到SqlSession：
+ * 1、通过配置文件获取数据库连接的相关信息
+ * 2、通过配置信息构建SqlSessionFactory
+ * 3、通过SqlSessionFactory打开数据库会话
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MessageDao {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 改成Mybatis的一套
+     * 根据查询条件获取消息列表
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> List&lt;Message&gt;<span style="color: #000000;"> queryMessageList(String command, String description) {
+        List</span>&lt;Message&gt; messageList = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        
+        DBAccess dbAccess </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DBAccess();
+        SqlSession sqlSession </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            sqlSession </span>=<span style="color: #000000;"> dbAccess.getSqlSession();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过sqlSession执行SQL语句</span>
+            messageList = sqlSession.selectList("Message.queryMessageList"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果中间发生异常sqlSession可能是null</span>
+            <span style="color: #0000ff;">if</span> (sqlSession != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                sqlSession.close();
+            }
+        }    
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> messageList;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        MessageDao messageDao </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> MessageDao();
+        messageDao.queryMessageList(</span>"", ""<span style="color: #000000;">);
+    }
+    
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">    // 数据库驱动
+    private static final String JDBC_DRIVER = "org.gjt.mm.mysql.Driver";
+    // 数据库地址
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/miro_message";
+    
+    // 用户名与密码
+    private static final String USER = "root";
+    private static final String PASS = "19971019";
+    
+    private static Connection conn = null;
+
+    // 加载数据库驱动
+    static {
+        try {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // 获取消息列表
+    public List&lt;Message&gt; queryMessageList(String command, String description) {
+        List&lt;Message&gt; messageList = new ArrayList&lt;&gt;();
+        
+        // SQL拼接
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("select ID, COMMAND, DESCRIPTION, CONTENT from MESSAGE where 1=1");
+        
+        List&lt;String&gt; paramList = new ArrayList&lt;&gt;();
+        // 判断指令是否为空
+        if (command != null &amp;&amp; !"".equals(command.trim())) {
+            sqlBuilder.append(" and COMMAND=?");
+            paramList.add(command);
+        }
+        // 判断描述是否为空
+        if (description != null &amp;&amp; !"".equals(description.trim())) {
+            sqlBuilder.append(" and DESCRIPTION like '%' ? '%'");
+            paramList.add(description);
+        }
+        
+        String sql = sqlBuilder.toString();
+        
+        PreparedStatement prep = null;
+        ResultSet result = null;
+        try {
+            prep = conn.prepareStatement(sql);
+            // 设置SQL参数
+            for (int i = 0; i != paramList.size(); ++i) {
+                prep.setString(i+1, paramList.get(i)); 
+            }
+            // 执行查找操作
+            result = prep.executeQuery();
+            while (result.next()) {
+                // 把查找结果放进List里
+                Message message = new Message();
+                messageList.add(message);
+                
+                message.setId(result.getString("ID"));
+                message.setCommand(result.getString("COMMAND"));
+                message.setDescription(result.getString("DESCRIPTION"));
+                message.setContent(result.getString("CONTENT"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        // 如果出现异常就返回一个空的List
+        return messageList;
+    }</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<h3>Configuration.xml</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd"</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">
+  &lt;settings&gt;
+    &lt;setting name="useGeneratedKeys" value="false"/&gt;
+    &lt;setting name="useColumnLabel" value="true"/&gt;
+  &lt;/settings&gt;
+
+  &lt;typeAliases&gt;
+    &lt;typeAlias alias="UserAlias" type="org.apache.ibatis.submitted.complex_property.User"/&gt;
+  &lt;/typeAliases&gt;
+</span><span style="color: #008000;">--&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">environments </span><span style="color: #ff0000;">default</span><span style="color: #0000ff;">="development"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">environment </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="development"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transactionManager </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="JDBC"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">/&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transactionManager</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dataSource </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="UNPOOLED"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="driver"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="org.gjt.mm.mysql.Driver"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="url"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="jdbc:mysql://localhost:3306/miro_message"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="username"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="root"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="19971019"</span><span style="color: #0000ff;">/&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dataSource</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">environment</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">environments</span><span style="color: #0000ff;">&gt;</span>
+ 
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">mappers</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">mapper </span><span style="color: #ff0000;">resource</span><span style="color: #0000ff;">="com/imooc/config/sqlxml/Message.xml"</span><span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">mappers</span><span style="color: #0000ff;">&gt;</span>
+  
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3>DBAccess.java</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.db;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.Reader;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.ibatis.io.Resources;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.ibatis.session.SqlSession;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.ibatis.session.SqlSessionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 
+ * 访问数据库类
+ *
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DBAccess {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 异常交给Dao层处理</span>
+    <span style="color: #0000ff;">public</span> SqlSession getSqlSession() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> STEP-1 通过配置文件获取数据库连接的相关信息</span>
+        Reader reader = Resources.getResourceAsReader("com/imooc/config/Configuration.xml"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> STEP-2 通过配置信息构建一个SqlSessionFactory</span>
+        SqlSessionFactory sqlSessionFactory = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SqlSessionFactoryBuilder().build(reader);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> STEP-3 通过SqlSessionFactory打开数据库会话</span>
+        SqlSession sqlSession =<span style="color: #000000;"> sqlSessionFactory.openSession();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sqlSession;
+    }
+}</span></pre>
+</div>
+<h3>Message.xml</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">
+
+       Copyright 2009-2016 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">mapper </span><span style="color: #ff0000;">namespace</span><span style="color: #0000ff;">="Message"</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">resultMap </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="com.imooc.bean.Message"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="MessageResult"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 主键用id标签，其它的用result标签 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">id </span><span style="color: #ff0000;">column</span><span style="color: #0000ff;">="id"</span><span style="color: #ff0000;"> jdbcType</span><span style="color: #0000ff;">="INTEGER"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="id"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">result </span><span style="color: #ff0000;">column</span><span style="color: #0000ff;">="COMMAND"</span><span style="color: #ff0000;"> jdbcType</span><span style="color: #0000ff;">="VARCHAR"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="command"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">result </span><span style="color: #ff0000;">column</span><span style="color: #0000ff;">="DESCRIPTION"</span><span style="color: #ff0000;"> jdbcType</span><span style="color: #0000ff;">="VARCHAR"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="description"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">result </span><span style="color: #ff0000;">column</span><span style="color: #0000ff;">="CONTENT"</span><span style="color: #ff0000;"> jdbcType</span><span style="color: #0000ff;">="VARCHAR"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="content"</span><span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">resultMap</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Message.xml的目的：配置如下的sql语句让SqlSession读到并执行 </span><span style="color: #008000;">--&gt;</span>
+  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> id是为了方便sqlSession调用，相同namespace下必须唯一 </span><span style="color: #008000;">--&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="queryMessageList"</span><span style="color: #ff0000;"> resultMap</span><span style="color: #0000ff;">="MessageResult"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    select ID, COMMAND, DESCRIPTION, CONTENT from MESSAGE where 1=1
+  </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">mapper</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

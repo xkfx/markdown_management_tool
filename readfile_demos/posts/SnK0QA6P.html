@@ -1,0 +1,62 @@
+<h1><a href="https://www.datacamp.com/home" target="_blank">源：DataCamp</a></h1>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180113211057613-1182074288.png" alt="" width="672" height="467" /></p>
+<p>气泡的大小表示人口的多少，横坐标表示人均GDP（美元），纵坐标表示预期寿命。-- 作者：<a href="https://en.wikipedia.org/wiki/Hans_Rosling" target="_blank">Hans Rosling</a></p>
+<p>&nbsp;</p>
+<p>Python 中有许许多多用于可视化的包，而<em> matplotlib</em> 是它们的源头。</p>
+<p>我们需要用到的是它的子包<em> pyplot</em> ，通常它被简写成<em> plt</em> 导入</p>
+<h3 class="exercise--title">1、Line plot&nbsp;</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180113213734988-1375658458.png" alt="" width="368" height="239" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Print the last item from year and pop</span>
+<span style="color: #0000ff;">print</span>(year[-1<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(pop[-1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Import matplotlib.pyplot as plt</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Make a line plot: year on the x-axis, pop on the y-axis</span>
+<span style="color: #000000;">plt.plot(year, pop)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Display the plot with plt.show()</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;\</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180113214253113-1476243688.png" alt="" width="349" height="226" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Print the last item of gdp_cap and life_exp</span>
+<span style="color: #0000ff;">print</span>(gdp_cap[-1<span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(life_exp[-1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Make a line plot, gdp_cap on the x-axis, life_exp on the y-axis</span>
+<span style="color: #000000;">plt.plot(gdp_cap, life_exp)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Display the plot</span>
+plt.show()</pre>
+</div>
+<p class="exercise--title">&nbsp;</p>
+<h3 class="exercise--title">2、Scatter Plot&nbsp;</h3>
+<p>When you have a time scale along the horizontal axis, the line plot is your friend. But in many other cases, when you're trying to assess if there's a correlation between two variables, for example, the scatter plot is the better choice. Below is an example of how to build a scatter plot.</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180113214752144-1715331712.png" alt="" width="351" height="228" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Change the line plot below to a scatter plot</span>
+<span style="color: #000000;">plt.scatter(gdp_cap, life_exp)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Put the x-axis on a logarithmic scale</span>
+plt.xscale(<span style="color: #800000;">'</span><span style="color: #800000;">log</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Show plot</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;\</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180113215113504-1965128205.png" alt="" width="365" height="237" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Import package</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Build Scatter plot</span>
+<span style="color: #000000;">plt.scatter(pop, life_exp)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Show plot</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,290 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">一、校验效果演示</a></li>
+<li><a href="#anchor1">二、校验器定义示例</a>
+<ul>
+<li><a href="#anchor2">定义一个最简单的校验器</a></li>
+<li><a href="#anchor3">正则校验器</a></li>
+</ul>
+</li>
+<li><a href="#anchor4">三、EasyValidator的实现</a></li>
+<li><a href="#anchor5">四、更好的应用姿势&mdash;&mdash;配合注解和面向切面</a></li>
+</ul>
+</div>
+<p>&ldquo;参数校验&rdquo;属于比较无聊但是又非常硬性的需求。。。</p>
+<p>最原始的方式就是在方法头手动逐个校验，但是这样写不太好看，而且容易造成大量重复代码，扩展起来也不是很方便。</p>
+<p>我简单看了一下已有的Spring&nbsp;Validation，粗看下去不太合胃口（PS. 其实是看不懂😅）。想想写一个似乎也不难，于是尝试自定义了一个简单的玩具版本。</p>
+<h2><a name="anchor0"></a>一、校验效果演示</h2>
+<p>MyTest.java：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyTest {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 创建一次，应用N次。
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> EasyValidator EASY_VALIDATOR = <span style="color: #0000ff;">new</span><span style="color: #000000;"> EasyValidator();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 允许自定义各种各样的校验器，只需实现Validator接口即可</span>
+        EASY_VALIDATOR.addValidator(<span style="color: #0000ff;">new</span><span style="color: #000000;"> RegexpValidator());
+        EASY_VALIDATOR.addValidator(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> TypeValidator());
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 示例&darr;</span>
+        <span style="color: #0000ff;">int</span> type = 3<span style="color: #000000;">;
+        String username </span>= "           "<span style="color: #000000;">;
+        String password </span>= "32"<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过抛异常的方式传递具体错误信息</span>
+        EASY_VALIDATOR.check(type, "type"<span style="color: #000000;">);
+        EASY_VALIDATOR.check(username, </span>"username.regexp"<span style="color: #000000;">);
+        EASY_VALIDATOR.check(password, </span>"password.regexp"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+ouput example - 1:
+Exception in thread "main" org.sample.exception.<strong>ValidateException: type越界了！</strong>
+ouput example - 2:
+Exception in thread "main" org.sample.exception.<strong>ValidateException: 用户名不能为空
+ </strong></span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>通过<strong>addValidator方法</strong>让校验器生效。</p>
+<h2><a name="anchor1"></a>二、校验器定义示例</h2>
+<p>仅需实现<strong>Validator接口</strong>就可以随心所欲地定义各式各样的参数校验器。</p>
+<p>Validator接口仅包含三个非常简单的方法：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('b7fa50fa-42f4-45fc-bca3-2c90935d06bb')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_b7fa50fa-42f4-45fc-bca3-2c90935d06bb" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_b7fa50fa-42f4-45fc-bca3-2c90935d06bb" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_b7fa50fa-42f4-45fc-bca3-2c90935d06bb" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> Validator {
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 用于标识和查找校验器
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    String getName();
+
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> validate(Object o);
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 便于多级查找校验方法，如果不支持该功能，
+     * 直接内部调void validate(Object o);方法即可
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">void</span><span style="color: #000000;"> validate(Object o, String validatorName);
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Validator.java</span></div>
+<h3><a name="anchor2"></a>定义一个最简单的校验器</h3>
+<p><strong>validate方法</strong>说明：校验不通过抛异常就ok了，在异常里传递具体错误信息。</p>
+<p>定义不抛异常的校验器。。是没意义的。在&ldquo;传Result&rdquo;和&ldquo;传异常&rdquo;间我也权衡了一下，网上说&ldquo;传异常&rdquo;没&ldquo;传Result&rdquo;性能好，但就写代码的角度来看，还是传异常干净得多，并且更简单</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> TypeValidator <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Validator {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String NAME = "type"<span style="color: #000000;">;
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> NAME;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> validate(Object o) {
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> Integer.parseInt(String.valueOf(o));
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> 通过抛异常的方式传递具体错误信息</span></strong>
+        <span style="color: #0000ff;">if</span> (i &lt; 0 || i &gt; 10) <span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> ValidateException("type越界了！"<span style="color: #000000;">);
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> 没抛出异常代表没问题！</span></strong>
+<span style="color: #000000;">    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> validate(Object o, String validatorName) {
+        validate(o);
+    }
+}</span></pre>
+</div>
+<h3><a name="anchor3"></a>正则校验器</h3>
+<p>同样可以定义一个复杂些的校验器&darr;</p>
+<p>原始版本来自<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/10340965.html">Spring笔记#02#利用切面和注解校验方法参数</a></p>
+<p>这是一个专门用来校验字符串的校验器，思路就是用.properties文件存键值对（&ldquo;名&rdquo;-正则）然后读到HashMap构造Pattern。根据&ldquo;名&rdquo;查找对应的Pattern进行正则校验。顺便提一下<strong>自定义的两种异常：ValidatorException和ValidateException</strong>，两个异常都继承自运行时异常，这样不至于把代码搞乱，前者属于程序员的错误，后者则用于抛出校验失败的具体信息。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> RegexpValidator <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Validator {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String NAME = "regexp"<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String FILE_NAME = File.separator + "easy-validator.properties"<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Map&lt;String, Pattern&gt; MAP = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 把.properties文件里的键值对读到内存里</span>
+        Properties prop = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Properties();
+        </span><span style="color: #0000ff;">try</span> (InputStream input = ServiceMethodAspect.<span style="color: #0000ff;">class</span><span style="color: #000000;">.getClassLoader().getResourceAsStream(FILE_NAME)){
+            </span><span style="color: #0000ff;">if</span> (input == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> RuntimeException("unable to find " +<span style="color: #000000;"> FILE_NAME);
+            }
+            prop.load(input);
+            Enumeration</span>&lt;?&gt; e =<span style="color: #000000;"> prop.propertyNames();
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (e.hasMoreElements()) {
+                String key </span>=<span style="color: #000000;"> (String) e.nextElement();
+                String value </span>=<span style="color: #000000;"> prop.getProperty(key);
+                MAP.put(key, Pattern.compile(value));
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> RuntimeException("An exception occurred while reading " +<span style="color: #000000;"> FILE_NAME, e);
+        }
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> NAME;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> validate(Object o) {
+        </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> ValidatorException("validate(Object o)方法未定义"<span style="color: #000000;">);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> validate(Object o, String validatorName) {
+        String str </span>=<span style="color: #000000;"> String.valueOf(o);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (StringUtils.isBlank(str)) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> ValidateException(PresentationUtils.english2chinese(validatorName) + "不能为空"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            Pattern pattern </span>=<span style="color: #000000;"> MAP.get(validatorName);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 程序员要确保格式已经定义</span>
+            <span style="color: #0000ff;">if</span> (pattern == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> ValidatorException(validatorName + "校验器未定义"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 格式检查</span>
+            <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">pattern.matcher(str).matches()) {
+                </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> ValidateException(PresentationUtils.english2chinese(validatorName) + "格式不正确"<span style="color: #000000;">);
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>在相应路径下的<strong>easy-validator.properties</strong>中定义正则表达式：</p>
+<div class="cnblogs_code">
+<pre>username=^<span style="color: #800000; font-weight: bold;">[</span><span style="color: #800000;">a-zA-Z0-9_</span><span style="color: #800000; font-weight: bold;">]</span>{4,16<span style="color: #000000;">}$
+<span style="color: #888888;"># 用户名：4到16位大小写字母、数字、下划线</span>
+password</span>=^<span style="color: #800000; font-weight: bold;">[</span><span style="color: #800000;">a-zA-Z0-9_</span><span style="color: #800000; font-weight: bold;">]</span>{6,16<span style="color: #000000;">}$
+<span style="color: #888888;"># 密码：6到16位大小写字母、数字、下划线</span></span></pre>
+</div>
+<h2><a name="anchor4"></a>三、EasyValidator的实现</h2>
+<p><span style="text-decoration: line-through;">EasyValidator的实现像它的名字一样简单。每个校验器由getName()的返回值标识（确保唯一），允许自定义多级校验器，命名规则为&ldquo;xx.次级校验器名.顶级校验器名&rdquo;，详细匹配过程参考代码实现：</span></p>
+<p>有逻辑错误，实际只能定义两级。多级靠自定义&radic;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 自定义的一个简易参数校验器
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> EasyValidator {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 初始化后不再更新，否则在多线程环境下有风险
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Map&lt;String, Validator&gt; MAP = <span style="color: #0000ff;">new</span> HashMap&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> addValidator(Validator validator) {
+        MAP.put(validator.getName(), validator);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> check(Object object, String validatorName) {
+        Validator validator </span>=<span style="color: #000000;"> MAP.get(getLast(validatorName));
+        </span><span style="color: #0000ff;">if</span> (validator != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            validator.validate(object, removeLast(validatorName));
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> ValidatorException("validator not found, validatorName=" +<span style="color: #000000;"> validatorName);
+        }
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 获取顶级校验器名称，如果只有一级就原样返回
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String getLast(String validatorName) {
+        </span><span style="color: #0000ff;">int</span> index = StringUtils.lastIndexOf(validatorName, '.'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (index == -1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> validatorName;
+        </span><span style="color: #0000ff;">return</span> StringUtils.substring(validatorName, index + 1<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 去掉顶级校验器名称，以便向下传递，如果只有一级就原样返回
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String removeLast(String validatorName) {
+        </span><span style="color: #0000ff;">int</span> index = StringUtils.lastIndexOf(validatorName, '.'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (index == -1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> validatorName;
+        </span><span style="color: #0000ff;">return</span> StringUtils.substring(validatorName, 0<span style="color: #000000;">, index);
+    }
+}</span></pre>
+</div>
+<h2><a name="anchor5"></a>四、更好的应用姿势&mdash;&mdash;配合注解和面向切面</h2>
+<p>Example代码（因为用到了Spring的黑科技，需要添加相应依赖）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Aspect
+@Configuration
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ServiceMethodAspect {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER =<span style="color: #000000;"> LogManager.getLogger();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ParameterNameDiscoverer DISCOVERER = <span style="color: #0000ff;">new</span><span style="color: #000000;"> LocalVariableTableParameterNameDiscoverer();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> EasyValidator EASY_VALIDATOR = <span style="color: #0000ff;">new</span><span style="color: #000000;"> EasyValidator();
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        EASY_VALIDATOR.addValidator(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> RegexpValidator());
+    }
+
+    @Pointcut(</span>"execution(* org.sample.shop.common.service.impl.*.*(..))"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> serviceMethod() {}
+
+    @Around(</span>"serviceMethod()"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ServiceResult work(ProceedingJoinPoint jp) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 参数校验</span>
+        Method method =<span style="color: #000000;"> ((MethodSignature) jp.getSignature()).getMethod();
+        Parameter[] parameter </span>= method.getParameters(); <span style="color: #008000;">//</span><span style="color: #008000;"> 便于获取注解对象</span>
+        String[] parameterName =<span style="color: #000000;"> DISCOVERER.getParameterNames(method);
+        Object[] parameterValue </span>= jp.getArgs(); 
+<span style="color: #000000;">        String currentValidatorName;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 逐个参数进行校验，先尝试获取Validator注解值，注解不存在用参数名作为校验器名</span>
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != parameter.length; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (parameter[i].getAnnotation(Validator.<span style="color: #0000ff;">class</span>) != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    currentValidatorName </span>= parameter[i].getAnnotation(Validator.<span style="color: #0000ff;">class</span><span style="color: #000000;">).value();
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    currentValidatorName </span>=<span style="color: #000000;"> parameterName[i];
+                }
+                LOGGER.info(</span>"check: object={}, validatorName={}", parameterValue[i], currentValidatorName); <span style="color: #008000;">//</span><span style="color: #008000;"> 偶尔出现校验异常有日志可查 TODO 用户信息</span>
+<span style="color: #000000;"><strong>                EASY_VALIDATOR.check(parameterValue[i], currentValidatorName);</strong>
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (ServiceResult) jp.proceed();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ValidateException e) {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ServiceResult.fail(e.getMessage());
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Throwable throwable) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 错误日志</span>
+            LOGGER.error(<span style="color: #0000ff;">new</span><span style="color: #000000;"> DetailedInfo(jp.getArgs(), throwable.getMessage()), throwable);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ServiceResult.error();
+        }
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DetailedInfo {
+
+        </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Object[] args;
+
+        </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String message;
+
+        DetailedInfo(Object[] args, String message) {
+            </span><span style="color: #0000ff;">this</span>.args =<span style="color: #000000;"> args;
+            </span><span style="color: #0000ff;">this</span>.message =<span style="color: #000000;"> message;
+        }
+
+        @Override
+        </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+            </span><span style="color: #0000ff;">return</span> "DetailedInfo{" +
+                    "args=" + Arrays.toString(args) +
+                    ", message='" + message + '\'' +
+                    '}'<span style="color: #000000;">;
+        }
+    }
+}</span></pre>
+</div>
+<p>通过注解指定校验器：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">    @Override
+    </span><span style="color: #0000ff;">public</span> ServiceResult&lt;User&gt; getUser(<strong>@Validator("username.regexp")</strong> String username, <strong>@Validator("password.regexp"</strong><span style="color: #000000;"><strong>)</strong> String password) {
+        </span><span style="color: #0000ff;">return</span> ServiceUtils.daoOperation(() -&gt;<span style="color: #000000;"> {
+            User user </span>=<span style="color: #000000;"> userDAO.getUser(username, password);
+            </span><span style="color: #0000ff;">return</span> user != <span style="color: #0000ff;">null</span> ? ServiceResult.ok(user) : <span style="color: #0000ff;">new</span> ServiceResult&lt;&gt;<span style="color: #000000;">(LOGIN_FAIL);
+        }, Connection.TRANSACTION_READ_COMMITTED);
+    }</span></pre>
+</div>
+<p>注解的实现依然和<a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/10340965.html">Spring笔记#02#利用切面和注解校验方法参数</a>里的差不多，只不过换了个名字。。。</p>

@@ -1,0 +1,165 @@
+<p>1. 分别设计一个Account类，和两个任务类 Company和Bank： （1）Account类拥有账户余额属性和余额增减操作；（2）Company任务类能增加Account对象中的余额；（3）Bank任务类能减少（或使用）Account对象中的余额（比如用于基金投资）。要求使用同一account对象来分别创建两个Company线程对象和两个Bank线程对象，通过两次测试来完成以下两任务（实验报告中 截两个图对应以下两个任务）：</p>
+<p>&nbsp;1) 出现Account对象余额不一致问题（同步问题）；</p>
+<p>&nbsp;2）使用同步代码块或同步方法或Lock对象来解决同步问题。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">package com.join;
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Bank implements Runnable {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Account account;
+
+    Bank(Account account) {
+        </span><span style="color: #0000ff;">this</span>.account =<span style="color: #000000;"> account;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">5</span>; ++<span style="color: #000000;">i) {
+            account.decreaseBalance(</span><span style="color: #800080;">10</span><span style="color: #000000;">);
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Company implements Runnable {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Account account;
+
+    Company(Account account) {
+        </span><span style="color: #0000ff;">this</span>.account =<span style="color: #000000;"> account;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">5</span>; ++<span style="color: #000000;">i) {
+            account.increaseBalance(</span><span style="color: #800080;">10</span><span style="color: #000000;">);
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Account {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> balance;
+
+    </span><span style="color: #0000ff;">private</span> Account(<span style="color: #0000ff;">double</span><span style="color: #000000;"> balance) {
+        </span><span style="color: #0000ff;">this</span>.balance =<span style="color: #000000;"> balance;
+    }
+
+    </span><span style="color: #0000ff;">void</span> increaseBalance(<span style="color: #0000ff;">double</span><span style="color: #000000;"> increment) {
+        </span><span style="color: #0000ff;">double</span> b =<span style="color: #000000;"> balance;
+        b </span>= balance +<span style="color: #000000;"> increment;
+        balance </span>=<span style="color: #000000;"> b;
+    }
+
+    </span><span style="color: #0000ff;">void</span> decreaseBalance(<span style="color: #0000ff;">double</span><span style="color: #000000;"> decrement) {
+        </span><span style="color: #0000ff;">double</span> b =<span style="color: #000000;"> balance;
+        b </span>= balance -<span style="color: #000000;"> decrement;
+        balance </span>=<span style="color: #000000;"> b;
+    }
+
+    </span><span style="color: #0000ff;">private</span> synchronized <span style="color: #0000ff;">double</span><span style="color: #000000;"> getBalance() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> balance;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Account account </span>= <span style="color: #0000ff;">new</span> Account(<span style="color: #800080;">100</span><span style="color: #000000;">);
+        Company company </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Company(account);
+        Bank bank </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bank(account);
+        Thread t1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Thread(company);
+        Thread t2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Thread(company);
+        Thread t3 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Thread(bank);
+        Thread t4 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Thread(bank);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 或者给方法加锁</span>
+        <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            t1.start();
+            t1.join();
+            t2.start();
+            t2.join();
+            t3.start();
+            t3.join();
+            t4.start();
+            t4.join();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.</span><span style="color: #0000ff;">out</span>.println(<span style="color: #800000;">"</span><span style="color: #800000;">最终余额为：</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> account.getBalance());
+    }
+}</span></pre>
+</div>
+<p>2. 设计一个生产电脑和搬运电脑类，要求生产一台电脑就搬走一台电脑，如果没有新的电脑生产出来，则搬运工要等待新电脑产出；如果生产出的电脑没有搬走，则要等待电脑搬走之后在生产，并统计出生产的电脑数量。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.my.test;
+
+</span><span style="color: #0000ff;">class</span> Producer <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Thread {
+
+    </span><span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">boolean</span> hasNewComputer = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Producer(String name) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(name);
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">void</span> produceComputer() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> InterruptedException {
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (hasNewComputer) {
+            wait();
+        }
+        Thread.sleep(</span>3000<span style="color: #000000;">);
+        hasNewComputer </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        System.out.println(Thread.currentThread().getName() </span>+ "：生产第" + ++count + "台电脑"<span style="color: #000000;">);
+        notify();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">void</span> consumeComputer(<span style="color: #0000ff;">int</span> count) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> InterruptedException {
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">hasNewComputer) {
+            wait();
+        }
+        Thread.sleep(</span>3000<span style="color: #000000;">);
+        hasNewComputer </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        System.out.println(Thread.currentThread().getName() </span>+ "：第" + count + "台电脑被消费"<span style="color: #000000;">);
+        notify();
+    }
+
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                produceComputer();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">class</span> Consumer <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Thread {
+
+    </span><span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+    Producer producer;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Consumer(String name, Producer producer) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(name);
+        </span><span style="color: #0000ff;">this</span>.producer =<span style="color: #000000;"> producer;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                producer.consumeComputer(</span>++<span style="color: #000000;">count);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Producer producer </span>= <span style="color: #0000ff;">new</span> Producer("producer"<span style="color: #000000;">);
+        Consumer consumer </span>= <span style="color: #0000ff;">new</span> Consumer("consumer"<span style="color: #000000;">, producer);
+        producer.start();
+        consumer.start();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

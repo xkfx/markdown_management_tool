@@ -1,0 +1,98 @@
+<p>第一章中作者介绍了各种值，但是这些独立的值是没有意义的，只有当值放在更大的框架的时候才会彰显它们的价值。所以第二章开始介绍程序结构。</p>
+<p>&nbsp;</p>
+<p>1、var VS. let 以及 const</p>
+<p>作者推荐用 let ，因为var 有一些稀奇古怪的行为？暂时没有详细解释。</p>
+<p>const 用于绑定常量值</p>
+<p>&nbsp;</p>
+<p>2、关于 JavaScript 的运行环境</p>
+<p>在运行 JavaScript 程序的环境中，并不仅仅只有你定义的绑定，还有其它各式各样初始化就有的&ldquo;环境绑定&rdquo;。</p>
+<p>例如说&nbsp;prompt ， 这是一个持有函数类型的绑定，不过在现代浏览器里几乎不用了，理由是它没法装饰。。不过在玩具式程序里倒是用得很多。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">typeof</span><span style="color: #000000;"> prompt
+</span>"function"<br />
+<span style="color: #0000ff;">typeof</span><span style="color: #000000;"> NaN
+</span>"number"</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、关于自增号。</p>
+<p>在 JavaScript 里 ++ -- += -= *= 都是可以用的，但是在 Python 里不行，它有 += 却没有 ++ --&nbsp;</p>
+<p>&nbsp;</p>
+<p>4、javascript 命名规范</p>
+<p>遵循驼峰命名法（可以发现 JavaScript 标准函数就是那样命名的， 但为什么像 Number 那样的函数第一个字母是大写呢？因为是它是构造器）</p>
+<div class="cnblogs_code">
+<pre>Number("xxxx"<span style="color: #000000;">)
+NaN
+
+Number(</span>"222"<span style="color: #000000;">)
+</span>222</pre>
+</div>
+<p>&nbsp;</p>
+<p>5、打印下面这个图形：</p>
+<pre class="snippet cm-s-default" data-language="null">#
+##
+###
+####
+#####
+######
+#######</pre>
+<div class="cnblogs_code">
+<pre>            let result = "#"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (let i = 0; i != 7; ++<span style="color: #000000;">i) {
+                console.log(result);
+                result </span>+= "#"<span style="color: #000000;">;
+            }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>6、关于控制流的小练习</p>
+<p>Write a program that uses&nbsp;<code>console.log</code>&nbsp;to print all the numbers from 1 to 100, with two exceptions. For numbers divisible by 3, print&nbsp;<code>"Fizz"</code>&nbsp;instead of the number, and for numbers divisible by 5 (and not 3), print&nbsp;<code>"Buzz"</code>&nbsp;instead.</p>
+<p><a id="p_fJ/4Bt0n0A" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/02_program_structure.html#p_fJ/4Bt0n0A"></a>When you have that working, modify your program to print&nbsp;<code>"FizzBuzz"</code>&nbsp;for numbers that are divisible by both 3 and 5 (and still print&nbsp;<code>"Fizz"</code>&nbsp;or&nbsp;<code>"Buzz"</code>&nbsp;for numbers divisible by only one of those).</p>
+<div class="cnblogs_code">
+<pre>        &lt;script type="text/javascript"&gt;
+            <span style="color: #0000ff;">for</span> (let i = 1; i &lt;= 100; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (i % 3 === 0 &amp;&amp; i % 5 === 0<span style="color: #000000;">) {    
+                    console.log(</span>"FizzBuzz"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i % 5 === 0<span style="color: #000000;">) {
+                    console.log(</span>"Buzz"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (i % 3 === 0<span style="color: #000000;">) {
+                    console.log(</span>"Fizz"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    console.log(i);
+                }
+            }
+        </span>&lt;/script&gt;</pre>
+</div>
+<p>PS. 优先级 + - 等远大于 == != 远大于 &amp;&amp;和||（其中 &amp;&amp; 大于||） 赋值号优先级是最小的，另外，上面的 === 属于多此一举，当可以确定两边值类型相同的时候用 == 就可以了。</p>
+<p>&nbsp;</p>
+<p>7、练习三：</p>
+<p>Passing this string to&nbsp;<code>console.log</code>&nbsp;should show something like this:</p>
+<pre class="snippet cm-s-default" data-language="null"><a id="c_7yVx5TrcJ/" class="c_ident" tabindex="-1" href="http://eloquentjavascript.net/02_program_structure.html#c_7yVx5TrcJ/"></a> # # # #
+# # # # 
+ # # # #
+# # # # 
+ # # # #
+# # # # 
+ # # # #
+# # # #</pre>
+<p><a id="p_8n1E0bRGiW" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/02_program_structure.html#p_8n1E0bRGiW"></a>When you have a program that generates this pattern, define a binding&nbsp;<code>size = 8</code>&nbsp;and change the program so that it works for any&nbsp;<code>size</code>, outputting a grid of the given width and height.</p>
+<div class="cnblogs_code">
+<pre>       &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            let size </span>= Number(prompt("Enter the size of chessboard"<span style="color: #000000;">));
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">Number.isNaN(size)) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> NaN 虽然含义是 "Not a Number"，不过 typeof 输出类型仍然是 Number</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 另外，意外发现 IE 环境居然不支持 isNaN 属性</span>
+                let result = ""<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">for</span> (let i = 0; i != size; ++<span style="color: #000000;">i) {
+                    </span><span style="color: #0000ff;">for</span> (let j = 0; j != size; ++<span style="color: #000000;">j) {
+                        </span><span style="color: #0000ff;">if</span> ((i + j) % 2 == 0<span style="color: #000000;">) {
+                            result </span>+= " "<span style="color: #000000;">;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            result </span>+= "#"<span style="color: #000000;">;
+                        }
+                    }
+                    result </span>+= "\n"<span style="color: #000000;">;
+                }
+                console.log(result);
+            }
+        </span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>

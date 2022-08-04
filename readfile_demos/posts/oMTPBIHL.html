@@ -1,0 +1,410 @@
+<div class="catalog">
+<p><a href="#a1">多进程</a></p>
+<p><a href="#a2">多线程</a></p>
+<p><a href="#a3">ThreadLocal</a></p>
+<p><a href="#a4">进程vs线程</a></p>
+<p><a href="#a5">分布式进程</a></p>
+<p><a href="#a">Top</a></p>
+</div>
+<p><strong><span style="color: #ff0000;">学习<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431928972981094a382e5584413fa040b46d46cce48e000" target="_blank"><span style="color: #ff0000;">廖老师的py官网</span></a>的笔记</span></strong></p>
+<p>多任务的实现方式有三种方式：</p>
+<p>1、多进程</p>
+<p>2、多线程</p>
+<p>3、多进程+多线程（这种比较复杂，实际很少采用）</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;"><a name="a1"></a>【多进程】</span></strong></p>
+<p>1、在mac中创建子进程使用Python封装的fork()系统调用。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+
+pid </span>= os.fork()</pre>
+</div>
+<p>pid</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170413194022876-757266354.png" alt="" width="185" height="57" /></p>
+<p>&nbsp;</p>
+<p>2、在windows上的实现。</p>
+<p>使用multiprocessing模块的Process类。</p>
+<p>为了观察，还加了一小段代码~</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">from</span> multiprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Process
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 这里是子进程要执行的代码</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> run_proc(name):
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Run child process %s (pid=%s)...</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> (name, os.getpid()))
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span>==<span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Parent process %s.</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> os.getpid())
+<span style="background-color: #ffff00;">    greeting </span></span><span style="background-color: #ffff00;">= input(<span style="color: #800000;">'</span><span style="color: #800000;">hi~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span></span><span style="color: #000000;"><span style="background-color: #ffff00;">(greeting)</span>
+    p </span>= Process(target=run_proc, args=(<span style="color: #800000;">'</span><span style="color: #800000;">MyTest</span><span style="color: #800000;">'</span><span style="color: #000000;">,))
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Child process will start.</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    p.start()
+    p.join()
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Child process end.</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p>然后就观察到：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170413195559970-1722823362.png" alt="" width="204" height="75" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170413195731064-548178358.png" alt="" width="321" height="86" /></p>
+<p>结束：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$python test.py
+Parent process </span>1388<span style="color: #000000;">.
+hi</span>~<span style="color: #000000;"> hi!
+ hi!
+Child process will start.
+Run child process MyTest (pid</span>=12680<span style="color: #000000;">)...
+Child process end.</span></pre>
+</div>
+<p>join用于进程间的同步，子进程结束后继续往下执行。</p>
+<p>&nbsp;</p>
+<p>3、有时候需要创建大量的进程，（比如应对多用户访问）这个时候就需要使用&ldquo;进程池&rdquo;。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">from</span> multiprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Pool
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> os, time, random
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> long_time_task(name):
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">run task %s (%s)...</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> (name, os.getpid()))
+    start </span>=<span style="color: #000000;"> time.time()
+    time.sleep(random.random() </span>* 3) <span style="color: #008000;">#</span><span style="color: #008000;"> teme.sleep(sec)\random.random生成一个0&lt;=x&lt;1的数</span>
+    end =<span style="color: #000000;"> time.time()
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Task %s run %.2f seconds.</span><span style="color: #800000;">'</span> % (name, (end -<span style="color: #000000;"> start)))
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span>==<span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Parent process %s</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> os.getpid())
+    p </span>= Pool(4) 
+    <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(5<span style="color: #000000;">):
+        p.apply_async(long_time_task, args</span>=(i,)) <span style="color: #008000;">#</span><span style="color: #008000;"> 初始化子进程：这里的意思应该是将任务分配给进程并添加参数</span>
+    <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Waiting all process Done!.  ..</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    p.close() </span><span style="color: #008000;">#</span><span style="color: #008000;"> 关闭进程池：调用之后就不能再添加新进程了</span>
+    p.join() <span style="color: #008000;">#</span><span style="color: #008000;"> 父进程等待：等待所有子进程执行完毕</span>
+    <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">ALL Done.</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>Parent process 8936<span style="color: #000000;">
+Waiting all process Done!.  ..
+run task 0 (</span>5608<span style="color: #000000;">)...
+run task </span>1 (11904<span style="color: #000000;">)...
+run task </span>2 (8212<span style="color: #000000;">)...
+run task </span>3 (7492<span style="color: #000000;">)...
+Task 0 run </span>0.86<span style="color: #000000;"> seconds.
+run task </span>4 (5608<span style="color: #000000;">)...
+Task </span>4 run 0.85<span style="color: #000000;"> seconds.
+Task </span>1 run 1.81<span style="color: #000000;"> seconds.
+Task </span>2 run 2.53<span style="color: #000000;"> seconds.
+Task </span>3 run 2.88<span style="color: #000000;"> seconds.
+ALL Done.</span></pre>
+</div>
+<p>在join之后宏观来说各个进程应该是并发的，但是task4却在task0执行完之后才开始run。</p>
+<p>原因是pool中设置了最大运行并行的进程个数。</p>
+<div class="cnblogs_code">
+<pre>    p = Pool(4) <span style="color: #008000;">#</span><span style="color: #008000;"> 这里设置的是可以同时并发的数量</span>
+    <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(8): <span style="color: #008000;">#</span><span style="color: #008000;"> 真正添加的进程数量</span></pre>
+</div>
+<p>run一下：</p>
+<div class="cnblogs_code">
+<pre>Parent process 7592<span style="color: #000000;">
+Waiting all process Done!.  ..
+run task 0 (</span>4596<span style="color: #000000;">)...
+run task </span>1 (12712<span style="color: #000000;">)...
+run task </span>2 (9460<span style="color: #000000;">)...
+run task </span>3 (7308<span style="color: #000000;">)...
+Task 0 run </span>1.20<span style="color: #000000;"> seconds.
+run task </span>4 (4596)... <span style="color: #008000;">#</span><span style="color: #008000;"> 因为已经有 4 个进程在并行了，因此 task 4需要等待一个进程结束才开始运行，后面的task也是同理，结束一个，加入一个。</span>
+Task 3 run 1.23<span style="color: #000000;"> seconds.
+run task </span>5 (7308<span style="color: #000000;">)...
+Task </span>4 run 1.26<span style="color: #000000;"> seconds.
+run task </span>6 (4596<span style="color: #000000;">)...
+Task </span>1 run 2.46<span style="color: #000000;"> seconds.
+run task </span>7 (12712<span style="color: #000000;">)...
+Task </span>2 run 2.63<span style="color: #000000;"> seconds.
+Task </span>5 run 1.63<span style="color: #000000;"> seconds.
+Task </span>6 run 0.95<span style="color: #000000;"> seconds.
+Task </span>7 run 1.92<span style="color: #000000;"> seconds.
+ALL Done.</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>p = Pool() <span style="color: #008000;">#</span><span style="color: #008000;"> 不添加参数就默认为电脑的核数</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、子进程。</p>
+<p>&rdquo;很多时候，子进程并不是自身，而是一个外部进程。&ldquo;这里看不懂。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> subprocess
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">$ nslookup www.python.org</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+r </span>= subprocess.call([<span style="color: #800000;">'</span><span style="color: #800000;">nslookup</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">www.python.org</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Exit code:</span><span style="color: #800000;">'</span>, r)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;<span style="color: #000000;">python test.py
+$ nslookup www.python.org
+DNS request timed out.
+    timeout was </span>2<span style="color: #000000;"> seconds.
+服务器:  UnKnown
+Address:  </span>218.85.157.99<span style="color: #000000;">
+
+非权威应答:
+DNS request timed out.
+    timeout was </span>2<span style="color: #000000;"> seconds.
+名称:    python.map.fastly.net
+Address:  </span>151.101.72.223<span style="color: #000000;">
+Aliases:  www.python.org
+
+Exit code: 0</span></pre>
+</div>
+<p>稍微修改一下，改成编译当前文件夹下的一个.cpp文件：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> subprocess
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">$ g++ prog1.cpp -std=c++11</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+r </span>= subprocess.call([<span style="color: #800000;">'</span><span style="color: #800000;">g++</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">prog1.cpp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">prog1.cpp</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Exit code:</span><span style="color: #800000;">'</span>, r)</pre>
+</div>
+<p>效果和直接在命令行下输入命令是一样的。（.bat）</p>
+<p>如果子进程<strong>还需</strong>要输入，则可以通过<code>communicate()</code>方法输入。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> subprocess
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">subprocess $ python</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+p </span>= subprocess.Popen([<span style="color: #800000;">'</span><span style="color: #800000;">python</span><span style="color: #800000;">'</span>], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=<span style="color: #000000;">subprocess.PIPE)
+output, err </span>= p.communicate(b<span style="color: #800000;">'</span><span style="color: #800000;">a = 1997\nprint(a)\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">output:</span><span style="color: #800000;">'</span> + output.decode(<span style="color: #800000;">'</span><span style="color: #800000;">utf-8</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Exit code:</span><span style="color: #800000;">'</span>, p.returncode)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;<span style="color: #000000;">python test.py
+subprocess $ python
+output:</span>1997<span style="color: #000000;">
+
+Exit code: 0</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、进程间的通信。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 进程间的通信，queue实现示例。</span>
+<span style="color: #0000ff;">from</span> multiprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Process, Queue
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> os, time, random
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 这段代码由写数据的进程执行</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> write(q):
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Process to write: %s</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> os.getpid())
+    </span><span style="color: #0000ff;">for</span> value <span style="color: #0000ff;">in</span> [<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">C</span><span style="color: #800000;">'</span><span style="color: #000000;">]:
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Put %s to queue...</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> value)
+        q.put(value)
+        time.sleep(random.random())
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 这段代码由读数据的进程执行</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> read(q):
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Process to read: %s</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> os.getpid())
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+        value </span>=<span style="color: #000000;"> q.get(True)
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Get %s from queue.</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> value)
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    q </span>=<span style="color: #000000;"> Queue()
+    pw </span>= Process(target=write, args=<span style="color: #000000;">(q,))
+    pr </span>= Process(target=read, args=<span style="color: #000000;">(q,))
+
+    pw.start()
+    pr.start()
+    pw.join()
+    pr.terminate() </span><span style="color: #008000;">#</span><span style="color: #008000;"> pr默认无限循环，这里一旦pw结束就关掉pr</span></pre>
+</div>
+<p>可以把含有read方法的进程看作服务器，把含有write看作客户端程序。。。q当作存放socket的队列。。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ python test.py
+Process to write: </span>27524<span style="color: #000000;">
+Put A to queue...
+Process to read: </span>25572<span style="color: #000000;">
+Get A </span><span style="color: #0000ff;">from</span><span style="color: #000000;"> queue.
+Put B to queue...
+Get B </span><span style="color: #0000ff;">from</span><span style="color: #000000;"> queue.
+Put C to queue...
+Get C </span><span style="color: #0000ff;">from</span> queue.</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a2"></a><span style="color: #ff00ff;">【多线程】</span></p>
+<p>1、Python中的线程模块有_thread和threading。_thread是threading的底层，通常使用threading就可以了。</p>
+<p>2、线程的接口和进程的接口差不多。</p>
+<p>任何进程默认启动一个线程。这个默认的线程叫做：MainThread</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> time, threading
+
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">current_thread is %s</span><span style="color: #800000;">'</span> % threading.current_thread().name)</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ python test.py
+current_thread </span><span style="color: #0000ff;">is</span> MainThread</pre>
+</div>
+<p>MainThread又可以创建新的线程，方式和创建进程类似：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> time, threading
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">current_thread is %s</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> threading.current_thread().name)
+    
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">current_thread is %s</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> threading.current_thread().name)
+t </span>= threading.Thread(target=f, name=<span style="color: #800000;">'</span><span style="color: #800000;">&gt;_&lt;</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+t.start();
+t.join();
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">current_thread is %s</span><span style="color: #800000;">'</span> % threading.current_thread().name)</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ python test.py
+current_thread </span><span style="color: #0000ff;">is</span><span style="color: #000000;"> MainThread
+
+D:\labs</span>&gt;<span style="color: #000000;">python test.py
+current_thread </span><span style="color: #0000ff;">is</span><span style="color: #000000;"> MainThread
+current_thread </span><span style="color: #0000ff;">is</span> &gt;_&lt;<span style="color: #000000;">
+current_thread </span><span style="color: #0000ff;">is</span> MainThread</pre>
+</div>
+<p>&nbsp;默认的线程名为<code>Thread-1</code>，<code>Thread-2</code>&hellip;</p>
+<p>&nbsp;3、多线程和多进程的不同在于，多进程中的每一个进程对程序中的变量都有&ldquo;副本&rdquo;，各自互不影响。</p>
+<p>而多线程中的各个线程却&ldquo;共享&rdquo;变量。</p>
+<p>尝试一下,线程的情况：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> time, threading
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> f():
+    </span><span style="color: #0000ff;">global</span> data <span style="color: #008000;">#</span><span style="color: #008000;"> 需要先声明一下</span>
+    data = data + 5
+    <span style="color: #0000ff;">print</span><span style="color: #000000;">(data)
+
+data </span>= 30<span style="color: #000000;">
+
+t </span>= threading.Thread(target=f, name=<span style="color: #800000;">'</span><span style="color: #800000;">&gt;_&lt;</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+t2 </span>= threading.Thread(target=f, name=<span style="color: #800000;">'</span><span style="color: #800000;">( &gt;_ &lt;)</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+t.start();
+t2.start();
+t.join();
+t2.join();</span></pre>
+</div>
+<p>最后输出的是40.</p>
+<p>4、Lock.</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> threading, time
+
+lock1 </span>= threading.Lock() <span style="color: #008000;">#</span><span style="color: #008000;"> 创建锁</span>
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> task1():
+    lock1.acquire() </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取锁    </span>
+    <span style="color: #0000ff;">try</span><span style="color: #000000;">:
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(10<span style="color: #000000;">):
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">execute task1...</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">finally</span><span style="color: #000000;">:    
+        lock1.release() </span><span style="color: #008000;">#</span><span style="color: #008000;"> 释放锁</span>
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> task2():    
+    lock1.acquire() </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取锁    </span>
+    <span style="color: #0000ff;">try</span><span style="color: #000000;">:
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(10<span style="color: #000000;">):
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">execute task2...</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">finally</span><span style="color: #000000;">:    
+        lock1.release() </span><span style="color: #008000;">#</span><span style="color: #008000;"> 释放锁</span>
+<span style="color: #000000;">
+
+t1 </span>= threading.Thread(target=<span style="color: #000000;">task1)
+t2 </span>= threading.Thread(target=<span style="color: #000000;">task2)
+t1.start()
+t2.start()
+t1.join()
+t2.join()</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;5、GIL锁。</p>
+<p>历史遗留问题，可以通过执行多个py程序来跑满多核cpu。（或者）</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><a name="a3"></a>【ThreadLocal】</span></p>
+<p>参考：http://python.jobbole.com/86150/</p>
+<p>有时候使用局部变量不太方便，所以就引入了threadlocal变量。这个变量实质是一个全局的dict，但是却提供储存局部数据的功能。</p>
+<p>怎么创建、访问threadlocal储存的局部数据呢？</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> threading, time
+
+global_data </span>= threading.local() <span style="color: #008000;">#</span><span style="color: #008000;"> 创建</span>
+ 
+<span style="color: #008000;">#</span><span style="color: #008000;"> 每个线程都可以通过 global_data.num 获得自己独有的数据，并且每个线程读取到的 global_data 都不同</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> show():
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(threading.current_thread().getName(), global_data.num)
+ 
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> thread_cal():
+    global_data.num </span>=<span style="color: #000000;"> 0
+    </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(1000<span style="color: #000000;">):
+        global_data.num </span>+= 1<span style="color: #000000;">
+    show()
+ 
+threads </span>=<span style="color: #000000;"> []
+</span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(10<span style="color: #000000;">):
+    threads.append(threading.Thread(target</span>=<span style="color: #000000;">thread_cal))
+    threads[i].start()
+</span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(10<span style="color: #000000;">):
+    threads[i].join()
+    </span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><a name="a4"></a>【进程vs线程】</span></p>
+<p>相对而言，多进程稳定，但是消耗资源大，多线程不稳定，但是消耗资源小。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><a name="a5"></a>【分布式进程】</span></p>
+<p><a href="http://www.liaoxuefeng.com/discuss/001409195742008d822b26cf3de46aea14f2b7378a1ba91000/00149144208203346ad42ce0a8943a698361530e64b5e39000" target="_blank">参考代码来源</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> queue
+
+</span><span style="color: #0000ff;">from</span> multiprocessing.managers <span style="color: #0000ff;">import</span><span style="color: #000000;"> BaseManager
+
+task_queue </span>=<span style="color: #000000;"> queue.Queue()
+result_queue </span>=<span style="color: #000000;"> queue.Queue()
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> QueueManager(BaseManager):
+    </span><span style="color: #0000ff;">pass</span>
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> return_task_queue():
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> task_queue
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> return_result_queue():
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result_queue
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> test():
+    QueueManager.register(</span><span style="color: #800000;">'</span><span style="color: #800000;">get_task_queue</span><span style="color: #800000;">'</span>, callable=<span style="color: #000000;">return_task_queue)
+    QueueManager.register(</span><span style="color: #800000;">'</span><span style="color: #800000;">get_result_queue</span><span style="color: #800000;">'</span>, callable=<span style="color: #000000;">return_result_queue)
+
+    manager </span>= QueueManager(address=(<span style="color: #800000;">'</span><span style="color: #800000;">127.0.0.1</span><span style="color: #800000;">'</span>, 5000), authkey=b<span style="color: #800000;">'</span><span style="color: #800000;">abc</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+    manager.start()
+
+    task </span>=<span style="color: #000000;"> manager.get_task_queue()
+    result </span>=<span style="color: #000000;"> manager.get_result_queue()
+
+    </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(10<span style="color: #000000;">):
+        task.put(i)
+        
+    </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(10<span style="color: #000000;">): 
+        </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(result.get())
+
+    manager.shutdown()
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span>  == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    test()</span></pre>
+</div>
+<p>自己写的死活运行不出来。。。</p>

@@ -1,0 +1,41 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖</a>雪峰的官方网站。</p>
+<p>1、把<code>list</code>、<code>dict</code>、<code>str</code>等<code>Iterable</code>变成<code>Iterator</code>可以使用<strong><code>iter()</code>函数</strong></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; L = iter([1, 2, 3, 4, 5, 7<span style="color: #000000;">])
+</span>&gt;&gt;&gt;<span style="color: #000000;"> L
+</span>&lt;list_iterator object at 0x000002014FB66160&gt;
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+</span>1
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+</span>2
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+</span>3
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+</span>4
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+</span>5
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+</span>7
+&gt;&gt;&gt;<span style="color: #000000;"> next(L)
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+StopIteration</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、<code>Iterator</code>的计算是惰性的，只有在需要返回下一个数据时它才会计算。</p>
+<p><code>Iterator</code>甚至可以表示一个无限大的数据流，例如全体自然数。而使用list是永远不可能存储全体自然数的。</p>
+<p>&nbsp;</p>
+<p>3、<strong>函数式编程</strong>就是一种抽象程度很高的编程范式，纯粹的函数式编程语言编写的函数没有变量。</p>
+<p>&nbsp;</p>
+<p>4、把函数作为参数传入，这样的函数称为<strong>高阶函数</strong>，函数式编程就是指这种高度抽象的编程范式。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;">&gt;&gt;&gt; def add(a, b, f):
+...     return f(a) + f(b)
+...
+&gt;&gt;&gt; add(-3, -4, abs)
+7
+</pre>
+</div>
+<p>　</p>
+<p>5、高阶函数是把函数看成对象，可以传入，还可以返回一个动态创建的函数。</p>
+<p>&nbsp;</p>

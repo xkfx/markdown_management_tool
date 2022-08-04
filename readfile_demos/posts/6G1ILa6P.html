@@ -1,0 +1,124 @@
+<h4><span style="text-decoration: underline; font-family: 楷体;">2.2-1</span></h4>
+<p><span style="font-family: 楷体;">theta n^3</span></p>
+<p><span style="font-family: 楷体;">&nbsp;</span></p>
+<p><span style="text-decoration: underline; font-family: 楷体;">2.2-2</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;">SELECTION-<span style="color: #000000;">SORT(A)
+    </span><span style="color: #0000ff;">for</span> i = 1 to A.length-1
+        <span style="color: #0000ff;">for</span> j = i+1<span style="color: #000000;"> to A.length
+            </span><span style="color: #0000ff;">if</span> A[i] &gt; <span style="color: #000000;">A[j]
+                swap(A[i], A[j])</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">维持的循环不变式是 A[1..i] 按序排列（从小到大），</span></p>
+<p><span style="font-family: 楷体;">不严谨地尝试证明&darr;</span></p>
+<p><span style="font-family: 楷体;">初始化：对于单个元素 A[1]，显然成立。</span></p>
+<p><span style="font-family: 楷体;">保持：我们假设在 i = n 时循环不变式成立，那么当 i = n + 1 时，A[i] 将会和 A[i+1] ~ A[A.length] 中的每个元素进行比较，最终 A[i] 将取得它们中的最小值，事实上它就是在整个序列中次小于 A[i-1] 的那个数（因为每次迭代总会拿到剩余队列的最小值，因此&ldquo;下一次&rdquo;只能拿到仅次于&ldquo;上次&rdquo;的最小值），故 A[1..i] 保持循环不变式。</span></p>
+<p><span style="font-family: 楷体;">终止：当 i = A.length 时迭代结束，根据上面的证明 A[1..A.length-1] 已确保有序， A[A.length] 是经过 A.length - 1 次比较后剩下的次次次..（省略 A.length - 4 个次）.次最小数，也就是序列中的最大数，因此 A[1.. A.length] 按序排列，故算法正确。&nbsp;</span></p>
+<p><span style="font-family: 楷体;">算法的运行时间 T(n) = c1*(n-1) + c2*(n-1+1)*n / 2 + c3*(n-1+1)*n / 2 +&nbsp;c4*(n-1+1)*n / 2</span></p>
+<p><span style="font-family: 楷体;">最佳状况是数组已经有序（c4 取 0），最坏情况是数组逆序（如上式），不过两者增长量级是相同的，都是 theta n^2 。</span></p>
+<p><span style="font-family: 楷体;">&nbsp;</span></p>
+<p><span style="text-decoration: underline; font-family: 楷体;">2.2-3</span></p>
+<p><span style="font-family: 楷体;">平均需要检查 n / 2 个元素，最坏情况需要检查 n 个。</span></p>
+<p><span style="font-family: 楷体;">平均情况和最坏情况的增长量级都是 theta n&nbsp;</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #000000;">SEARCH(v, A)
+    </span><span style="color: #0000ff;">for</span> i = 1<span style="color: #000000;"> to A.length    c1 tn
+        </span><span style="color: #0000ff;">if</span> A[i] ==<span style="color: #000000;"> v        c2 tn
+            </span><span style="color: #0000ff;">return</span> i        c3 1 <span style="color: #0000ff;">or</span><span style="color: #000000;"> 0
+    </span><span style="color: #0000ff;">return</span> NIL                c4 1 <span style="color: #0000ff;">or</span> 0  </span></pre>
+</div>
+<p><span style="font-family: 楷体;">T(n) =&nbsp;c1*tn + c2*tn + c3 + c4</span></p>
+<p><span style="font-family: 楷体;">代入 n （最坏）或者 n/2 （平均），忽略常数，结果都是 theta n</span></p>
+<p><span style="font-family: 楷体;">&nbsp;</span></p>
+<p><span style="text-decoration: underline; font-family: 楷体;">2.2-4</span></p>
+<p><span style="font-family: 楷体;">针对特殊情况进行测试，如果符合的话就直接给出预先计算好的答案。</span></p>
+<p><span style="font-family: 楷体;">就是增加常数时间能跑完的代码，用于覆盖一些特例，减少无所谓的循环。</span></p>
+<p><span style="font-family: 楷体;">下面是网上找的参考答案：</span></p>
+<p><span style="font-family: 楷体;"><img src="http://images2017.cnblogs.com/blog/1042431/201710/1042431-20171013140609996-1880043979.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>摘：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('1550f21c-e54b-4c38-8b9c-466b7a53bb36')"><img id="code_img_closed_1550f21c-e54b-4c38-8b9c-466b7a53bb36" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_1550f21c-e54b-4c38-8b9c-466b7a53bb36" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('1550f21c-e54b-4c38-8b9c-466b7a53bb36',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_1550f21c-e54b-4c38-8b9c-466b7a53bb36" class="cnblogs_code_hide">
+<pre><span style="color: #800080;">1</span><span style="color: #000000;">
+我们先来观察几个简单的四则运算：
+
+</span><span style="color: #800080;">3</span> + <span style="color: #800080;">1</span> = <span style="color: #800080;">2</span> 
+
+<span style="color: #800080;">23</span> + <span style="color: #800080;">23</span> = <span style="color: #800080;">46</span>
+
+<span style="color: #800080;">2</span> + <span style="color: #800080;">4</span> = <span style="color: #800080;">6</span><span style="color: #000000;">
+
+上面几个式子有什么相似之处呢？
+
+很显然它们的统一特征就是&ldquo;求和&rdquo;。我们找一个符号来抽象表示&ldquo;这件事情&rdquo;，比如说用 sum(a, b) 表示&ldquo;求和&rdquo;，
+
+这样的话我们可以推出 sum(</span><span style="color: #800080;">3</span>, <span style="color: #800080;">1</span>) = <span style="color: #800080;">2</span><span style="color: #000000;">
+
+sum(</span><span style="color: #800080;">23</span>, <span style="color: #800080;">23</span>) = <span style="color: #800080;">46</span><span style="color: #000000;">，
+
+&ldquo; </span>+<span style="color: #000000;"> &rdquo;只不过是个符号而已！
+
+再比如我们需要把一些数组从小到大到排序。
+
+例如说  </span><span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> ，很容易得到  <span style="color: #800080;">1</span> <span style="color: #800080;">2</span> <span style="color: #800080;">3</span><span style="color: #000000;"> 
+
+再比如  </span><span style="color: #800080;">1</span> <span style="color: #800080;">4</span> <span style="color: #800080;">3</span>  ，很容易得到 <span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">4</span><span style="color: #000000;">
+
+我们同样可以用一个符号来抽象表示这件事情， sort(</span><span style="color: #800080;">1</span>,  <span style="color: #800080;">3</span>, <span style="color: #800080;">2</span><span style="color: #000000;">) 。 （sort 是英语中的排序）
+
+ 那我现在问你，你到底是如何把 </span><span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span><span style="color: #000000;"> 从小到大到排序的呢？
+
+按照普通高中生的思维，一般都会说：这还用想？#@X 把 </span><span style="color: #800080;">3</span> 和 <span style="color: #800080;">2</span><span style="color: #000000;"> 调换就可以了。。
+
+好吧 那我让你将 </span><span style="color: #800080;">1729</span> <span style="color: #800080;">237</span> <span style="color: #800080;">9123</span> <span style="color: #800080;">263</span> <span style="color: #800080;">12</span> <span style="color: #800080;">123</span> <span style="color: #800080;">2813</span> <span style="color: #800080;">123</span> <span style="color: #800080;">213</span> <span style="color: #800080;">123</span> <span style="color: #800080;">321</span> <span style="color: #800080;">312</span> <span style="color: #800080;">3</span><span style="color: #000000;">... 从小到大到排序你会怎么做呢？
+
+▉▊▋▌▍▎▉▊▋▌▍▎▏█▇ ▆ ▅ ▄ ▃ ▂ ▂ 
+
+▏█▇ 　　▌▍▎▇ ▆ 
+
+▍▎▏▉▊▍▎▏▉▊▋▌▍▎▏▌▍▎█▌▍▎▌▍
+
+是不是发现有特别多的方法？例如说你可以把最小的挑出来，然后再去找次小的、又或者可以按照排队的方法，把大的往后换...
+
+当然，在我们软件开发的过程中要做的事情通常不是排序那么简单。
+
+例如说一个非常简单的例子。。我希望你让计算机识别某张图片中的数字。。同样的，我们可以像 sum() 、sort() 一样把它抽象为 f(a.jpg) ， f 只是个记号！
+
+好吧，对于这个问题，我想非专业人员并不是很快可以知道该怎么做的。。。
+
+我们把类似于 sum() 、sort() 、f(a.jpg) 的玩意儿叫做函数 ，算法可以理解为函数的具体实现。
+
+ 
+
+</span><span style="color: #800080;">2</span><span style="color: #000000;">
+大多数情况都不需要我们从头到尾亲自去设计一个算法，也就是你不需要去亲自弄清楚怎么样去识别图片中的数字。
+
+更多时候，我们是作为一个算法的使用者，&ldquo;识别数字&rdquo;往往也只是软件功能的一小部分，
+
+我们做得更多的事情是&ldquo;分析算法&rdquo;，然后拿来用：
+
+要分析一个算法，首先需要我们能够看懂算法（），其次是能够甄别算法的效率。
+
+ 
+
+我们怎样判断一个算法的效率呢？严格来讲一个算法的快慢相关于其具体的运行环境。
+
+如果是真实的场景的话，肯定是要基于具体条件分析的。
+
+但是从应用的角度，我们一般假设算法都运行在相同的环境下（诸如硬件条件、内存之类的），在此基础上去衡量算法的运行时间，这个运行时间对于不同的输入显然也不是一成不变的，排序 </span><span style="color: #800080;">1</span> <span style="color: #800080;">3</span> <span style="color: #800080;">2</span> 显然比排序 <span style="color: #800080;">1729</span> <span style="color: #800080;">237</span> <span style="color: #800080;">9123</span> <span style="color: #800080;">263</span> <span style="color: #800080;">12</span> <span style="color: #800080;">123</span> <span style="color: #800080;">2813</span> <span style="color: #800080;">123</span> <span style="color: #800080;">213</span> <span style="color: #800080;">123</span> <span style="color: #800080;">321</span> <span style="color: #800080;">312</span> <span style="color: #800080;">3</span><span style="color: #000000;">...快得多。
+
+倘若赤裸裸的分析一个算法的话，运行时间指的是算法运行的步数！！！一般呈现这样的关系：运行时间相关于输入规模和输入内容， 
+
+（当然，存在对于特定输入却有不同运行时间的状况，暂且不提）
+
+通常认为，一个算法的增长量级越低就越有效，例如说n</span>^<span style="color: #800080;">2</span><span style="color: #000000;"> 相对于 nlogn 显得很笨重！
+
+具体怎么算参考算法导论。
+
+ 
+
+总之，认识一个算法或者说对待算法的态度应该是：算法有什么用 </span>&gt; 算法效率怎么样 &gt; 算法具体做了什么</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;</p>

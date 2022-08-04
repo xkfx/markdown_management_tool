@@ -1,0 +1,160 @@
+<p><a href="#a1">前端学习纲要</a> ※<a href="#a2"> jQuery 参考</a> ※&nbsp;<a href="#a4">整理&nbsp;Chrome 收藏夹的小技巧</a> ※ <a href="#a3">解决 AJAX 跨域获取 cookie</a> ※ <a href="#a5">记一次 MyBatis 相关的 debug</a></p>
+<p>&nbsp;</p>
+<p><a name="a1"></a>【1】</p>
+<p>前端学习纲要：</p>
+<p><span style="color: #ff0000;">&diams;&nbsp;</span>第一阶段：</p>
+<p>web-project 的命名规范与文件的组织规范；</p>
+<p>HTML 的基本元素 --&gt; &nbsp;例如 h p ui ol li .. img 等 --&gt; HTML 元素的属性；</p>
+<p>CSS 属性与值 --&gt; 各种选择器 --&gt; 盒子模型 --&gt; inline 和 block 的区别（CSS 本质上是 HTML 元素的一个属性）;</p>
+<p>JS --&gt; 用于完善网页的动态与逻辑 --&gt; 动态创建元素 更改 CSS属性等 --&gt; DOM --&gt; 学会查看&nbsp;<a href="https://developer.mozilla.org/en/docs/Web/API" target="_blank">相关API</a> --&gt; Window 方法、属性；</p>
+<p>掌握&nbsp;<a href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/Publishing_your_website" target="_blank">发布网站的 N 种途径</a>；</p>
+<p><span style="color: #ff0000;">&diams;</span> 第二阶段：</p>
+<p>HTML&nbsp;--&gt; 学会用 span 与 div 封装内容 --&gt; 了解 HTML 中的转义字符&nbsp;--&gt; 掌握超链接相关内容，例如图片超链接，链接到文档的特定部分，链接的选取等 &nbsp;<a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Creating_hyperlinks#Link_best_practices" target="_blank">链接的最佳实践</a>&nbsp;--&gt; 了解 URL 路径，例如如何转到父目录等；</p>
+<p>JS --&gt; 了解何为 strict 模式 --&gt; JS 变量的作用域、JS 的符号不严格，例如 ; 与 " ' 等（JavaScript 引擎具有行末自动添加分号的机制） --&gt; JS 中字符串相关的内容，例如 <strong>用</strong>&nbsp;<strong>${} 取变量值</strong>、length、字符串不可变、一些操作字符串的方法等 --&gt; <a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/00143449921138898cdeb7fc2214dc08c6c67827758cd2f000#0" target="_blank"><strong>数组相关的操作！</strong></a> --&gt; JS 对象的 in delete 操作及其继承关系 --&gt; For 语句最常用于遍历数组 --&gt; 定义 JS 函数的两种等价形式 --&gt; JS 减少命名冲突常常采用&nbsp;<a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/0014344993159773a464f34e1724700a6d5dd9e235ceb7c000" target="_blank">&ldquo;名字空间&rdquo;&nbsp;</a>&nbsp;封装自定义变量 --&gt;<strong> &nbsp;<a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499490767fe5a0e31e17e44b69dcd1196f7ec6fc6000#0" target="_blank">处理 JSON 数据</a>&nbsp;</strong>--&gt; JS 的面向对象 --&gt; 利用 httpOnly 防止 cookie 泄露 --&gt;&nbsp;<strong><a href="https://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434499851683f7f8d6b7717343248a75d5e7f930def4000#0" target="_blank">操作DOM</a>&nbsp;--&gt; AJAX </strong>--&gt; 跨域相关的问题 --&gt;<strong>&nbsp;<a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=14&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwjLooHCxqjVAhWL2LwKHSglAScQFghpMA0&amp;url=https%3A%2F%2Fjquery.com%2F&amp;usg=AFQjCNFnz7C6MAXGLm7pVcOD_LrOjJUUiA" target="_blank" data-href="https://jquery.com/">jQuery</a>；<br /></strong></p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>【2】</p>
+<p>jQuery 参考 --&gt; 选择器 &amp; 操作 DOM &amp; 事件</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Basic table&lt;/title&gt;
+    &lt;style&gt;<span style="color: #000000;">
+        td {
+            border: 1px solid #</span>999<span style="color: #000000;">;
+            padding: </span>0<span style="color: #000000;">.1em 1em;
+        }
+
+        .red {
+            color: blue;
+        }
+    </span>&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;table class="simple-table" id="my-table"&gt;
+        &lt;tr id="row-one"&gt;
+            &lt;td&gt;Cats&lt;/td&gt;
+            &lt;td&gt;Dogs&lt;/td&gt;
+            &lt;td&gt;Lemurs&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr class="a b c"&gt;
+            &lt;td class="wide-animal"&gt;Tiger&lt;/td&gt;
+            &lt;td&gt;Grey Wolf&lt;/td&gt;
+            &lt;td&gt;Indri&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+    &lt;script src="scripts\jquery-3.2.1.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> v1 = $('#row-one'); <span style="color: #008000;">//</span><span style="color: #008000;"> query by id, v1 is a jQuery object</span>
+        <span style="color: #0000ff;">var</span> v2 = v1.get(0); <span style="color: #008000;">//</span><span style="color: #008000;"> v2 is a DOM object</span>
+        <span style="color: #0000ff;">var</span> v3 = $(v2); <span style="color: #008000;">//</span><span style="color: #008000;"> v3 is a jQuery object</span>
+
+        <span style="color: #0000ff;">var</span> v4 = $('td'); <span style="color: #008000;">//</span><span style="color: #008000;"> query by tag name</span>
+        <span style="color: #0000ff;">var</span> v5 = $('.simple-table'); <span style="color: #008000;">//</span><span style="color: #008000;"> query by class name</span>
+        <span style="color: #0000ff;">var</span> v6 = $('.a.b.c'); <span style="color: #008000;">//</span><span style="color: #008000;"> query elements that contain a b c at the same time</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> ... query by properties</span>
+        <span style="color: #0000ff;">var</span> v7 = $('td.wide-animal'); <span style="color: #008000;">//</span><span style="color: #008000;"> query by tag-name and class-name</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> ... Omitted n methods</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> console.log(v7);</span>
+
+        <span style="color: #008000;">//</span><span style="color: #008000;"> Special selectors, such as $ ('input [type = radio]: checked')..</span>
+
+        <span style="color: #008000;">//</span><span style="color: #008000;"> get text and html</span>
+        <span style="color: #0000ff;">var</span> v8 = $('#my-table tr td[class=wide-animal]'<span style="color: #000000;">);
+        console.log(v8.html() </span>+ ' ' +<span style="color: #000000;"> v8.text());
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> set text and html</span>
+        v8.html('&lt;span style="color: red"&gt;Tiger&lt;/span&gt;'<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> v9 = $('#my-table tr td'<span style="color: #000000;">);
+        v9.text(</span>'Tiger'); <span style="color: #008000;">//</span><span style="color: #008000;"> Change all data to tiger</span>
+
+        <span style="color: #008000;">//</span><span style="color: #008000;"> get+set+clear STYLE!</span>
+        console.log(v9.css('color'<span style="color: #000000;">));
+        v9.css(</span>'color', 'red'); <span style="color: #008000;">//</span><span style="color: #008000;"> css('name', 'value')</span>
+        v9.css('color', ''<span style="color: #000000;">);
+        v9.addClass(</span>'red'<span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> hide &amp; show</span>
+<span style="color: #000000;">        v9.hide();
+        v9.show();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> get+set+remove propertis ...</span>
+        v9.attr('id', 'complex-data'<span style="color: #000000;">);
+        console.log(v9.attr(</span>'id'<span style="color: #000000;">));
+        v9.removeAttr(</span>'id'<span style="color: #000000;">);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Form related content --&gt; val() --&gt; get+set</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> add+remove DOM</span>
+        v1.append('&lt;td&gt;fish&lt;/td&gt;'<span style="color: #000000;">);
+        v1.prepend(</span>'&lt;td id=\'fish\'&gt;fish&lt;/td&gt;'<span style="color: #000000;">);
+        v6.remove();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> event</span>
+        <span style="color: #0000ff;">var</span> v10 = $('#fish'<span style="color: #000000;">);
+        v10.click(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            alert(</span>'fish!'<span style="color: #000000;">);
+        });
+        v10.mouseleave(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            alert(</span>'fish!fish!'<span style="color: #000000;">);
+        });
+    </span>&lt;/script&gt;
+
+    &lt;p&gt;&lt;input type="text" class="simple-input"&gt;&lt;/p&gt;
+    &lt;p id="event-info"&gt;&lt;/p&gt;
+
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> v11 = $('.simple-input'<span style="color: #000000;">);
+        v11.keydown(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            v11.css(</span>"background-color", "#FFFFCC"<span style="color: #000000;">);
+        });
+        v11.focus(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            $(</span>'body').attr('style', 'background-color: red'<span style="color: #000000;">);
+        });
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> other event, such as ready[&lt;---important!!!]. submit. </span>
+        $(<span style="color: #0000ff;">function</span> () { <span style="color: #008000;">//</span><span style="color: #008000;"> Equivalent to $(document).ready(function() {})</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> init...</span>
+<span style="color: #000000;">        });
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Get event information</span>
+        $(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            $(</span>'html').mousemove(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (event) {
+                $(</span>'#event-info').text('x = ' + event.pageX + ', y = ' +<span style="color: #000000;"> event.pageY);
+            });
+        });
+    </span>&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a3"></a>【3】</p>
+<p>参考：<a href="http://www.cnblogs.com/helloyy/p/6109665.html#3741878" target="_blank">http://www.cnblogs.com/helloyy/p/6109665.html#3741878</a></p>
+<p>通过 AJAX 访问与通过浏览器键入地址访问是完全不同的，如果没有进行恰当的设置，浏览器将会把 AJAX 从服务器得到的 set-cookie 当成垃圾处理掉！</p>
+<p>结果就是客户端得不到预期的 cookie ，要解决这个问题需要在【两边】进行设置，</p>
+<p>客户端 AJAX 属性：</p>
+<div class="cnblogs_code">
+<pre>            async:<span style="color: #0000ff;">false</span><span style="color: #000000;">,
+            data:datatosend,
+            dataType:</span>"json"<span style="color: #000000;">,
+            beforeSend: </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(xhr) {
+                xhr.withCredentials </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            crossDomain:</span><span style="color: #0000ff;">true</span>,</pre>
+</div>
+<p><span style="font-size: 14px;">服务端：</span></p>
+<div class="cnblogs_code">
+<pre>response.setHeader("Access-Control-Allow-Credentials", "true"<span style="color: #000000;">);
+response.setHeader(</span>"Access-Control-Allow-Origin", request.getHeader("Origin"));</pre>
+</div>
+<p><span style="font-size: 14px;">暂时先这样。。。</span></p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>【4】</p>
+<p>关于 Chrome 的一个小技巧，按住 Ctrl 键可以很方便地整理文件夹。</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201707/1042431-20170726150708281-1505825333.png" alt="" width="607" height="343" /></p>
+<p>&nbsp;</p>
+<p><a name="a5"></a>【5】</p>
+<p>记一次 BUG，参考：<a href="http://zhangsha1251.blog.163.com/blog/static/6262405320111037220994/" target="_blank">http://zhangsha1251.blog.163.com/blog/static/6262405320111037220994/</a></p>
+<p>为了方便测试给实体类添加了一个有参构造器。。没有补上无参构造器。。导致 MyBatis 创建不了实体类对象。。。</p>

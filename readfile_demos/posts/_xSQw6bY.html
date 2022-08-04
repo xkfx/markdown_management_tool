@@ -1,0 +1,50 @@
+<p>2018-06-02</p>
+<p>在 Class.forName 的时候记得先尝试 import 一下。</p>
+<p>&nbsp;</p>
+<p>2018-06-04</p>
+<p>1、JDBC SELECT 查询，中文条件查不出东西，可能是字符编码问题：</p>
+<div class="cnblogs_code">
+<pre>            String sql = "select reply from reply where words = ?"<span style="color: #000000;">;
+            preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+            preparedStatement.setString(</span>1<span style="color: #000000;">, words);
+            resultSet </span>= preparedStatement.executeQuery();</pre>
+</div>
+<p>检查&nbsp;&nbsp;conn = DriverManager.getConnection("jdbc:mysql://123.123.82.66:3306/chat", "123", "123");</p>
+<p>按如下修改&nbsp;conn = DriverManager.getConnection("jdbc:mysql://123.123.82.66:3306/chat<span style="color: #ff0000;">?characterEncoding=utf8</span>", "123", "123");</p>
+<p>2、存储过程插入中文数据乱码？？！！方案来自：https://blog.csdn.net/qq_20948497/article/details/78535941</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> insert_mapping;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> insert_mapping(
+  </span><strong><span style="color: #808080;">IN</span> words_in <span style="color: #0000ff;">VARCHAR</span> (<span style="color: #800000;">100</span>) <span style="color: #ff0000;">character set utf8,
+  </span><span style="color: #808080;">IN</span> reply_in <span style="color: #0000ff;">VARCHAR</span> (<span style="color: #800000;">300</span>) <span style="color: #ff0000;">character set</span></strong><span style="color: #000000;"><span style="color: #ff0000;"><strong> utf8</strong></span>
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+<span style="color: #008080;">--</span><span style="color: #008080;">     先通过查 id 判断是否已经存在 words ，存在，直接插入 reply，不存在插入 words 和 reply</span>
+    <span style="color: #0000ff;">DECLARE</span> wid <span style="color: #0000ff;">BIGINT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">SELECT</span> words_id <span style="color: #0000ff;">FROM</span> words <span style="color: #0000ff;">WHERE</span> words_in<span style="color: #808080;">=</span>words <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> wid;
+
+    </span><span style="color: #0000ff;">IF</span> wid <span style="color: #808080;">=</span> <span style="color: #800000; font-weight: bold;">0</span> <span style="color: #0000ff;">THEN</span>
+      <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span> words(words) <span style="color: #0000ff;">VALUES</span><span style="color: #000000;"> (words_in);
+      </span><span style="color: #0000ff;">SELECT</span> words_id <span style="color: #0000ff;">FROM</span> words <span style="color: #0000ff;">WHERE</span> words_in<span style="color: #808080;">=</span>words <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> wid;
+      </span><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span> reply2(reply, words_id) <span style="color: #0000ff;">VALUES</span><span style="color: #000000;"> (reply_in, wid);
+    </span><span style="color: #0000ff;">ELSE</span>
+      <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span> reply2(reply, words_id) <span style="color: #0000ff;">VALUES</span><span style="color: #000000;"> (reply_in, wid);
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">IF</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;">
+DELIMITER ;
+</span><span style="color: #008080;">--</span><span style="color: #008080;">  插入一些 数据</span>
+<span style="color: #808080;">CALL insert_mapping('你好', '你好呢。');
+CALL insert_mapping('你好', 'hi.');</span></pre>
+</div>
+<p>3、命令行下插不了中文，JDBC却可以。</p>
+<p>set name gbk; 即可。&nbsp;</p>
+<p>&nbsp;</p>
+<p>2018-06-05</p>
+<p>1、依然是连接 MySQL 中文没法匹配的问题，发现像下面那样修改一下就可以了：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SET</span> character_set_database<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+Query OK, </span><span style="color: #800000; font-weight: bold;">0</span> rows affected (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>不过这种修改是临时性的，要永久性更改需要修改 mysql 的配置文件，但是我没有找到那个配置文件，于是修改了&nbsp;my.cnf 结果是 mysql 启动不了了 。。。</p>
+<p>&nbsp;</p>

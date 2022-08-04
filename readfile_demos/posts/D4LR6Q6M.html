@@ -1,0 +1,101 @@
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/10min.html" target="_blank">10 Minutes to pandas</a></p>
+<p>&nbsp;</p>
+<h3>Concat</h3>
+<div class="cnblogs_code">
+<pre>df = pd.DataFrame(np.random.randn(10, 4<span style="color: #000000;">))
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(df)
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> break it into pieces</span>
+pieces = [df[:3], df[3:7], df[7<span style="color: #000000;">:]]
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(pd.concat(pieces))
+</span><span style="color: #008000;">#</span><span style="color: #008000;">           0         1         2         3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  0.879526 -1.417311 -1.309299  0.287933</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1 -1.194092  1.237536 -0.375177 -0.622846</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  1.449524  1.732103  1.866323  0.327194</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3 -0.028595  1.047751  0.629286 -0.611354</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4 -1.237406  0.878287  1.407587 -1.637072</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5  0.536248  1.172208  0.405543  0.245162</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6  0.166374  1.185840  0.132388 -0.832135</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7  0.750722 -1.188307  1.306327  1.564907</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 8 -0.755132 -1.538270 -0.173119  1.341313</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 9 -0.572171  1.808220  0.688190 -0.672612</span><span style="color: #008000;">
+#</span><span style="color: #008000;">           0         1         2         3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  0.879526 -1.417311 -1.309299  0.287933</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1 -1.194092  1.237536 -0.375177 -0.622846</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  1.449524  1.732103  1.866323  0.327194</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3 -0.028595  1.047751  0.629286 -0.611354</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4 -1.237406  0.878287  1.407587 -1.637072</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5  0.536248  1.172208  0.405543  0.245162</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6  0.166374  1.185840  0.132388 -0.832135</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7  0.750722 -1.188307  1.306327  1.564907</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 8 -0.755132 -1.538270 -0.173119  1.341313</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 9 -0.572171  1.808220  0.688190 -0.672612</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>Join</h3>
+<p>类似 sql 里的 join （联表）</p>
+<div class="cnblogs_code">
+<pre>left = pd.DataFrame({<span style="color: #800000;">'</span><span style="color: #800000;">key</span><span style="color: #800000;">'</span>: [<span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>], <span style="color: #800000;">'</span><span style="color: #800000;">lval</span><span style="color: #800000;">'</span>: [1, 2<span style="color: #000000;">]})
+right </span>= pd.DataFrame({<span style="color: #800000;">'</span><span style="color: #800000;">key</span><span style="color: #800000;">'</span>: [<span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>], <span style="color: #800000;">'</span><span style="color: #800000;">rval</span><span style="color: #800000;">'</span>: [4, 5<span style="color: #000000;">]})
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(left)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(right)
+</span><span style="color: #0000ff;">print</span>(pd.merge(left, right, on=<span style="color: #800000;">'</span><span style="color: #800000;">key</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+</span><span style="color: #008000;">#</span><span style="color: #008000;">    key  lval</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  foo     1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  foo     2</span><span style="color: #008000;">
+#</span><span style="color: #008000;">    key  rval</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  foo     4</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  foo     5</span><span style="color: #008000;">
+#</span><span style="color: #008000;">    key  lval  rval</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  foo     1     4</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  foo     1     5</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  foo     2     4</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3  foo     2     5</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>Merge</h3>
+<div class="cnblogs_code">
+<pre>df = pd.DataFrame(np.random.randn(8, 4), columns=[<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">C</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(df)
+s </span>= df.iloc[3<span style="color: #000000;">]
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(s)
+df.append(s, ignore_index</span>=<span style="color: #000000;">True)
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(df)
+</span><span style="color: #0000ff;">print</span>(df.append(s, ignore_index=<span style="color: #000000;">True))
+</span><span style="color: #008000;">#</span><span style="color: #008000;">           A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0 -1.744799 -0.745689 -0.066827 -0.993191</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  0.843984  0.902578  0.845040  1.336861</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  0.865214  1.151313  0.277192 -0.711557</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3  0.917065 -0.948935  0.110977  0.047466</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4 -1.309586  0.539592  1.956684 -0.117199</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5 -0.431144  0.884499 -0.828626 -0.506894</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6 -1.263993 -0.826366  1.426688 -0.434647</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7 -0.567870 -0.086037  2.166162 -0.396294</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> /</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> A    0.917065</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> B   -0.948935</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> C    0.110977</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> D    0.047466</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Name: 3, dtype: float64</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> /</span><span style="color: #008000;">
+#</span><span style="color: #008000;">           A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0 -1.744799 -0.745689 -0.066827 -0.993191</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  0.843984  0.902578  0.845040  1.336861</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  0.865214  1.151313  0.277192 -0.711557</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3  0.917065 -0.948935  0.110977  0.047466</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4 -1.309586  0.539592  1.956684 -0.117199</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5 -0.431144  0.884499 -0.828626 -0.506894</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6 -1.263993 -0.826366  1.426688 -0.434647</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7 -0.567870 -0.086037  2.166162 -0.396294</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> /</span><span style="color: #008000;">
+#</span><span style="color: #008000;">           A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  0.673341  0.211039  0.370737 -0.533311</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1 -0.860026 -0.850189 -0.101193 -0.208695</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  1.684126  0.057633  0.775963  0.571528</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3  0.340264 -1.576842  1.251407  1.703995</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4  0.201961 -0.016234 -1.077373  0.477445</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5 -0.096186 -0.766024  0.702740 -0.580853</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6  0.941851  1.474317 -0.065384 -0.779173</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7 -0.556754 -0.535569 -0.353260 -0.839585</span><span style="color: #ff0000;"><strong>
+# 8  0.340264 -1.576842  1.251407  1.703995</strong></span></pre>
+</div>
+<p>&nbsp;</p>

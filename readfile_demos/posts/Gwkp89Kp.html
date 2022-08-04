@@ -1,0 +1,292 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">通过一个简单的调用看整体结构</a></li>
+<li><a href="#anchor1">Examples</a></li>
+<li><a href="#anchor2">修改JAVA连接数据库#03#中的代码</a></li>
+</ol></ul>
+</div>
+<p>DbUtils并非是什么ORM框架，只是对原始的JDBC进行了一些封装，以便我们少写一些重复代码。就&ldquo;用&rdquo;而言，仅仅需要学习QueryRunner类和ResultSetHandler接口就可以了。它的显著特点就是超级轻量级，总代码量目测似乎还不到一万行。</p>
+<h2><a name="anchor0"></a>通过一个简单的调用看整体结构</h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('0a845603-138a-4fc5-8e08-05df44203ff6')"><img id="code_img_closed_0a845603-138a-4fc5-8e08-05df44203ff6" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_0a845603-138a-4fc5-8e08-05df44203ff6" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('0a845603-138a-4fc5-8e08-05df44203ff6',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_0a845603-138a-4fc5-8e08-05df44203ff6" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestDbUtils {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> QueryRunner RUNNER = <span style="color: #0000ff;">new</span><span style="color: #000000;"> QueryRunner(HikariCPUtils.getDs());
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ResultSetHandler</span>&lt;SimpleUser&gt; handler = <span style="color: #0000ff;">new</span> BeanHandler&lt;&gt;(SimpleUser.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        SimpleUser user </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            user </span>= RUNNER.query("SELECT * FROM simple_user WHERE username=?", handler, "admin123"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        } 
+        System.out.println(user);
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">TestDbUtils.java</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('62a762ec-3be0-4df5-8991-51ab9727d039')"><img id="code_img_closed_62a762ec-3be0-4df5-8991-51ab9727d039" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_62a762ec-3be0-4df5-8991-51ab9727d039" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('62a762ec-3be0-4df5-8991-51ab9727d039',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_62a762ec-3be0-4df5-8991-51ab9727d039" class="cnblogs_code_hide">
+<pre>    <span style="color: #008000;">/**</span><span style="color: #008000;">
+     * Calls query after checking the parameters to ensure nothing is null.
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> conn The connection to use for the query call.
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> closeConn True if the connection should be closed, false otherwise.
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> sql The SQL statement to execute.
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> params An array of query replacement parameters.  Each row in
+     * this array is one set of batch replacement values.
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> The results of the query.
+     * </span><span style="color: #808080;">@throws</span><span style="color: #008000;"> SQLException If there are database or parameter errors.
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> &lt;T&gt; T query(Connection conn, <span style="color: #0000ff;">boolean</span> closeConn, String sql, ResultSetHandler&lt;T&gt;<span style="color: #000000;"> rsh, Object... params)
+            </span><span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        </span><span style="color: #0000ff;">if</span> (conn == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> SQLException("Null connection"<span style="color: #000000;">);
+        }
+
+        </span><span style="color: #0000ff;">if</span> (sql == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (closeConn) {
+                close(conn);
+            }
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> SQLException("Null SQL statement"<span style="color: #000000;">);
+        }
+
+        </span><span style="color: #0000ff;">if</span> (rsh == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (closeConn) {
+                close(conn);
+            }
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> SQLException("Null ResultSetHandler"<span style="color: #000000;">);
+        }
+
+        PreparedStatement stmt </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ResultSet rs </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        T result </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            stmt </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.prepareStatement(conn, sql);
+            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.fillStatement(stmt, params);
+            rs </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.wrap(stmt.executeQuery());
+            result </span>=<span style="color: #000000;"> rsh.handle(rs);
+
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.rethrow(e, sql, params);
+
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                close(rs);
+            } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                close(stmt);
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (closeConn) {
+                    close(conn);
+                }
+            }
+        }
+
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }</span></pre>
+</div>
+<span class="cnblogs_code_collapse"> private T query(Connection conn, boolean closeConn, String sql, ResultSetHandler rsh, Object... params) throws SQLException</span></div>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181218094008777-723361090.png" alt="" width="950" height="356" /></p>
+<p>AbstractQueryRunner、RowProcessor、ResultSetHandler&lt;T&gt;是Apache Commons DbUtils里的三大主角，通过继承上述抽象类/实现上述接口可以很方便地对API功能进行定制化。</p>
+<p>详细类图参考：<a href="http://ju.outofmemory.cn/entry/143920" target="_blank">http://ju.outofmemory.cn/entry/143920</a></p>
+<h2><a name="anchor1"></a>Examples</h2>
+<p>官方Examples：<a href="http://commons.apache.org/proper/commons-dbutils/examples.html" target="_blank">http://commons.apache.org/proper/commons-dbutils/examples.html</a></p>
+<p>同步请求的代码在上面已经给出。异步请求的草稿代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DbUtilsSampleDAO {
+
+    </span><span style="color: #0000ff;">private</span> AsyncQueryRunner runner = <span style="color: #0000ff;">new</span><span style="color: #000000;"> AsyncQueryRunner(Executors.newCachedThreadPool());
+
+    </span><span style="color: #0000ff;">public</span> Future&lt;Integer&gt;<span style="color: #000000;"> saveProfile(Profile profile) {
+        Future</span>&lt;Integer&gt;<span style="color: #000000;"> future;
+        Connection conn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            conn </span>=<span style="color: #000000;"> ConnectionFactory.getConnection();
+            future </span>=<span style="color: #000000;"> runner.update(conn,
+                    </span>"INSERT ignore INTO `profiles`.`profile` (`username`, `password`, `nickname`) " +
+                            "VALUES (?, ?, ?)"<span style="color: #000000;">, profile.getUsername(), profile.getPassword(), profile.getNickname());
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                DbUtils.close(conn);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+                </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> future;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        DbUtilsSampleDAO dao </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DbUtilsSampleDAO();
+        Profile profile </span>= <span style="color: #0000ff;">new</span> Profile("myusername", "mypassword", "thisnickname"<span style="color: #000000;">);
+        Future</span>&lt;Integer&gt; future =<span style="color: #000000;"> dao.saveProfile(profile);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            System.out.println(future.get() </span>== 1 ? "更新成功" : "更新失败"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span> (InterruptedException |<span style="color: #000000;"> ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+}</span></pre>
+</div>
+<h2><a name="anchor2"></a>修改<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_0" href="https://www.cnblogs.com/xkxf/p/9414499.html">JAVA连接数据库#03#</a>中的代码</h2>
+<p>以下代码同步更新在GitHub：<a href="https://github.com/xkfx/web-test-01" target="_blank">https://github.com/xkfx/web-test-01</a></p>
+<p>主要的几个类如下：</p>
+<p>①&nbsp;QueryRunnerProxy.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.webapp.db.queryrunner;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.commons.dbutils.QueryRunner;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.commons.dbutils.ResultSetHandler;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.db.connmanager.ConnectionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 封装DAO层通用代码，不会关闭connection！！！
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> QueryRunnerProxy {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> QueryRunnerProxy() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Exists to defeat instantiation</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> QueryRunner runner = <span style="color: #0000ff;">new</span><span style="color: #000000;"> QueryRunner();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> update(String sql, Object... param) {
+        </span><span style="color: #0000ff;">int</span> updates = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            updates </span>=<span style="color: #000000;"> runner.update(ConnectionFactory.getConnection(), sql, param);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> updates;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> &lt;T&gt; T query(String sql, ResultSetHandler&lt;T&gt;<span style="color: #000000;"> rsh, Object... params) {
+        T result </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            result </span>=<span style="color: #000000;"> runner.query(ConnectionFactory.getConnection(), sql, rsh, params);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p>②&nbsp;RsHandlers.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.webapp.db.queryrunner;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.commons.dbutils.handlers.BeanHandler;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.commons.dbutils.handlers.BeanListHandler;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.entity.Profile;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 业务相关，保存各式各样的ResultSetHandler常量
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> RsHandlers {
+
+    BeanListHandler</span>&lt;Profile&gt; PROFILE_LIST = <span style="color: #0000ff;">new</span> BeanListHandler&lt;&gt;(Profile.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+
+    BeanHandler</span>&lt;Profile&gt; PROFILE = <span style="color: #0000ff;">new</span> BeanHandler&lt;&gt;(Profile.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p>③&nbsp;ProfileDAOImpl.java 顺便改为enum了，仅是因为觉得这样写表示单例更清晰（后来证明这是一个意义非常有限、自寻麻烦的做法。。）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.webapp.dao.impl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.dao.ProfileDAO;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.db.queryrunner.QueryRunnerProxy;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.db.queryrunner.RsHandlers;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.webapp.entity.Profile;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 该类方法统一抛出DaoException
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">enum</span> ProfileDAOImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ProfileDAO {
+
+    INSTANCE;
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> saveProfile(Profile profile) {
+        </span><span style="color: #0000ff;">final</span> String sql = "INSERT ignore INTO profile (username, password, nickname) " +
+                "VALUES (?, ?, ?)"; <span style="color: #008000;">//</span><span style="color: #008000;"> 添加ignore出现重复不会抛出异常而是返回0</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> QueryRunnerProxy.update(sql, profile.getUsername(), profile.getPassword(), profile.getNickname());
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> List&lt;Profile&gt;<span style="color: #000000;"> listByNickname(String nickname) {
+        </span><span style="color: #0000ff;">final</span> String sql = "SELECT  profile_id AS id,  username,  password,  nickname, last_online AS lastOnline, gender, birthday, location, joined " +
+                "FROM profile " +
+                "WHERE nickname=?"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> QueryRunnerProxy.query(sql, RsHandlers.PROFILE_LIST, nickname);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Profile getByUsername(String username) {
+        </span><span style="color: #0000ff;">final</span> String sql = "SELECT  profile_id AS id,  username,  password,  nickname, last_online AS lastOnline, gender, birthday, location, joined " +
+                "FROM profile " +
+                "WHERE username=?"; <span style="color: #008000;">//</span><span style="color: #008000;"> TODO 该字符串会反复创建吗？</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> QueryRunnerProxy.query(sql, RsHandlers.PROFILE, username);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> updateById(Profile profile) {
+        </span><span style="color: #0000ff;">final</span> String sql = "UPDATE profile " +
+                "SET nickname=?, gender=?, birthday=?, location=? " +
+                "WHERE profile_id=?"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> QueryRunnerProxy.update(sql, profile.getNickname(), profile.getGender() != <span style="color: #0000ff;">null</span> ? String.valueOf(profile.getGender()) : <span style="color: #0000ff;">null</span><span style="color: #000000;">,
+                profile.getBirthday(), profile.getLocation(), profile.getId());
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> updatePassword(String username, String password) {
+        </span><span style="color: #0000ff;">final</span> String sql = "UPDATE profile " +
+                "SET password=? " +
+                "WHERE username=?"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> QueryRunnerProxy.update(sql, password, username);
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> updateLastOnline(String username) {
+        </span><span style="color: #0000ff;">final</span> String sql = "UPDATE profile " +
+                "SET last_online=CURRENT_TIMESTAMP " +
+                "WHERE username=?"<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> QueryRunnerProxy.update(sql, username);
+    }
+}</span></pre>
+</div>
+<p>后续：</p>
+<p>1、把sql常量字符串集中放在一个Interface里。如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.shop.db.queryrunner;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> SQLs {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> item</span>
+    String ITEM_LIST_BY_UID_AND_STATUS = "SELECT id, user_id AS userId, name, price, status, quantity FROM item WHERE user_id=? AND status=?"<span style="color: #000000;">;
+    String ITEM_SAVE_ITEM </span>= "INSERT INTO item(user_id, name, price, status, quantity) VALUES (?, ?, ?, ?, ?)"<span style="color: #000000;">;
+    String ITEM_REMOVE_BY_ID </span>= "DELETE FROM item WHERE id=?"<span style="color: #000000;">;
+    String ITEM_UPDATE_BY_ID </span>= "UPDATE item SET name=?, price=?, status=?, quantity=? WHERE id=?"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> order</span>
+    String ORDER_GET_BY_UID = "SELECT id, user_id AS userId, total FROM simple_order WHERE user_id=?"<span style="color: #000000;">;
+    String ORDER_SAVE_ORDER </span>= "INSERT INTO simple_order(user_id, total) VALUES(?, ?)"<span style="color: #000000;">;
+    String ORDER_SAVE_ORDER_DETAIL </span>= "INSERT INTO order_detail(order_id, item_id, user_id, quantity, price, status) VALUES(?, ?, ?, ?, ?, ?)"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> order detail</span>
+    String ORDER_DETAIL_GET_BY_ORDER_ID = "SELECT id, order_id AS orderId, item_id AS itemId, user_id AS userId, quantity, price, status FROM order_detail WHERE order_id=?"<span style="color: #000000;">;
+    String ORDER_DETAIL_GET_BY_UID </span>= "SELECT id, order_id AS orderId, item_id AS itemId, user_id AS userId, quantity, price, status FROM order_detail WHERE user_id=?"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> user</span>
+    String USER_GET_BY_USERNAME = "SELECT id, username, password, type FROM simple_user WHERE username=?"<span style="color: #000000;">;
+    String USER_SAVE_USER </span>= "INSERT INTO simple_user(type, username, password) VALUES (?, ?, ?)"<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> transport order</span>
+    String TRANSPORT_ORDER_SAVE_ORDER = "INSERT INTO transport_order(user_id, order_detail_id, location, status) VALUES (?, ?, ?, ?)"<span style="color: #000000;">;
+    String TRANSPORT_ORDER_GET_BY_UID </span>= "SELECT id, user_id AS userId, order_detail_id AS detailId, location, status FROM transport_order WHERE user_id=?"<span style="color: #000000;">;
+    String TRANSPORT_ORDER_GET_BY_DETAIL_ID </span>= "SELECT id, user_id AS userId, order_detail_id AS detailId, location, status FROM transport_order WHERE order_detail_id=?"<span style="color: #000000;">;
+    String TRANSPORT_ORDER_UPDATE_BY_ID </span>= "UPDATE transport_order SET location=?, status=? WHERE id=?"<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

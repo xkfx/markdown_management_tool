@@ -1,0 +1,470 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p>Notes</p>
+</li>
+<li>
+<p>Excercise</p>
+<ol>
+<li><a href="#a1">Measuring a robot</a></li>
+<li><a href="#a2">Robot efficiency</a></li>
+<li><a href="#a3">Persistent group</a></li>
+</ol></li>
+</ul>
+</div>
+<p>注释即笔记：</p>
+<div class="cnblogs_code">
+<pre>const roads =<span style="color: #000000;"> [
+    </span>"Alice's House-Bob's House", "Alice's House-Cabin"<span style="color: #000000;">,
+    </span>"Alice's House-Post Office", "Bob's House-Town Hall"<span style="color: #000000;">,
+    </span>"Daria's House-Ernie's House", "Daria's House-Town Hall"<span style="color: #000000;">,
+    </span>"Ernie's House-Grete's House", "Grete's House-Farm"<span style="color: #000000;">,
+    </span>"Grete's House-Shop", "Marketplace-Farm"<span style="color: #000000;">,
+    </span>"Marketplace-Post Office", "Marketplace-Shop"<span style="color: #000000;">,
+    </span>"Marketplace-Town Hall", "Shop-Town Hall"<span style="color: #000000;">
+];
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> buildGraph(edges) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> graph的存储格式类似于</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> graph.place_a: [place_b, place_c]</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 表示由a能够直接到达b或者c</span>
+    let graph = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> addEdge(from, to) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 首先判断该起点有没有被添加</span>
+        <span style="color: #0000ff;">if</span>(graph[from] == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            graph[from] </span>=<span style="color: #000000;"> [to];
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            graph[from].push(to);
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 'Alice's House-Bob's House'.split("-")</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ['Alice's House', 'Bob's House']</span>
+    <span style="color: #0000ff;">for</span>(let [from, to] of edges.map(r =&gt; r.split("-"<span style="color: #000000;">))) {
+        addEdge(from, to);
+        addEdge(to, from);
+    }
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> graph;
+}
+
+const roadGraph </span>=<span style="color: #000000;"> buildGraph(roads);
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 不要条件反射地把每个概念都搞成对象，
+ * 这样的程序通常是难以理解和维护的。
+ * 相反，用最小的数值集合来描述村庄&amp;机器人
+ * 状态就可以了。
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+class VillageState {
+    constructor(place, parcels) {
+        </span><span style="color: #0000ff;">this</span>.place =<span style="color: #000000;"> place;
+        </span><span style="color: #0000ff;">this</span>.parcels =<span style="color: #000000;"> parcels;
+    }
+
+    move(destination) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> move表示机器人的一次移动。</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 首先检查是否存在一条从当前位置this.place到目的地destination的路</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 如果不存在就说明不是合法的移动，返回旧的VillageState。</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 如果存在，就更新机器人的当前位置，也就是更新VillageState.place</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 为destination，当然同时需要更新包裹的状态：1-还没被机器人拿到</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 的包裹不去管它，2-拿到的包裹则更新当前位置place（目的地address不改变）</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 3-最后过滤掉已经送到的包裹（目的地就在本地）</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> PS. 整个move方法实际上是重造了一个VillageState，并没改变旧的</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> VillageState对象</span>
+        <span style="color: #0000ff;">if</span>(!roadGraph[<span style="color: #0000ff;">this</span><span style="color: #000000;">.place].includes(destination)) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            let parcels </span>= <span style="color: #0000ff;">this</span>.parcels.map(p =&gt;<span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span>(p.place != <span style="color: #0000ff;">this</span>.place) <span style="color: #0000ff;">return</span><span style="color: #000000;"> p;
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                    place: destination,
+                    address: p.address
+                };
+            }).filter(p </span>=&gt; p.place !=<span style="color: #000000;"> p.address);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> VillageState(destination, parcels);
+        }
+    }
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 可以用Object.freeze冻结对象
+ * 所有对该对象属性的写入操作会被忽略
+ * 这需要计算机做一些额外工作
+ * let object = Object.freeze({value: 5});
+    object.value = 10;
+    console.log(object.value);
+    // &rarr; 5
+ </span><span style="color: #008000;">*/</span>
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * But the most important limit 
+ * on what kind of systems we can build 
+ * is how much we can understand. 
+ * Anything that makes your code easier 
+ * to understand makes it possible 
+ * to build a more ambitious system.
+ * 写程序最重要的限制是我们能够理解多少
+ </span><span style="color: #008000;">*/</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> robot实际上是一个函数接口，</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 该函数输入state和memory</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 输出决策action用于实际移动</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 这样写就能够动态更改策略了。</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> runRobot(state, robot, memory) {
+    </span><span style="color: #0000ff;">for</span>(let turn = 0;; turn++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span>(state.parcels.length == 0<span style="color: #000000;">) {
+            console.log(`Done </span><span style="color: #0000ff;">in</span><span style="color: #000000;"> ${turn} turns`);
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        let action </span>=<span style="color: #000000;"> robot(state, memory);
+        state </span>=<span style="color: #000000;"> state.move(action.direction);
+        memory </span>=<span style="color: #000000;"> action.memory;
+        console.log(`Moved to ${action.direction}`);
+    }
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> randomPick(array) {
+    let choice </span>= Math.floor(Math.random() *<span style="color: #000000;"> array.length);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> array[choice];
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 最愚蠢但有效的策略--随机决定下一个方向。</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 虽然这里只有一个参数，但是js允许传</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 入更多（或者更少）的参数。在这里，传入的</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> memeory被忽略了</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> randomRobot(state) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+        direction: randomPick(roadGraph[state.place])
+    };
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+VillageState.random = <span style="color: #0000ff;">function</span>(parcelCount = 5<span style="color: #000000;">) {
+    let parcels </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span>(let i = 0; i &lt; parcelCount; i++<span style="color: #000000;">) {
+        let address </span>=<span style="color: #000000;"> randomPick(Object.keys(roadGraph));
+        let place;
+        </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+            place </span>=<span style="color: #000000;"> randomPick(Object.keys(roadGraph));
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 包裹的起点和终点不可以是同一个地方</span>
+        } <span style="color: #0000ff;">while</span> (place ==<span style="color: #000000;"> address);
+        parcels.push({
+            place,
+            address
+        });
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> VillageState("Post Office"<span style="color: #000000;">, parcels);
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> runRobot(VillageState.random(), randomRobot);</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 版本一，步数不稳定</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> runRobotAnimation(VillageState.random(), randomRobot); </span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 作者写的动画版本，相当直观酷炫。。</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> 第二个策略：事先指定一条可以通过所有地点的路线</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 走两遍就可以确保投递所有邮件</span>
+const mailRoute =<span style="color: #000000;"> [
+    </span>"Alice's House", "Cabin", "Alice's House", "Bob's House"<span style="color: #000000;">,
+    </span>"Town Hall", "Daria's House", "Ernie's House"<span style="color: #000000;">,
+    </span>"Grete's House", "Shop", "Grete's House", "Farm"<span style="color: #000000;">,
+    </span>"Marketplace", "Post Office"<span style="color: #000000;">
+];
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> [a,b,c].slice(1) </span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; [b,c]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> [a,b,c].slice(1, 2) </span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; [b] // 包括start不包括end</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> routeRobot(state, memory) {
+    </span><span style="color: #0000ff;">if</span>(memory.length == 0<span style="color: #000000;">) {
+        memory </span>=<span style="color: #000000;"> mailRoute;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> memory类似于队列</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 等价: return {direction: memory.shift(), memory: memory}</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+        direction: memory[</span>0<span style="color: #000000;">],
+        memory: memory.slice(</span>1<span style="color: #000000;">)
+    };
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> runRobot(VillageState.random(), routeRobot, []);</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 版本二，最多26步</span>
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * The problem of finding a route 
+ * through a graph is a typical search problem. 
+ * We can tell whether a given solution (a route) 
+ * is a valid solution, but we can&rsquo;t directly compute
+ * the solution the way we could for 2 + 2. 
+ * Instead, we have to keep creating potential solutions 
+ * until we find one that works.
+ </span><span style="color: #008000;">*/</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> 返回一点到另一点的最短路线，参考：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/7709097.html">C++ 电路布线/最短路径问题</a></span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> findRoute(graph, from, to) {
+    let work </span>= [{at: from, route: []}]; <span style="color: #008000;">//</span><span style="color: #008000;"> 其实也是个队列</span>
+    <span style="color: #0000ff;">for</span>(let i = 0; i &lt; work.length; i++<span style="color: #000000;">) {
+        let {at, route} </span>= work[i]; <span style="color: #008000;">//</span><span style="color: #008000;"> 原来还可以这样赋值。。</span>
+        <span style="color: #0000ff;">for</span><span style="color: #000000;">(let place of graph[at]) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 搜索四周围，如果找到了目的地就直接+1返回。</span>
+            <span style="color: #0000ff;">if</span>(place == to) <span style="color: #0000ff;">return</span><span style="color: #000000;"> route.concat(place);
+            </span><span style="color: #0000ff;">if</span>(!work.some(w =&gt; w.at == place)) { <span style="color: #008000;">//</span><span style="color: #008000;"> 判断点是否已经入队</span>
+<span style="color: #000000;">                work.push({at: place, route: route.concat(place)});
+            }
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> goalOrientedRobot({place, parcels}, route) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 首先判断当前制定的路线走完没有，</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 走完就重新制定下一条路线</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 逐个包裹处理（当然也有可能顺</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 路完成其它包裹的fetch和投递）</span>
+    <span style="color: #0000ff;">if</span>(route.length == 0<span style="color: #000000;">) {
+        let parcel </span>= parcels[0<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span>(parcel.place !=<span style="color: #000000;"> place) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 制定取包裹路线</span>
+            route =<span style="color: #000000;"> findRoute(roadGraph, place, parcel.place);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 制定投递路线</span>
+            route =<span style="color: #000000;"> findRoute(roadGraph, place, parcel.address);
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> {direction: route[0], memory: route.slice(1<span style="color: #000000;">)};
+}
+
+
+runRobot(VillageState.random(), goalOrientedRobot, []);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 版本三，平均十来步的样子</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="a1"></a>① Measuring a robot</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> testRobot(state, robot, memory) {
+    </span><span style="color: #0000ff;">for</span>(let turn = 0;; turn++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span>(state.parcels.length == 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> turn;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        let action </span>=<span style="color: #000000;"> robot(state, memory);
+        state </span>=<span style="color: #000000;"> state.move(action.direction);
+        memory </span>=<span style="color: #000000;"> action.memory;
+    }
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> compareRobots(robot1, memory1, robot2, memory2) {
+    let tasks </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != 100; ++<span style="color: #000000;">i) {
+        tasks.push(VillageState.random());
+    }
+    let total1 </span>= 0, total2 = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let task of tasks) {
+        total1 </span>+=<span style="color: #000000;"> testRobot(task, robot1, memory1);
+        total2 </span>+=<span style="color: #000000;"> testRobot(task, robot2, memory2);
+    }
+    console.log(`average turns: robot1 ${total1 </span>/ 100}, robot2 ${total2 / 100<span style="color: #000000;">}`);
+}
+
+compareRobots(routeRobot, [], goalOrientedRobot, []);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; average turns: robot1 18.07, robot2 15.03</span></pre>
+</div>
+<p>- - -- - - - - -- -- -- - - - - -- -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- - -&nbsp;</p>
+<p><a name="a2"></a>② Robot efficiency</p>
+<p>没做任何优化的穷举，而且还用递归。。。6个以上包裹浏览器应该会直接崩溃掉。。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+  max表示一个包裹要被处理的次数
+  arr为长度为包裹数量的全0数组
+  arr[i]表示第i个包裹被处理的次数
+   当arr为[max, max, max, ...]时
+   表示所有包裹已经被处理完
+   返回的sequences包含处理包裹的
+   所有顺序集合
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> makeSequences(max, arr) {
+    
+    const sequences </span>=<span style="color: #000000;"> [];
+    
+    const fillArrWith </span>= (max, arr, start, sequence) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 填充起始点</span>
+        arr[start] += 1<span style="color: #000000;">;
+        sequence.push(start);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断是否已经填充满</span>
+        let sum = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let x of arr) {
+            sum </span>+=<span style="color: #000000;"> x;
+        };
+        </span><span style="color: #0000ff;">if</span> (sum == max *<span style="color: #000000;"> arr.length) {
+            sequences.push(sequence);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 寻找下一个填充点</span>
+        <span style="color: #0000ff;">for</span> (let i = 0; i != arr.length; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">if</span> (arr[i] &lt;<span style="color: #000000;"> max) fillArrWith(max, arr.slice(), i, sequence.slice()); 
+        }        
+    };
+    
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != arr.length; ++<span style="color: #000000;">i) {
+        fillArrWith(</span>max<span style="color: #000000;">, arr.slice(), i, []);
+    }    
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sequences;
+}
+
+
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+   把生成的序列转化为具体业务相关的表达。
+   得到route并不是实际的route 而是可能不相邻的地点
+  routes包含所有能够完成任务的路线
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> sequencesToRoutes(sequences, {place, parcels}) {
+    const routes </span>=<span style="color: #000000;"> [];
+    
+    const flag </span>= parcels.map(() =&gt; 0); <span style="color: #008000;">//</span><span style="color: #008000;"> 用于之后拷贝用</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 逐个序列处理</span>
+    <span style="color: #0000ff;">for</span><span style="color: #000000;"> (let sequence of sequences) {
+        let route </span>= [place]; <span style="color: #008000;">//</span><span style="color: #008000;"> 添加起点</span>
+        let localFlag = flag.slice(); <span style="color: #008000;">//</span><span style="color: #008000;"> 标记包裹的状态</span>
+        <span style="color: #0000ff;">for</span><span style="color: #000000;"> (let num of sequence) {
+            </span><span style="color: #0000ff;">if</span> (localFlag[num] == 0) { <span style="color: #008000;">//</span><span style="color: #008000;"> 第一次处理包裹num：到place取包裹</span>
+                localFlag[num]++; <span style="color: #008000;">//</span><span style="color: #008000;"> 包裹num已取,这样可以保证某包裹的place一定优先于该包裹的address入队</span>
+                <span style="color: #0000ff;">if</span> (route[route.length - 1] != parcels[num].place) { <span style="color: #008000;">//</span><span style="color: #008000;"> 避免出现两个连续重复place</span>
+<span style="color: #000000;">                    route.push(parcels[num].place);
+                }                
+            } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> 第二次处理包裹num： 送包裹，去该包裹的目的地</span>
+                <span style="color: #0000ff;">if</span> (route[route.length-1] !=<span style="color: #000000;"> parcels[num].address) {
+                    route.push(parcels[num].address);
+                }                        
+            }        
+        }
+        routes.push(route);
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> routes;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 计算单个路线需要的最短步数
+ * turnsMap用于保存已经计算的两点值，避免重复计算
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">function</span> turnsOfRoute(route, turnsMap=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Map()) {
+    let totalTurns </span>= 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != route.length - 1; ++<span style="color: #000000;">i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 两点、两点处理。</span>
+        let routeKey = route[i].concat(route[i + 1<span style="color: #000000;">]);
+        let turns </span>=<span style="color: #000000;"> turnsMap.get(routeKey);
+        </span><span style="color: #0000ff;">if</span> (turns !=<span style="color: #000000;"> undefined) {
+            totalTurns </span>+=<span style="color: #000000;"> turns;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            turns </span>= findRoute(roadGraph, route[i], route[i + 1<span style="color: #000000;">]).length;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算 a到b 的最小步数 &uarr;</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 保存计算结果 &darr;</span>
+<span style="color: #000000;">            turnsMap.set(routeKey, turns);
+            routeKey </span>= route[i + 1].concat(route[i]); <span style="color: #008000;">//</span><span style="color: #008000;"> a到b和b到a的最短路是一样的。</span>
+<span style="color: #000000;">            turnsMap.set(routeKey, turns);
+            
+            totalTurns </span>+=<span style="color: #000000;"> turns;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> totalTurns;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 寻找最短路线
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> shortestRoute(routes) {
+    let min </span>=<span style="color: #000000;"> Infinity;
+    let tempRoute;
+    let turnsMap </span>= <span style="color: #0000ff;">new</span> Map(); <span style="color: #008000;">//</span><span style="color: #008000;"> 用于保存已经计算的两点值，避免重复计算</span>
+    <span style="color: #0000ff;">for</span><span style="color: #000000;"> (let route of routes) {
+        let turns </span>=<span style="color: #000000;"> turnsOfRoute(route, turnsMap);
+        </span><span style="color: #0000ff;">if</span> (turns &lt;<span style="color: #000000;"> min) {
+            min </span>=<span style="color: #000000;"> turns;
+            tempRoute </span>= route; <span style="color: #008000;">//</span><span style="color: #008000;"> 保存最短路线</span>
+<span style="color: #000000;">        }
+    }
+    
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将最短路线转化为相邻的可以实际移动的地点序列</span>
+    let result =<span style="color: #000000;"> [];    
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != tempRoute.length - 1; ++<span style="color: #000000;">i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 仍然是两点、两点处理</span>
+        let midRoute = findRoute(roadGraph, tempRoute[i], tempRoute[i + 1<span style="color: #000000;">]);
+        </span><span style="color: #0000ff;">if</span> (result[result.length - 1] != midRoute[0]) { <span style="color: #008000;">//</span><span style="color: #008000;"> 避免出现两个连续重复place</span>
+            result =<span style="color: #000000;"> result.concat(midRoute);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            result </span>=<span style="color: #000000;"> result.concat(midRoute.shift());
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> simpleRobot({place, parcels}, route) {
+    </span><span style="color: #0000ff;">if</span>(route.length == 0<span style="color: #000000;">) {
+        let sequences </span>= makeSequences(2, parcels.map(() =&gt; 0)); <span style="color: #008000;">//</span><span style="color: #008000;"> 转化成一种比较抽象的东西。。。</span>
+        let routes =<span style="color: #000000;"> sequencesToRoutes(sequences, {place, parcels}); 
+        route </span>=<span style="color: #000000;"> shortestRoute(routes);
+    }
+    </span><span style="color: #0000ff;">return</span> {direction: route[0], memory: route.slice(1<span style="color: #000000;">)};
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">runRobot(VillageState.random(), simpleRobot, []);</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 版本四，穷举。。 平均 10.64</span><span style="color: #008000;">
+//</span><span style="color: #008000;">runRobotAnimation(VillageState.random(), simpleRobot, []);</span></pre>
+</div>
+<p>- - -- - - - - -- -- -- - - - - -- -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- - -&nbsp;</p>
+<p><a name="a3"></a>③ Persistent group</p>
+<p>结果没错，实现上有点跑偏。。（英语阅读能力不足造成的）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class PGroup {
+    add(x) {
+        let result </span>=<span style="color: #000000;"> Object.create(PGroup.prototype);
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.container ==<span style="color: #000000;"> undefined) {
+            </span><span style="color: #0000ff;">this</span>.container =<span style="color: #000000;"> [];
+        }
+        
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.container.includes(x)) {
+            result.container </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.container.concat(x);    
+          } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+              result.container </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.container;
+          }
+        
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    </span><span style="color: #0000ff;">delete</span><span style="color: #000000;">(x) {
+        let result </span>=<span style="color: #000000;"> Object.create(PGroup.prototype);
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.container !=<span style="color: #000000;"> undefined) {
+            result.container </span>= <span style="color: #0000ff;">this</span>.container.filter(a =&gt; !(a ===<span style="color: #000000;"> x));    
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    has(x) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.container !=<span style="color: #000000;"> undefined) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.container.includes(x);
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+}
+
+PGroup.empty </span>=<span style="color: #000000;"> Object.create(PGroup.prototype);
+
+let a </span>= PGroup.empty.add("a"<span style="color: #000000;">);
+let ab </span>= a.add("b"<span style="color: #000000;">);
+let b </span>= ab.<span style="color: #0000ff;">delete</span>("a"<span style="color: #000000;">);
+
+console.log(b.has(</span>"b"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(a.has("b"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(b.has("a"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>&nbsp;</p>

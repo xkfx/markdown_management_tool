@@ -1,0 +1,132 @@
+<p>极少数时候，我们会碰到类似这样的问题：与A同学合作写代码， A同学只会写Python，不熟悉Java ，而你只会写Java不擅长Python，并且发现难以用Java来重写对方的代码，这时，就不得不想方设法&ldquo;调用对方的代码&rdquo;。</p>
+<p>下面，我通过一些简单的小例子来说明：如何在Java中调用Python代码。</p>
+<div id="diy_right_menu">
+<p>主要内容如下：</p>
+<ul>
+<li><a href="#a1">什么是 Jython ？</a></li>
+<li><a href="#a2">一个 HelloPython 示例程序</a></li>
+<li><a href="#a3">如何在 JVM 中执行 Python 脚本</a></li>
+<li><a href="#a4">在 JVM&nbsp;中调用 Python 编写的函数</a></li>
+<li><a href="#a5">在本地环境中调用 Python 脚本</a></li>
+</ul>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;"><strong><a name="a1"></a><span style="font-family: 'comic sans ms', sans-serif;">什么是Jython？&nbsp;</span></strong></span></h2>
+<p>Jython（原JPython），可以理解为一个由Java语言编写的Python解释器。</p>
+<p>要使用Jython，只需要将Jython<a href="https://github.com/mybatis/mybatis-3/releases">-</a>x.x.x.jar文件置于classpath中即可 --&gt;&nbsp;<a href="https://www.jython.org/download" target="_blank">官网下载</a></p>
+<p>当然，通过Maven导入也OK，如下：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;"><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.python<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>jython-standalone<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>2.7.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></span></pre>
+</div>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;"><strong><a name="a2"></a>一个HelloPython程序</strong></span></h2>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;"><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.python.util.PythonInterpreter;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloPython {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        PythonInterpreter interpreter </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PythonInterpreter();
+        interpreter.exec(</span>"print('hello')"<span style="color: #000000;">);
+    }
+}</span></span></pre>
+</div>
+<p>什么是PythonInterpreter呢？它的中文意思即&ldquo;Python解释器&rdquo;。我们知道Python程序都是由解释器执行的，上面的代码在JVM中创建一个&ldquo;Python解释器&rdquo;对象，用于模拟Python解释器的行为，并通过exec("Python语句") 直接在JVM中执行Python代码，代码的输出结果为：hello。<span style="color: #ff0000;">该程序运行速度相较正常的Java或者Python程序都要慢那么一点。</span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;"><a name="a3"></a>在JVM中执行Python脚本</span></h2>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;">interpreter.execfile(<span style="color: #800000;">"</span><span style="color: #800000;">D:/labs/mytest/hello.py</span><span style="color: #800000;">"</span>);  </span></pre>
+</div>
+<p>如上，将exec改为execfile就可以了。需要注意的是，这个 .py文件不能含有第三方模块，因为这个&ldquo;Python脚本&rdquo;说到底仍是在JVM环境下执行的（而非依赖于本地计算机环境），如果 .py 程序中包含有第三方模块（例如 NumPy）将会在编译期报错：<span style="font-family: 宋体;"><span style="color: #ff0000;">java ImportError: No module named xxx</span></span></p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;"><a name="a4"></a>在JVM中调用Python编写的函数</span></h2>
+<p>先写一个hello.py的Python代码：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;"><span style="color: #0000ff;">def</span><span style="color: #000000;"> hello():
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span><span style="color: #800000;">Hello</span><span style="color: #800000;">'</span></span></pre>
+</div>
+<p>在Java代码中调用这个Python函数：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;"><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.python.core.PyFunction;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.python.core.PyObject;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.python.util.PythonInterpreter;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloPython {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        PythonInterpreter interpreter </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PythonInterpreter();
+        interpreter.execfile(</span>"D:/labs/hello.py"<span style="color: #000000;">);
+
+        PyFunction pyFunction </span>= interpreter.get("hello", PyFunction.<span style="color: #0000ff;">class</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 第一个参数为期望获得的函数（变量）的名字，第二个参数为期望返回的对象类型</span>
+        PyObject pyObject = pyFunction.__call__(); <span style="color: #008000;">//</span><span style="color: #008000;"> 调用函数</span>
+<span style="color: #000000;">
+        System.out.println(pyObject);
+    }
+}</span></span></pre>
+</div>
+<p>上面的代码执行结果为：Hello</p>
+<p>可以发现：即便只是调用一个函数，也必须先加载整个 .py文件，之后才能通过Jython包中所定义的类获取、调用这个函数。</p>
+<p>如果Python函数需要参数，必须先将Java代码中的参数转化为对应的&ldquo;Python类型&rdquo;（姑且可以称作 Jython 类型 (●'◡'●)，例如：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;">__call__(<span style="color: #0000ff;">new</span> PyInteger(a), <span style="color: #0000ff;">new</span> PyInteger(b))</span></pre>
+</div>
+<p>a，b的类型均为Java中的int型，还有一些Jython类型诸如：<a href="http://www.jython.org/javadoc/org/python/core/PyString.html#PyString(java.lang.String)">PyString</a>、<span style="font-family: 宋体;"><code><a href="http://www.jython.org/javadoc/org/python/core/PyList.html#PyList(java.util.Iterator)">PyList</a></code>等</span>，详细信息可以参考官方的API文档。</p>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<h2><span style="font-family: 宋体;"><a name="a5"></a><span style="font-family: 'comic sans ms', sans-serif;">在本地环境中调用Python脚本</span></span></h2>
+<p>例子程序（与舍友合作写的一个手写识别程序，可识别很粗的数字，JAVA写界面，Python识别）：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 宋体;"><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> PyCaller {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String DATA_SWAP = "temp.txt"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String PY_URL = System.getProperty("user.dir") + "\\test.py"<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> writeImagePath(String path) {
+        PrintWriter pw </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            pw </span>= <span style="color: #0000ff;">new</span> PrintWriter(<span style="color: #0000ff;">new</span> FileWriter(<span style="color: #0000ff;">new</span><span style="color: #000000;"> File(DATA_SWAP)));
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        }
+
+        pw.print(path);
+        pw.close();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String readAnswer() {
+        BufferedReader br;
+        String answer </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            br </span>= <span style="color: #0000ff;">new</span> BufferedReader(<span style="color: #0000ff;">new</span> FileReader(<span style="color: #0000ff;">new</span><span style="color: #000000;"> File(DATA_SWAP)));
+            answer </span>=<span style="color: #000000;"> br.readLine();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (FileNotFoundException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        }
+
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> answer;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> execPy() {
+        Process proc </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {</span><strong><span style="color: #ff0000;">
+            proc = Runtime.getRuntime().exec("python " +</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;"> PY_URL);
+            proc.waitFor();</span></strong>
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试码</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> main(String[] args) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException, InterruptedException {
+<strong>        writeImagePath(</strong></span><strong>"D:\\labs\\mytest\\test.jpg"</strong><span style="color: #000000;"><strong>);
+        execPy();
+        System.out.println(readAnswer());</strong>
+    }
+}</span></span></pre>
+</div>
+<p>运行流程：Java Swing 界面接收用户输入 --&gt; Java 将用户输入写到本地文件中 --&gt; Java 调用本地 Python 脚本 --&gt; Python 从本地文件拿到用户输入 --&gt; Python 处理用户输入得到最终结果 --&gt; Python 把最终结果写到本地文件 --&gt; Java 对 Python 脚本的调用结束 --&gt; Java 从本地文件中取出最终结果 --&gt; Java 把最终结果返回给用户</p>

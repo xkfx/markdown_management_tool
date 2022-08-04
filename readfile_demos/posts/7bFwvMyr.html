@@ -1,0 +1,128 @@
+<p><span style="color: #ff00ff;">【无返回值函数】</span></p>
+<p>1、在c++的void函数中，可以显式地使用return;语句来提前结束函数的调用。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【有返回值函数】</span></p>
+<p>1、值是如何被返回的：返回一个值的方式和初始化一个变量或者形参的方式完全一样。</p>
+<p>&nbsp;</p>
+<p>2、不要返回局部对象的引用或指针。</p>
+<p>&nbsp;</p>
+<p>3、返回类类型的函数和调用运算符：调用运算符的优先级和点运算符、箭头运算符相同，且满足左结合律。</p>
+<p>&nbsp;</p>
+<p>4、引用返回左值！其他返回类型得到右值，具体而言：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">char</span> &amp;get_val(<span style="color: #0000ff;">string</span> &amp;str, <span style="color: #0000ff;">string</span><span style="color: #000000;">::size_type ix)
+{
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> str[ix];
+}</span></pre>
+</div>
+<p>虽然看上去有点奇怪，但却是合法的：</p>
+<div class="cnblogs_code">
+<pre>get_val(s, <span style="color: #800080;">0</span>) = <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5、</span>列表初始化返回值。例子：</p>
+<div class="cnblogs_code">
+<pre>vector&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> f()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> codes</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> {s1, s2, s3, ...};
+}</span></pre>
+</div>
+<p>（可以和可变参数的函数配合使用。）</p>
+<p>&nbsp;</p>
+<p>6、主函数main的返回值。<br />返回0表示执行成功，返回非0表示执行失败，在cstdlib中定义了两个预处理变量表示成功和失败。</p>
+<p>&nbsp;</p>
+<p>7、递归。没什么好说的，记住：一定有某一条路径是不包含递归调用的！</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.30</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">bool</span> str_subrange(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;str1, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">str2)
+{
+    </span><span style="color: #0000ff;">if</span> (str1.size() ==<span style="color: #000000;"> str2.size())
+        </span><span style="color: #0000ff;">return</span> str1 ==<span style="color: #000000;"> str2;
+    auto size </span>= (str1.size() &lt;<span style="color: #000000;"> str2.size())
+                </span>?<span style="color: #000000;"> str1.size() : str2.size();
+    </span><span style="color: #0000ff;">for</span> (decltype(size) i = <span style="color: #800080;">0</span>; i != size; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (str1[i] !=<span style="color: #000000;"> str2[i])
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>prog1.cpp: In function <span style="color: #800000;">'</span><span style="color: #800000;">bool str_subrange(const string&amp;, const string&amp;)</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+prog1.cpp:</span><span style="color: #800080;">11</span>:<span style="color: #800080;">4</span>: error: <span style="color: #0000ff;">return</span>-statement with no value, <span style="color: #0000ff;">in</span> function returning <span style="color: #800000;">'</span><span style="color: #800000;">bool</span><span style="color: #800000;">'</span> [-<span style="color: #000000;">fpermissive]
+    </span><span style="color: #0000ff;">return</span>;</pre>
+</div>
+<p>如果补上合适的返回值编译器不报错，证明编译器没有检查出&ldquo;在循环后面漏了一个return&rdquo;这个错误！同时也证明了源代码能通过编译器，并不等同于程序没有问题，就算程序能正确运行，也可能存在一些没有暴露出来的问题。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.31</span></p>
+<p>当引用局部对象、局部常量的时候，返回的引用、常量引用无效。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.32</span></p>
+<p>&nbsp;从运行结果来看是合法的，功能略。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> &amp;<span style="color: #0000ff;">get</span>(<span style="color: #0000ff;">int</span> *arry, <span style="color: #0000ff;">int</span><span style="color: #000000;"> index) 
+{
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> arry[index];
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">get</span>(ia, i) =<span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (auto x : ia) {
+        cout </span>&lt;&lt; x &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p><span style="line-height: 1.5;">&nbsp;</span></p>
+<p><span style="text-decoration: underline;"><span style="line-height: 1.5;">6.3</span></span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> vectorPrinter(vector&lt;<span style="color: #0000ff;">int</span>&gt;::iterator beg, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">::iterator end)
+{
+    </span><span style="color: #0000ff;">if</span> (beg !=<span style="color: #000000;"> end) {
+        cout </span>&lt;&lt; *beg &lt;&lt;<span style="color: #000000;"> endl;
+        vectorPrinter(beg</span>+<span style="color: #800080;">1</span><span style="color: #000000;">, end);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec = {<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span><span style="color: #000000;">};
+    vectorPrinter(begin(ivec), end(ivec));
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}    </span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.34</span></p>
+<p>结果是不会错，但是会多做一次乘法运算。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.35</span></p>
+<p>逻辑上有错，--val倒是可以试一下，但是这样的话势必会影响乘号右侧运算对象的值，没有正确结果。</p>
+<p>&nbsp;</p>
+<p>【返回数组指针】</p>
+<p><br />这一小节看不懂。</p>
+<p>&nbsp;</p>
+<p>1、使用类型别名。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span> arrT = <span style="color: #0000ff;">int</span>[<span style="color: #800080;">10</span><span style="color: #000000;">];
+arrT</span>* func()</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、使用尾置返回类型。</p>
+<div class="cnblogs_code">
+<pre>auto func(<span style="color: #0000ff;">int</span> i) -&gt; <span style="color: #0000ff;">int</span>(*)[<span style="color: #800080;">10</span>]</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、使用decltype。</p>
+<p>&nbsp;</p>

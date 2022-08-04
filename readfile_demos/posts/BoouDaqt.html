@@ -1,0 +1,128 @@
+<p>参考：</p>
+<p><span style="background-color: #ff0000;">1、</span><a href="https://developers.google.com/web/fundamentals/design-and-ui/animations/css-vs-javascript?hl=zh-cn" target="_blank">CSS 对比 JavaScript 动画</a></p>
+<p>2、CSS制作水平垂直居中对齐_水平居中, 垂直居中 教程_w3cplus：https://www.w3cplus.com/css/vertically-center-content-with-css</p>
+<p>3、box-shadow：http://www.w3school.com.cn/cssref/pr_box-shadow.asp</p>
+<p>4、css平移：http://webkkl.com/style/translate.php、https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform</p>
+<p>5、css动画：http://www.cnblogs.com/xkxf/p/6718391.html</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170422095418540-607003665.png" alt="" width="642" height="292" /></p>
+<p>效果图：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170422102020462-46890855.png" alt="" width="214" height="208" /></p>
+<p>思路：</p>
+<p>1、画一个静态的小球。</p>
+<p>2、修改成动态。</p>
+<p>代码：基本参考url1。。。</p>
+<p>css：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;Dynamic Ball&lt;/title&gt;
+        &lt;style&gt;
+            html </span>{<span style="color: #ff0000;">
+                background</span>:<span style="color: #0000ff;"> #F2F2F2</span>;
+            }<span style="color: #800000;">
+            
+            p </span>{<span style="color: #ff0000;">
+                font-family</span>:<span style="color: #0000ff;"> helvetica, arial, sans-serif</span>;<span style="color: #ff0000;">
+                text-align</span>:<span style="color: #0000ff;"> center</span>;
+            }<span style="color: #800000;">
+            
+            .ball </span>{<span style="color: #ff0000;">
+                width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+                height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+                
+                background</span>:<span style="color: #0000ff;"> #FFF</span>;<span style="color: #ff0000;">
+                box-shadow</span>:<span style="color: #0000ff;">0 10px 20px rgba(0,0,0,0.5)</span>;
+                <span style="color: #008000;">/*</span><span style="color: #008000;">参数：水平阴影 竖直阴影 模糊距离！阴影的距离 阴影的颜色</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+                
+                border-radius</span>:<span style="color: #0000ff;"> 50%</span>;<span style="color: #ff0000;">
+                
+                animation</span>:<span style="color: #0000ff;"> down 6s infinite</span>;
+                <span style="color: #008000;">/*</span><span style="color: #008000;">3s一次 无限次 </span><span style="color: #008000;">*/</span>
+            }<span style="color: #800000;">
+            
+            @keyframes down </span>{<span style="color: #ff0000;">
+                0% {
+                    transform</span>:<span style="color: #0000ff;"> translateY(-100px)</span>;
+                }<span style="color: #800000;">
+                100% </span>{
+                    <span style="color: #008000;">/*</span><span style="color: #008000;">平移变换</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+                    transform</span>:<span style="color: #0000ff;"> translateY(768px)</span>;
+                }<span style="color: #800000;">
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;Dynamic Ball&lt;/p&gt;
+        &lt;div class="ball"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</span></pre>
+</div>
+<p>&nbsp;JavaScript：貌似本质还是css，只不过用JS增强了控制。。。循环播放没解决。。。</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;Dynamic Ball&lt;/title&gt;
+        &lt;style&gt;<span style="color: #000000;">
+            html {
+                background: #F2F2F2;
+            }
+            
+            p {
+                text</span>-<span style="color: #000000;">align: center;
+            }
+            
+            .ball {
+                width: 100px;
+                height: 100px;
+                
+                background: #FFF;
+                box</span>-shadow: 0 10px 20px rgba(0, 0, 0, 0.5<span style="color: #000000;">);
+                
+                border</span>-radius: 50%<span style="color: #000000;">;
+            }
+        </span>&lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;Dynamic Ball&lt;/p&gt;
+        &lt;div class="ball"&gt;&lt;/div&gt;
+        
+        &lt;script&gt;
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> animateBall() {
+                </span><span style="color: #0000ff;">var</span> target = document.querySelector('.ball'); <span style="color: #008000;">//</span><span style="color: #008000;"> 返回文档中匹配指定 CSS 选择器的一个元素</span>
+                <span style="color: #0000ff;">var</span> player =<span style="color: #000000;"> target.animate([
+                    {transform: </span>'translateY(-50px)'<span style="color: #000000;">},
+                    {transform: </span>'translateY(768px)'<span style="color: #000000;">},
+                ], </span>7000<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 参数分别是 起始动画 结束动画 持续时间ms</span>
+<span style="color: #000000;">            }
+            animateBall();
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;参考2：循环动画</p>
+<p>1、http://blog.sina.com.cn/s/blog_448f59f30102vvoj.html</p>
+<p>2、http://www.open-open.com/lib/view/open1471745095074.html</p>
+<p>3、<a href="http://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000/001434500456006abd6381dc3bb439d932cb895b62d9eee000" target="_blank">廖雪峰JavasCript</a></p>
+<p>4、setTimeout:http://www.w3school.com.cn/jsref/met_win_settimeout.asp</p>
+<p>5、setInterval：http://www.jb51.net/shouce/htmldom/jb51.net.htmldom/htmldom/met_win_setinterval.asp.html</p>
+<p>Interval：间隔。</p>
+<p>JavaScript:循环动画。。。缺点是控制还不够细致。。</p>
+<div class="cnblogs_code">
+<pre>        &lt;script&gt;
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> animateBall() {
+                </span><span style="color: #0000ff;">var</span> target = document.querySelector('.ball'); <span style="color: #008000;">//</span><span style="color: #008000;"> 返回文档中匹配指定 CSS 选择器的一个元素</span>
+                <span style="color: #0000ff;">var</span> player =<span style="color: #000000;"> target.animate([
+                    {transform: </span>'translateY(100px)'<span style="color: #000000;">},
+                    {transform: </span>'translateY(600px)'<span style="color: #000000;">},
+                ], </span>4000); <span style="color: #008000;">//</span><span style="color: #008000;"> 参数分别是 起始动画 结束动画 持续时间ms</span>
+<span style="color: #000000;">            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">animateBall(); 循环调用animateBall();无法实现循环</span>
+            animateBall(); <span style="color: #008000;">//</span><span style="color: #008000;"> 免去等待第一次间隔时间。</span>
+            setInterval("animateBall()", 4000<span style="color: #000000;">);
+        </span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>

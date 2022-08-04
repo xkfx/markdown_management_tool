@@ -1,0 +1,53 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">Architecture</a>
+<ul>
+<li><a href="#anchor1">Main Components</a>
+<ul>
+<li><a href="#anchor2">Logger Hierarchy</a></li>
+<li><a href="#anchor3">LoggerContext</a></li>
+<li><a href="#anchor4">Configuration</a></li>
+<li><a href="#anchor5">Logger</a></li>
+<li><a href="#anchor6">LoggerConfig</a></li>
+<li><a href="#anchor7">Filter</a></li>
+<li><a href="#anchor8">Appender</a></li>
+<li><a href="#anchor9">Layout</a></li>
+<li><a href="#anchor10">StrSubstitutor and StrLookup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol></ul>
+</div>
+<h2><a name="anchor0"></a>Architecture</h2>
+<h3><a name="anchor1"></a>Main Components</h3>
+<p>Log4j使用下图所示的类。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181124191459419-1482205213.png" alt="" width="776" height="470" /></p>
+<p>使用Log4j 2 API的应用程序将从LogManager请求具有特定名称的Logger。LogManager将定位适当的LoggerContext，然后从中获取Logger。如果必须创建Logger，它将与LoggerConfig相关联，LoggerConfig包含 a)与Logger相同的名字，b)父包的名字，或 c) root&nbsp;LoggerConfig。LoggerConfig对象是从配置中的Logger声明创建的。LoggerConfig与实际交付LogEvents的Appenders相关联。</p>
+<h4><span style="text-decoration: underline;"><a name="anchor2"></a>Logger Hierarchy</span></h4>
+<p>与普通System.out.println相比，任何日志API的第一个也是最重要的优点是：能够禁用某些日志语句，同时允许其他日志语句不受阻碍地打印。这个功能假定日志空间，也就是所有可能日志语句的空间，是根据开发人员选择的一些标准进行分类的。</p>
+<p>在Log4j 1.x 里，Logger层次结构是通过Logger之间的关系来维护的。在Log4j 2中，这种关系不再存在。相反，层次结构是在LoggerConfig对象之间的关系中维护的。</p>
+<p>Logger和LoggerConfig是命名实体。日志记录器名称区分大小写，它们遵循<strong><span style="color: #ff0000;">分层命名规则</span></strong>。</p>
+<h4><span style="text-decoration: underline;"><a name="anchor3"></a>LoggerContext</span></h4>
+<p><a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/LoggerContext.html" target="_blank">LoggerContext</a>充当日志系统的锚点。但是，根据具体情况，应用程序中可能有多个活动的LoggerContexts&nbsp;。有关LoggerContext的更多细节见<a href="https://logging.apache.org/log4j/2.x/manual/logsep.html" target="_blank">日志分隔</a>部分。</p>
+<h4><span style="text-decoration: underline;"><a name="anchor4"></a>Configuration</span></h4>
+<p>每个LoggerContext都有一个活动的<a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/config/Configuration.html">Configuration</a>。Configuration包含所有Appenders、上下文范围的Filters、LoggerConfigs，并包含对StrSubstitutor的引用。在重新配置期间，将存在两个配置对象。一旦所有Logger被重定向到新的Configuration，旧的Configuration将被停止并丢弃。</p>
+<h4><span style="text-decoration: underline;"><a name="anchor5"></a>Logger</span></h4>
+<p>如前所述，Logger是通过调用LogManager.getLogger创建的。Logger本身不执行任何直接操作。它只有一个名称，并与LoggerConfig关联。它扩展了AbstractLogger并实现了所需的方法。当配置被修改时，记录器可能与不同的LoggerConfig关联，从而导致它们的行为被修改。&nbsp;</p>
+<h5>Retrieving Loggers</h5>
+<p>由于以Logger所属类的名称命名Logger是一种非常常见的习惯用法，因此<strong><span style="color: #ff0000;">提供了方便的方法LogManager.getLogger()来自动使用调用类的完全限定类名作为Logger名称</span></strong>。</p>
+<h4><span style="text-decoration: underline;"><a name="anchor6"></a>LoggerConfig</span></h4>
+<p>LoggerConfig对象是在日志配置中声明Logger时创建的。LoggerConfig包含一组Filters，LogEvent在传递给任何Appenders之前，必须通过这些Filters。它包含用于处理事件的Appenders的引用。</p>
+<h5>Log Levels</h5>
+<p><a class="externalLink" href="http://logging.apache.org/log4j/1.2/manual.html">Log4j 1.x</a>和<a class="externalLink" href="http://logback.qos.ch/manual/architecture.html#effectiveLevel">Logback</a>都有<strong>&ldquo;<span style="color: #ff0000;">级别继承</span>&rdquo;</strong>的概念。在Log4j 2中，Logger和LoggerConfigs是两个不同的对象，因此这个概念的实现是不同的。每个Logger引用适当的LoggerConfig，而LoggerConfig又可以引用它的父类，从而达到相同的效果。（PS. 言下之意，概念没有变，只不过实现方式有点不一样罢了）</p>
+<p>与Logback不同的是，在ERROR和OFF中间添加了<strong>FATAL</strong>级别。</p>
+<h4><a name="anchor7"></a><span style="text-decoration: underline;">Filter</span></h4>
+<p>除了根据日志级别自动过滤,如前一节所述,Log4j提供<a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/Filter.html">Filter</a>s,可以应用在控制传递给任何LoggerConfig之前,控制传递给LoggerConfig后但在调用任何Appenders之前,控制传递给LoggerConfig后但在调用一个特定的Appender之前,以及每一个Appender之中。以一种与防火墙过滤器非常相似的方式，每个过滤器可以返回三个结果之一，Accept, Deny或者Neutral。</p>
+<p>虽然事件可能被Filter接受，但事件仍然可能没有被记录。当事件被pre-LoggerConfig Filter接受，但随后被LoggerConfig Filter拒绝或被所有appender拒绝时，就会发生这种情况。</p>
+<h4><a name="anchor8"></a><span style="text-decoration: underline;">Appender</span></h4>
+<p>appender可加性的内容仍然可以参考<a href="https://www.cnblogs.com/xkxf/p/9971665.html#anchor4" target="_blank">Logback</a>的。</p>
+<h4><span style="text-decoration: underline;"><a name="anchor9"></a>Layout</span></h4>
+<p>类似Logback</p>
+<h4><a name="anchor10"></a><span style="text-decoration: underline;">StrSubstitutor and StrLookup</span></h4>
+<p>StrSubstitutor类和<a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/lookup/StrLookup.html">StrLookup</a>接口是从Apache Commons Lang中借来的，然后进行了修改，以支持评估LogEvents。此外，<a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/lookup/Interpolator.html">Interpolator</a>类是从Apache Commons Configuration中借来的，以允许StrSubstitutor计算来自多个StrLookups的变量。它也被修改以支持评估LogEvents。它们一起提供了一种机制，允许配置引用来自系统属性、配置文件、ThreadContext映射、LogEvent中的StructuredData的变量。变量可以在处理配置时解析，也可以在处理每个事件时解析(如果组件能够处理的话)。有关更多信息，请参见<a href="https://logging.apache.org/log4j/2.x/manual/lookups.html">Lookups</a>&nbsp;。</p>

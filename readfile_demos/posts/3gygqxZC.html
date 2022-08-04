@@ -1,0 +1,53 @@
+<p>日常收集</p>
+<p class="page-title"><a href="#a1"><span class="field field--name-title field--type-string field--label-hidden">vim editor: How do I enable and disable vim syntax highlighting?</span></a></p>
+<p><a href="#a2">&nbsp;搭建 Python 环境</a></p>
+<p>&nbsp;</p>
+<h3 class="page-title"><span class="field field--name-title field--type-string field--label-hidden"><a name="a1"></a>vim editor: How do I enable and disable vim syntax highlighting?</span></h3>
+<p><span class="field field--name-title field--type-string field--label-hidden">完美解决：</span><a href="https://alvinalexander.com/linux/vi-vim-editor-syntax-highlighting" target="_blank">https://alvinalexander.com/linux/vi-vim-editor-syntax-highlighting</a></p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180108230205551-484115675.png" alt="" width="561" height="382" /></p>
+<p>&nbsp;</p>
+<h3><a name="a2"></a>搭建 Python 环境</h3>
+<p>这种题材是不可能原创的：<a href="http://docs.python-guide.org/en/latest/starting/install3/linux/" target="_blank">Installing Python 3 on Linux</a>&nbsp;（ps. 这个网站非常符合我的审美）写一下自己搭的过程，记录 &amp; 备用：</p>
+<h4><span style="color: #0000ff;">&nbsp;1、首先检查自己的机子有没有装 Python&nbsp;</span></h4>
+<div class="cnblogs_code">
+<pre>root@iZwz:~<span style="color: #008000;">#</span><span style="color: #008000;"> python --version</span>
+Python 2.7.9</pre>
+</div>
+<p>结果是装了，但是我不满意，我一定要装 Python 3.6</p>
+<h4><span style="color: #0000ff;">2、根据具体操作系统来决定该怎么做</span></h4>
+<p>我用的是<span style="color: #ff0000; background-color: #ffff99;">&nbsp; Debian 8.8 64位</span> ，COPY 自&nbsp;<a class="question-hyperlink" href="https://unix.stackexchange.com/questions/332641/how-to-install-python-3-6" target="_blank">How to install Python 3.6?</a></p>
+<p><code><span class="pln">sudo apt<span class="pun">-<span class="pln">get install python3 没办法安装到最新版本：</span></span></span></code></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> apt-<span style="color: #000000;">get update
+</span><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span><span style="color: #000000;"> python3
+python3 is already the newest version.
+python </span>-<span style="color: #000000;">V
+Python </span><span style="color: #800080;">3.4</span>.<span style="color: #800080;">2</span></pre>
+</div>
+<p>&nbsp;需要直接从官网下载：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">wget</span> https:<span style="color: #008000;">//</span><span style="color: #008000;">www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz</span>
+<span style="color: #0000ff;">tar</span> xvf Python-<span style="color: #800080;">3.6</span>.<span style="color: #800080;">3</span><span style="color: #000000;">.tgz
+cd Python</span>-<span style="color: #800080;">3.6</span>.<span style="color: #800080;">3</span><span style="color: #000000;">
+.</span>/configure --enable-<span style="color: #000000;">optimizations
+</span><span style="color: #0000ff;">make</span> -<span style="color: #000000;">j8
+</span><span style="color: #0000ff;">sudo</span> <span style="color: #0000ff;">make</span><span style="color: #000000;"> altinstall
+python3.</span><span style="color: #800080;">6</span></pre>
+</div>
+<p>逐条运行指令 + 耐心等待就可以了。</p>
+<p>Some package need to be installed to avoid some known&nbsp;<a href="https://stackoverflow.com/questions/41489439/pip3-installs-inside-virtual-environment-with-python3-6-failing-due-to-ssl-modul/41601137#41601137">problems</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> -y <span style="color: #0000ff;">make</span> build-essential libssl-dev zlib1g-<span style="color: #000000;">dev   
+</span><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> -y libbz2-dev libreadline-dev libsqlite3-dev <span style="color: #0000ff;">wget</span><span style="color: #000000;"> curl llvm 
+</span><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> -y libncurses5-dev  libncursesw5-dev xz-utils tk-dev</pre>
+</div>
+<p>&nbsp;（这个大可以出了问题再装，我是这么认为的）</p>
+<p>大功告成图：</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180111234824941-1690359393.png" alt="" width="595" height="162" /></p>
+<h4><span style="color: #0000ff;">3、Setuptools &amp; Pip 通常情况下已经被默认安装（Python 版本在 3.4 以上的话）</span></h4>
+<p>Setuptools 和 Pip 是两个很关键的 Python 第三方包管理工具，详细参看原教程。检查是否安装好：</p>
+<div class="cnblogs_code">
+<pre>root@iZwz:~/Python-<span style="color: #800080;">3.6</span>.<span style="color: #800080;">3</span># command -<span style="color: #000000;">v pip
+</span>/usr/local/bin/pip</pre>
+</div>
+<p>&nbsp;</p>

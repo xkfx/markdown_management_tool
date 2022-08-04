@@ -1,0 +1,131 @@
+<h2>MySQL ROLE</h2>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/roles.html" target="_blank">MySQL 8.0 Reference Manual&nbsp;&nbsp;/&nbsp;&nbsp;<span id="hidden-breadcrumbs" class="hidden">Security&nbsp;&nbsp;/&nbsp;&nbsp;MySQL User Account Management&nbsp;&nbsp;/&nbsp;&nbsp;Using Roles</span></a></p>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/26453106/how-to-create-role-on-mysql-database" target="_blank">how to create role on MySQL database</a></p>
+<p>mysql 8.0 才支持角色。</p>
+<p>创建新角色：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> ROLE <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_developer</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_read</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_write</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>将权限赋予角色：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">GRANT</span> <span style="color: #808080;">ALL</span> <span style="color: #0000ff;">ON</span> app_db.<span style="color: #808080;">*</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_developer</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">GRANT</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #0000ff;">ON</span> app_db.<span style="color: #808080;">*</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_read</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">GRANT</span> <span style="color: #0000ff;">INSERT</span>, <span style="color: #0000ff;">UPDATE</span>, <span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">ON</span> app_db.<span style="color: #808080;">*</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_write</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>创建新用户：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #ff00ff;">USER</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">dev1</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span> IDENTIFIED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">dev1pass</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #ff00ff;">USER</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">read_user1</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span> IDENTIFIED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">read_user1pass</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #ff00ff;">USER</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">read_user2</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span> IDENTIFIED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">read_user2pass</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #ff00ff;">USER</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">rw_user1</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span> IDENTIFIED <span style="color: #0000ff;">BY</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">rw_user1pass</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>将角色赋予用户：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">GRANT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_developer</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">dev1</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">GRANT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_read</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">read_user1</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">read_user2</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">GRANT</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_read</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">app_write</span><span style="color: #ff0000;">'</span> <span style="color: #0000ff;">TO</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">rw_user1</span><span style="color: #ff0000;">'</span>@<span style="color: #ff0000;">'</span><span style="color: #ff0000;">localhost</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<h2>SQL CHECK 约束</h2>
+<p><a href="http://www.w3school.com.cn/sql/sql_check.asp" target="_blank">http://www.w3school.com.cn/sql/sql_check.asp</a></p>
+<p><a id="cb_post_title_url" href="http://www.cnblogs.com/wangtianze/p/6700244.html" target="_blank">MySQL关于check约束无效的解决办法</a></p>
+<p>没找到官方文档。查了下资料发现 MySQL 不支持 CHECK ，加不加都一样。。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TABLE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> employee;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> employee (
+    name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    phone_num </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">),
+    sex </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(id),
+    
+    </span><strong><span style="color: #0000ff;">CONSTRAINT</span> check_sex <span style="color: #0000ff;">CHECK</span> (sex <span style="color: #808080;">IN</span> (<span style="color: #ff0000;">'</span><span style="color: #ff0000;">f</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">m</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)),
+    </span><span style="color: #0000ff;">CONSTRAINT</span> check_id <span style="color: #0000ff;">CHECK</span> (id <span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">E_______</span><span style="color: #ff0000;">'</span></strong><span style="color: #000000;"><strong>)</strong>
+    
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> employee
+    (name, 
+    phone_num, 
+    id, 
+    sex)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+    (</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">李四</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">15159000122</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">E2008001</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">f</span><span style="color: #ff0000;">'</span><span style="color: #000000;">);
+    
+</span><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TABLE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> product;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> product (
+    name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+    product_type </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    production_date DATE,
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(id),
+    
+    </span><strong><span style="color: #0000ff;">CONSTRAINT</span> check_id <span style="color: #0000ff;">CHECK</span> (id <span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">P%</span><span style="color: #ff0000;">'</span>
+    <span style="color: #808080;">AND</span> <span style="color: #ff00ff;">SUBSTRING</span>(id, <span style="color: #800000;">2</span>, <span style="color: #800000;">4</span>) <span style="color: #808080;">=</span> <span style="color: #ff00ff;">YEAR</span></strong><span style="color: #000000;"><strong>(production_date))</strong>
+    
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;
+
+</span><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> product
+    (name, 
+    id, 
+    product_type, 
+    production_date)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #888888;">
+    ('飞碟迷宫',
+    'P20080021',
+    '玩具',
+    '2008-10-22');
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> customer (
+    name </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">9</span><span style="color: #000000;">),
+    sex </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    department </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    salary </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    job_title </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">(id),
+    
+    </span><span style="color: #0000ff;">CONSTRAINT</span> check_id <span style="color: #0000ff;">CHECK</span> (id <span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">C%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)
+    
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;    
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_master (
+    id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">12</span>) <span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;">,
+    customer_id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">9</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    employee_id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">8</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    total </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>, <span style="color: #800000; font-weight: bold;">2</span>) <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">0</span><span style="color: #000000;">,
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> order_date DATE DEFAULT CURDATE(), 这两行是错的，MySQL目前字段的默认值不支持函数</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> shipping_date DATE DEFAULT CURDATE(), 另外一种解决方案是由应用程序插入默认值</span>
+    order_date <span style="color: #0000ff;">TIMESTAMP</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #ff00ff;">CURRENT_TIMESTAMP</span><span style="color: #000000;">,
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> shipping_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, there can be only one TIMESTAMP column with CURRENT_TIMESTAMP in DEFAULT or ON UPDATE clause</span>
+    <span style="color: #008080;">--</span><span style="color: #008080;"> 或者是用触发器来做</span>
+    invoice_number <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #0000ff;">UNIQUE</span><span style="color: #000000;">,
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (customer_id) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> customer(id),
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (employee_id) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> employee(id)        
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span><span style="color: #000000;">utf8;    
+
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> order_detail (
+    order_id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">12</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    product_id </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">9</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    quantity </span><span style="color: #0000ff;">INT</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    price </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>, <span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (order_id) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> order_master(id),
+    
+    </span><span style="color: #0000ff;">FOREIGN</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (product_id) 
+        </span><span style="color: #0000ff;">REFERENCES</span><span style="color: #000000;"> product(id)    
+)    ENGINE</span><span style="color: #808080;">=</span>INNODB <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8;    </pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,257 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p>Notes</p>
+<ol>
+<li><a href="#a1">strict mode</a></li>
+<li><a href="#a2">js类型</a></li>
+<li><a href="#a3">js测试</a></li>
+<li><a href="#a4">Debugging</a></li>
+<li><a href="#a5">Exceptions</a></li>
+<li><a href="#a6">finally</a></li>
+<li><a href="#a7">异常分支</a></li>
+</ol></li>
+<li>
+<p>Exercise</p>
+<ol>
+<li><a href="#b1">Retry</a></li>
+<li><a href="#b2">The locked box</a></li>
+</ol></li>
+</ul>
+</div>
+<h2>Notes</h2>
+<p><a name="a1"></a>1、strict mode</p>
+<p>strict mode优势：更严格的检查、删除了一些有问题的语言特性。</p>
+<p>把 "use strict" 放在文件顶部（必须是文件顶部，放在其它地方就被当成字符串了）或者函数顶部开启js strict模式。</p>
+<p>示例1：没启用strict模式，js就会给你悄摸摸地加一个let上去...</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> canYouSpotTheProblem() {
+  </span>"use strict"<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">for</span> (counter = 0; counter &lt; 10; counter++<span style="color: #000000;">) {
+    console.log(</span>"Happy happy"<span style="color: #000000;">);
+  }
+}
+
+canYouSpotTheProblem();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ReferenceError: counter is not defined</span></pre>
+</div>
+<p>示例2：没启用strict模式，name被悄悄地绑定到一个全局对象上而没报错。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span> Person(name) { <span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name; }
+let ferdinand </span>= Person("Ferdinand"); <span style="color: #008000;">//</span><span style="color: #008000;"> oops</span>
+<span style="color: #000000;">console.log(name);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Ferdinand</span>
+<span style="color: #000000;">console.log(window.name);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Ferdinand</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> - -- - --修改&darr;分割线------------------------------------</span>
+
+"use strict"<span style="color: #000000;">;
+</span><span style="color: #0000ff;">function</span> Person(name) { <span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name; }
+let ferdinand </span>= Person("Ferdinand"); <span style="color: #008000;">//</span><span style="color: #008000;"> forgot new</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; TypeError: Cannot set property 'name' of undefined</span></pre>
+</div>
+<p>PS. 上述情况，用class定义类具有和采用strict模式一样的效果，所以尽量用class定义类。</p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、js类型</p>
+<p>js在在运行时才会涉及到类型。许多语言在编译期就考虑类型了。</p>
+<p>为了减少js类型带来的一些问题，有两个简单的解决方案：</p>
+<p>① 注释</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> (VillageState, Array) &rarr; {direction: string, memory: Array}</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> goalOrientedRobot(state, memory) {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<p>②&nbsp;<a href="https://www.typescriptlang.org/">TypeScript</a>&nbsp;</p>
+<p>可以进行类型检查，并编译成js</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、js测试</p>
+<p>采用第三方测试套件或者如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> test(label, body) {
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">body()) console.log(`Failed: ${label}`);
+}
+
+test(</span>"convert Latin text to uppercase", () =&gt;<span style="color: #000000;"> {
+  </span><span style="color: #0000ff;">return</span> "hello".toUpperCase() == "HELLO"<span style="color: #000000;">;
+});
+test(</span>"convert Greek text to uppercase", () =&gt;<span style="color: #000000;"> {
+  </span><span style="color: #0000ff;">return</span> "&Chi;&alpha;ί&rho;&epsilon;&tau;&epsilon;".toUpperCase() == "&Chi;&Alpha;Ί&Rho;&Epsilon;&Tau;&Epsilon;"<span style="color: #000000;">;
+});
+test(</span>"don't convert case-less characters", () =&gt;<span style="color: #000000;"> {
+  </span><span style="color: #0000ff;">return</span> "مرحبا".toUpperCase() == "مرحبا"<span style="color: #000000;">;
+});</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、Debugging</p>
+<p>console.log或者debugger关键字：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> add(a, b) {
+    console.log(`add ${a} and ${b}`);
+    </span><span style="color: #0000ff;">return</span> a +<span style="color: #000000;"> b;
+}
+
+</span><span style="color: #0000ff;">debugger</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 从这一行开始进入浏览器debug模式</span>
+<span style="color: #000000;">
+let x </span>= add(1, 3<span style="color: #000000;">);
+prompt(</span>"<span style="color: #ff00ff;">只有在开发者模式下，debug模式才生效</span>");</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、Exceptions</p>
+<p>异常的一大优势：几乎无耦合地在多个函数中（调用栈）传递，中间函数什么都不需要知道，仅在最外层处理就行了。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> promptDirection(question) {
+  let result </span>=<span style="color: #000000;"> prompt(question);
+  </span><span style="color: #0000ff;">if</span> (result.toLowerCase() == "left") <span style="color: #0000ff;">return</span> "L"<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">if</span> (result.toLowerCase() == "right") <span style="color: #0000ff;">return</span> "R"<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("Invalid direction: " +<span style="color: #000000;"> result);
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> look() {
+  </span><span style="color: #0000ff;">if</span> (promptDirection("Which way?") == "L"<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span> "a house"<span style="color: #000000;">;
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> "two angry bears"<span style="color: #000000;">;
+  }
+}
+
+</span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+  console.log(</span>"You see"<span style="color: #000000;">, look());
+} </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (error) {
+  console.log(</span>"Something went wrong: " +<span style="color: #000000;"> error);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6、finally</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> transfer(from, amount) {
+  </span><span style="color: #0000ff;">if</span> (accounts[from] &lt; amount) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+  let progress </span>= 0<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+    accounts[from] </span>-=<span style="color: #000000;"> amount;
+    progress </span>= 1<span style="color: #000000;">;
+    accounts[getAccount()] </span>+=<span style="color: #000000;"> amount;
+    progress </span>= 2<span style="color: #000000;">;
+  } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (progress == 1<span style="color: #000000;">) {
+      accounts[from] </span>+=<span style="color: #000000;"> amount;
+    }
+  }
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">Writing programs that operate reliably </span><span style="color: #008000;">
+//</span><span style="color: #008000;">even when exceptions pop up in unexpected places </span><span style="color: #008000;">
+//</span><span style="color: #008000;">is hard. Many people simply don&rsquo;t bother, </span><span style="color: #008000;">
+//</span><span style="color: #008000;">and because exceptions are typically reserved </span><span style="color: #008000;">
+//</span><span style="color: #008000;">for exceptional circumstances, the problem may </span><span style="color: #008000;">
+//</span><span style="color: #008000;">occur so rarely that it is never even noticed.</span><span style="color: #008000;">
+//</span><span style="color: #008000;">Whether that is a good thing or a really bad thing </span><span style="color: #008000;">
+//</span><span style="color: #008000;">depends on how much damage the software will do when it fails.</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、异常分支</p>
+<p>js不支持catch分支，而在try-catch的时候，同样会捕获undefined.call等造成的异常。</p>
+<p>有些人可能会想只要比对e里面的信息就可以知道哪儿出现问题了，但是异常信息不是一个稳定的东西，一旦抛出的异常信息的表达改变，程序就不会正常工作，更可靠的解决方案如下（自定义空异常，只为了利用class区分，不加任何东西）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class InputError extends Error {}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> promptDirection(question) {
+  let result </span>=<span style="color: #000000;"> prompt(question);
+  </span><span style="color: #0000ff;">if</span> (result.toLowerCase() == "left") <span style="color: #0000ff;">return</span> "L"<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">if</span> (result.toLowerCase() == "right") <span style="color: #0000ff;">return</span> "R"<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> InputError("Invalid direction: " +<span style="color: #000000;"> result);
+}
+
+</span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (;;) {
+  </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+    let dir </span>= promptDirection("Where?"<span style="color: #000000;">);
+    console.log(</span>"You chose "<span style="color: #000000;">, dir);
+    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+  } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+    </span><span style="color: #0000ff;">if</span> (e <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> InputError) {
+      console.log(</span>"Not a valid direction. Try again."<span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">throw</span><span style="color: #000000;"> e;
+    }
+  }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="b1"></a>①&nbsp;Retry</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class MultiplicatorUnitFailure extends Error {}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> primitiveMultiply(a, b) {
+    </span><span style="color: #0000ff;">if</span>(Math.random() &lt; 0.2<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span> a *<span style="color: #000000;"> b;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> MultiplicatorUnitFailure("Klunk"<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> reliableMultiply(a, b) {
+    let result </span>=<span style="color: #000000;"> undefined;
+    </span><span style="color: #0000ff;">for</span> (; result ==<span style="color: #000000;"> undefined;) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            result </span>=<span style="color: #000000;"> primitiveMultiply(a, b);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(e) {
+            </span><span style="color: #0000ff;">if</span> (e <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> MultiplicatorUnitFailure) {                
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">throw</span><span style="color: #000000;"> e;
+            }
+        }        
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+console.log(reliableMultiply(</span>8, 8<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 64</span></pre>
+</div>
+<p>&mdash;&mdash;&mdash;&mdash;-- - ---&nbsp; -- - -&nbsp; -------&mdash;-- - -&mdash;-- - -</p>
+<p><a name="b2"></a>②&nbsp;The locked box</p>
+<div class="cnblogs_code">
+<pre>const box =<span style="color: #000000;"> {
+  locked: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+  unlock() { </span><span style="color: #0000ff;">this</span>.locked = <span style="color: #0000ff;">false</span><span style="color: #000000;">; },
+  lock() { </span><span style="color: #0000ff;">this</span>.locked = <span style="color: #0000ff;">true</span><span style="color: #000000;">;  },
+  _content: [],
+  get content() {
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.locked) <span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("Locked!"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">._content;
+  }
+};
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> withBoxUnlocked(body) {
+  let locked </span>=<span style="color: #000000;"> box.locked;
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">locked) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> body();
+  }
+
+  box.unlock();
+  </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> body();
+  } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+    box.lock();
+  }
+}
+
+withBoxUnlocked(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+  box.content.push(</span>"gold piece"<span style="color: #000000;">);
+});
+
+</span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+  withBoxUnlocked(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("Pirates on the horizon! Abort!"<span style="color: #000000;">);
+  });
+} </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+  console.log(</span>"Error raised:"<span style="color: #000000;">, e);
+}
+
+console.log(box.locked);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,506 @@
+<p>官方教程（包括 javase的基础部分）：<a href="https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html" target="_blank">JDBC Basics</a></p>
+<p>重新梳理、学习一下&ldquo;Java连接数据库&rdquo;相关的内容。</p>
+<p>&nbsp;因为最开始没有认真学多线程和JDBC，一直在自己写的多线程程序中维持下面的错误写法：</p>
+<ol>
+<li>多个线程共用一个connection&nbsp;</li>
+<li>connection只开不关</li>
+</ol>
+<p>为什么上述做法是错误的呢？ 可以参看<a href="https://bbs.csdn.net/topics/340259805" target="_blank">这个帖子</a>。- - &ldquo;JDBC规范并未规定那三个对象必须是线程安全的，因此所有的JDBC厂商也不会去弄成线程安全的，正因为如此，所以就会有并发问题。&rdquo; 、-- &ldquo; 并不是说不能把连接对象弄成成员变量，只是不能将其弄成成员变量后，在多线程环境下处于共享这些对象，如果同步处理得不好，那就会产生严重的连接泄漏。为了避免这种情况发生，仅在用时获取连接，用完后马上关掉。&rdquo; -- &ldquo;如果你对JDBC、多线程编程没有达到非常熟练的程度，还是老老实实地使用经典的JDBC代码结构。&rdquo; -- 摘抄自csdn&nbsp;<a title="火龙果被占用了" href="https://my.csdn.net/bao110908" rel="nofollow" target="_blank">火龙果被占用了</a></p>
+<p>另外，connection只开不关很容易导致连接失效（mysql默认保持连接的时间是8小时，如果这个连接在8小时内无人访问的话，就会关闭这个连接。- -摘）</p>
+<p>我把这些<span style="color: #ff0000;"><strong>错误代码</strong></span>放在第一小节记录下来，作为java连接数据库的最原始版本，在这之后逐渐改良成可以适应各种场景的正确代码。</p>
+<div id="diy_right_menu">
+<p>代码索引：</p>
+<ul>
+<li><a href="#a1">DDL.sql</a></li>
+<li><a href="#a2">Profile.java</a></li>
+<li><a href="#a3">ConnectionFactory.java</a></li>
+<li><a href="#a4">db-config.properties</a></li>
+<li><a href="#a5">ProfileDAO.java</a></li>
+<li><a href="#a6">ProfileDAOImpl.java</a></li>
+<li><a href="#a7">ProfileDAOTest.java</a></li>
+</ul>
+</div>
+<p><a name="a1"></a>① DDL.sql</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">TABLE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> `profile`;
+</span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">TABLE</span><span style="color: #000000;"> `profile` (
+    `profileId` </span><span style="color: #0000ff;">BIGINT</span>(<span style="color: #800000; font-weight: bold;">20</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;"> AUTO_INCREMENT,
+    `username` </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `password` </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `nickname` </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `last_online` </span><span style="color: #0000ff;">TIMESTAMP</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `gender` </span><span style="color: #0000ff;">CHAR</span>(<span style="color: #800000; font-weight: bold;">1</span>) <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `birthday` </span><span style="color: #0000ff;">TIMESTAMP</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `location` </span><span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span>) <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+    `joined` </span><span style="color: #0000ff;">TIMESTAMP</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #ff00ff;">CURRENT_TIMESTAMP</span><span style="color: #000000;">,
+    </span><span style="color: #0000ff;">PRIMARY</span> <span style="color: #0000ff;">KEY</span><span style="color: #000000;"> (`profileId`),
+    </span><span style="color: #0000ff;">UNIQUE</span> <span style="color: #0000ff;">INDEX</span><span style="color: #000000;"> `username` (`username`)
+) ENGINE</span><span style="color: #808080;">=</span>InnoDB AUTO_INCREMENT<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #0000ff;">DEFAULT</span> CHARSET<span style="color: #808080;">=</span>utf8;</pre>
+</div>
+<p>profile表可以基本等价为user表来理解。</p>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a2"></a>② 对应的实体类Profile.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.entity;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Timestamp;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Profile {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Long profileId;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String username;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String password;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String nickname;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Timestamp last_online;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Character gender;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Timestamp birthday;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String location;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Timestamp joined;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Profile() {
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Long getProfileId() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profileId;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setProfileId(Long profileId) {
+        </span><span style="color: #0000ff;">this</span>.profileId =<span style="color: #000000;"> profileId;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getUsername() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setUsername(String username) {
+        </span><span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getPassword() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> password;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setPassword(String password) {
+        </span><span style="color: #0000ff;">this</span>.password =<span style="color: #000000;"> password;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getNickname() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> nickname;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setNickname(String nickname) {
+        </span><span style="color: #0000ff;">this</span>.nickname =<span style="color: #000000;"> nickname;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Timestamp getLast_online() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> last_online;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setLast_online(Timestamp last_online) {
+        </span><span style="color: #0000ff;">this</span>.last_online =<span style="color: #000000;"> last_online;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Character getGender() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> gender;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setGender(Character gender) {
+        </span><span style="color: #0000ff;">this</span>.gender =<span style="color: #000000;"> gender;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Timestamp getBirthday() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> birthday;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setBirthday(Timestamp birthday) {
+        </span><span style="color: #0000ff;">this</span>.birthday =<span style="color: #000000;"> birthday;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getLocation() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> location;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setLocation(String location) {
+        </span><span style="color: #0000ff;">this</span>.location =<span style="color: #000000;"> location;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Timestamp getJoined() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> joined;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setJoined(Timestamp joined) {
+        </span><span style="color: #0000ff;">this</span>.joined =<span style="color: #000000;"> joined;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "Profile{" +
+                "profileId=" + profileId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", last_online=" + last_online +
+                ", gender=" + gender +
+                ", birthday=" + birthday +
+                ", location='" + location + '\'' +
+                ", joined=" + joined +
+                '}'<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a3"></a>③ ConnectionFactory.java或者常说的Dbutil（<span style="color: #ff0000;"><strong>错误代码 &darr;</strong></span>）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.db;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.DriverManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ResourceBundle;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 单线程适用，只开不关，反复用一个 Connection
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> StaticConnectionFactory {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> ResourceBundle rb = ResourceBundle.getBundle("org.sample.db.db-config"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_URL = rb.getString("jdbc.url"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_USER = rb.getString("jdbc.username"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_PASSWORD = rb.getString("jdbc.password"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> Connection conn = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Class.forName("org.gjt.mm.mysql.Driver");
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> JDBC 4.0 之后（包括 JDBC 4.0）不再需要 class.forName ，详细查看 javaSE6 之后的 API</span>
+            conn =<span style="color: #000000;"> DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> RuntimeException("Error connecting to the database"<span style="color: #000000;">, e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Connection getConnection() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> conn;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> setAutoCommit(<span style="color: #0000ff;">boolean</span> autoCommit) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        conn.setAutoCommit(autoCommit);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> commit() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        conn.commit();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> rollback() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        conn.rollback();
+    }
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a4"></a>&nbsp;④ org/sample/db/db-config.properties</p>
+<div class="cnblogs_code">
+<pre>jdbc.url=jdbc:mysql:<span style="color: #008000;">//</span><span style="color: #008000;">***.**.**.**:3306/profiles?characterEncoding=utf8</span>
+jdbc.username=<span style="color: #000000;">root
+jdbc.password</span>=aaaaaaaaaaa</pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a5"></a>⑤ ProfileDAO.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> ProfileDAO {
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> saveProfile(Profile profile);
+
+    List</span>&lt;Profile&gt;<span style="color: #000000;"> listProfileByNickname(String nickname);
+
+    Profile getProfileByUsername(String username);
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> updateProfileById(Profile profile);
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> updatePassword(String username, String password);
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> updateLastOnline(String username);
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a6"></a>⑥ ProfileDAOImpl.java（为了用&ldquo;带资源的try&rdquo;严重画蛇添足了。）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao.impl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.ProfileDAO;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.db.StaticConnectionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.PreparedStatement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> NotThreadSafe</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ProfileDAOImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ProfileDAO {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Connection conn =<span style="color: #000000;"> StaticConnectionFactory.getConnection();
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> saveProfile(Profile profile) {
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> (
+                PreparedStatement ps </span>=<span style="color: #000000;">
+                        createPreparedStatementForSaveProfile(conn, profile);
+        ) {
+            i </span>=<span style="color: #000000;"> ps.executeUpdate();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">if</span> (!(e <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> MySQLIntegrityConstraintViolationException)) {
+                e.printStackTrace();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> List&lt;Profile&gt;<span style="color: #000000;"> listProfileByNickname(String nickname) {
+        List</span>&lt;Profile&gt; profiles = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> (
+                PreparedStatement ps </span>=<span style="color: #000000;">
+                        createPreparedStatementForListProfileByNickname(conn, nickname);
+                ResultSet rs </span>=<span style="color: #000000;"> ps.executeQuery();
+        ) {
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                Profile profile </span>=<span style="color: #000000;"> extractProfileFromResultSet(rs);
+                profiles.add(profile);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profiles;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Profile getProfileByUsername(String username) {
+        Profile profile </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> (
+                PreparedStatement ps </span>=<span style="color: #000000;">
+                        createPreparedStatementForGetProfileByUsername(conn, username);
+                ResultSet rs </span>=<span style="color: #000000;"> ps.executeQuery();
+        ) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                profile </span>=<span style="color: #000000;"> extractProfileFromResultSet(rs);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profile;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> updateProfileById(Profile profile) {
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> (
+                PreparedStatement ps </span>=<span style="color: #000000;">
+                        createPreparedStatementForUpdateProfileById(conn, profile);
+        ) {
+            i </span>=<span style="color: #000000;"> ps.executeUpdate();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> updatePassword(String username, String password) {
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> (
+                PreparedStatement ps </span>=<span style="color: #000000;">
+                        createPreparedStatementForUpdatePassword(username, password);
+        ) {
+            i </span>=<span style="color: #000000;"> ps.executeUpdate();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> updateLastOnline(String username) {
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> (
+                PreparedStatement ps </span>=<span style="color: #000000;">
+                        createPreparedStatementForUpdateLastOnline(username);
+        ) {
+            i </span>=<span style="color: #000000;"> ps.executeUpdate();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    </span><span style="color: #0000ff;">private</span> Profile extractProfileFromResultSet(ResultSet rs) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile();
+        profile.setBirthday(rs.getTimestamp(</span>"birthday"<span style="color: #000000;">));
+        profile.setJoined(rs.getTimestamp(</span>"joined"<span style="color: #000000;">));
+        profile.setLast_online(rs.getTimestamp(</span>"last_online"<span style="color: #000000;">));
+        profile.setLocation(rs.getString(</span>"location"<span style="color: #000000;">));
+        profile.setNickname(rs.getString(</span>"nickname"<span style="color: #000000;">));
+        profile.setPassword(rs.getString(</span>"password"<span style="color: #000000;">));
+        profile.setProfileId(rs.getLong(</span>"profile_id"<span style="color: #000000;">));
+        profile.setUsername(rs.getString(</span>"username"<span style="color: #000000;">));
+        </span><span style="color: #0000ff;">if</span> (rs.getString("gender") != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            profile.setGender(rs.getString(</span>"gender").charAt(0<span style="color: #000000;">));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profile;
+    }
+
+    </span><span style="color: #0000ff;">private</span> PreparedStatement createPreparedStatementForSaveProfile(Connection conn, Profile profile) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "INSERT INTO `profiles`.`profile` (`username`, `password`, `nickname`) " +
+                "VALUES (?, ?, ?)"<span style="color: #000000;">;
+        PreparedStatement ps </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        ps.setString(</span>1<span style="color: #000000;">, profile.getUsername());
+        ps.setString(</span>2<span style="color: #000000;">, profile.getPassword());
+        ps.setString(</span>3<span style="color: #000000;">, profile.getNickname());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ps;
+    }
+
+    </span><span style="color: #0000ff;">private</span> PreparedStatement createPreparedStatementForListProfileByNickname(Connection conn, String nickname) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "SELECT  `profile_id`,  `username`,  `password`,  `nickname`,  `last_online`,  `gender`,  `birthday`,  `location`,  `joined`" +
+                "FROM `profiles`.`profile`" +
+                "WHERE `nickname`=?"<span style="color: #000000;">;
+        PreparedStatement ps </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        ps.setString(</span>1<span style="color: #000000;">, nickname);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ps;
+    }
+
+    </span><span style="color: #0000ff;">private</span> PreparedStatement createPreparedStatementForGetProfileByUsername(Connection conn, String username) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "SELECT  `profile_id`,  `username`,  `password`,  `nickname`,  `last_online`,  `gender`,  `birthday`,  `location`,  `joined`" +
+                "FROM `profiles`.`profile`" +
+                "WHERE `username`=?"<span style="color: #000000;">;
+        PreparedStatement ps </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        ps.setString(</span>1<span style="color: #000000;">, username);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ps;
+    }
+
+    </span><span style="color: #0000ff;">private</span> PreparedStatement createPreparedStatementForUpdateProfileById(Connection conn, Profile profile) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "UPDATE `profiles`.`profile`" +
+                "SET `nickname`=?,  `gender`=?,  `birthday`=?,  `location`=? " +
+                "WHERE  `profile_id`=?"<span style="color: #000000;">;
+        PreparedStatement ps </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        ps.setString(</span>1<span style="color: #000000;">, profile.getNickname());
+        ps.setString(</span>2, profile.getGender() != <span style="color: #0000ff;">null</span> ? String.valueOf(profile.getGender()) : <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        ps.setTimestamp(</span>3<span style="color: #000000;">, profile.getBirthday());
+        ps.setString(</span>4<span style="color: #000000;">, profile.getLocation());
+        ps.setLong(</span>5<span style="color: #000000;">, profile.getProfileId());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ps;
+    }
+
+    </span><span style="color: #0000ff;">private</span> PreparedStatement createPreparedStatementForUpdatePassword(String username, String password) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "UPDATE `profiles`.`profile`" +
+                "SET `password`=? " +
+                "WHERE  `username`=?"<span style="color: #000000;">;
+        PreparedStatement ps </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        ps.setString(</span>1<span style="color: #000000;">, password);
+        ps.setString(</span>2<span style="color: #000000;">, username);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ps;
+    }
+    
+    </span><span style="color: #0000ff;">private</span> PreparedStatement createPreparedStatementForUpdateLastOnline(String username) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "UPDATE `profiles`.`profile`" +
+                "SET `last_online`=CURRENT_TIMESTAMP " +
+                "WHERE  `username`=?"<span style="color: #000000;">;
+        PreparedStatement ps </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        ps.setString(</span>1<span style="color: #000000;">, username);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ps;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p>&nbsp;<a name="a7"></a>⑦&nbsp;ProfileDAOTest.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.impl.ProfileDAOImpl;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.db.StaticConnectionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span> org.junit.Assert.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ProfileDAOTest {
+
+    </span><span style="color: #0000ff;">private</span> ProfileDAO profileDAO = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ProfileDAOImpl();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String USER_NAME = "hello123"<span style="color: #000000;">;
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> saveProfile() {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile();
+        profile.setUsername(USER_NAME);
+        profile.setPassword(</span>"231231232"<span style="color: #000000;">);
+        profile.setNickname(</span>"jack"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> profileDAO.saveProfile(profile);
+        System.out.println(i);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> listProfileByNickname() {
+        List</span>&lt;Profile&gt; profiles = profileDAO.listProfileByNickname("123"<span style="color: #000000;">);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> getProfileByUsername() {
+        Profile existProfile </span>=<span style="color: #000000;"> profileDAO.getProfileByUsername(USER_NAME);
+        Profile notExistProfile </span>= profileDAO.getProfileByUsername(USER_NAME + "321"<span style="color: #000000;">);
+        assertNotNull(existProfile);
+        assertNull(notExistProfile);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> updateProfileById() {
+        Profile profile </span>=<span style="color: #000000;"> profileDAO.getProfileByUsername(USER_NAME);
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> profileDAO.updateProfileById(profile);
+        assertEquals(</span>1, i); <span style="color: #008000;">//</span><span style="color: #008000;"> 即便没改变值，但是还是会重新set一遍，因此影响行数还是一行</span>
+<span style="color: #000000;">
+        profile.setGender(</span>'f'<span style="color: #000000;">);
+        profile.setNickname(</span>"www" +<span style="color: #000000;"> Math.random());
+        </span><span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> profileDAO.updateProfileById(profile);
+        assertEquals(</span>1<span style="color: #000000;">, j);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> updatePassword() {
+        profileDAO.updatePassword(USER_NAME, </span>"www" +<span style="color: #000000;"> Math.random());
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> updateLastOnline() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            StaticConnectionFactory.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+            profileDAO.getProfileByUsername(USER_NAME);
+            profileDAO.updateLastOnline(USER_NAME);
+            StaticConnectionFactory.commit();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                StaticConnectionFactory.rollback();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e1) {
+                e1.printStackTrace();
+            }
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            StaticConnectionFactory.setAutoCommit(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

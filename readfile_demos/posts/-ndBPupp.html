@@ -1,0 +1,71 @@
+<p>datacamp + 日常收集</p>
+<p><a href="#a1">How to install Package</a>&nbsp;</p>
+<p><a href="#a2">pip3 &amp; What is difference between pip and pip3?</a></p>
+<p><a href="#a3">Import&nbsp; Package</a></p>
+<p><a href="#a4">Selective import</a></p>
+<p><a href="#a5">Different ways of importing</a></p>
+<p>&nbsp;</p>
+<h3><a name="a1"></a>How to install Package&nbsp;</h3>
+<p><span class="rendered_qtext"><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180109233813785-1449346707.png" alt="" width="335" height="187" /></span></p>
+<p>在 Python 中，我们通常使用 pip 来安装 Package（扩展包）。pip 是 python 的一个包管理工具（类似于各种 Linux distribution 里的包管理工具）。</p>
+<p>步骤是这样的，首先需要先到 pip 的官网（google 一下）下载 get-pip.py ，之后打开终端运行 get-pip.py &ldquo;真正&rdquo;地安装它，然后就可以轻松地使用 pip 命令来安装各种扩展包。</p>
+<p>&nbsp;</p>
+<h3><span class="rendered_qtext"><a name="a2"></a>What is difference between pip and pip3?</span></h3>
+<p>pip3 always operates on the Python3 environment only, as pip2 does with Python2. pip operates on whichever environment is appropriate to the context. For example if you are in a Python3 venv, pip will operate on the Python3 environment. --&nbsp;<span id="VjDOYi"><span id="__w2_fZyeWHJ_link" class="hover"><a id="__w2_fZyeWHJ_name_link" class="user" href="https://www.quora.com/profile/Brendan-Donegan" target="_blank">Brendan Donegan</a><span class="NameCredential IdentityNameCredential">, Automating testing using Python for 6 years</span></span></span></p>
+<p>&nbsp;</p>
+<h3><span><span class="hover"><span class="NameCredential IdentityNameCredential"><a name="a3"></a>Import Package</span></span></span></h3>
+<p><span><span class="hover"><span class="NameCredential IdentityNameCredential">当我们安装好扩展包后，如何在代码中使用它呢？主要有以下几种方式：</span></span></span></p>
+<p><span><span class="hover"><span class="NameCredential IdentityNameCredential">1）</span></span></span></p>
+<p><span><span class="hover"><span class="NameCredential IdentityNameCredential"><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180109235951254-255952847.png" alt="" width="359" height="125" /></span></span></span></p>
+<p>2）</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180110000039472-2024062446.png" alt="" width="267" height="90" /></p>
+<p>3）</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180110000127207-1099401336.png" alt="" width="268" height="72" /></p>
+<p>&nbsp;用哪种全凭喜好，不过我比较倾向于用方式一。范例代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Definition of radius</span>
+r = 0.43
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import the math package</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> math
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Calculate C</span>
+C = 2 * math.pi *<span style="color: #000000;"> r
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Calculate A</span>
+A = math.pi * r ** 2
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Build printout</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Circumference: </span><span style="color: #800000;">"</span> +<span style="color: #000000;"> str(C))
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">Area: </span><span style="color: #800000;">"</span> + str(A))</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a4"></a>Selective import</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Definition of radius</span>
+r = 192500
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import radians function of math package</span>
+<span style="color: #0000ff;">from</span> math <span style="color: #0000ff;">import</span><span style="color: #000000;"> radians
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Travel distance of Moon over 12 degrees. Store in dist.</span>
+dist = r * radians(12<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out dist</span>
+<span style="color: #0000ff;">print</span>(dist)</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a5"></a>Different ways of importing</h3>
+<div>
+<div>
+<p>There are several ways to import packages and modules into Python. Depending on the import call, you'll have to use different Python code.</p>
+<p>Suppose you want to use the function&nbsp;<a href="http://docs.scipy.org/doc/numpy-1.10.0/reference/generated/numpy.linalg.inv.html" target="_blank"><code>inv()</code></a>, which is in the&nbsp;<code>linalg</code>subpackage of the&nbsp;<code>scipy</code>&nbsp;package. You want to be able to use this function as follows:</p>
+<pre><code>my_inv([[1,2], [3,4]])
+</code></pre>
+<p>Which&nbsp;<code>import</code>&nbsp;statement will you need in order to run the above code without an error?</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">from</span> scipy.linalg <span style="color: #0000ff;">import</span> inv as my_inv</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>

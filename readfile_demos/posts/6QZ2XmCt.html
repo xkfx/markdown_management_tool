@@ -1,0 +1,81 @@
+<p>Kotlin 是一种静态类型的编程语言，可在 Java 虚拟机上运行，也可以编译为 JavaScript 源代码。其主要发展来自位于俄罗斯圣彼得堡的 JetBrains 程序员团队。虽然语法与 Java 不兼容，但 Kotlin 旨在与 Java 代码进行交互操作，并且依赖于现有 Java 类库（例如集合框架）的 Java 代码。这个名字来自圣彼得堡附近的科特林岛（Kotlin Island）。&mdash;&mdash; wikipedia</p>
+<ol>
+<li><a href="#a1"><span>Kotlin 初识</span></a></li>
+<li><span><span class="text"><a href="#a2">Kotlin 入门：在 IDEA 中运行 Kotlin 程序</a></span><br /></span></li>
+<li><a href="#a3">用命令行编译 Kotlin 程序</a></li>
+
+
+
+
+
+
+
+
+</ol>
+<p>&nbsp;</p>
+<h3><a name="a1"></a>1、Kotlin 初识</h3>
+<ol>
+<li>什么是 Kotlin？<a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)" target="_blank">Kotlin (programming language) - Wikipedia</a></li>
+<li>Kotlin 作为服务器端开发语言与 Java 相比会如何？<a href="https://www.zhihu.com/question/57141334" target="_blank">Kotlin作为服务器端开发语言与Java相比会如何? - 知乎</a></li>
+<li>为什么使用 Kotlin，以及 Kotlin 的入门。<a href="https://www.google.co.jp/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwiL9rGRrKvUAhULvLwKHczvDaAQFggoMAA&amp;url=https%3A%2F%2Fkotlinlang.org%2F&amp;usg=AFQjCNGXKT03tgxJWb_HYfMeXhS5u0243A&amp;sig2=QYfNoQNqaf2WPVIRbQj_QA" target="_blank" data-href="https://kotlinlang.org/">Kotlin Programming Language</a></li>
+<li>Kotlin 的相关资讯。<a href="https://twitter.com/kotlin?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" target="_blank">Kotlin (@kotlin) &middot; Twitter</a></li>
+<li>kotlin-docs &amp;&nbsp;Programming Kotlin&nbsp;<a href="http://pan.baidu.com/s/1hrHLtfY" target="_blank">http://pan.baidu.com/s/1hrHLtfY</a></li>
+
+
+
+
+
+
+
+
+</ol>
+<p>&nbsp;</p>
+<h3><span class="text"><a name="a2"></a>2、Kotlin 入门：在 IDEA 中运行 Kotlin 程序<br /></span></h3>
+<p><strong>Step-1</strong>: 前提是需要有一个较高版本的&nbsp;<span class="text"><em>IntelliJ IDEA</em>，先</span><span class="text">创建一个新的 <em>Kotlin工程</em>，名字随便取。</span></p>
+<p><img style="clear: both; display: block; margin: auto;" src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607195139575-145408569.png" alt="" width="591" height="120" /></p>
+<p>&nbsp;</p>
+<p><strong>Step-2</strong>: 创建一个<em> Kotlin类</em> &mdash;&mdash; <em>hello.kt</em></p>
+<p><img style="clear: both; display: block; margin: auto;" src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607195237028-310785741.png" alt="" width="552" height="148" /></p>
+<p>&nbsp;</p>
+<p><strong>Step-3</strong>: 编写 <em>Kotlin代码&nbsp;</em>并运行程序。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/6/7.
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+fun main(args: Array</span>&lt;String&gt;<span style="color: #000000;">) {
+    println(</span>"Hello world!"<span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607195425825-1825417417.png" alt="" width="302" height="145" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607195457372-1307551980.png" alt="" width="275" height="85" /></p>
+<p>&nbsp;</p>
+<h3><a name="a3"></a>3、在命令行编译 Kotlin 程序</h3>
+<p id="-windows-python">1、在 Windows 上安装 <em>Kotlin</em></p>
+<p>在&nbsp;<a href="https://github.com/JetBrains/kotlin/releases/tag/v1.1.2-2">GitHub</a>&nbsp;上下载 <em>kotlin-compiler-1.1.2-2.zip</em>，网速慢的话点<a href="http://pan.baidu.com/s/1eS48xqU" target="_blank">这里</a>。</p>
+<p>将压缩包解压放在自己喜欢的位置，然后<strong>仿照&ldquo;配置JDK环境变量&rdquo;</strong>的方式配置 Kotlin 的环境变量。如果在命令行下输入<em> kotlinc</em> 显示类似如下界面，说明配置成功。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607184502184-1730404635.png" alt="" width="419" height="104" /></p>
+<p>&nbsp;编写一个<em> hello.kt</em>，如下</p>
+<div class="cnblogs_code">
+<pre>fun main(args: Array&lt;String&gt;<span style="color: #000000;">) {
+    println(</span><span style="color: #800000;">"</span><span style="color: #800000;">Hello, World!</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+}</span></pre>
+</div>
+<p>使用<em> kotlinc hello.kt</em> 编译上面的文件，这时会在同一目录下生成一个 <em>HelloKt.class</em>，尝试用 java命令来运行 <em>HelloKt</em>，结果会是 <em>NoClassDefFoundError</em>！</p>
+<p>那么，应该如何运行这段代码呢？根据官网的介绍大概是以下两种方式。</p>
+<p><strong>方式一：使用 Kotlin 命令运行这段代码</strong></p>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;<span><span style="color: #ff0000;"><strong>kotlinc hello.kt</strong></span>
+
+D:\labs&gt;<span><span style="color: #ff0000;"><strong>kotlin HelloKt</strong></span>
+Hello, World!</span></span></pre>
+</div>
+<p><strong>方式二：使用本地JVM 运行含有 Kotlin代码的 JAR包</strong></p>
+<p>官方的命令为：<span style="color: #ff0000;">kotlinc hello.kt -include-runtime -d hello.jar&nbsp;</span></p>
+<p><span style="color: #000000;">运行上述命令之后将得到一个hello.jar，运行这个JAR包：<span style="color: #ff0000;">java -jar -hello.jar&nbsp;</span></span></p>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;java -<span style="color: #000000;">jar hello.jar
+Hello, World</span>!</pre>
+</div>
+<p>这样就证明了&mdash;&mdash;Kotlin 是完全与原始JVM 兼容的！</p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><span style="color: #ff0000;">&nbsp;</span></span></p>

@@ -1,0 +1,124 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014319347182373b696e637cc04430b8ee2d548ca1b36d000" target="_blank">廖雪峰的官方网站</a>&nbsp;笔记性质</p>
+<div class="catalog">
+<p><a href="#a1">1、datetime</a></p>
+<p><a href="#a2">2、collections</a></p>
+<p><a href="#a3">3、base64</a></p>
+<p>4、struct</p>
+<p>5、hashlib</p>
+<p>6、itertools</p>
+<p>7、contextlib</p>
+<p>8、XML</p>
+<p>9、HTMLParser</p>
+<p>10、urllib</p>
+<p>&nbsp;</p>
+<p><strong><a name="a1"></a>datetime</strong></p>
+<p>Ⅰ、获取当前日期和时间：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> datetime <span style="color: #0000ff;">import</span><span style="color: #000000;"> datetime
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">print</span><span style="color: #000000;">(datetime.now())
+</span>2017-05-06 11:53:09.545977</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅱ、创建指定时间的datetime对象：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; myBirthday = datetime(1886, 2, 3<span style="color: #000000;">)
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">print</span><span style="color: #000000;">(myBirthday)
+</span>1886-02-03 00:00:00</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅲ、datetime转换为timestamp.1970年以前的timestamp表示为为负数,timestamp本质是一个浮点数，如果时间过于久远，可能会出现OverflowError: timestamp out of range</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; hi = datetime(2017, 2, 2, 3<span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> hi.timestamp()
+</span>1485975600.0</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅳ、timestamp转换为datetime：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; stamp = 1485975600.0
+&gt;&gt;&gt;<span style="color: #000000;"> datetime.fromtimestamp(stamp)
+datetime.datetime(</span>2017, 2, 2, 3, 0)</pre>
+</div>
+<p>这个转换与操作系统设置的时区有关，也可以直接转换成UTC标准时区的时间：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; datetime.utcfromtimestamp(1485975600.0<span style="color: #000000;">)
+datetime.datetime(</span>2017, 2, 1, 19, 0)</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅴ、str转换为datetime：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; datetime.strptime(<span style="color: #800000;">'</span><span style="color: #800000;">2017-5-8 18:19:59</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">%Y-%m-%d %H:%M:%S</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+datetime.datetime(</span>2017, 5, 8, 18, 19, 59)</pre>
+</div>
+<p>具体参考<a href="https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior" target="_blank">Python文档</a>，以上的datetime.datetime(......)都是标准的datetime对象，</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; datetime(2017, 2, 2, 3<span style="color: #000000;">)
+datetime.datetime(</span>2017, 2, 2, 3, 0)</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅵ、datetime转换为str：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">print</span>(datetime.now().<strong><span style="color: #3366ff;">strftime('%a, %b %d %H:%M'</span></strong><span style="color: #000000;"><strong><span style="color: #3366ff;">)</span></strong>)
+Wed, May </span>10 23:43</pre>
+</div>
+<p>同样需要指定格式。</p>
+<p>&nbsp;</p>
+<p>Ⅶ、datetime的加减。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> datetime <span style="color: #0000ff;">import</span><span style="color: #000000;"> datetime, <strong><span style="color: #3366ff;">timedelta
+</span></strong></span>&gt;&gt;&gt; <span style="color: #0000ff;">print</span>(datetime.now() + <strong><span style="color: #3366ff;">timedelta(hours=24</span></strong><span style="color: #000000;"><strong><span style="color: #3366ff;">)</span></strong>)
+</span>2017-05-11 23:47:16.551996</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">print</span>(datetime.now() + <strong><span style="color: #3366ff;">timedelta(days=1</span></strong><span style="color: #000000;"><strong><span style="color: #3366ff;">)</span></strong>)
+</span>2017-05-11 23:47:45.727287</pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅷ、本地时间转换为UTC时间。</p>
+<p>Ⅸ、时区转换。</p>
+<p>&nbsp;</p>
+<p><strong><a name="a2"></a>collections</strong></p>
+<p>Ⅰ、namedtuple.</p>
+<p>简便地定义tuple的子类型。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> collections <span style="color: #0000ff;">import</span><span style="color: #000000;"> namedtuple
+</span>&gt;&gt;&gt; Point = namedtuple(<span style="color: #800000;">'</span><span style="color: #800000;">Point</span><span style="color: #800000;">'</span>, [<span style="color: #800000;">'</span><span style="color: #800000;">x</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">y</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+</span>&gt;&gt;&gt; p = Point(1, 2<span style="color: #000000;">) 
+</span>&gt;&gt;&gt; p.x <span style="color: #008000;">#</span><span style="color: #008000;"> 访问tuple中的元素</span>
+1
+&gt;&gt;&gt;<span style="color: #000000;"> isinstance(p, tuple)
+True </span><span style="color: #008000;">#</span><span style="color: #008000;"> 可以验证，p也是一种tuple</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>Ⅱ、deque.</p>
+<p>双向列表，高效插入删除。</p>
+<p>&nbsp;</p>
+<p>Ⅲ、defaultdict.</p>
+<p>当dict的key不存在时会返回一个默认值的特殊dict。</p>
+<p>&nbsp;</p>
+<p>Ⅳ、orderedDict.</p>
+<p>有序的dict。</p>
+<p>&nbsp;</p>
+<p>Ⅴ、Counter</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> collections <span style="color: #0000ff;">import</span><span style="color: #000000;"> Counter
+</span>&gt;&gt;&gt; c =<span style="color: #000000;"> Counter()
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">for</span> ch <span style="color: #0000ff;">in</span> <span style="color: #800000;">'</span><span style="color: #800000;">aaabbbbcccaabababacc</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+...     c[ch] </span>= c[ch] + 1<span style="color: #000000;">
+...
+</span>&gt;&gt;&gt;<span style="color: #000000;"> c
+Counter({</span><span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>: 8, <span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span>: 7, <span style="color: #800000;">'</span><span style="color: #800000;">c</span><span style="color: #800000;">'</span>: 5})</pre>
+</div>
+<p>本质也是一个dict。</p>
+<p>&nbsp;</p>
+<p><strong><a name="a3"></a>base64</strong></p>
+<p><a name="a4"></a>struct</p>
+<p><a name="a5"></a>hashlib</p>
+<p><a name="a6"></a>itertools</p>
+<p><a name="a7"></a>contextlib</p>
+<p><a name="a8"></a>XML</p>
+<p><a name="a9"></a>HTMLParser</p>
+<p><a name="a10"></a>urllib</p>
+<p><a href="#a">Top</a></p>
+<p>&nbsp;</p>
+</div>

@@ -1,0 +1,47 @@
+<p>1、让其它组件接管全部请求。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.example.model.BeerExpert;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> BeerSelect <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        String c </span>= req.getParameter("color"<span style="color: #000000;">);
+
+        BeerExpert be </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BeerExpert();
+        List result </span>=<span style="color: #000000;"> be.getBrands(c);
+
+<strong><span style="color: #ff0000;">        req.setAttribute(</span></strong></span><strong><span style="color: #ff0000;">"styles", result); // 为请求增加一个属性，供JSP使用。
+
+        RequestDispatcher view = req.getRequestDispatcher("result.jsp"); // 为JSP实例化一个请求分派器
+
+        view.forward(req, resp); // 使用请求分派器要求容器准备好JSP，并向JSP发送请求和响应</span></strong>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>这里我有一个疑惑，为什么不是sendRequest("result.jsp");，而是先要获得一个Requestdispatcher，然后再forward，前者不是更一目了然吗？然而并不存在一个这样的方法，或许是拆分成原子更便于自定义。</p>
+<p>BTW:在搜索资料过程中的意外收获:<a class="question-hyperlink" href="https://stackoverflow.com/questions/20371220/what-is-the-difference-between-response-sendredirect-and-request-getrequestdis">What is the difference between response.sendRedirect() and request.getRequestDispatcher().forward(request,response) [duplicate]</a></p>
+<p>&nbsp;</p>
+<p>2、RequestDispatcher揭秘。</p>
+<p>从哪里获得RequestDispatcher？</p>
+<p>ServletRequest或者ServletContext对象，方法名是getRequestDispatcher</p>
+<p>两者的差异：</p>
+<ol>
+<li>ServletRequest，可以使用相对路径，使用绝对路径也没问题！</li>
+<li>ServletContext，必须使用<strong>绝对路径</strong>，也就是路径开头必须是&ldquo;/&rdquo;。</li>
+</ol>
+<p>如何使用RequestDispatcher？</p>
+<ol>
+<li>调用forward()。很简单，把请求和响应作为参数传进去就可以了。</li>
+<li>需要注意的，不要在响应提交（例如os.flush）之后forward()，这样做是非法的。</li>
+</ol>
+<p>&nbsp;</p>
+<p>3、属性作用域</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170604101941977-1733552977.png" alt="" /></p>
+<p>&nbsp;</p>

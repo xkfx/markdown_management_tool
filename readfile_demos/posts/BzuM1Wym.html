@@ -1,0 +1,116 @@
+<h2>索引</h2>
+<ol>
+<li><a href="#a1">视图是啥&nbsp;</a></li>
+<li><a href="#a2">为什么需要视图</a></li>
+<li><a href="#a3">使用视图的规则</a></li>
+<li><a href="#a4">如何使用视图</a></li>
+<li><a href="#a5">视图应用实例</a></li>
+<li><a href="#a6">别用视图更新数据！</a></li>
+</ol>
+<h2><a name="a1"></a>视图是啥</h2>
+<p>理解视图的最佳方式就是看下面这个例子。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_name, cust_contact
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customers, orders, orderitems
+</span><span style="color: #0000ff;">WHERE</span> customers.cust_id <span style="color: #808080;">=</span><span style="color: #000000;"> orders.cust_id
+  </span><span style="color: #808080;">AND</span> orderitems.order_num <span style="color: #808080;">=</span><span style="color: #000000;"> orders.order_num
+  </span><span style="color: #808080;">AND</span> prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">TNT2</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>上面的请求用于检索<strong>购买了特定产品的顾客</strong>的信息，任何想要检索到上面数据的人都必须<strong>理解表的结构</strong>以及<strong>多张表之间的关系</strong>。如果要获得另一个产品的相同信息还必须要修改 WHERE 后面的条件。</p>
+<p>如果可以把上面的整个请求封装成一个 <tt>productcustomers 表</tt>，那么只需要下面的语句就足够检索出所需数据了：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_name, cust_contact
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> productcustomers
+</span><span style="color: #0000ff;">WHERE</span> prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">TNT2</span><span style="color: #ff0000;">'</span>;</pre>
+</div>
+<p>productcustomers 就是一个视图，<strong>视图仅仅包含请求，它本身不具备任何字段和数据，当使用视图的时候，视图将动态地检索出所需要的数据。</strong></p>
+<h2><a name="a2"></a>为什么需要视图</h2>
+<p class="docText">You've&nbsp;already seen one use for views. Here are some other common uses:</p>
+<ul>
+<li>
+<p class="docList"><span style="color: #ff0000;">To reuse SQL statements.</span></p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">To simplify complex SQL operations.</span> After the query is written, it can be reused easily, without having to know the details of the underlying query itself.</p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">To expose parts of a table instead</span> of complete tables.</p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">To secure data</span>. Users can be given access to specific subsets of tables instead of to entire tables.</p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">To change data formatting and representation.</span> Views can return data formatted and presented differently from their underlying tables.</p>
+</li>
+</ul>
+<p class="docText">For the most part, after views are created, they can be used in the same way as tables. You can perform <tt>SELECT</tt> operations, filter and sort data, join views to other views or tables, and possibly even add and update data. (There are some restrictions on this last item. More on that in a moment.)</p>
+<p class="docText">The important thing to remember is views are just that, views into data stored elsewhere. Views contain no data themselves, so the data they return is retrieved from other tables. When data is added or changed in those tables, the views will return that changed data.</p>
+<h2 class="docText"><a name="a3"></a>使用视图的规则</h2>
+<p class="docText">Here&nbsp;are some of the most common rules and restrictions governing view creation and usage:</p>
+<ul>
+<li>
+<p class="docList">Like tables, views must be uniquely named. (They cannot be named with the name of any other table or view).</p>
+</li>
+<li>
+<p class="docList">There is no limit to the number of views that can be created.</p>
+</li>
+<li>
+<p class="docList">To create views, you must h<span style="color: #ff0000;">ave security access</span>. This is usually granted by the database administrator.</p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">Views can be nested;</span> that is, a view may be built using a query that retrieves data from another view.</p>
+</li>
+<li>
+<p class="docList"><tt>ORDER BY</tt> may be used in a view, but it will be overridden if <tt>ORDER BY</tt> is also used in the <tt>SELECT</tt> that retrieves data from the view.</p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">Views cannot be indexed, nor can they have triggers or default values associated with them.</span></p>
+</li>
+<li>
+<p class="docList"><span style="color: #ff0000;">Views can be used in conjunction with tables, f</span>or example, to create a <tt>SELECT</tt> statement which joins a table and a view.</p>
+</li>
+</ul>
+<h2><a name="a4"></a>如何使用视图</h2>
+<p class="docText">So&nbsp;now that you know what views are (and the rules and restrictions that govern them), let's look at view creation:</p>
+<ul>
+<li>
+<p class="docList">Views are created using the <tt>CREATE VIEW</tt> statement.</p>
+</li>
+<li>
+<p class="docList">To view the statement used to create a<span style="color: #ff0000;"> view, use <tt>SHOW CREATE VIEW</tt> <span class="docEmphasis"><tt>viewname;</tt>.</span></span></p>
+</li>
+<li>
+<p class="docList">To remove a view, the <tt>DROP</tt> statement is used. The syntax is simply <tt>DROP VIEW</tt> <span class="docEmphasis"><tt>viewname;</tt>.</span></p>
+</li>
+<li>
+<p class="docList">To update a view you may use the <tt>DROP</tt> statement and then the <tt>CREATE</tt> statement again, or just u<span style="color: #ff0000;">se <tt>CREATE OR REPLACE VIEW</tt>, which</span> will create it if it does not exist and replace it if it does.</p>
+</li>
+</ul>
+<h2><a name="a5"></a>视图应用实例</h2>
+<p>格式化检索出来的数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">VIEW</span> vendorlocations <span style="color: #0000ff;">AS</span>
+<span style="color: #0000ff;">SELECT</span> Concat(<span style="color: #ff00ff;">RTrim</span>(vend_name), <span style="color: #ff0000;">'</span><span style="color: #ff0000;"> (</span><span style="color: #ff0000;">'</span>, <span style="color: #ff00ff;">RTrim</span>(vend_country), <span style="color: #ff0000;">'</span><span style="color: #ff0000;">)</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)
+       </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> vend_title
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> vendors
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> vend_name;</pre>
+</div>
+<p>过滤不需要的数据：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">VIEW</span> customeremaillist <span style="color: #0000ff;">AS</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_id, cust_name, cust_email
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customers
+</span><span style="color: #0000ff;">WHERE</span> cust_email <span style="color: #0000ff;">IS</span> <span style="color: #808080;">NOT</span> <span style="color: #0000ff;">NULL</span>;</pre>
+</div>
+<p>简化计算字段：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">VIEW</span> orderitemsexpanded <span style="color: #0000ff;">AS</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_num,
+       prod_id,
+       quantity,
+       item_price,
+       quantity</span><span style="color: #808080;">*</span>item_price <span style="color: #0000ff;">AS</span><span style="color: #000000;"> expanded_price
+</span><span style="color: #0000ff;">FROM</span> orderitems;</pre>
+</div>
+<h2><a name="a6"></a>别用视图更新数据</h2>
+<p>可以，但不推荐！</p>

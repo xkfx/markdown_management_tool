@@ -1,0 +1,174 @@
+<h2>ListView横向列表</h2>
+<p>效果：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211029121740855-1761670963.jpg" alt="" width="159" height="353" loading="lazy" />（可以左右滑动）</p>
+<p>代码形式1：</p>
+<p>main.dart</p>
+<div class="cnblogs_code">
+<pre>import 'package:flutter/material.dart'<span style="color: #000000;">;
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> MaterialApp(
+      title: </span>'dasldjalsdjasldj'<span style="color: #000000;">,
+      home: Scaffold(
+        appBar: </span><span style="color: #0000ff;">new</span> AppBar(title: <span style="color: #0000ff;">new</span> Text('new texrdasdasd'<span style="color: #000000;">),),
+        body: Center(
+          child: Container(
+            height: </span>200.0<span style="color: #000000;">,
+            child: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+                  width: </span>120<span style="color: #000000;">,
+                  color: Colors.lime,
+                ),
+                </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+                  width: </span>120<span style="color: #000000;">,
+                  color: Colors.pinkAccent,
+                ),
+                </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+                  width: </span>120<span style="color: #000000;">,
+                  color: Colors.purpleAccent,
+                ),
+                </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+                  width: </span>120<span style="color: #000000;">,
+                  color: Colors.deepPurple,
+                ),                                                
+              ],
+            ),
+          ),
+        )
+      ),
+    );
+  }
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main() {
+  runApp(MyApp());
+}</span></pre>
+</div>
+<p>代码形式2：</p>
+<p>main.dart</p>
+<div class="cnblogs_code">
+<pre>import 'package:flutter/material.dart'<span style="color: #000000;">;
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> MaterialApp(
+      title: </span>'dasldjalsdjasldj'<span style="color: #000000;">,
+      home: Scaffold(
+        appBar: </span><span style="color: #0000ff;">new</span> AppBar(title: <span style="color: #0000ff;">new</span> Text('new texrdasdasd'<span style="color: #000000;">),),
+        body: Center(
+          child: Container(
+            height: </span>200.0<span style="color: #000000;">,
+            child: Mylist(),
+          ),
+        )
+      ),
+    );
+  }
+}
+
+
+class Mylist extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ListView(
+      scrollDirection: Axis.horizontal,
+      children: [
+        </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+          width: </span>120<span style="color: #000000;">,
+          color: Colors.lime,
+        ),
+        </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+          width: </span>120<span style="color: #000000;">,
+          color: Colors.pinkAccent,
+        ),
+        </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+          width: </span>120<span style="color: #000000;">,
+          color: Colors.purpleAccent,
+        ),
+        </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Container(
+          width: </span>120<span style="color: #000000;">,
+          color: Colors.deepPurple,
+        ),
+      ],
+    );
+  }
+}
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main() {
+  runApp(MyApp());
+}</span></pre>
+</div>
+<h2>ListView不定长列表</h2>
+<p>效果：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211029132058781-1004178890.jpg" alt="" width="216" height="480" loading="lazy" /></p>
+<p>代码：</p>
+<p>main.dart</p>
+<div class="cnblogs_code">
+<pre>import 'package:flutter/material.dart'<span style="color: #000000;">;
+
+class MyApp extends StatelessWidget {
+
+  final List</span>&lt;String&gt;<span style="color: #000000;"> items;
+  MyApp({required </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.items});
+
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> MaterialApp(
+      title: </span>'dasldjalsdjasldj'<span style="color: #000000;">,
+      home: Scaffold(
+        appBar: </span><span style="color: #0000ff;">new</span> AppBar(title: <span style="color: #0000ff;">new</span> Text('new texrdasdasd'<span style="color: #000000;">),),
+        body: </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+          </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> ListTile(
+            title: </span><span style="color: #0000ff;">new</span> Text('${items[index]}'<span style="color: #000000;">),
+          );
+        })
+      ),
+    );
+  }
+}
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main() {
+  runApp(MyApp(items: </span><span style="color: #0000ff;">new</span> List&lt;String&gt;.generate(20, (index) =&gt; "物品 $index"<span style="color: #000000;">),));
+}</span></pre>
+</div>
+<h2>网格</h2>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211030094417450-1954990295.jpg" alt="" width="192" height="426" loading="lazy" /></p>
+<div class="cnblogs_code">
+<pre>import 'package:flutter/material.dart'<span style="color: #000000;">;
+
+class MyApp extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> MaterialApp(
+      title: </span>'dasldjalsdjasldj'<span style="color: #000000;">,
+      home: Scaffold(
+        appBar: </span><span style="color: #0000ff;">new</span> AppBar(title: <span style="color: #0000ff;">new</span> Text('new texrdasdasd'<span style="color: #000000;">),),
+        body: GridView.count(
+          crossAxisCount: </span>3<span style="color: #000000;">,
+          children: [
+            const Text(</span>'hello'<span style="color: #000000;">),
+            const Text(</span>'23'<span style="color: #000000;">),
+            const Text(</span>'2323'<span style="color: #000000;">),
+            const Text(</span>'323'<span style="color: #000000;">),
+            const Text(</span>'he2323llo'<span style="color: #000000;">),
+            const Text(</span>'h322ello'<span style="color: #000000;">),
+            const Text(</span>'he23llo'<span style="color: #000000;">),
+            const Text(</span>'he23llo'<span style="color: #000000;">),
+            const Text(</span>'2323'<span style="color: #000000;">),
+            const Text(</span>'LAST'<span style="color: #000000;">),
+          ],)
+      ),
+    );
+  }
+}
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> main() {
+  runApp(MyApp());
+}</span></pre>
+</div>
+<p>&nbsp;</p>

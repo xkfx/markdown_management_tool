@@ -1,0 +1,143 @@
+<h2>BUG来源</h2>
+<p>根据<a href="https://spring.io/guides/gs/accessing-data-mysql/" target="_blank">https://spring.io/guides/gs/accessing-data-mysql/</a>进行操作，</p>
+<p>照抄教程中的：</p>
+<div class="cnblogs_code">
+<pre>spring.datasource.driver-<span style="color: #0000ff;">class</span>-name =<strong><span style="color: #ff0000;">com.mysql.jdbc.Driver</span></strong></pre>
+</div>
+<p>mvn package成功，IDEA运行JAR成功，但是在（git bash/ win10命令行）中通过java指令运行JAR失败。</p>
+<h2>可能的原因及解决办法</h2>
+<p>没有正确加载驱动类。</p>
+<p>将</p>
+<div class="cnblogs_code">
+<pre>spring.datasource.driver-class-name =<strong>com.mysql.jdbc.Driver</strong></pre>
+</div>
+<p>修改为</p>
+<div class="cnblogs_code">
+<pre>spring.datasource.driver-class-name =<strong>com.mysql.cj.jdbc.Driver</strong></pre>
+</div>
+<p>依据是程序在测试阶段，以及成功执行JAR时日志中的相关提示和警告（WARN）。</p>
+<h2>BUG探究</h2>
+<p>发现执行mvn package -DskipTests时，数据库里没有表。</p>
+<p>执行mvn package后，数据库里多了两个<span style="color: #ff0000;">hibernate_sequence和user表</span></p>
+<p>证明这两张表是在测试阶段生产的，<span style="color: #ff0000;">测试阶段并没有报错，</span></p>
+<p>但是等到<span style="color: #ff0000;">执行java -jar target/accessingdatamysql-0.0.1-SNAPSHOT.jar时</span>却报错误</p>
+<p>经过实验证明，执行JAVA指令前，不管数据库里面有没表都报同样的错误，且执行JAVA指令的过程中，并不生成表</p>
+<h2>BUG的进一步探究</h2>
+<p>是什么导致测试阶段不报错，但是运行JAR时却报错？</p>
+<p>精简版测试阶段日志：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">[INFO] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[INFO] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in </span>49 ms. <strong><span style="color: #ff0000;">Found 1</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;"> JPA repository interfaces.</span></strong>
+<span style="background-color: #ffff99;">Loading </span></span><span style="background-color: #ffff99;"><span style="color: #0000ff;">class</span> <strong><span style="color: #ff0000;">`com.mysql.jdbc.Driver'</span></strong>. <strong><span style="color: #ff0000;">This is deprecated.</span></strong> The new driver class is <strong><span style="color: #ff0000;">`com.mysql.cj.jdbc.Driver'</span></strong>.</span> The driver is automatically registered via the SPI and <strong><span style="color: #ff0000;">manual loading of the driver class</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;"> is generally unnecessary</span></strong>.
+[INFO] o.hibernate.jpa.internal.util.LogHelper : HHH000204: Processing PersistenceUnitInfo [name: </span><span style="color: #0000ff;">default</span><span style="color: #000000;">]
+[INFO] org.hibernate.<span style="color: #ff0000;"><strong>Version</strong> </span>: HHH000412: <span style="color: #ff0000;">Hibernate ORM core version </span></span><strong><span style="color: #ff0000;">5.6.5</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;">.Final</span></strong>
+[INFO] o.hibernate.annotations.common.Version : HCANN000001: Hibernate Commons Annotations {</span>5.1.2<span style="color: #000000;">.Final}
+[INFO] com.zaxxer.hikari.HikariDataSource : HikariPool</span>-1 -<span style="color: #000000;"> Starting...
+[WARN] com.zaxxer.hikari.util.DriverDataSource : <span style="color: #ff0000;"><strong>Registered driver with driverClassName</strong></span></span><span style="color: #ff0000;"><strong>=</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>com.mysql.jdbc.Driver was not found, trying direct instantiation.</strong></span>
+[INFO] com.zaxxer.hikari.HikariDataSource : HikariPool</span>-1 -<span style="color: #000000;"> Start completed.
+[INFO] org.hibernate.dialect.Dialect : HHH000400: Using dialect: <span style="color: #ff0000;">org.hibernate.dialect.<strong>MySQL57Dialect</strong></span>
+[INFO] o.h.e.t.j.p.i.JtaPlatformInitiator : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[INFO] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory </span><span style="color: #0000ff;">for</span> persistence unit 'default'<span style="color: #000000;">
+[WARN] JpaBaseConfiguration$JpaWebConfiguration : <span style="color: #ff0000;">spring.jpa.open</span></span><span style="color: #ff0000;">-in-view is enabled by default.</span> Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable <span style="color: #0000ff;">this</span><span style="color: #000000;"> warning
+[INFO] c.e.a.AccessingdatamysqlApplicationTests : Started AccessingdatamysqlApplicationTests in </span>5.115 seconds (JVM running <span style="color: #0000ff;">for</span> 6.501)</pre>
+</div>
+<p>本想打印执行<span style="color: #ff0000;">java -jar target/accessingdatamysql-0.0.1-SNAPSHOT.jar</span>后的错误日志，但是接下来发生了一个让我非常意外的事情。</p>
+<p>因为我<strong>本来</strong>是在<span style="color: #ff0000;">WIN10环境下用Git Bash</span>执行<span style="color: #ff0000;">java -jar target/accessingdatamysql-0.0.1-SNAPSHOT.jar</span>指令的，这样输出到控制台的<span style="color: #ff0000;">日志没有高亮，不方便阅读</span>。</p>
+<p>因此，为了<span style="color: #ff0000;">更清楚地看<strong>错误日志</strong></span>，我用<span style="color: #0000ff;"><strong>IntelliJ IDEA</strong> Community Edition 2021.3.1</span>重新去跑这个JAR包，没想到竟然<span style="color: #0000ff;">没有报任何错误</span>。就成功执行了。</p>
+<p>并且在执行之后MySQL里<span style="color: #ff0000;">确实新创建了hibernate_sequence和user表</span>，证明确实连上了数据库。</p>
+<p>观察到IDEA是用下面这个指令跑的程序：</p>
+<div class="cnblogs_code">
+<pre>"C:\xxx\java.exe" <span style="color: #ff0000;"><strong>-Dfile.encoding=GBK</strong></span> -jar D:\xxxx\accessingdatamysql\target\accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p>因此推测之前之所以报错，很可能是文件的字符集问题，于是用上面的指令在Git Bash下又跑一次程序：</p>
+<div class="cnblogs_code">
+<pre>java <span style="color: #ff0000;"><strong>-Dfile.encoding=GBK</strong></span> -jar target/accessingdatamysql-0.0.1-SNAPSHOT.jar </pre>
+</div>
+<p><strong><span style="color: #ff0000;">没想还是报了原来的错误，</span></strong>看着冗长难以阅读的错误日志，我选择用<span style="color: #ff0000;">WIN10原装命令行</span>再去跑这个程序（以上为Git Bash的执行结果）。结果是无论是加<span style="color: #ff0000;">-Dfile.encoding=GBK</span>还是不加，<strong><span style="color: #ff0000;">都报了原来的错误</span></strong>。我一怒之下，在命令行下采用<strong>绝对路径执行</strong>，就是原原本本拷贝IDEA的指令：</p>
+<div class="cnblogs_code">
+<pre>"<strong><span style="color: #0000ff;">C:\Program Files\Java\jdk1.8.0_101\bin\java.exe</span></strong>" <span style="color: #ff0000;"><strong>-Dfile.encoding=GBK</strong></span> -jar D:\xxxxxx\accessingdatamysql\target\accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p><span style="color: #0000ff;">没想到执行<strong>成功</strong>了，</span>而且数据库里确实多了两张表。</p>
+<p>经过检查，本地JAVA指令确实对应"<span style="color: #ff0000;">C:\Program Files\Java\jdk1.8.0_101\bin\java.exe</span>"（环境变量一致、版本一致）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;">java -</span><span style="color: #000000;"><span style="color: #ff0000;">version</span>
+<strong>java version </strong></span><strong>"1.8.0_101"</strong><span style="color: #000000;">
+Java(TM) SE Runtime Environment (build </span>1.8.0_101-<span style="color: #000000;">b13)
+Java HotSpot(TM) </span>64-Bit Server VM (build 25.101-b13, mixed mode)</pre>
+</div>
+<p>于是在好奇心的驱使下，我又用java指令+绝对路径执行：</p>
+<div class="cnblogs_code">
+<pre>java <strong><span style="color: #ff0000;">-Dfile.encoding=GBK</span></strong> -jar D:\xxx\accessingdatamysql\target\accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p>结果<strong><span style="color: #ff0000;">还是报了原来的错误</span></strong>，再尝试：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #ff0000;">"java.exe"</span></strong> -Dfile.encoding=GBK -jar D:\xxx\accessingdatamysql\target\accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p>仍然<span style="color: #ff0000;">报原来的错误</span>。又一次用：</p>
+<div class="cnblogs_code">
+<pre>"C:\Program Files\Java\jdk1.8.0_101\bin\java.exe" -Dfile.encoding=GBK -jar D:\xxx\accessingdatamysql\target\accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p><span style="color: #ff0000;"><span style="color: #0000ff;">还是<strong>成功</strong>的。没有报任何错误，数据里也多出了两张表</span>。我感到非常不可思议。又执行：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;"><strong>"C:\Program Files\Java\jdk1.8.0_101\bin\java.exe"</strong></span><span style="color: #ff0000;"> -Dfile.encoding=GBK</span> -jar <span style="color: #0000ff;">accessingdatamysql-0.0.1-SNAPSHOT.jar</span></pre>
+</div>
+<p><span style="color: #0000ff;">还是成功了。</span>我继续执行：</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #0000ff;">"C:\Program Files\Java\jdk1.8.0_101\bin\java.exe"</span></strong> -jar <span style="color: #0000ff;">accessingdatamysql-0.0.1-SNAPSHOT.jar</span></pre>
+</div>
+<p><span style="color: #0000ff;">依然成功。</span></p>
+<p>百思不得其解，我甚至重新配了一遍环境变量，也不能够解决问题。</p>
+<p>至于通过<span style="color: #ff0000;">"C:\Program Files\Java\jdk1.8.0_101\bin\java.exe"</span>和<span style="color: #ff0000;">"java.exe"</span>执行程序的区别，网上也没有相关的资料。</p>
+<h2>回到错误日志</h2>
+<p>只好回到原来的思路，老老实实分析一下<span style="color: #ff0000;">执行java -jar target/accessingdatamysql-0.0.1-SNAPSHOT.jar后</span>的错误日志：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">[INFO].s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[INFO].s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in </span>57 ms. <strong><span style="color: #ff0000;">Found 1</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;"> JPA repository interfaces.</span></strong>
+[INFO]省略嵌入式汤姆猫的初始化过程
+[INFO]w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in </span>3521<span style="color: #000000;"> ms
+[INFO]o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: </span><span style="color: #0000ff;">default</span><span style="color: #000000;">]
+[INFO]org.hibernate.Version                    : <span style="color: #ff0000;"><strong>HHH000412: Hibernate ORM core version </strong></span></span><span style="color: #ff0000;"><strong>5.6.5</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>.Final</strong></span>
+[INFO]o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations <strong><span style="color: #ff0000;">{</span></strong></span><strong><span style="color: #ff0000;">5.1.2</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;">.Final}</span></strong>
+[INFO]com.zaxxer.hikari.HikariDataSource       : HikariPool</span>-1 -<span style="color: #000000;"> Starting...
+[INFO]com.zaxxer.hikari.pool.PoolBase          : HikariPool</span>-1 - <strong><span style="color: #ff0000;">Driver does not support get/set network timeout for</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;"> connections. (com.mysql.jdbc.Connection.getNetworkTimeout()I)</span></strong>
+[ERROR]com.zaxxer.hikari.pool.PoolBase          : HikariPool</span>-1 - <span style="color: #ff0000;">Failed to execute <strong>isValid()</strong> for</span><span style="color: #000000;"><span style="color: #ff0000;"> connection, configure connection test query <strong>(com.mysql.jdbc.Connection.isValid(I)Z)</strong>.</span>
+[WARN]ConfigServletWebServerApplicationContext : Exception encountered during context initialization </span>- cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in <span style="color: #0000ff;">class</span> path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.<span style="color: #0000ff;">class</span><span style="color: #000000;">]: <span style="color: #ff0000;">Invocation of init method failed; nested exception is java.lang.AbstractMethodError: com.mysql.jdbc.Connection.isValid(I)Z</span>
+[INFO]o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+[INFO]ConditionEvaluationReportLoggingListener :
+
+Error starting ApplicationContext. To display the conditions report re</span>-run your application with 'debug'<span style="color: #000000;"> enabled.
+</span>08.472<span style="color: #000000;">[ERROR]o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name </span>'entityManagerFactory' defined in <span style="color: #0000ff;">class</span> path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.<span style="color: #0000ff;">class</span><span style="color: #000000;">]: Invocation of init method failed; nested exception is java.lang.AbstractMethodError: com.mysql.jdbc.Connection.isValid(I)Z
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:</span>1804) ~[spring-beans-5.3.16.jar!/:5.3.16<span style="color: #000000;">]
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:</span>620) ~[spring-beans-5.3.16.jar!/:5.3.16<span style="color: #000000;">]
+        at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:</span>542) ~[spring-beans-5.3.16.jar!/:5.3.16<span style="color: #000000;">]
+此处省略20多行
+Caused by: <span style="color: #ff0000;">java.lang.AbstractMethodError: com.mysql.jdbc.Connection.isValid(I)Z</span>
+        at com.zaxxer.hikari.pool.PoolBase.checkValidationSupport(PoolBase.java:</span>464) ~[HikariCP-4.0.3.jar!/<span style="color: #000000;">:na]
+        at com.zaxxer.hikari.pool.PoolBase.checkDriverSupport(PoolBase.java:</span>447) ~[HikariCP-4.0.3.jar!/<span style="color: #000000;">:na]
+        at com.zaxxer.hikari.pool.PoolBase.setupConnection(PoolBase.java:</span>416) ~[HikariCP-4.0.3.jar!/<span style="color: #000000;">:na]
+        at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:</span>369) ~[HikariCP-4.0.3.jar!/<span style="color: #000000;">:na]
+        at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:</span>206) ~[HikariCP-4.0.3.jar!/<span style="color: #000000;">:na]
+        at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:</span>476) ~[HikariCP-4.0.3.jar!/<span style="color: #000000;">:na]
+此处省略20多行
+        ... </span>24 common frames omitted</pre>
+</div>
+<p>也就是说，调用抽象方法<strong><span style="color: #ff0000;">com.mysql.jdbc.</span></strong>Connection.isValid(I)Z发生了错误。</p>
+<p>根据正确执行的日志中的：<span style="color: #ff0000;">Loading class `com.mysql.jdbc.Driver'. This is deprecated</span>. <strong><span style="color: #ff0000;">The new driver class is `com.mysql.cj.jdbc.Driver'.</span> </strong>The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.</p>
+<p>推测是由于某种原因，在用java指令执行JAR时<strong>没有正确地加载驱动类</strong>。</p>
+<p>因此将</p>
+<div class="cnblogs_code">
+<pre>spring.datasource.driver-<span style="color: #0000ff;">class</span>-name =<strong><span style="color: #ff0000;">com.mysql.jdbc.Driver</span></strong></pre>
+</div>
+<p>修改为</p>
+<div class="cnblogs_code">
+<pre>spring.datasource.driver-<span style="color: #0000ff;">class</span>-name =<strong><span style="color: #ff0000;">com.mysql.cj.jdbc.Driver</span></strong></pre>
+</div>
+<p>保存之后通过mvn clean以及mvn package -DskipTests重新编译打包程序，并通过IDEA运行打包后的程序。正常运行且不报<span style="color: #ffff00;">Loading class `com.mysql.jdbc.Driver'. This is deprecated.&nbsp;<strong>The new driver class is `com.mysql.cj.jdbc.Driver'.&nbsp;</strong>The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.</span></p>
+<p>通过mvn clean package再执行一遍，测试阶段日志也不再报<span style="color: #ffff00;">[WARN] com.zaxxer.hikari.util.DriverDataSource : <strong>Registered driver with driverClassName</strong><strong>=</strong><strong>com.mysql.jdbc.Driver was not found, trying direct instantiation.</strong></span></p>
+<p>清空数据库里新创建的两张表，cd到target文件夹下执行</p>
+<div class="cnblogs_code">
+<pre>java -jar accessingdatamysql-0.0.1-SNAPSHOT.jar</pre>
+</div>
+<p><span style="color: #ff0000;">这次终于没问题了。</span></p>

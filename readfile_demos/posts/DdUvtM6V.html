@@ -1,0 +1,52 @@
+<p><span style="color: #ff0000;">原始内容：https://www.tutorialspoint.com/jsp/jsp_life_cycle.htm</span></p>
+<p>&nbsp;</p>
+<p>在这一章中，我们将讨论JSP的生命周期。</p>
+<p>理解JSP低层次功能的关键在于&mdash;&mdash;理解它们所遵循的、最简单的生命周期。</p>
+<p>JSP的生命周期就是指&ldquo;它从创建到销毁&rdquo;的这一过程。</p>
+<p>这个过程和servlet的生命周期很相似，</p>
+<p>只不过增加了额外的一步，需要先把JSP编译成servlet。</p>
+<h2>JSP所遵循的路径</h2>
+<p>下面就是JSP所遵循的路径 &minus;</p>
+<ul class="list">
+<li>汇编</li>
+<li>初始化</li>
+<li>执行</li>
+<li>清理</li>
+</ul>
+<p>JSP生命周期的4个主要阶段与servlet的生命周期十分相似。4个阶段如下图所示 &minus;</p>
+<p><img src="https://www.tutorialspoint.com/jsp/images/jsp_life_cycle.jpg" alt="JSP Life Cycle" width="512" height="374" /></p>
+<h2>汇编</h2>
+<p>当一个浏览器请求一个JSP页面的时候，JSP引擎首先检查它是否需要编译这个页面。如果这个页面从未被编译，或者，这个页面已经被修改，JSP引擎将编译这个页面。</p>
+<p>这个汇编过程包括以下三步 -</p>
+<ul class="list">
+<li>解析JSP.</li>
+<li>把JSP转化为一个servlet.</li>
+<li>编译servlet.</li>
+</ul>
+<h2>JSP的初始化</h2>
+<p>当容器加载一个JSP的时候，最先被调用的是&nbsp;<strong>jspInit()&nbsp;</strong>方法。如果你需要在这个时候做点什么，请重写这个方法 -</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> jspInit(){
+   </span><span style="color: #008000;">//</span><span style="color: #008000;"> Initialization code...</span>
+}</pre>
+</div>
+<p>通常，初始化只会被执行一次，在这个时候，你可以：初始化数据库连接、打开某些文件、建立&ldquo;查询表&rdquo;等</p>
+<h2>JSP的执行</h2>
+<p>这一阶段，JSP将与请求打交道。</p>
+<p>每当浏览器请求一个已经被初始化的JSP页面的时候，</p>
+<p>JSP引擎将在调用在JSP中的&nbsp;<strong>_jspService()</strong> 方法，该方法接收一个&nbsp;&nbsp;<strong>HttpServletRequest</strong>&nbsp;和一个&nbsp;<strong>HttpServletResponse&nbsp;</strong>作为参数，如下所示 -</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">void</span><span style="color: #000000;"> _jspService(HttpServletRequest request, HttpServletResponse response) {
+   </span><span style="color: #008000;">//</span><span style="color: #008000;"> Service handling code...</span>
+}</pre>
+</div>
+<p>JSP的 _jspService() 方法基于特定的HTTP请求生成相应的响应。这些HTTP请求可能是 GET、POST、DELETE等等。</p>
+<h2>JSP的清除</h2>
+<p>当JSP不再被使用的时候，就会被容器移除。</p>
+<p>你可以通过覆盖 方法，在JSP清除的时候做点什么，比如说关闭数据库连接，关闭文件啊，诸如此类 -</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> jspDestroy() {
+   </span><span style="color: #008000;">//</span><span style="color: #008000;"> Your cleanup code goes here.</span>
+}</pre>
+</div>
+<p>&nbsp;</p>

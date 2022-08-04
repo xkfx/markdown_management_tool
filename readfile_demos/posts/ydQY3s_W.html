@@ -1,0 +1,80 @@
+<p>参考：</p>
+<p>1、<a href="http://www.cnblogs.com/Wayou/p/how-to-make-a-simple-html5-canvas-game.html" target="_blank">Simple Canvas Game</a></p>
+<p>2、<a href="http://www.jianshu.com/p/59204b8acf7d" target="_blank">javaScript 事件监听</a></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;moveBall&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script&gt;
+<span style="color: #008000;">//</span><span style="color: #008000;">            a test</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            addEventListener("keydown", function (e) {</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                console.log(e);</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            }, false);</span>
+            <span style="color: #0000ff;">var</span> screenWidth =<span style="color: #000000;"> document.documentElement.clientWidth;
+            </span><span style="color: #0000ff;">var</span> screenHeight =<span style="color: #000000;"> document.documentElement.clientHeight;
+            
+            </span><span style="color: #0000ff;">var</span> ball = document.createElement("div"<span style="color: #000000;">);
+            
+            ball.style.width </span>= 124 + "px"<span style="color: #000000;">;
+            ball.style.height </span>= 124 + "px"<span style="color: #000000;">;
+            
+            ball.style.backgroundColor </span>= "coral"<span style="color: #000000;">;
+            ball.style.borderRadius </span>= "50%"<span style="color: #000000;">;
+            
+            </span><span style="color: #0000ff;">var</span> X = Math.random()*<span style="color: #000000;">screenWidth;
+            </span><span style="color: #0000ff;">var</span> Y = Math.random()*<span style="color: #000000;">screenHeight;
+            ball.style.position </span>= "absolute"<span style="color: #000000;">;
+            ball.style.left </span>= X + "px"<span style="color: #000000;">;
+            ball.style.top </span>= Y + "px"<span style="color: #000000;">;
+            
+            document.body.appendChild(ball);
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> repaint() {
+                ball.style.left </span>= X + "px"<span style="color: #000000;">;
+                ball.style.top </span>= Y + "px"<span style="color: #000000;">;
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> moveUp() {
+                Y</span>--<span style="color: #000000;">;
+                repaint();
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> moveDown() {
+                Y</span>++<span style="color: #000000;">;
+                repaint();
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> moveLeft() {
+                X</span>--<span style="color: #000000;">;
+                repaint();
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> moveRight() {
+                X</span>++<span style="color: #000000;">;
+                repaint();
+            }
+            
+            addEventListener(</span>"keydown", <span style="color: #0000ff;">function</span><span style="color: #000000;"> (e) {
+                </span><span style="color: #0000ff;">if</span> (e.key == "ArrowUp"<span style="color: #000000;">) {
+                    moveUp();
+                }
+                </span><span style="color: #0000ff;">if</span> (e.key == "ArrowDown"<span style="color: #000000;">) {
+                    moveDown();
+                }
+                </span><span style="color: #0000ff;">if</span> (e.key == "ArrowLeft"<span style="color: #000000;">) {
+                    moveLeft();
+                }
+                </span><span style="color: #0000ff;">if</span> (e.key == "ArrowRight"<span style="color: #000000;">) {
+                    moveRight();
+                }
+            }, </span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>

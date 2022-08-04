@@ -1,0 +1,244 @@
+<p>先熟悉一下基本语法（运行环境是装git的时候一起装的那个windows下的bash）：</p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+
+# 实现两个函数
+# </span><span style="color: #800080;">1</span><span style="color: #000000;"> appendToFile()追加一行到文件
+# </span><span style="color: #800080;">2</span><span style="color: #000000;"> readFile()把文件中所有内容逐行写到控制台
+
+</span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">welcome to bash!</span><span style="color: #800000;">"</span>
+<span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">welcome to bash!</span><span style="color: #800000;">'</span><span style="color: #000000;">
+printf </span><span style="color: #800000;">'</span><span style="color: #800000;">%-5s %-10s %-4s\n</span><span style="color: #800000;">'</span><span style="color: #000000;"> No Name Mark
+printf </span><span style="color: #800000;">'</span><span style="color: #800000;">%-5s %-10s %-4.2f\n</span><span style="color: #800000;">'</span> <span style="color: #800080;">1</span> Jack <span style="color: #800080;">20.012</span><span style="color: #000000;">
+# welcome to bash</span>!<span style="color: #000000;">
+# welcome to bash</span>!<span style="color: #000000;">
+# No    Name       Mark
+# </span><span style="color: #800080;">1</span>     Jack       <span style="color: #800080;">20.01</span><span style="color: #000000;">
+
+v</span>=<span style="color: #800000;">'</span><span style="color: #800000;">sads</span><span style="color: #800000;">'</span><span style="color: #000000;">
+# v2 </span>= <span style="color: #800000;">'</span><span style="color: #800000;">dasdas</span><span style="color: #800000;">'</span><span style="color: #000000;"> 
+# </span>=&gt;<span style="color: #000000;">  v2: command not found（这是是一个错误示范）
+</span><span style="color: #0000ff;">echo</span> v2 # =&gt;<span style="color: #000000;"> v2
+</span><span style="color: #0000ff;">echo</span> $v # =&gt;<span style="color: #000000;"> sads
+</span><span style="color: #0000ff;">echo</span> ${v} # =&gt;<span style="color: #000000;"> sads
+</span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">hello, $v and ${v}</span><span style="color: #800000;">'</span> # =&gt;<span style="color: #000000;"> hello, $v and ${v}
+</span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">hello, $v and ${v}</span><span style="color: #800000;">"</span> # =&gt;<span style="color: #000000;"> hello, sads and sads
+
+</span><span style="color: #0000ff;">echo</span> ${#v} # =&gt; <span style="color: #800080;">4</span><span style="color: #000000;">（字符串长度）
+
+let digit1</span>=<span style="color: #800080;">3</span><span style="color: #000000;"> 
+let digit2</span>=<span style="color: #800080;">2</span><span style="color: #000000;">
+let result</span>=digit1+<span style="color: #000000;">digit2
+</span><span style="color: #0000ff;">echo</span> $result # =&gt; <span style="color: #800080;">5</span><span style="color: #000000;">
+
+# </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">4 * 0.5</span><span style="color: #800000;">"</span> |<span style="color: #000000;"> bc
+
+</span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">重定向到文本</span><span style="color: #800000;">"</span> &gt;<span style="color: #000000;"> text.txt
+</span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">追加到目标文件</span><span style="color: #800000;">"</span> &gt;&gt;<span style="color: #000000;"> text.txt
+# $ </span><span style="color: #0000ff;">cat</span><span style="color: #000000;"> text.txt
+# 重定向到文本
+# 追加到目标文件
+
+array[</span><span style="color: #800080;">0</span>]=<span style="color: #800000;">'</span><span style="color: #800000;">daasd</span><span style="color: #800000;">'</span><span style="color: #000000;">
+array[</span><span style="color: #800080;">3</span>]=<span style="color: #800000;">'</span><span style="color: #800000;">asassd</span><span style="color: #800000;">'</span>
+<span style="color: #0000ff;">echo</span> ${array[<span style="color: #800080;">0</span>]} # =&gt;<span style="color: #000000;"> daasd
+</span><span style="color: #0000ff;">echo</span> ${array[*]} # =&gt;<span style="color: #000000;"> daasd asassd
+</span><span style="color: #0000ff;">echo</span> ${!array[*]} # =&gt; <span style="color: #800080;">0</span> <span style="color: #800080;">3</span><span style="color: #000000;">
+
+# $ </span><span style="color: #0000ff;">sh</span> -v linux.<span style="color: #0000ff;">sh</span><span style="color: #000000;">
+# $ </span><span style="color: #0000ff;">sh</span> -x linux.<span style="color: #0000ff;">sh</span><span style="color: #000000;"> 进行调试打印
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f() {
+    </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">接下来是f的输出：</span><span style="color: #800000;">'</span>
+    <span style="color: #0000ff;">echo</span> $<span style="color: #800080;">1</span>
+    <span style="color: #0000ff;">echo</span> $<span style="color: #800080;">2</span>
+    <span style="color: #0000ff;">echo</span><span style="color: #000000;"> $@
+    </span><span style="color: #0000ff;">echo</span> $*<span style="color: #000000;">
+}
+f </span><span style="color: #800080;">1</span> <span style="color: #800000;">'</span><span style="color: #800000;">hello</span><span style="color: #800000;">'</span> <span style="color: #800080;">3</span><span style="color: #000000;"> # 调用函数
+# 接下来是f的输出：
+# </span><span style="color: #800080;">1</span><span style="color: #000000;">
+# hello
+# </span><span style="color: #800080;">1</span> hello <span style="color: #800080;">3</span><span style="color: #000000;">
+# </span><span style="color: #800080;">1</span> hello <span style="color: #800080;">3</span><span style="color: #000000;">
+FILENAME</span>=<span style="color: #000000;">student
+appendToFile() {
+    # arg1: filename, arg2: content
+    </span><span style="color: #0000ff;">echo</span> $<span style="color: #800080;">1</span> &gt;&gt;<span style="color: #000000;"> $FILENAME
+}
+appendToFile </span><span style="color: #800000;">"</span><span style="color: #800000;">小张 25 未婚</span><span style="color: #800000;">"</span><span style="color: #000000;">
+
+readFile() {
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> read LINE
+    </span><span style="color: #0000ff;">do</span>
+        <span style="color: #0000ff;">echo</span><span style="color: #000000;"> $LINE
+    </span><span style="color: #0000ff;">done</span> &lt;<span style="color: #000000;"> $FILENAME
+}
+</span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">invoke readFile:</span><span style="color: #800000;">'</span><span style="color: #000000;">
+readFile
+# invoke readFile:
+# 小张 </span><span style="color: #800080;">25</span><span style="color: #000000;"> 未婚
+# 小张 </span><span style="color: #800080;">25</span> 未婚</pre>
+</div>
+<p>再结合百度完成低配版的学生管理系统：</p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+
+<span style="color: #3366ff;"># 构造三个类似数据库的文本文件:
+# 第一个为学院信息文件，包含字段：
+# 学院编号（唯一），学院名称
+# 第二个为学生信息文件，包含字段：
+# 学号（唯一），学生姓名，所在学院编号，说明（休学suspended，退学dropout）
+# 第三个为学生成绩文件，包含字段：
+# 学号（唯一），学生姓名，科目名称，成绩；说明（期考final,补考makeup）
+# 说明：每个记录占一行；分隔符可以自己选定，建议用&rdquo;,&rdquo;； 编码规则自己定；文件名自己定
+# 程序功能：要求实现4个功能，每个功能作为一个函数
+# </span></span><span style="color: #3366ff;">1.向文件中插入记录
+# 2.显示文件中的每条记录的每个字段值
+# 3.从文件中修改指定学号的记录
+# 4</span><span style="color: #000000;"><span style="color: #3366ff;">.对学生成绩进行统计（包括每个学生总成绩；每个学科前3名和总成绩前5名统计）</span>
+
+newFile() {
+    # arg1: filename
+    # 例子：newFile temp
+    </span><span style="color: #0000ff;">touch</span> :&gt;$<span style="color: #800080;">1</span><span style="color: #000000;">
+}
+
+saveRecord() {
+    # arg1: filename, arg2: content
+    # 例子：saveRecord temp </span><span style="color: #800000;">"</span><span style="color: #800000;">小张 25 未婚</span><span style="color: #800000;">"</span>
+    <span style="color: #0000ff;">echo</span> $<span style="color: #800080;">2</span> &gt;&gt; $<span style="color: #800080;">1</span><span style="color: #000000;">
+}
+
+initTables() { 
+    # 数据库文件初始化
+    # academy </span><span style="color: #800000;">"</span><span style="color: #800000;">academy_id,academy_name</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    # student </span><span style="color: #800000;">"</span><span style="color: #800000;">stu_id,stu_name,academy_id,stu_description</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    # subject </span><span style="color: #800000;">"</span><span style="color: #800000;">stu_id,stu_name,subject_name,score,subject_description</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    newFile academy
+    newFile student
+    newFile subject
+}
+
+updateStudentById() {
+    # arg1: 学号, arg2：新的记录
+    # 例子：updateStudentById </span><span style="color: #800000;">'</span><span style="color: #800000;">2132022129</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">2132022129,李四,001,dropout</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    oldStr</span>=`<span style="color: #0000ff;">grep</span> $<span style="color: #800080;">1</span><span style="color: #000000;"> student` # 把grep的执行结果赋给oldStr
+    newStr</span>=$<span style="color: #800080;">2</span>
+    <span style="color: #0000ff;">sed</span> -i <span style="color: #800000;">"</span><span style="color: #800000;">s/${oldStr}/${newStr}/</span><span style="color: #800000;">"</span><span style="color: #000000;"> student
+}
+
+echoTitle() {
+    </span><span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">-------------------------------------------------------</span><span style="color: #800000;">'</span>
+    <span style="color: #0000ff;">echo</span> $<span style="color: #800080;">1</span>
+    <span style="color: #0000ff;">echo</span> <span style="color: #800000;">'</span><span style="color: #800000;">-------------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">
+}
+
+endl() {
+    </span><span style="color: #0000ff;">echo</span> -e <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">
+}
+
+listRecords() {
+    # arg1: data_filename
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> read LINE
+    </span><span style="color: #0000ff;">do</span>
+        <span style="color: #0000ff;">echo</span><span style="color: #000000;"> $LINE
+    </span><span style="color: #0000ff;">done</span> &lt; $<span style="color: #800080;">1</span><span style="color: #000000;">
+}
+
+initRecords() {
+    # 学院信息
+    saveRecord academy </span><span style="color: #800000;">"</span><span style="color: #800000;">001,挪威阿克苏而达学院</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord academy </span><span style="color: #800000;">"</span><span style="color: #800000;">002,哈尔滨佛学院（简称哈佛）</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    # 学生信息
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022129,张三,001,dropout</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022139,李四,002,dropout</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022149,王五,001,dropout</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022159,老王,002,dropout</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022119,张飞,001,suspended</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022109,刘备,001,suspended</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord student </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022179,关羽,002,suspended</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    # linux成绩
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022129,张三,linux,0,makeup</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022139,李四,linux,13.5,makeup</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022149,王五,linux,23.5,makeup</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022119,张飞,linux,99.5,makeup</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022109,刘备,linux,0,makeup</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022179,关羽,linux,100,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022159,老王,linux,43.5,makeup</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    # math成绩
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022129,张三,math,10,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022139,李四,math,23.5,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022149,王五,math,33.5,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022119,张飞,math,89.5,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022109,刘备,math,55,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022179,关羽,math,50,final</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    saveRecord subject </span><span style="color: #800000;">"</span><span style="color: #800000;">2132022159,老王,math,93.5,final</span><span style="color: #800000;">"</span><span style="color: #000000;">    
+}
+
+totalScore() {
+    # arg1: 学号
+    # 打印某个学生的学号，姓名，总成绩
+    </span><span style="color: #0000ff;">echo</span> `<span style="color: #0000ff;">awk</span> -v stuId=$<span style="color: #800080;">1</span> -F, <span style="color: #800000;">'</span><span style="color: #800000;">BEGIN{total=0} {if($1==stuId){total+=$4;name=$2}} END{print stuId,name,total}</span><span style="color: #800000;">'</span> OFS=<span style="color: #800000;">"</span><span style="color: #800000;">,</span><span style="color: #800000;">"</span><span style="color: #000000;"> subject`
+}
+
+subjectScore() {
+    # arg1: 学号, arg2: 科目名
+    # 打印某个学生的学号，姓名，单科成绩
+    pattern</span>=<span style="color: #800000;">"</span><span style="color: #800000;">^$1.*$2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    record</span>=`<span style="color: #0000ff;">grep</span> -<span style="color: #000000;">E $pattern subject`
+    </span><span style="color: #0000ff;">echo</span><span style="color: #000000;"> $record
+}
+
+sortByColumn() {
+    # arg1: 按第几列排，arg2: 需要排名的文件
+    </span><span style="color: #0000ff;">sort</span> -nrk $<span style="color: #800080;">1</span> -t, $<span style="color: #800080;">2</span><span style="color: #000000;">
+}
+
+topStudent() {
+    # 打印成绩排名，默认打印总成绩排名
+    # arg1: 科目名
+    newFile topStudent    
+    </span><span style="color: #0000ff;">if</span> [ ! -n <span style="color: #800000;">"</span><span style="color: #800000;">$1</span><span style="color: #800000;">"</span> ] ;<span style="color: #0000ff;">then</span>            
+        <span style="color: #0000ff;">while</span><span style="color: #000000;"> read LINE
+        </span><span style="color: #0000ff;">do</span><span style="color: #000000;">
+            stuId</span>=${LINE%%,*<span style="color: #000000;">}
+            saveRecord topStudent `totalScore $stuId`
+        </span><span style="color: #0000ff;">done</span> &lt;<span style="color: #000000;"> student
+            
+        echoTitle </span><span style="color: #800000;">'</span><span style="color: #800000;">**总成绩排名</span><span style="color: #800000;">'</span><span style="color: #000000;">
+        sortByColumn </span><span style="color: #800080;">3</span><span style="color: #000000;"> topStudent; endl
+    </span><span style="color: #0000ff;">else</span>        
+        <span style="color: #0000ff;">while</span><span style="color: #000000;"> read LINE
+        </span><span style="color: #0000ff;">do</span><span style="color: #000000;">
+            stuId</span>=${LINE%%,*<span style="color: #000000;">}
+            saveRecord topStudent `subjectScore $stuId $</span><span style="color: #800080;">1</span><span style="color: #000000;">`
+        </span><span style="color: #0000ff;">done</span> &lt;<span style="color: #000000;"> student    
+    
+        echoTitle </span><span style="color: #800000;">"</span><span style="color: #800000;">**单科成绩排名&gt;&gt;&gt;&gt;$1&lt;&lt;&lt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        sortByColumn </span><span style="color: #800080;">4</span><span style="color: #000000;"> topStudent; endl
+    </span><span style="color: #0000ff;">fi</span><span style="color: #000000;">
+}
+
+main() {
+    initTables
+    initRecords
+    
+    echoTitle </span><span style="color: #800000;">'</span><span style="color: #800000;">1、学院表一览</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    listRecords academy; endl
+    echoTitle </span><span style="color: #800000;">'</span><span style="color: #800000;">2、学生表一览</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    listRecords student; endl
+    echoTitle </span><span style="color: #800000;">'</span><span style="color: #800000;">3、成绩表一览</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    listRecords subject; endl
+    
+    updateStudentById </span><span style="color: #800000;">'</span><span style="color: #800000;">2132022129</span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">2132022129,张三,002,dropout</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    echoTitle </span><span style="color: #800000;">'</span><span style="color: #800000;">**学生表一览（更新2132022129后）</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    listRecords student; endl
+    
+    topStudent
+    topStudent </span><span style="color: #800000;">'</span><span style="color: #800000;">linux</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    topStudent </span><span style="color: #800000;">'</span><span style="color: #800000;">math</span><span style="color: #800000;">'</span><span style="color: #000000;">
+}
+
+main</span></pre>
+</div>
+<p>&nbsp;</p>

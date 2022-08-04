@@ -1,0 +1,77 @@
+<h2>INDEX</h2>
+<ul>
+<li><a href="#a1">BAD EXAMPLE</a></li>
+<li><a href="#a2"><span class="docEmphStrong">Improving Overall Performance</span></a></li>
+<li><a href="#a3"><span class="docEmphStrong">Inserting Multiple Rows INSTEAD OF Inserting a Single Row</span></a></li>
+<li><a href="#a4"><span class="docEmphStrong">Inserting Retrieved Data&nbsp;</span></a></li>
+</ul>
+<h2><a name="a1"></a>BAD EXAMPLE</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> Customers
+</span><span style="color: #0000ff;">VALUES</span>(<span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+   </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Pep E. LaPew</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">100 Main Street</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Los Angeles</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">CA</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">90046</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">USA</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #0000ff;">NULL</span><span style="color: #000000;">,
+   </span><span style="color: #0000ff;">NULL</span>);</pre>
+</div>
+<p class="docText"><span class="docEmphStrong"><strong>Always Use a Columns List</strong> As a rule,&nbsp;never use <tt>INSERT</tt> without explicitly specifying the column list. This will greatly increase the probability that your SQL will continue to function in the event that table changes occur.</span></p>
+<h2><span class="docEmphStrong"><a name="a2"></a>Improving Overall Performance</span></h2>
+<p class="docText">Databases are frequently accessed by multiple clients, and it is MySQL's job to manage which requests are processed and in which order. <tt>INSERT</tt> operations can be time consuming (especially if there are many indexes to be updated), and this can h<span style="color: #ff0000;">urt the performance of <tt>SELECT</tt> statements that are waiting to be processed.</span></p>
+<p class="docText">If data retrieval is of utmost importance (as is usually is), you can instruct MySQL to lower the priority of your <tt>INSERT</tt> statement by adding the keyword <tt>LOW_PRIORITY</tt> in between <tt>INSERT</tt> and <tt>INTO</tt>, like this:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">INSERT</span> LOW_PRIORITY <span style="color: #0000ff;">INTO</span></pre>
+</div>
+<p>Incidentally, this also applies to the <tt>UPDATE</tt> and <tt>DELETE</tt> statements that you'll learn about in the next chapter.</p>
+<h2><a name="a3"></a>Inserting Multiple Rows INSTEAD OF Inserting a Single Row</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> customers(cust_name,
+   cust_address,
+   cust_city,
+   cust_state,
+   cust_zip,
+   cust_country)
+</span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">(
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Pep E. LaPew</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">100 Main Street</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Los Angeles</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">CA</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">90046</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">USA</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+     ),
+      (
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">M. Martian</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">42 Galaxy Way</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">New York</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">NY</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">11213</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+        </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">USA</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+   );</span></pre>
+</div>
+<p><span class="docEmphStrong"><strong>Improving <tt>INSERT</tt> Performance</strong> This technique can improve the performance of your database possessing, as MySQL will process multiple insertions in a single <tt>INSERT</tt> faster than it will multiple <tt>INSERT</tt> statements.</span></p>
+<h2><span class="docEmphStrong"><a name="a4"></a>Inserting Retrieved Data&nbsp;</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> customers(cust_id,
+    cust_contact,
+    cust_email,
+    cust_name,
+    cust_address,
+    cust_city,
+    cust_state,
+    cust_zip,
+    cust_country)
+</span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_id,
+    cust_contact,
+    cust_email,
+    cust_name,
+    cust_address,
+    cust_city,
+    cust_state,
+    cust_zip,
+    cust_country
+</span><span style="color: #0000ff;">FROM</span> custnew;</pre>
+</div>
+<p>PS. 列名可以不对应，列的值类型对应就可以了。</p>

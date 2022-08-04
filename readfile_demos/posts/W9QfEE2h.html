@@ -1,0 +1,65 @@
+<p>感觉很详细：<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/frchen/p/5725910.html" target="_blank">数据分析：pandas 基础</a></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt</span><span style="color: #000000;">
+
+dates </span>= pd.date_range(<span style="color: #800000;">'</span><span style="color: #800000;">20180116</span><span style="color: #800000;">'</span>, periods=3) <span style="color: #008000;">#</span><span style="color: #008000;"> 创建 16 17 18 等六个日期</span>
+<span style="color: #000000;">
+df </span>= pd.DataFrame(np.random.randn(3,4), index=dates, columns=list(<span style="color: #800000;">'</span><span style="color: #800000;">ABCD</span><span style="color: #800000;">'</span>)) <span style="color: #008000;">#</span><span style="color: #008000;"> 这是二维的，类似于一个表！</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 通过 numpy 随机了一个 3 * 4 的数据，这和行数、列数是相对应的</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -0.139759  0.857653  0.754470  0.224313</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  1.565070  0.521973 -1.265168 -0.278524</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18 -0.668574 -0.527155  0.877785 -1.123334</span>
+
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(<strong>df.head(1</strong>)) # 默认值是 5</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -0.039203  1.211976  0.664805  0.307147</span>
+<span style="color: #000000;">
+df.tail(</span>5) <span style="color: #008000;">#</span><span style="color: #008000;"> 同上，顾名思义</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(<strong>df.index</strong>) # 顾名思义 + 1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(<strong>df.columns</strong>)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> DatetimeIndex(['2018-01-16', '2018-01-17', '2018-01-18'], dtype='datetime64[ns]', freq='D')</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Index(['A', 'B', 'C', 'D'], dtype='object')</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(<strong>df.describe()</strong>) # 对每列数据做一些简单的统计学处理</span><span style="color: #008000;">
+#</span><span style="color: #008000;">               A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> count  3.000000  3.000000  3.000000  3.000000</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> mean  -0.163883 -0.107242 -0.621706  0.618341</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> std    0.360742  0.429078  0.800366  0.609524</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> min   -0.505212 -0.502887 -1.352274  0.055032</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 25%   -0.352602 -0.335291 -1.049444  0.294803</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 50%   -0.199991 -0.167695 -0.746613  0.534574</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 75%    0.006782  0.090581 -0.256421  0.899995</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> max    0.213556  0.348857  0.233770  1.265416</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(<strong>df.T</strong>) # 转置（Transposing）</span><span style="color: #008000;">
+#</span><span style="color: #008000;">    2018-01-16  2018-01-17  2018-01-18</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> A   -1.137015   -0.067200    0.737709</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> B   -1.141811    0.335953    1.023016</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> C    2.481266   -0.957599    0.011144</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> D    1.485434   -0.605588    0.592746</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(df)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(<strong>df.sort_index(axis=1, ascending=False)</strong>) # axis=1 按照列名排序 axis=0 按照行名排序</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -0.787226  0.321619  1.097938 -0.701082</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.417257 -0.163390 -0.943166 -0.497475</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  0.486670 -0.733582  1.923475 -1.145891</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    D         C         B         A</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -0.701082  1.097938  0.321619 -0.787226</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.497475 -0.943166 -0.163390 -0.417257</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18 -1.145891  1.923475 -0.733582  0.486670</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(<strong>df.sort_values(by='B')</strong>)</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  0.817088 -0.792903  1.643429 -0.008784</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  0.540910  0.662119  0.190846 -0.960926</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  0.333727  1.196133 -0.527796  0.677337</span></pre>
+</div>
+<p>&nbsp;</p>

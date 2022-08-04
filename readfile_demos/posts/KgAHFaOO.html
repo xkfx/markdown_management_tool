@@ -1,0 +1,39 @@
+<h2>例子</h2>
+<p>使用C语言的字符串库，更多请看参考1</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{     
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> NOTICE 在处理字符串时，如果越界，通常在编译时并不报错。
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 但是运行时会有未定义的行为。
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 因此要确保字符数组长度大于其存储的字符串长度。
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ######## 1 STRCPY ######### 
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> strcpy = string copy
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将其作为赋值号使用</span>
+    <span style="color: #0000ff;">char</span> s1[<span style="color: #800080;">10</span>] = <span style="color: #800000;">"</span><span style="color: #800000;">hello C\n</span><span style="color: #800000;">"</span>, s2[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    printf(strcpy(s2, s1)); </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; hello C</span>
+    printf(s2); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; hello C
+    
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ######## 2 STELEN #########
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> strlen = string length
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ######## 3 STRCAT #########
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> strcat = string concatenate 或者 string catenate </span>
+    <span style="color: #0000ff;">char</span> s3[<span style="color: #800080;">32</span>] = <span style="color: #800000;">"</span><span style="color: #800000;">head jjjjjjjjj</span><span style="color: #800000;">"</span>, s4[] = <span style="color: #800000;">"</span><span style="color: #800000;"> tail\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    printf(strcat(s3, s4)); </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; head jjjjjjjjj tail</span>
+    printf(s3); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; head jjjjjjjjj tail
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ######## 4 STRCMP #########
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 总之可以测试两字符串间任何可能的关系</span>
+     
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="http://www.cplusplus.com/reference/cstring/" target="_blank">http://www.cplusplus.com/reference/cstring/</a></p>

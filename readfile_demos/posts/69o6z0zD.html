@@ -1,0 +1,40 @@
+<h2>INDEX</h2>
+<ul>
+<li><a href="#a1"><tt>UNION</tt> Rules</a></li>
+<li><a href="#a2">WHERE VS. UNION</a></li>
+<li><a href="#a3">UNION VS. UNION ALL</a></li>
+<li><a href="#a4">Sorting Combined Query Results</a></li>
+</ul>
+<h2><tt><a name="a1"></a>UNION</tt> Rules</h2>
+<p class="docText">As you can see,&nbsp;unions are very easy to use. But a few rules govern exactly which can be combined:</p>
+<ul>
+<li>
+<p class="docList">A <tt>UNION</tt> must be comprised of two or more <tt>SELECT</tt> statements, each separated by the keyword <tt>UNION</tt> (so, if combining four <tt>SELECT</tt> statements, three <tt>UNION</tt> keywords would be used).</p>
+</li>
+<li>
+<p class="docList">Each query in a <tt>UNION</tt> must con<span style="color: #ff0000;">tain the same columns, expressions, or aggregate functions (although column</span>s need not be listed in the same order).</p>
+</li>
+<li>
+<p class="docList">Colu<span style="color: #ff0000;">mn datatypes must b</span>e compatible: They need not be the exact same type, but they must be of a type that MySQL can implicitly convert (for example, different numeric types or different date types).</p>
+</li>
+</ul>
+<p class="docText">Aside from these basic rules and restrictions, unions can be used for any data retrieval tasks.</p>
+<h2><a name="a2"></a>WHERE VS. UNION</h2>
+<p>For the most part, combining two queries to the same table accomplishes the same thing as a single query with multiple <tt>WHERE</tt> clause conditions. In other words, any <tt>SELECT</tt> statement with multiple <tt>WHERE</tt> clauses can also be specified as a combined query, as you'll see in the section that follows. The performance of each of the two techniques, however, can vary based on the queries used. As suc<span style="color: #ff0000;">h, it is always good to experiment to</span> determine which is preferable for specific queries.</p>
+<h2><a name="a3"></a>UNION VS. UNION ALL</h2>
+<p class="docText">The <tt>UNIO<span style="color: #ff0000;">N</span></tt><span style="color: #ff0000;"> automatically removes any duplicate rows f</span>rom the query result set (in other words, it behaves just as multiple <tt>WHERE</tt> clause conditions in a single <tt>SELECT</tt> would). Because vendor <tt>1002</tt> creates a product that costs less than <tt>5</tt>, that row was returned by both <tt>SELECT</tt> statements. When the <tt>UNION</tt> was used, the duplicate row was eliminated.</p>
+<p class="docText">This is the default behavior of <tt>UNION</tt>, but you can change this if you so desire. If you do, in fact, want all occurrences of all matches returned, you can use <tt>UNION ALL</tt> instead of <tt>UNION</tt>.</p>
+<h2 class="docText"><a name="a4"></a>Sorting Combined Query Results</h2>
+<p class="docText"><tt>SELECT</tt> statement&nbsp;output is sorted using the <tt>ORDER BY</tt> clause. When combining queries with a <tt>UN<span style="color: #ff0000;">ION</span></tt><span style="color: #ff0000;">, only one <tt>ORDER BY</tt> clause may be used, and<strong> it must occur after the final <tt>SELECT</tt> statement.</strong></span> There is very little point in sorting part of a result set one way and part another way, and so multiple <tt>ORDER BY</tt> clauses are not allowed.</p>
+<p class="docText">The following example sorts the results returned by the previously used <tt>UNION</tt>:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> vend_id, prod_id, prod_price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products
+</span><span style="color: #0000ff;">WHERE</span> prod_price <span style="color: #808080;">&lt;=</span> <span style="color: #800000; font-weight: bold;">5</span>
+<span style="color: #0000ff;">UNION</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> vend_id, prod_id, prod_price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products
+</span><span style="color: #0000ff;">WHERE</span> vend_id <span style="color: #808080;">IN</span> (<span style="color: #800000; font-weight: bold;">1001</span>,<span style="color: #800000; font-weight: bold;">1002</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> vend_id, prod_price;</pre>
+</div>
+<p>&nbsp;</p>

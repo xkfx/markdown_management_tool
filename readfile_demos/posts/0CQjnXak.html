@@ -1,0 +1,151 @@
+## DO
+
+写代码的最核心技术在于 ——  控制复杂度。
+
+引入这些东西（DO、DTO、VO之类的）我认为也是这个目的，这些”概念“可以让我们的代码更清晰、更容易读，更利于维护（在应用恰当的情况下）。
+
+DO=data object，纯数据对象，就是单纯放数据而没有行为的对象。我的设想是，在贫血模型里面可以直接创建一个叫dataobject的包放这些对象，感觉比用entity放这些纯数据对象要好一点。这样的话，可以对“纯数据对象”和更复杂的的对象进行一个区分。data object就严格的去对应一个数据表项。
+
+例如购物车项
+
+CartItemDO纯数据对象的字段是（严格对应一张表的字段，由DAO层传给服务层）：
+
+```java
+private Long id;
+private Long user_id;
+private Long item_id;
+private Integer quantity;
+```
+
+CartItemModel（添加了表里没有的内容，由服务层传给web层）：
+
+```java
+private Long id;
+private Long user_id;
+private Long item_id;
+private Integer quantity;
+
+// 冗余
+private String item_name;
+```
+
+这样子做有没意义还需实践。。。。。。。。。。。。。。
+
+
+
+## VO
+
+VO=view object
+
+我的代码里，Model通常是对DO的组合，而VO则是对Model的组合。我自己的设想是是一个VO对应一个网页，VO里包括该网页所需要的所有数据，至于数据怎么去呈现，那就是前端的事情了。最开始我显式的去写一个VO类，然后发现画蛇添足，很不灵活，直接采取类似下面的方案：
+
+```java
+@RequestMapping(value = "api/v1/message_board_vo", method = RequestMethod.GET)
+public ResponseEntity<?> listMessage(int offset, int limit) {
+    List<Message> messageList = messageService.listMessage(offset, limit);
+    Map<String, Object> nodes = new HashMap<>();
+    nodes.put("title", "this is my message board");
+    nodes.put("messageList", messageList);
+    return new ResponseEntity<>(nodes, HttpStatus.OK);
+}
+```
+
+类似这种接口，全部放在一个叫PageDataController的类里，和普通的XXXController共存。
+
+
+
+## ResponseEntity
+
+web层最终返回的对象。
+
+很久以前是用[Jackson组合多个对象的属性构成JSON（以及添加自定义属性）](https://www.cnblogs.com/xkxf/p/10113215.html)做这件事。甚至写一个下面的东西，来封装服务结果：
+
+```java
+package org.sample.shop.common.dto;
+
+import org.sample.shop.common.enums.business.BusinessCode;
+
+/**
+ * DTO数据传输对象。
+ * VO由一个中间服务来做或者
+ * 直接由js来构造
+ */
+public class ServiceResult<T> {
+
+    private static final String SERVER_ERROR = "服务器内部错误！";
+
+    private boolean success;
+
+    private T data = null;
+
+    private String error = "success";
+
+    public ServiceResult(T data) {
+        this.data = data;
+        this.success = true;
+    }
+
+    public ServiceResult(String error) {
+        this.error = error;
+        this.success = false;
+    }
+
+    public static <T> ServiceResult<T> ok(T data) {
+        return new ServiceResult<T>(data);
+    }
+
+    public static <T> ServiceResult<T> fail(String error) {
+        return new ServiceResult<T>(error);
+    }
+
+    public static <T> ServiceResult<T> error() {
+        return new ServiceResult<T>(SERVER_ERROR);
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceResult{" +
+                "success=" + success +
+                ", data=" + data +
+                ", error='" + error + '\'' +
+                '}';
+    }
+
+    private BusinessCode code; // 类比HTTP状态码，但是描述的是业务执行结果
+
+    public ServiceResult(BusinessCode code, T data) {
+        this.data = data;
+        this.code = code;
+    }
+
+    public ServiceResult(BusinessCode code) {
+        this.code = code;
+    }
+
+    public int getCode() {5
+        return code.getCode();
+    }
+
+    public String getDefaultDescription() {
+        return code.getDefaultDescription();
+    }
+}
+```
+
+后面才知道有ResponseEntity这个东西。关于ResponseEntity可参考：
+
+- [How to respond with HTTP status code in a Spring MVC @RestController @ResponseBody class returning an object?](https://stackoverflow.com/questions/26134331/how-to-respond-with-http-status-code-in-a-spring-mvc-restcontroller-responsebo)
+
+- [springboot自定义http反馈状态码* | *小强哥博客*](https://www.baidu.com/link?url=3Nig8Wt6H6MLzLBdMWPFwYhs0muFy1ioxjsMe4E2Ul0i05BGDPY5NnOUSA3MIemKe9Zsb7RtU4-CvMQ-5sSmv5ugvu2WrFI0Uz6_qlOBGDO&wd=&eqid=a53a0ce30001323b00000005600fdf51)

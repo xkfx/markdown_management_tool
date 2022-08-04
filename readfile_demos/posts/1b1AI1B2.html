@@ -1,0 +1,68 @@
+<p>饮水思源：<a href="https://www.bilibili.com/video/BV1vW411M7zp?spm_id_from=333.337.search-card.all.click" target="_blank">https://www.bilibili.com/video/BV1vW411M7zp?spm_id_from=333.337.search-card.all.click</a></p>
+<h2>一、JDBC</h2>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202203/1042431-20220311164345466-1573038606.png" alt="" width="342" height="250" loading="lazy" /></p>
+<p>JDBC只是一组规范、接口，具体实现都是由各个数据库厂商提供的。我们只需添加对应厂商提供的&ldquo;数据库驱动类&rdquo;（例如：<strong>org.gjt.mm.mysql.Driver</strong>），就可以通过一组统一的类和接口（JDBC）访问该数据库。除了<strong>JDBC的实现类</strong>，还需要配合<strong>URL和一些凭证</strong>，才能顺利创建数据源（DataSource）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">jdbc.url=<strong>jdbc:</strong>mysql://***.**.**.**:3306/profiles?characterEncoding=utf8
+jdbc.username=root
+jdbc.password=aaaaaaaaaaa</span></pre>
+</div>
+<p>关于JDBC所规定的类和接口，详见<a href="https://docs.oracle.com/javase/8/docs/api/" target="_blank">API文档</a>中的java.sql包。</p>
+<p>应用JDBC的一般步骤：添加依赖、加载驱动（<span style="color: #0000ff;">所谓加载驱动，就是确定采用哪个数据库提供的JDBC实现类</span>）、提供URL和凭证、通过java.sql.驱动管理器获取<strong>连接（connection）</strong>、通过连接进行增删查改、释放包括<strong>连接</strong>在内的资源，详见<a href="https://www.cnblogs.com/xkxf/p/9354968.html" target="_blank">https://www.cnblogs.com/xkxf/p/9354968.html</a></p>
+<h2>二、连接池</h2>
+<p>在生产环境中，自己去管理这些连接是低效的，因此我们引入了连接池（<a href="https://www.cnblogs.com/xkxf/p/9414499.html" target="_blank">https://www.cnblogs.com/xkxf/p/9414499.html</a>），当然，连接池只是帮助我们管理连接，高效利用连接，<strong>相应的驱动类，URL以及凭证</strong>等仍然是必不可少的，也就是底层还是用JDBC去访问数据库：</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> HikariConfig config = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariConfig();
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> HikariDataSource ds;
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        config.setJdbcUrl(</span>"<strong>jdbc:</strong>mysql://127.0.0.1:3306/profiles?characterEncoding=utf8"<span style="color: #000000;">);
+        config.setUsername(</span>"root"<span style="color: #000000;">);
+        config.setPassword(</span>"???????"<span style="color: #000000;">);
+        config.addDataSourceProperty(</span>"cachePrepStmts", "true"<span style="color: #000000;">);
+        config.addDataSourceProperty(</span>"prepStmtCacheSize", "250"<span style="color: #000000;">);
+        config.addDataSourceProperty(</span>"prepStmtCacheSqlLimit", "2048"<span style="color: #000000;">);
+        ds </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariDataSource(config);
+        config </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariConfig();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <strong><span style="color: #ff0000;">Connection</span> </strong>getConnection() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"><strong> ds.getConnection();</strong>
+    }</span></pre>
+</div>
+<p>在使用连接池的时候有一点需要注意，应该采用对应连接池恰当的办法去获得<strong>连接</strong>，这样在关闭<strong>连接</strong>时就不会真的关闭，而是将它重新返还到连接池中。</p>
+<h2>三、ORM</h2>
+<p>在开发过程中，发现在代码里面写SQL也很烦，而且有很多不方便。于是有人写了一些代码<strong>对JDBC进一步封装</strong>，抽象，简化，例如<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/xkxf/p/10128082.html" target="_blank">Apache Commons DbUtils&nbsp;</a>但是实际上也没有多大改善。我们<strong>进一步</strong>追求代码的可读性，方便性，SQL和代码分离等，并且，希望可以更好地<strong>服务于面向对象编程（面向对象是一种很实用的编程思想。。。）</strong>，于是就出现了一堆的ORM框架（Object Relational Mapping）。大概就是指MyBatis、Hibernate之类的框架（网络上，有种说法，MyBatis严格来说不能列入ORM框架），<strong>它们本质上仍是对JDBC的封装</strong>。摘抄一些网上的介绍：</p>
+<div class="cnblogs_code">
+<pre>ORM的作用是在编程中，把面向对象的概念跟数据库中表的概念对应起来。举例来说就是，我定义一个对象，那就对应着一张表，这个对象的实例，就对应着表中的一条记录。</pre>
+</div>
+<div class="cnblogs_code">
+<pre>ORM主要作用是把<strong>数据库领域</strong>的东西映射到<strong>面向对象领域</strong></pre>
+</div>
+<div class="cnblogs_code">
+<pre>不用对象也就没必要用到ORM</pre>
+</div>
+<p>当然ORM框架其实没有连接池必要。只是作用于<strong>&ldquo;开发时&rdquo;</strong>。</p>
+<p>到后面，我们发现自己写SQL也很烦，干脆直接根据代码生成，然后就出现了类似<strong>MyBatis Generator</strong>的工具。到了JPA时代，甚至不需要懂SQL，只要理解<strong>面向对象</strong>就可以轻松操控数据库（<span style="color: #ff00ff;">一种理想情况。。。现实并非如此。。</span>）。一切都是对象。</p>
+<p>最后，ORM框架以及代码生成工具只是为了方便我们开发，说到底，<strong>底层还是用JDBC</strong>。因此，相应的<strong>驱动类，URL及凭证</strong>依旧是创建数据源的前提：</p>
+<div class="cnblogs_code">
+<pre>mybatis.mapper-locations=classpath:mapping<span style="color: #008000;">/*</span><span style="color: #008000;">.xml
+
+spring.datasource.name=jee_ex9_datasource
+spring.datasource.driver-class-name=<span style="color: #ff0000;"><strong>com.mysql.cj.jdbc.Driver</strong></span>
+spring.datasource.url=<span style="color: #ff0000;"><strong>jdbc:</strong></span>mysql://127.0.0.1:3306/jee_ex9?useUnicode=true&amp;characterEncoding=utf8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Asia/Shanghai
+<strong><span style="color: #ff0000;">spring.datasource.username=root
+spring.datasource.password=*********</span></strong>
+
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource</span></pre>
+</div>
+<h2>四、JPA</h2>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202203/1042431-20220311164712185-1962469581.png" alt="" width="372" height="247" loading="lazy" /></p>
+<p><strong>JDBC</strong>的实现类可能来自Oracle、MySQL或者其它数据库，</p>
+<p>同样的，我们应用的ORM框架也可能是Hibernate或者其它，实践过程中，我们发现学习一种ORM框架是需要时间成本的（因为每个ORM框架都长得不太一样），<span style="text-decoration: underline;"><strong>最好弄成和JDBC一样，这样只需要学习一套API，我们就可以去使用任何ORM框架。</strong></span></p>
+<p>所以就出现了一个叫JPA（Java Persistence API）的东西<span style="text-decoration: underline;"><strong>，它本质上是一种规范，而不是一种框架</strong></span>。以下内容来自百度百科：</p>
+<div class="cnblogs_code">
+<pre>Sun引入新的JPA ORM规范出于两个原因：其一，<strong>简化</strong>现有Java EE和Java SE应用开发工作；其二，Sun希望<strong>整合ORM技术，实现天下归一</strong>。</pre>
+</div>
+<p>JPA可以说是JDBC的升华版，升级版。应用JPA需要依赖JPA的实现类，而JPA的实现类<strong>归根结底还是需要依赖JDBC以及它的实现类。</strong></p>
+<p><strong>补充说明：</strong>Spring Data JPA的默认实现是<strong><span style="color: #ff0000;">Hibernate</span></strong>，不管是Spring还是Hibernate都对原始的JPA做了补充，可以说原始JPA是他们两个的子集。应用JPA就好像把和数据库打交道的工作托管给了另一个人，虽然你不直接去和数据库打交道了，但也还是需要时不时检查那个人有没履行好职责。因此还是必须有sql和db的知识。</p>

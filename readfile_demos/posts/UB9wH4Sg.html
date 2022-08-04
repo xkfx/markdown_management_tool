@@ -1,0 +1,60 @@
+<p>离散型hopfield神经网络。参考自<a href="http://web.cs.ucla.edu/~rosen/161/notes/hopfield.html" target="_blank">http://web.cs.ucla.edu/~rosen/161/notes/hopfield.html</a>实现的草稿版本：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> http://web.cs.ucla.edu/~rosen/161/notes/hopfield.html</span>
+<span style="color: #000000;">
+attractors </span>= np.array([[0, 1, 1, 0, 1], [1, 0, 1, 0, 1<span style="color: #000000;">]])
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">attractors:\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, attractors)
+
+weight_matrix </span>= np.zeros((5, 5<span style="color: #000000;">))
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">weight_matrix:\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, weight_matrix)
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 第一个向量表示第一个节点到各个节点的权值</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 初始化网络，权值是对称的，例如w12 = w21，而w11 w22都是0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> for i in range(len(weight_matrix)):</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> reflect_about_the_diagonal(matrix):
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 将矩阵上三角翻转拷贝到下三角</span>
+    matrix += matrix.T -<span style="color: #000000;"> np.diag(matrix.diagonal())
+
+</span><span style="color: #0000ff;">for</span> attractor <span style="color: #0000ff;">in</span><span style="color: #000000;"> attractors:
+    temp_matrix </span>= np.zeros((5, 5<span style="color: #000000;">))
+    </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(0, 4<span style="color: #000000;">):
+        </span><span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span> range(i + 1, 5<span style="color: #000000;">):
+            temp_matrix[i, j] </span>= (2 * attractor[i] - 1) * (2 * attractor[j] - 1<span style="color: #000000;">)
+    weight_matrix </span>+=<span style="color: #000000;"> temp_matrix
+    
+reflect_about_the_diagonal(weight_matrix)
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">weight_matrix:\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, weight_matrix)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> print(weight_matrix[2].dot(attractors[0]))</span>
+
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 类似于bp里的预测,som里的map</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> xxxx(input_vector):
+    vector </span>=<span style="color: #000000;"> input_vector.copy()
+    
+    stable_state </span>=<span style="color: #000000;"> False
+    
+    random_order </span>=<span style="color: #000000;"> np.arange(len(attractors[0]))
+
+    
+    </span><span style="color: #0000ff;">while</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> stable_state:
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 生成一个随机序列，以随机的顺序更新节点</span>
+<span style="color: #000000;">        np.random.shuffle(random_order)
+        stable_state </span>=<span style="color: #000000;"> True
+        </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> random_order:
+            original_value </span>=<span style="color: #000000;"> vector[i]
+            vector[i] </span>=<span style="color: #000000;"> weight_matrix[i].dot(vector)
+            </span><span style="color: #0000ff;">if</span> (vector[i] &gt;=<span style="color: #000000;"> 0):
+                vector[i] </span>= 1
+            <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+                vector[i] </span>=<span style="color: #000000;"> 0
+            </span><span style="color: #0000ff;">if</span> (vector[i] !=<span style="color: #000000;"> original_value):
+                </span><span style="color: #0000ff;">print</span>(i, <span style="color: #800000;">"</span><span style="color: #800000;">change </span><span style="color: #800000;">"</span>, original_value, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span><span style="color: #000000;">, vector[i])
+                stable_state </span>=<span style="color: #000000;"> False
+        
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vector
+
+x </span>= [1, 1, 1, 1, 1<span style="color: #000000;">]
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">test:</span><span style="color: #800000;">'</span>, x, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, xxxx(np.array(x)))</pre>
+</div>
+<p>&nbsp;</p>

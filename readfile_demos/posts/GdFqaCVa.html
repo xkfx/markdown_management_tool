@@ -1,0 +1,30 @@
+<p>rownum是Oracle为查询结果分配的有序编号（总是从1~n）。言下之意，rownum字段本来并不存在于表中，而是经查询后才分配的。</p>
+<p>举一个例子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> rownum, name, price 
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> item 
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">user_id</span><span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #808080;">AND</span> status<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">0</span>;</pre>
+</div>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181229192325600-1213237669.png" alt="" width="540" height="261" /></p>
+<p>错误的示范（试图直接用rownum字段）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> rownum, name, price 
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> item 
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">user_id</span><span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #808080;">AND</span> status<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">0</span> <strong><span style="color: #808080;">AND</span> rownum <span style="color: #808080;">&gt;</span> <span style="color: #800000;">1</span>;</strong></pre>
+</div>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181229193103130-2144003238.png" alt="" width="568" height="124" /></p>
+<p>正确的写法（采用简单的子查询，将rownum临时固定一下。。）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+<span style="color: #0000ff;">FROM</span><span style="color: #000000;"> (
+</span><strong><span style="color: #0000ff;">SELECT</span> rownum <span style="color: #0000ff;">AS</span><span style="color: #000000;"> r, name, price 
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> item 
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">user_id</span><span style="color: #808080;">=</span><span style="color: #800000;">1000</span> <span style="color: #808080;">AND</span> status<span style="color: #808080;">=</span><span style="color: #800000;">0</span>
+<span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> id <span style="color: #0000ff;">DESC</span></strong><span style="color: #000000;">
+) </span><span style="color: #0000ff;">temp</span> 
+<span style="color: #0000ff;">WHERE</span> r <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">1</span> <span style="color: #808080;">AND</span> r <span style="color: #808080;">&lt;</span> <span style="color: #800000; font-weight: bold;">6</span>;</pre>
+</div>
+<p>ORDER BY xxx DESC 是一种默认的习惯写法，因为一般总是倾向于先拿比较新的数据。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201812/1042431-20181229195048630-1632405550.png" alt="" width="514" height="197" /></p>
+<p>然后网上有很多优化方案，有时间可以研究研究。。。。。。。。。。</p>
+<p>&nbsp;</p>

@@ -1,0 +1,93 @@
+<blockquote>
+<p><span style="font-family: 宋体;"><span style="color: #ff6600; font-size: 18pt;">When action grows unprofitable, gather information; when information grows unprofitable, sleep.&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span style="color: #000000;">Ursula K. Le Guin,&nbsp;<cite>The Left Hand of Darkness</cite></span></span></p>
+</blockquote>
+<h4><span style="text-decoration: underline; font-family: 宋体;"><strong><span style="color: #ff0000; text-decoration: underline;">索引</span></strong></span></h4>
+<ol>
+<li>
+<p><span style="font-family: 宋体;"><a href="#a1">作者的几个观点</a></span></p>
+</li>
+<li>
+<p><span style="font-family: 宋体;"><a href="#a2">ECMAScript standard</a></span></p>
+</li>
+<li><a href="#a3">Values, Types, and Operators</a></li>
+<li>
+<p><span style="font-family: 宋体;">Web browsers are not the only platforms on which JavaScript is used. Some databases, such as<span style="color: #ff0000;"> MongoDB and CouchDB</span>, use JavaScript as their scripting and query language.&nbsp;</span></p>
+</li>
+</ol>
+<p><span style="font-family: 宋体;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier;">这个教程应该是在持续更新的，作者在 Introduction 中表示书中用的是 2017 版本的 JavaScript</span></p>
+<p>&nbsp;</p>
+<h2><span style="text-decoration: underline; font-family: 宋体;"><strong><span style="color: #ff0000; text-decoration: underline;"><a name="a1"></a>COPY &darr;</span></strong></span></h2>
+<p><span style="font-family: 宋体;"><span style="color: #ff0000;">Keeping programs under control</span> is the main problem of programming.&nbsp;</span></p>
+<p><span style="font-family: 宋体;">The art of programming is<em> <span style="color: #ff0000;">the skill of controlling complexity</span></em>.&nbsp;</span></p>
+<p><span style="font-family: 宋体;">Some programmers believe that this complexity is best managed by using only a small set of well-understood techniques in their programs. They have composed strict rules (&ldquo;best practices&rdquo;) prescribing the form programs should have, and carefully stay within their safe little zone.</span></p>
+<p><span style="font-family: 宋体;"><a id="p_cPr6HjEw1O" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/00_intro.html#p_cPr6HjEw1O"></a>This is not only boring, it is also ineffective. New problems often require new solutions.<span style="color: #ff0000;"> The field of programming is young and still developing rapidly, and is varied enough to have room for wildly different approaches.</span> There are many terrible mistakes to make in program design, and you should go ahead and make them so that you understand them. <span style="color: #ff0000;">A sense of what a good program looks like<em><strong> is developed in practice</strong></em>, not learned from a list of rules.</span></span></p>
+<p>&nbsp;</p>
+<h2 class="r"><span style="font-family: 宋体;"><a name="a2" href="https://www.ecma-international.org/publications/standards/Ecma-262.htm" target="_blank">Standard ECMA-262 - Ecma International</a></span></h2>
+<p><span style="font-family: 宋体;"><a name="a2"></a>After its adoption outside of Netscape, a standard document was written to describe the way the JavaScript language should work, so that the various pieces of software that claimed to support JavaScript were actually talking about the same language. This is called the<em><a href="https://www.ecma-international.org/publications/standards/Ecma-262.htm" target="_blank"> ECMAScript standard</a></em>, after the Ecma International organization that did the standardization.&nbsp;</span></p>
+<p><span style="text-decoration: underline;"><span style="font-family: 宋体;">&nbsp;</span></span></p>
+<p>&nbsp;</p>
+<h2><span style="text-decoration: underline;"><a name="a3"></a></span><span style="text-decoration: underline;">Values, Types, and Operators</span></h2>
+<p>&nbsp;</p>
+<ol>
+<li><strong><a href="http://eloquentjavascript.net/01_values.html" target="_blank"><span style="text-decoration: underline;"><em>Bits</em></span></a></strong></li>
+<li>
+<p><strong>Values</strong> -&nbsp;</p>
+<p>每个值都必须存储在某个地方，如果您想同时使用大量数据，则可能<span style="color: #ff0000;">会导致<strong>内存</strong>不足。幸</span>运的是，只有在同时需要大量值的时候，这才是一个问题。只要你不再使用值，它就会消失，留下它的一部分 作为下一代值的建筑材料。</p>
+<p>本章介绍JavaScript<span style="color: #ff0000;">程序的<strong>原子元素</strong>，即简单</span>的<span style="color: #ff0000;"><strong>值类型</strong></span>和可以处理<span style="color: #ff0000;">这些值<strong>的操作符</strong></span><strong>。</strong></p>
+</li>
+<li>
+<p><strong>Numbers -&nbsp;</strong>JavaScript 用定长的比特存储数字 -- -<span style="font-family: 宋体;">JavaScript us<span style="color: #ff0000;">es a fixed number of bits, n</span>amely 64 of them, to store a single number value.&nbsp;you can represen<span style="color: #ff0000;">t 2<sup>64</sup>different nu</span>mbers, which is about 18 quintillion (an 18 with 18 zeros after it). 仅仅是 2 的 64 次方<span style="color: #ff0000;">个不同数</span>字！并不是指如此多的正整数。&nbsp; ---- -&nbsp;</span><span style="font-family: 宋体;">N<span style="color: #ff0000;">ot all whole numbers bel</span>ow 18 quintillion fit in a JavaScript number, though. Those bits also store <span style="color: #ff0000;">negative numbers, so one bit indicates the sign of the number.</span> A bigger issue is that nonwhole numbers must also be represented. To do th<span style="color: #ff0000;">is, some of the bits</span> are used to store the position of the decimal point. The actual maximum whole number that can be stored is more i<span style="color: #ff0000;">n the range of 9 quadrillio</span>n (15 zeros)&mdash;which is still pleasantly huge.</span></p>
+</li>
+<li>
+<p><strong>Special numbers</strong> --&nbsp;The first two ar<span style="color: #ff0000;">e&nbsp;<code>Infinity</code>&nbsp;and&nbsp;<code>-Infinity</code>, whi</span>ch represent the positive and negative infinities.&nbsp;<code>Infinity - 1</code>&nbsp;is still&nbsp;<code>Infinity</code>, and so on. Don&rsquo;t put too much trust in infinity-based computation, though. It isn&rsquo;t mathematically sound, and it will quickly lead to our next special number:&nbsp;<code>NaN</code>.&nbsp; &nbsp; &nbsp;---------------&nbsp;<span style="color: #ff0000;"><code>NaN</code>&nbsp;stands for &ldquo;not a number&rdquo;, eve</span>n though it&nbsp;<em>is</em>&nbsp;a value of the number type. You&rsquo;ll get this result when you, for example, try to calculate&nbsp;<code>0 / 0</code>&nbsp;(zero divided by zero),&nbsp;<code>Infinity - Infinity</code>, or any number of other numeric operations that don&rsquo;t yield a meaningful result.</p>
+</li>
+<li><strong>&nbsp;Strings,</strong> too, hav<span style="color: #ff0000;">e to be modeled as a series of bits to be able to exist inside the computer. T</span>he way JavaScript do<span style="color: #ff0000;">es this is based on the&nbsp;<em>Unicode&nbsp;</em>standard.</span> This standard assigns a number to virtually every character you would ever need, including characters from Greek, Arabic, Japanese, Armenian, <span style="color: #ff0000;">and so on. If we have a number for every character, a string can be described by a sequence of numbers.&nbsp; -- -'/n' -- -&nbsp;</span><span>And that&rsquo;s what JavaScript does. But there&rsquo;s a comp<span style="color: #ff0000;">lication: JavaScript&rsquo;s repre<strong>sentation u<em>ses 16 bits</em> per str</strong>ing element,</span> which can describe up to 2<sup>16</sup>different characte<span style="color: #ff0000;">rs. B<em>ut <strong>Unicode d</strong>e</em>fin<strong>es more cha</strong>racters t</span>han that&mdash;about twice as many, at this point. So some characters, such as many emoji, tak<strong>e<span style="color: #ff0000;"> up two</span><span style="color: #ff0000;"> &ldquo;</span></strong><span style="color: #ff0000;"><strong>c</strong>haracter positions</span><strong><span style="color: #ff0000;">&rdquo;</span></strong> in JavaScript strings.</span></li>
+<li>
+<p><strong>Unary operators</strong> -- --Not all operators are symbols. Some are written as words. One example is the&nbsp;<code>typeof</code>&nbsp;operator, which produces a string value naming the type of the value you give it. 这里提到一个非符号一元操作符 typeof &rarr;&nbsp;&nbsp;<span style="font-family: 'Courier New'; font-size: 12px;">console.</span><span class="cm-property" style="font-family: 'Courier New'; font-size: 12px;">log(<span class="cm-keyword">typeof <span class="cm-number">4.5) output =&nbsp;</span></span></span><span class="cm-variable"><span class="cm-property"><span class="cm-keyword"><span class="cm-number"><span class="cm-comment">number</span></span></span></span></span></p>
+</li>
+<li>
+<p><strong>Comparison -</strong> - -Ther<span style="color: #ff0000;"><strong>e is only one v</strong></span>alue in JavaScript that is not equal to itself, and that is&nbsp;<code>NaN</code>&nbsp;(&ldquo;not a number&rdquo;).&nbsp;&nbsp;<span style="font-family: 'Courier New'; font-size: 12px;">console.</span><span class="cm-property" style="font-family: 'Courier New'; font-size: 12px;">log(<span class="cm-atom">NaN <span class="cm-operator">== <span class="cm-atom">NaN)&nbsp;</span></span></span></span><span class="cm-variable" style="color: #ff0000;"><span class="cm-property"><span class="cm-atom"><span class="cm-operator"><span class="cm-atom"><span class="cm-comment">// &rarr; false&nbsp; &nbsp;- -----&nbsp; -&nbsp;</span></span></span></span></span></span><code>NaN</code>&nbsp;is supposed to denote the result of a nonsensical computation, and as such, it isn&rsquo;t equal to the result of any&nbsp;<em>other</em>&nbsp;nonsensical computations.</p>
+</li>
+<li>
+<p><strong>Empty values</strong> -- 别把它和 Special numbers&nbsp; 搞混了，它已经脱离了 数（numbers）的范畴了。</p>
+<p>有两个特殊值，写成 <strong><em>null</em></strong> 和 <strong><em>undefined</em></strong>，用来表示意义缺失的值（也就是没有意义的值）。 它们本身是值，但它们没有包含任何信息。</p>
+<p>语言中有许多没有得到有意义的值的操作（稍后会看到）会产生 undefined，因为它们必须产生一些值。&uarr; （虽然 没有包含任何信息）</p>
+<p>undefined 和 null 之间含义的差异<em>&nbsp;</em>是 JavaScript设计的一个意外，大多数<span style="color: #ff0000;">时候它并不重要。</span> 在你不得不关注这些值的情况下，我建<span style="color: #ff0000;">议将它们视为大体上可互换的。</span></p>
+</li>
+</ol>
+<p>&nbsp;</p>
+<h2>Empty values # 摘</h2>
+<p><a id="p_Q/OIPtr8xY" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/01_values.html#p_Q/OIPtr8xY"></a>There are two special values, written&nbsp;<code>null</code>&nbsp;and&nbsp;<code>undefined</code>, that are used to denote the absence of a&nbsp;<em>meaningful</em>&nbsp;value. They are themselves values, but they carry no information.</p>
+<p><a id="p_3veSnHeYus" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/01_values.html#p_3veSnHeYus"></a>Many operations in the language that don&rsquo;t produce a meaningful value (you&rsquo;ll see some later) yield&nbsp;<code>undefined</code>&nbsp;simply because they have to yield&nbsp;<em>some</em>&nbsp;value.</p>
+<p><a id="p_43ZLcQuUDk" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/01_values.html#p_43ZLcQuUDk"></a>The difference in meaning between&nbsp;<code>undefined</code>&nbsp;and&nbsp;<code>null</code>&nbsp;is an accident of JavaScript&rsquo;s design, and it doesn&rsquo;t matter most of the time. In the cases where you actually have to concern yourself with these values, I recommend treating them as mostly interchangeable.</p>
+<p>&nbsp;</p>
+<h2>Automatic type conversion # 摘</h2>
+<p>When you do&nbsp;<em>not</em>&nbsp;want any automatic type conversions to happen, there are two additional operators:&nbsp;<code>===</code>&nbsp;and&nbsp;<code>!==</code>. The first tests whether a value is&nbsp;<em>precisely</em>&nbsp;equal to the other, and the second tests whether it is not precisely equal. So&nbsp;<code>"" === false</code>&nbsp;is false as expected.</p>
+<p>&nbsp;/</p>
+<p>I recommend using the three-character comparison operators defensively to prevent unexpected type conversions from tripping you up. But when you&rsquo;re certain the types on both sides will be the same, there is no problem with using the shorter operators.</p>
+<p>&nbsp;/</p>
+<p>We can use this functionality as a way to fall back on a default value. If you have a value that might be empty, you can put&nbsp;<code>||</code>&nbsp;after it with a replacement value. If the initial value can be converted to false, you&rsquo;ll get the replacement instead. 逻辑运算的奇淫巧技，就是说逻辑运算符号两侧如果不是布尔值，那么将会把左侧值自动转化为布尔值然后根据转化结果返回 两侧值中的一个。 那么谁知道左侧值会转化为 false 还是 true 呢？ 规则是这样的：0，NaN，"" 都是false 其余都是 true，那为什么只转化一边就可以决定返回值呢？原因当然是因为短路运算啦。。。</p>
+<div class="cnblogs_code">
+<pre>NaN || "3333"
+"3333"
+
+0 || "3333"
+"3333"
+
+"" || "3333"
+"3333"<span style="color: #000000;">
+
+Infinity </span>|| "3333"<span style="color: #000000;">
+Infinity
+
+</span><strong><span style="color: #0000ff;">null</span> || "3333"
+"3333"<span style="color: #000000;">
+
+undefined </span>|| "3333"
+"3333"</strong></pre>
+</div>
+<p>&nbsp;不过经过我测试 null 和 undefined 返回的也是 false 所以还是慎用。。。</p>
+<p>/</p>
+<p>Another important property of these two operators is that the part to their right is evaluated only when necessary. In the case of&nbsp;<code>true || X</code>, no matter what&nbsp;<code>X</code>&nbsp;is&mdash;even if it&rsquo;s a piece of program that does something&nbsp;<em>terrible</em>&mdash;the result will be true, and&nbsp;<code>X</code>&nbsp;is never evaluated. The same goes for&nbsp;<code>false &amp;&amp; X</code>, which is false and will ignore&nbsp;<code>X</code>. This is called&nbsp;<em>short-circuit evaluation</em>.</p>
+<p><a id="p_WW6GFa4Qbm" class="p_ident" tabindex="-1" href="http://eloquentjavascript.net/01_values.html#p_WW6GFa4Qbm"></a>The conditional operator works in a similar way. Of the second and third value, only the one that is selected is evaluated.</p>

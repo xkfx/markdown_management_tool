@@ -1,0 +1,147 @@
+<p class="postTitle">引用<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/xkxf/p/6746148.html">【JavaScript】满天星</a>的代码，稍作修改的结果：</p>
+<div class="cnblogs_code">
+<pre>            <span style="color: #0000ff;">function</span><span style="color: #000000;"> drawStars() {
+                </span><span style="color: #0000ff;">for</span> (i = 1; i &lt; 100; ++<span style="color: #000000;">i) {
+                    ctx.fillText(</span>"*", Math.random()*1024, Math.random()*768<span style="color: #000000;">);
+                   }
+            }
+            setInterval(</span>"drawStars()", 100);</pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170422231641759-379512029.png" alt="" width="239" height="176" /><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170422231723884-1137703684.png" alt="" width="234" height="173" /><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170422231824509-99359009.png" alt="" width="230" height="166" /></p>
+<p>text被反复绘制，以至占满屏幕，避免这种情况需要在每次repaint之前清除屏幕。code：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170423000558368-1596876819.png" alt="" width="451" height="334" /></p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"/&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style&gt;<span style="color: #000000;">
+        canvas {
+            background</span>-<span style="color: #000000;">color: white;
+        }
+    </span>&lt;/style&gt;
+&lt;/head&gt;
+    &lt;body&gt;
+        &lt;canvas id="myCanvas" width="1024" height="768" style="border:1px solid #d3d3d3;"&gt;
+         &lt;/canvas&gt;
+        &lt;script&gt;
+            <span style="color: #0000ff;">var</span> c = document.getElementById("myCanvas"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">var</span> ctx = c.getContext("2d"<span style="color: #000000;">);
+            ctx.font </span>= "30px Verdana"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> clear() {
+                ctx.clearRect(</span>0, 0<span style="color: #000000;">, c.width, c.height);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> drawStars() {
+                </span><span style="color: #0000ff;">for</span> (i = 1; i &lt; 300; ++<span style="color: #000000;">i) {
+                    ctx.fillText(</span>"*", Math.random()*1024, Math.random()*768<span style="color: #000000;">);
+                }
+                setTimeout(clear, </span>90<span style="color: #000000;">);
+            }
+            setInterval(drawStars, </span>100<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> setInterval不会因为包含有setTimeout而延迟执行，</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 而是严格的按照传入setInterval的参数时间调用drawStars</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 每个setTimeout间也是相互独立的，不会因为上一个setTimeout还在等待时间就无法调用。</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 这里的setInterval和setTimeout不能独立考虑。。。如果interval的时间比较短，那么同一时间会有多个setTimeout在等待执行。。。</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 这样setTimeout除了第一次是按照自己的参数时间调用函数外，其余都是按Interval的时间参数调用。。。</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 如果需要clearInteval；那么需要以var verb = setInterval(drawStars, 100);形式声明变量</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 然后在函数中调用clearInteval(verb)终止循环</span>
+        &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+</div>
+<p>修改之后（顺便改了颜色）有了&ldquo;视觉下落&rdquo;的效果，但是达不到对每个&ldquo;雪花&rdquo;的精细控制。。。而且仅仅是视觉上。。没有真正的下落</p>
+<p>参考：</p>
+<p>1、<a href="http://www.111cn.net/wy/99/71b9c5073260f58bbb04d2418c642564.htm" target="_blank">js innerHTML 改变div内容</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170423220337788-924695630.png" alt="" width="277" height="147" /></p>
+<p>code2:</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;snow2&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script&gt;
+<span style="color: #008000;">//</span><span style="color: #008000;">            尝试一个雪花下落。</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            var screenWidth = document.documentElement.clientWidth;</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            var screenHeight = document.documentElement.clientHeight;</span><span style="color: #008000;">
+//</span>            <span style="color: #008000;">
+//</span><span style="color: #008000;">            var star = document.createElement("div");</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            star.innerHTML = '*';</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            star.style.fontSize = 100 + "px";</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            document.body.appendChild(star);</span><span style="color: #008000;">
+//</span>            <span style="color: #008000;">
+//</span><span style="color: #008000;">            var X = Math.random()*screenWidth;</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            var Y = Math.random()*screenHeight;</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            star.style.position = "absolute";</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            star.style.left = X + "px";</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            star.style.top = Y + "px";</span><span style="color: #008000;">
+//</span>            <span style="color: #008000;">
+//</span><span style="color: #008000;">            function down() {</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                Y++;</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                if (Y &gt; screenHeight) {</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                    Y = 0;</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                }</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                star.style.left = X + "px";</span><span style="color: #008000;">
+//</span><span style="color: #008000;">                star.style.top = Y + "px";</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            }</span><span style="color: #008000;">
+//</span>            <span style="color: #008000;">
+//</span><span style="color: #008000;">            setInterval(down, 10);</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            创建100个Snowflake对象，设置初始位置---&gt;new star(300, 400);</span><span style="color: #008000;">
+//</span><span style="color: #008000;">            Snowflakes.down();</span>
+            <span style="color: #0000ff;">var</span> screenWidth =<span style="color: #000000;"> document.documentElement.clientWidth;
+            </span><span style="color: #0000ff;">var</span> screenHeight =<span style="color: #000000;"> document.documentElement.clientHeight;
+            
+            </span><span style="color: #0000ff;">var</span> snowflake =<span style="color: #000000;"> [];
+            </span><span style="color: #0000ff;">var</span> X =<span style="color: #000000;"> [];
+            </span><span style="color: #0000ff;">var</span> Y =<span style="color: #000000;"> [];
+            
+            </span><span style="color: #0000ff;">var</span> numberOfSnowflake = 0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> createSnowflake() {
+                </span><span style="color: #0000ff;">var</span> sf = document.createElement("div"<span style="color: #000000;">);
+                sf.innerHTML </span>= '*'<span style="color: #000000;">;
+                sf.style.fontSize </span>= 100 + "px"<span style="color: #000000;">;
+                document.body.appendChild(sf);
+                
+                X[numberOfSnowflake] </span>= Math.random()*<span style="color: #000000;">screenWidth;
+                Y[numberOfSnowflake] </span>= Math.random()*<span style="color: #000000;">screenHeight;
+                sf.style.position </span>= "absolute"<span style="color: #000000;">;
+                sf.style.left </span>= X[numberOfSnowflake] + "px"<span style="color: #000000;">;
+                sf.style.top </span>= Y[numberOfSnowflake] + "px"<span style="color: #000000;">;
+                
+                snowflake.push(sf);
+                
+                numberOfSnowflake</span>++<span style="color: #000000;">;
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> repaint(i) {
+                snowflake[i].style.left </span>= X[i] + "px"<span style="color: #000000;">;
+                snowflake[i].style.top </span>= Y[i] + "px"<span style="color: #000000;">;
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> down(i) {
+                </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> miniDown() {
+                    Y[i]</span>++<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (Y[i] &gt;<span style="color: #000000;"> screenHeight) {
+                        X[i] </span>= Math.random()*<span style="color: #000000;">screenWidth;
+                        Y[i] </span>= 0<span style="color: #000000;">;
+                    }
+                    repaint(i);
+                }
+                setInterval(miniDown, </span>10<span style="color: #000000;">);
+            }
+            
+            </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i;
+            </span><span style="color: #0000ff;">for</span> (i = 0; i &lt;= 100; ++<span style="color: #000000;">i) {
+                createSnowflake();
+                down(numberOfSnowflake);
+            }
+            down(</span>0<span style="color: #000000;">);
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>

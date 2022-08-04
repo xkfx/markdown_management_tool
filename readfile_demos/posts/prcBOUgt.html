@@ -1,0 +1,91 @@
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/10min.html" target="_blank">10 Minutes to pandas</a></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span>Stats</pre>
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> shift 这玩意儿有啥用？？？</span>
+s = pd.Series([1,5,np.nan], index=<span style="color: #000000;">dates).<span style="color: #ff0000;"><strong>shift(0)
+</strong></span></span><span style="color: #008000;">#</span><span style="color: #008000;"> s1 = pd.Series([1,5,np.nan], index=dates).shift(1)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> s2 = pd.Series([1,5,np.nan], index=dates).shift(2)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(s)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(s1)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(s2)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16    1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17    5.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18    NaN</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Freq: D, dtype: float64</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16    NaN</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17    1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18    5.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Freq: D, dtype: float64</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16    NaN</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17    NaN</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18    1.0</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> Freq: D, dtype: float64</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> print(df)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df.<span style="color: #ff0000;"><strong>sub</strong></span>(s, axis='index')) # <strong>"Wise subtraction"</strong></span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -1.809723  0.342129  2.048727  0.995959</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  0.871955  1.960730  0.368855  0.459528</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18 -0.483717  0.031247  0.619609 -0.712104</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16 -2.809723 -0.657871  1.048727 -0.004041</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -4.128045 -3.039270 -4.631145 -4.540472</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18       NaN       NaN       NaN       NaN</span></pre>
+</div>
+<p>&nbsp;/</p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #008000;">#</span><span style="color: #008000;"> Applying functions to the data</span></strong><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(df.apply(np.cumsum)) # 应用 numpy 的函数 cumsum 对每列累计求和</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  1.516139  0.501701  0.624571 -1.270804</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17 -0.223673 -0.092153  0.782620 -2.073206</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  0.844318 -1.180269  0.994821 -1.372318</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                    A         B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-16  1.516139  0.501701  0.624571 -1.270804</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-17  1.292466  0.409548  1.407191 -3.344010</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2018-01-18  2.136784 -0.770721  2.402013 -4.716328</span></pre>
+</div>
+<p>/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Histogramming（直方图化） ps：就是把每个值出现的次数统计出来</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> s = pd.Series(np.random.randint(0, 7, size=10))</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(s)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(<strong>s.value_counts()</strong>)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0    1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1    4</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2    6</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3    2</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4    4</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5    2</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6    3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7    2</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 8    1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 9    5</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> dtype: int32</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2    3</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4    2</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1    2</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6    1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5    1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3    1</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> dtype: int64</span></pre>
+</div>
+<p>/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> String Methods</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> s = pd.Series(['A', 'B', 'C', 'Aaba', 'Baca', np.nan, 'CABA', 'dog', 'cat'])</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> print(<strong>s.str.lower()</strong>)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0       a</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1       b</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2       c</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3    aaba</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4    baca</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5     NaN</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6    caba</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7     dog</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 8     cat</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> dtype: object</span></pre>
+</div>
+<p>&nbsp;</p>

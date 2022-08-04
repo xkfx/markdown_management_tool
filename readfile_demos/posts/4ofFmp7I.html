@@ -1,0 +1,47 @@
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/10min.html" target="_blank">10 Minutes to pandas</a></p>
+<p>&nbsp;</p>
+<h4>引</h4>
+<div class="cnblogs_code">
+<pre>By &ldquo;group by&rdquo; we are referring to a process involving one <span style="color: #0000ff;">or</span><span style="color: #000000;"> more of the following steps
+
+Splitting the data into groups based on some criteria
+Applying a function to each group independently
+Combining the results into a data structure
+See the Grouping section</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4>代码</h4>
+<div class="cnblogs_code">
+<pre>df = pd.DataFrame({<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>: [<span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">bar</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">bar</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">bar</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">foo</span><span style="color: #800000;">'</span><span style="color: #000000;">],
+                    </span><span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span>: [<span style="color: #800000;">'</span><span style="color: #800000;">one</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">one</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">two</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">three</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">two</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">two</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">one</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">three</span><span style="color: #800000;">'</span><span style="color: #000000;">],
+                     </span><span style="color: #800000;">'</span><span style="color: #800000;">C</span><span style="color: #800000;">'</span>: np.random.randn(8), <span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span>: np.random.randn(8<span style="color: #000000;">)})
+</span><span style="color: #0000ff;">print</span><span style="color: #000000;">(df)
+</span><span style="color: #0000ff;">print</span>(df.<strong>groupby(<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>)</strong>.sum()) <span style="color: #008000;">#</span><span style="color: #008000;"> 计算 foo bar 各自对应 C D 列的和（B列无法求和）</span>
+
+<span style="color: #0000ff;">print</span>(df.<strong>groupby([<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span>])</strong>.sum()) <span style="color: #008000;">#</span><span style="color: #008000;"> 同理，不过这里有个一对多的关系</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;">      A      B         C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 0  foo    one  0.102071 -0.301926</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 1  bar    one  1.161158  0.847451</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 2  foo    two -0.023879  0.936338</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 3  bar  three -0.353075 -0.834349</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 4  foo    two -0.272542 -1.425635</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 5  bar    two -1.016016 -0.031614</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 6  foo    one -0.428517  0.892747</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 7  foo  three -0.843796  0.614443</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> /</span><span style="color: #008000;">
+#</span><span style="color: #008000;">             C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> A                      </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> bar -0.207932 -0.018512</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> foo -1.466663  0.715967</span><span style="color: #008000;">
+#</span><span style="color: #008000;">                   C         D</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> /</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> A   B                        </span><span style="color: #008000;">
+#</span><span style="color: #008000;"> bar one    1.161158  0.847451</span><span style="color: #008000;">
+#</span><span style="color: #008000;">     three -0.353075 -0.834349</span><span style="color: #008000;">
+#</span><span style="color: #008000;">     two   -1.016016 -0.031614</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> foo one   -0.326445  0.590821</span><span style="color: #008000;">
+#</span><span style="color: #008000;">     three -0.843796  0.614443</span><span style="color: #008000;">
+#</span><span style="color: #008000;">     two   -0.296421 -0.489296</span></pre>
+</div>
+<p>&nbsp;</p>

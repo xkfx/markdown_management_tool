@@ -1,0 +1,658 @@
+<div id="diy_right_menu">
+<p>内容索引</p>
+<ul>
+<li><a href="#a1">LocalConnectionFactory.java</a></li>
+<li><a href="#a2">LocalConnectionProxy.java</a></li>
+<li><a href="#a3">ProfileDAO.java-2.0</a></li>
+<li><a href="#a4">ProfileDAOImpl.java-2.0</a></li>
+<li><a href="#a5">DaoException.java</a></li>
+<li><a href="#a6">DbUtil.java-2.0</a></li>
+<li><a href="#a7">ProfileDAOTest.java-2.0</a></li>
+<li><a href="#a8">DaoTest.java（并发测试）</a></li>
+<li><a href="#a9">后续修改</a></li>
+</ul>
+</div>
+<p>接<a id="homepage1_HomePageDays_DaysList_ctl00_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/9354968.html">Java连接数据库 #01# JDBC单线程适用</a>，主要是改为多线程适用，顺便对DAO层结构进行改良：</p>
+<ol>
+<li>connection由共享变量改为由一个ThreadLocal变量保存</li>
+<li>添加一个connection的管理类来控制事务</li>
+<li>dao层统一向上抛出DaoException</li>
+<li>dao层对象改为单例</li>
+</ol>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a1"></a>① LocalConnectionFactory.java 负责创建connection并用ThreadLocal变量保存connection</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.db;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.DriverManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ResourceBundle;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LocalConnectionFactory {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> LocalConnectionFactory() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Exists to defeat instantiation</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> ResourceBundle rb = ResourceBundle.getBundle("org.sample.db.db-config"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_URL = rb.getString("jdbc.url"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_USER = rb.getString("jdbc.username"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_PASSWORD = rb.getString("jdbc.password"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ThreadLocal&lt;Connection&gt; LocalConnectionHolder = <span style="color: #0000ff;">new</span> ThreadLocal&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Connection getConnection() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Connection conn </span>=<span style="color: #000000;"> LocalConnectionHolder.get();
+        </span><span style="color: #0000ff;">if</span> (conn == <span style="color: #0000ff;">null</span> ||<span style="color: #000000;"> conn.isClosed()) {
+            conn </span>=<span style="color: #000000;"> DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+            LocalConnectionHolder.set(conn);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> conn;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> removeLocalConnection() {
+        LocalConnectionHolder.remove();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a2"></a>② LocalConnectionProxy.java 通过该类间接控制connection，在Service层控制事务<span style="color: #ff0000;"><strong>（代码分层有错误！）</strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.manager;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.db.LocalConnectionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LocalConnectionProxy {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> setAutoCommit(<span style="color: #0000ff;">boolean</span> autoCommit) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> DaoException {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            conn.setAutoCommit(autoCommit);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    public static void setTransactionIsolation(int level) throws DaoException {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        try {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">            Connection conn = LocalConnectionFactory.getConnection();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">            conn.setTransactionIsolation(level);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        } catch (SQLException e) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">            throw new DaoException(e);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        }
+</span><span style="color: #008000;">//</span><span style="color: #008000;">    }</span>
+
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> commit() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> DaoException {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            conn.commit();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> rollback() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> DaoException {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            conn.rollback();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> close() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> DaoException {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            conn.close();
+            LocalConnectionFactory.removeLocalConnection();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a3"></a>③ ProfileDAO.java-2.0 <span style="text-decoration: line-through;">标示出了可能抛出的异常</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> ProfileDAO {
+
+    </span><span style="color: #0000ff;">int</span> saveProfile(Profile profile)<span style="color: #000000;">;
+
+    List</span>&lt;Profile&gt; listProfileByNickname(String nickname)<span style="color: #000000;">;
+
+    Profile getProfileByUsername(String username)</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">int</span> updateProfileById(Profile profile)<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">int</span> updatePassword(String username, String password)<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">int</span> updateLastOnline(String username)<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a4"></a>④ ProfileDAOImpl.java-2.0 改进了savePOJO方法，该类是线程安全的，并且适合采用单例模式。至于为什么不直接用静态方法，在网上看到的是：静态方法一般都是业务无关的，而DAO方法都是业务相关的，并且创建对象可以方便框架（Spring）进行依赖注入，采用多态等。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao.impl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.ProfileDAO;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.db.LocalConnectionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.util.DbUtil;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.PreparedStatement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ProfileDAOImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ProfileDAO {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ProfileDAO INSTANCE = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ProfileDAOImpl();
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> ProfileDAOImpl() {}
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> saveProfile(Profile profile)<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            String sql </span>= "INSERT ignore INTO `profiles`.`profile` (`username`, `password`, `nickname`) " +
+                    "VALUES (?, ?, ?)"; <span style="color: #008000;">//</span><span style="color: #008000;"> 添加ignore出现重复不会抛出异常而是返回0</span>
+            <span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, profile.getUsername());
+                ps.setString(</span>2<span style="color: #000000;">, profile.getPassword());
+                ps.setString(</span>3<span style="color: #000000;">, profile.getNickname());
+                i </span>=<span style="color: #000000;"> ps.executeUpdate();
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> List&lt;Profile&gt; listProfileByNickname(String nickname) <span style="color: #000000;">{
+        List</span>&lt;Profile&gt; result = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            String sql </span>= "SELECT  `profile_id`,  `username`,  `password`,  `nickname`,  `last_online`,  `gender`,  `birthday`,  `location`,  `joined`" +
+                    "FROM `profiles`.`profile`" +
+                    "WHERE `nickname`=?"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, nickname);
+                </span><span style="color: #0000ff;">try</span> (ResultSet rs =<span style="color: #000000;"> ps.executeQuery()) {
+                    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                        Profile profile </span>=<span style="color: #000000;"> DbUtil.extractProfileFromResultSet(rs);
+                        result.add(profile);
+                    }
+                }
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> Profile getProfileByUsername(String username) <span style="color: #000000;">{
+        Profile result </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            String sql </span>= "SELECT  `profile_id`,  `username`,  `password`,  `nickname`,  `last_online`,  `gender`,  `birthday`,  `location`,  `joined`" +
+                    "FROM `profiles`.`profile`" +
+                    "WHERE `username`=?"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, username);
+                </span><span style="color: #0000ff;">try</span> (ResultSet rs =<span style="color: #000000;"> ps.executeQuery()) {
+                    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                        result </span>=<span style="color: #000000;"> DbUtil.extractProfileFromResultSet(rs);
+                    }
+                }
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> updateProfileById(Profile profile) <span style="color: #000000;">{
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            String sql </span>= "UPDATE `profiles`.`profile`" +
+                    "SET `nickname`=?,  `gender`=?,  `birthday`=?,  `location`=? " +
+                    "WHERE  `profile_id`=?"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, profile.getNickname());
+                ps.setString(</span>2, profile.getGender() != <span style="color: #0000ff;">null</span> ? String.valueOf(profile.getGender()) : <span style="color: #0000ff;">null</span><span style="color: #000000;">);
+                ps.setTimestamp(</span>3<span style="color: #000000;">, profile.getBirthday());
+                ps.setString(</span>4<span style="color: #000000;">, profile.getLocation());
+                ps.setLong(</span>5<span style="color: #000000;">, profile.getProfileId());
+                i </span>=<span style="color: #000000;"> ps.executeUpdate();
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> updatePassword(String username, String password) <span style="color: #000000;">{
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            String sql </span>= "UPDATE `profiles`.`profile`" +
+                    "SET `password`=? " +
+                    "WHERE  `username`=?"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, password);
+                ps.setString(</span>2<span style="color: #000000;">, username);
+                i </span>=<span style="color: #000000;"> ps.executeUpdate();
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> updateLastOnline(String username) <span style="color: #000000;">{
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> LocalConnectionFactory.getConnection();
+            String sql </span>= "UPDATE `profiles`.`profile`" +
+                    "SET `last_online`=CURRENT_TIMESTAMP " +
+                    "WHERE  `username`=?"<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, username);
+                i </span>=<span style="color: #000000;"> ps.executeUpdate();
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a5"></a>⑤ DaoException.java（RuntimeException）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.exception;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> DaoException <span style="color: #0000ff;">extends</span><span style="color: #000000;"> OnesProfileException {
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> DaoException() {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">();
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> DaoException(String message) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(message);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> DaoException(String message, Throwable cause) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(message, cause);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> DaoException(Throwable cause) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(cause);
+    }
+
+    </span><span style="color: #0000ff;">protected</span> DaoException(String message, Throwable cause, <span style="color: #0000ff;">boolean</span> enableSuppression, <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> writableStackTrace) {
+        </span><span style="color: #0000ff;">super</span><span style="color: #000000;">(message, cause, enableSuppression, writableStackTrace);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><a name="a6"></a>⑥DbUtil.java-2.0 改为一个单纯的数据库操作辅助类。。。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.util;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DbUtil {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Profile extractProfileFromResultSet(ResultSet rs) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile();
+        profile.setBirthday(rs.getTimestamp(</span>"birthday"<span style="color: #000000;">));
+        profile.setJoined(rs.getTimestamp(</span>"joined"<span style="color: #000000;">));
+        profile.setLast_online(rs.getTimestamp(</span>"last_online"<span style="color: #000000;">));
+        profile.setLocation(rs.getString(</span>"location"<span style="color: #000000;">));
+        profile.setNickname(rs.getString(</span>"nickname"<span style="color: #000000;">));
+        profile.setPassword(rs.getString(</span>"password"<span style="color: #000000;">));
+        profile.setProfileId(rs.getLong(</span>"profile_id"<span style="color: #000000;">));
+        profile.setUsername(rs.getString(</span>"username"<span style="color: #000000;">));
+        </span><span style="color: #0000ff;">if</span> (rs.getString("gender") != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            profile.setGender(rs.getString(</span>"gender").charAt(0<span style="color: #000000;">));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profile;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><span><a name="a7"></a>⑦ ProfileDAOTest.java-2.0 各个方法测试之间不再相互依赖</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.impl.ProfileDAOImpl;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.manager.LocalConnectionProxy;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.junit.Assert.assertEquals;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.junit.Assert.assertNotNull;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ProfileDAOTest {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ProfileDAO PROFILE_DAO =<span style="color: #000000;"> ProfileDAOImpl.INSTANCE;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String ORIGIN_STRING = "hello"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String PASSWORD =<span style="color: #000000;"> ORIGIN_STRING;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String RandomString() {
+        </span><span style="color: #0000ff;">return</span> Math.random() + ORIGIN_STRING +<span style="color: #000000;"> Math.random();
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Profile RandomProfile() {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile(RandomString(), PASSWORD, RandomString());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profile;
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> saveProfile() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        Profile profile </span>=<span style="color: #000000;"> RandomProfile();
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> PROFILE_DAO.saveProfile(profile);
+        </span><span style="color: #0000ff;">int</span> j =<span style="color: #000000;"> PROFILE_DAO.saveProfile(profile);
+        LocalConnectionProxy.close();
+
+
+        assertEquals(</span>1<span style="color: #000000;">, i);
+        assertEquals(</span>0<span style="color: #000000;">, j);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> listProfileByNickname() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        </span><span style="color: #0000ff;">final</span> String nickName =<span style="color: #000000;"> RandomString();
+        Profile profile1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile(RandomString(), PASSWORD, nickName);
+        Profile profile2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile(RandomString(), PASSWORD, nickName);
+        Profile profile3 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile(RandomString(), PASSWORD, nickName);
+        PROFILE_DAO.saveProfile(profile1);
+        PROFILE_DAO.saveProfile(profile2);
+        PROFILE_DAO.saveProfile(profile3);
+        List result </span>=<span style="color: #000000;"> PROFILE_DAO.listProfileByNickname(nickName);
+        LocalConnectionProxy.close();
+
+        assertEquals(</span>3<span style="color: #000000;">, result.size());
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> getProfileByUsername() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        Profile profile </span>=<span style="color: #000000;"> RandomProfile();
+        PROFILE_DAO.saveProfile(profile);
+        Profile result </span>=<span style="color: #000000;"> PROFILE_DAO.getProfileByUsername(profile.getUsername());
+        LocalConnectionProxy.close();
+
+        assertNotNull(result);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> updateProfileById() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        Profile profile </span>=<span style="color: #000000;"> RandomProfile();
+        PROFILE_DAO.saveProfile(profile);
+        Profile temp </span>=<span style="color: #000000;"> PROFILE_DAO.getProfileByUsername(profile.getUsername());
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> PROFILE_DAO.updateProfileById(temp);
+
+        LocalConnectionProxy.close();
+
+        assertEquals(</span>1<span style="color: #000000;">, i);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> updatePassword() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        Profile profile </span>=<span style="color: #000000;"> RandomProfile();
+        PROFILE_DAO.saveProfile(profile);
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> PROFILE_DAO.updatePassword(profile.getUsername(), RandomString());
+        LocalConnectionProxy.close();
+
+        assertEquals(</span>1<span style="color: #000000;">, i);
+    }
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> updateLastOnline() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        Profile profile </span>=<span style="color: #000000;"> RandomProfile();
+        PROFILE_DAO.saveProfile(profile);
+        </span><span style="color: #0000ff;">int</span> i =<span style="color: #000000;"> PROFILE_DAO.updateLastOnline(profile.getUsername());
+        LocalConnectionProxy.close();
+
+        assertEquals(</span>1<span style="color: #000000;">, i);
+    }
+
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p><span><a name="a8"></a>⑧ DaoTest.java 简单测试了下在并发情况下代码的运行状况</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.manager;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.ProfileDAO;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.impl.ProfileDAOImpl;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Collections;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.LinkedList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.CountDownLatch;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.ExecutorService;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.Executors;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.TimeUnit;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.logging.Logger;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.junit.Assert.assertTrue;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DaoTest {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER = Logger.getLogger(DaoTest.<span style="color: #0000ff;">class</span><span style="color: #000000;">.getName());
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String ORIGIN_STRING = "hello"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String RandomString() {
+        </span><span style="color: #0000ff;">return</span> Math.random() + ORIGIN_STRING +<span style="color: #000000;"> Math.random();
+    }
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Profile RandomProfile() {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile(RandomString(), ORIGIN_STRING, RandomString());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profile;
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ProfileDAO PROFILE_DAO =<span style="color: #000000;"> ProfileDAOImpl.INSTANCE;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> Worker <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> Profile profile =<span style="color: #000000;"> RandomProfile();
+
+        @Override
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+            LOGGER.info(Thread.currentThread().getName() </span>+ " has started his work"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                LocalConnectionProxy.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                PROFILE_DAO.saveProfile(profile);
+                LocalConnectionProxy.commit();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (DaoException e) {
+                e.printStackTrace();
+            } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    LocalConnectionProxy.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (DaoException e) {
+                    e.printStackTrace();
+                }
+            }
+            LOGGER.info(Thread.currentThread().getName() </span>+ " has finished his work"<span style="color: #000000;">);
+        }
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> numTasks = 100<span style="color: #000000;">;
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> test() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        List</span>&lt;Runnable&gt; workers = <span style="color: #0000ff;">new</span> LinkedList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0; i != numTasks; ++<span style="color: #000000;">i) {
+            workers.add(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Worker());
+        }
+        assertConcurrent(</span>"Dao test "<span style="color: #000000;">, workers, Integer.MAX_VALUE);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> assertConcurrent(<span style="color: #0000ff;">final</span> String message, <span style="color: #0000ff;">final</span> List&lt;? <span style="color: #0000ff;">extends</span> Runnable&gt; runnables, <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> maxTimeoutSeconds) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> InterruptedException {
+        </span><span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> numThreads =<span style="color: #000000;"> runnables.size();
+        </span><span style="color: #0000ff;">final</span> List&lt;Throwable&gt; exceptions = Collections.synchronizedList(<span style="color: #0000ff;">new</span> ArrayList&lt;Throwable&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">final</span> ExecutorService threadPool =<span style="color: #000000;"> Executors.newFixedThreadPool(numThreads);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">final</span> CountDownLatch allExecutorThreadsReady = <span style="color: #0000ff;">new</span><span style="color: #000000;"> CountDownLatch(numThreads);
+            </span><span style="color: #0000ff;">final</span> CountDownLatch afterInitBlocker = <span style="color: #0000ff;">new</span> CountDownLatch(1<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">final</span> CountDownLatch allDone = <span style="color: #0000ff;">new</span><span style="color: #000000;"> CountDownLatch(numThreads);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">final</span><span style="color: #000000;"> Runnable submittedTestRunnable : runnables) {
+                threadPool.submit(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {
+                    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                        allExecutorThreadsReady.countDown();
+                        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                            afterInitBlocker.await();
+                            submittedTestRunnable.run();
+                        } </span><span style="color: #0000ff;">catch</span> (<span style="color: #0000ff;">final</span><span style="color: #000000;"> Throwable e) {
+                            exceptions.add(e);
+                        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                            allDone.countDown();
+                        }
+                    }
+                });
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> wait until all threads are ready</span>
+            assertTrue("Timeout initializing threads! Perform long lasting initializations before passing runnables to assertConcurrent", allExecutorThreadsReady.await(runnables.size() * 10<span style="color: #000000;">, TimeUnit.MILLISECONDS));
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> start all test runners</span>
+<span style="color: #000000;">            afterInitBlocker.countDown();
+            assertTrue(message </span>+" timeout! More than" + maxTimeoutSeconds + "seconds"<span style="color: #000000;">, allDone.await(maxTimeoutSeconds, TimeUnit.SECONDS));
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            threadPool.shutdownNow();
+        }
+        assertTrue(message </span>+ "failed with exception(s)" +<span style="color: #000000;"> exceptions, exceptions.isEmpty());
+    }
+}</span></pre>
+</div>
+<p>在连接数量超出100时会抛出<span style="color: #ff0000;"> com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Data source rejected establishment of connection,&nbsp; message from server: "Too many connections" ，<span style="color: #000000;">这是因为超出了mysql默认的最大连接数，</span></span>这个值是可以自定义的，应根据具体的并发量、服务器性能、业务场景等各种因素综合决定。参考<a href="https://segmentfault.com/q/1010000012496196" target="_blank">连接池最大/最小连接数，自动释放时间，设置多少合适？</a></p>
+<p><span style="color: #000000;">★查看数据库连接相关信息：</span></p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> show status <span style="color: #808080;">like</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">Threads%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+-------+</span>
+<span style="color: #808080;">|</span> Variable_name     <span style="color: #808080;">|</span> Value <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+-------+</span>
+<span style="color: #808080;">|</span> Threads_cached    <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">8</span>     <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Threads_connected <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">1</span>     <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Threads_created   <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">3419</span>  <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Threads_running   <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">1</span>     <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-----------------+-------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>Threads_cached是数据库缓存的连接数。</p>
+<p>★查看最大连接数：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> show variables <span style="color: #808080;">like</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">%max_connections%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------------+-------+</span>
+<span style="color: #808080;">|</span> Variable_name   <span style="color: #808080;">|</span> Value <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------------+-------+</span>
+<span style="color: #808080;">|</span> max_connections <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">100</span>   <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------------+-------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.01</span> sec)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> show global status <span style="color: #808080;">like</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">Max_used_connections</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;<br /><span style="color: #888888;">&nbsp;ps. 官方解释 - The maximum number of connections that have been in use simultaneously since the server started.
+</span></span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------+-------+</span>
+<span style="color: #808080;">|</span> Variable_name        <span style="color: #808080;">|</span> Value <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------+-------+</span>
+<span style="color: #808080;">|</span> Max_used_connections <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">101</span>   <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------------+-------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;但是我很奇怪为什么max_used_connections会大于max_connections，查文档结果如下 &darr;</p>
+<p>&nbsp;&nbsp;<a class="link" title="4.3.1&nbsp;mysqld &mdash; The MySQL Server" href="https://dev.mysql.com/doc/refman/8.0/en/mysqld.html"><span class="command"><strong>mysqld</strong></span></a>&nbsp;actually permits&nbsp;<a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_connections"><code class="literal">max_connections+1</code></a>&nbsp;clients to connect. The extra connection is reserved for use by accounts that have the<a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_connection-admin"><code class="literal">CONNECTION_ADMIN</code></a>&nbsp;or&nbsp;<a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_super"><code class="literal">SUPER</code></a>&nbsp;privilege. By granting the&nbsp;<a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_super"><code class="literal">SUPER</code></a>privilege to administrators and not to normal users (who should not need it), an administrator can connect to the server and use&nbsp;<a class="link" title="13.7.6.29&nbsp;SHOW PROCESSLIST Syntax" href="https://dev.mysql.com/doc/refman/8.0/en/show-processlist.html"><code class="literal">SHOW PROCESSLIST</code></a>&nbsp;to diagnose problems even if the maximum number of unprivileged clients are connected. See&nbsp;<a class="xref" title="13.7.6.29&nbsp;SHOW PROCESSLIST Syntax" href="https://dev.mysql.com/doc/refman/8.0/en/show-processlist.html">Section&nbsp;13.7.6.29, &ldquo;SHOW PROCESSLIST Syntax&rdquo;</a>.</p>
+<p>&nbsp;</p>
+<p>顺便mark&nbsp;<a href="https://www.techrepublic.com/blog/linux-and-open-source/10-mysql-variables-that-you-should-monitor/" target="_blank">10 MySQL variables that you should monitor - TechRepublic</a></p>
+<p><a name="a9"></a>后续修改&darr;</p>
+<p>1、简化dao层方法命名</p>
+<p>2、更改LocalConnectionFactory.java，依然采用Class.forName</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('babb0f44-5456-4303-bb4a-262ed18db038')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_babb0f44-5456-4303-bb4a-262ed18db038" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_babb0f44-5456-4303-bb4a-262ed18db038" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_babb0f44-5456-4303-bb4a-262ed18db038" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.db;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.DriverManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ResourceBundle;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LocalConnectionFactory {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> LocalConnectionFactory() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Exists to defeat instantiation</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> ResourceBundle rb = ResourceBundle.getBundle("org.sample.db.db-config"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_URL = rb.getString("jdbc.url"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_USER = rb.getString("jdbc.username"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String JDBC_PASSWORD = rb.getString("jdbc.password"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ThreadLocal&lt;Connection&gt; LocalConnectionHolder = <span style="color: #0000ff;">new</span> ThreadLocal&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Class.forName(</span>"com.mysql.jdbc.Driver"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 虽然说JDBC4之后已经不再需要Class.forName，但是能否
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 自动注册和环境、版本的相关性很大，所以安全起见还是加上这句比较好。</span>
+        } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClassNotFoundException e) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO 日志</span>
+            <span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> DaoException("could not register JDBC driver"<span style="color: #000000;">, e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Connection getConnection() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Connection conn </span>=<span style="color: #000000;"> LocalConnectionHolder.get();
+        </span><span style="color: #0000ff;">if</span> (conn == <span style="color: #0000ff;">null</span> ||<span style="color: #000000;"> conn.isClosed()) {
+            conn </span>=<span style="color: #000000;"> DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+            LocalConnectionHolder.set(conn);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> conn;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> removeLocalConnection() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO 应该先关掉再remove?</span>
+<span style="color: #000000;">        LocalConnectionHolder.remove();
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">LocalConnectionFactory.java</span></div>
+<p>3、补一张结构草图<span style="color: #ff0000;"><strong>（WRONG！！！）</strong></span>：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181106091349011-1338936828.png" alt="" width="448" height="284" /></p>
+<p>&nbsp;</p>

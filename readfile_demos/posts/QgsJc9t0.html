@@ -1,0 +1,150 @@
+<h2>题</h2>
+<p class="title-article">集合栈计算机，完整题目见参考[1]</p>
+<p class="title-article">书上的原始代码如下：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;map&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">set</span>&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;stack&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;
+<span style="color: #008000;">//</span><span style="color: #008000;"> algorithm是必要的？否则 set_union报错 </span>
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+typedef </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> Set;
+map</span>&lt;Set, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ID_cache;
+vector</span>&lt;Set&gt;<span style="color: #000000;"> Set_cache;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 查找指定集合的 id 如果找不到，分配一个新的 </span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> ID(Set x) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (ID_cache.count(x)) {
+        </span><span style="color: #0000ff;">return</span> ID_cache[x]; <span style="color: #008000;">//</span><span style="color: #008000;"> 返回相应 ID </span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        Set_cache.push_back(x); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 把集合放入集合cache中 </span>
+        <span style="color: #0000ff;">return</span> ID_cache[x] = Set_cache.size() - <span style="color: #800080;">1</span><span style="color: #000000;">; 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 新分配ID也就是新集合在集合cache中的位置 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Set_cache[id] 就是那个对应的集合 </span>
+<span style="color: #000000;">    }
+}
+
+</span><span style="color: #0000ff;">#define</span> ALL(x) x.begin(), x.end()
+<span style="color: #0000ff;">#define</span> INS(x) inserter(x, x.begin())
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    stack</span>&lt;<span style="color: #0000ff;">int</span>&gt; s; <span style="color: #008000;">//</span><span style="color: #008000;"> 方便起见，为每个不同的集合，分配一个唯一的ID </span>
+    
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    cin </span>&gt;&gt;<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> op;
+        cin </span>&gt;&gt;<span style="color: #000000;"> op;
+        </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">P</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            s.push(ID(Set()));
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> PUSH操作 空集{}入栈
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这里实际是创建了一个空的 set&lt;int&gt; 对象
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 然后将其添加到 set_cache中 并分配了一个唯一的id
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过 set_cache[id] 可以拿到这个集合，通过 IDcache[这个集合] 可以拿到它的id  
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过ID()函数封装了这些操作。然后用id来充当集合进行操作 </span>
+        } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            s.push(s.top());
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> DUP操作
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只是把一个数字push进去。集合本身没有拷贝
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> DUP多次的结果就是，栈中会有多个数字指向一个集合 </span>
+        } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> UNION 以及 INTERSECT 以及 ADD操作首先都需要出栈两个集合</span>
+            Set x1 = Set_cache[s.top()]; <span style="color: #008000;">//</span><span style="color: #008000;"> setcache中的集合是永不消除的 </span>
+<span style="color: #000000;">            s.pop();
+            Set x2 </span>=<span style="color: #000000;"> Set_cache[s.top()];
+            s.pop();
+            Set x;
+            </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">U</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 求并集 </span>
+<span style="color: #000000;">                set_union(ALL(x1), ALL(x2), INS(x));
+            }
+            </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">I</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                set_intersection(ALL(x1), ALL(x2), INS(x));        
+            }
+            </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                x </span>=<span style="color: #000000;"> x2;
+                x.insert(ID(x1)); 
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 所以这个集合也是插入数字 并没有真正把集合插入到集合里去 
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 所以是用 set&lt;int&gt; 就可以 </span>
+<span style="color: #000000;">            }
+            s.push(ID(x));
+        }
+        cout </span>&lt;&lt; Set_cache[s.top()].size() &lt;&lt;<span style="color: #000000;"> endl;
+    }    
+}</span></pre>
+</div>
+<p>改了一下变量名，感觉还是没有很清晰。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;map&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">set</span>&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;stack&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+typedef </span><span style="color: #0000ff;">set</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> MySet;
+map</span>&lt;MySet, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ids; 
+vector</span>&lt;MySet&gt;<span style="color: #000000;"> sets;  
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> getId(MySet mySet) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (ids.count(mySet)) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ids[mySet];
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        sets.push_back(mySet);
+        </span><span style="color: #0000ff;">return</span> ids[mySet] = sets.size() - <span style="color: #800080;">1</span><span style="color: #000000;">; 
+    }
+}
+
+MySet getMySet(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sets[id];
+}
+
+</span><span style="color: #0000ff;">#define</span> ALL(x) x.begin(), x.end()
+<span style="color: #0000ff;">#define</span> INS(x) inserter(x, x.begin())
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> stack;
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    cin </span>&gt;&gt;<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> op;
+        cin </span>&gt;&gt;<span style="color: #000000;"> op;
+        </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">P</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            stack.push(getId(MySet()));
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">D</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            stack.push(stack.top());
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            MySet set1 </span>=<span style="color: #000000;"> getMySet(stack.top()); 
+            stack.pop();
+            MySet set2 </span>=<span style="color: #000000;"> getMySet(stack.top());
+            stack.pop();
+            MySet </span><span style="color: #0000ff;">set</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">U</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                set_union(ALL(set1), ALL(set2), INS(</span><span style="color: #0000ff;">set</span><span style="color: #000000;">));
+            }
+            </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">I</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                set_intersection(ALL(set1), ALL(set2), INS(</span><span style="color: #0000ff;">set</span><span style="color: #000000;">));        
+            }
+            </span><span style="color: #0000ff;">if</span> (op[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">set</span> =<span style="color: #000000;"> set2;
+                </span><span style="color: #0000ff;">set</span><span style="color: #000000;">.insert(getId(set1)); 
+            }
+            stack.push(getId(</span><span style="color: #0000ff;">set</span><span style="color: #000000;">));
+        }
+        cout </span>&lt;&lt; getMySet(stack.top()).size() &lt;&lt;<span style="color: #000000;"> endl;
+    }    
+}</span></pre>
+</div>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://vjudge.net/problem/UVA-12096" target="_blank">https://vjudge.net/problem/UVA-12096</a></p>

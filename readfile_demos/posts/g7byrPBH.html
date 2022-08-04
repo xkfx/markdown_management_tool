@@ -1,0 +1,118 @@
+<p>参考《maven实战》</p>
+<p>1、编写POM</p>
+<p>2、编写主代码</p>
+<p>3、编写测试代码</p>
+<p>4、打包和运行</p>
+<p>具体如下：</p>
+<p>1、编写POM。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170420190230352-384990292.png" alt="" width="208" height="78" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> XML头，指定了该xml文档的版本和编辑方式 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version = "1.0" encoding = "UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> project是所有pom.xml的根元素 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> modelVersion指定当前POM模型的版本 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 最重要的三行，这三个元素定义了一个项目的基本坐标 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> groupId定义了当前项目属于那个组，与你的公司关联 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> artifactId定义了当前项目在组中的唯一ID </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> version指定了当前项目的版本 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.xkfx.mvnnote<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>hello-world<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.0-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+ 
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> name元素不是必须的，但推荐使用，为项目定义一个对于用户更友好的名称 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>Maven Hello World Project<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;上面的xml应该把第一行的注释去掉。</p>
+<p>&nbsp;</p>
+<p>2、编写主代码</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170420191828118-471394284.png" alt="" width="485" height="82" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.mvnnote.helloworld;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 一般来说，项目中Java类的包都应该基于项目的groupId和artifactId</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloWorld {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String sayHello() {
+        </span><span style="color: #0000ff;">return</span> "HelloMaven"<span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        System.out.print(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> HelloWorld().sayHello());
+    }
+}</span></pre>
+</div>
+<p>使用Maven进行编译，在根目录下运行mvn clean compile</p>
+<div class="cnblogs_code">
+<pre>D:\labs\hello-world&gt;<span style="color: #000000;">mvn clean compile
+[INFO] Scanning </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> projects...
+[INFO]
+[INFO] </span>------------------------------------------------------------------------<span style="color: #000000;">
+[INFO] Building <strong><span style="color: #ff00ff;">Maven Hello World Project </span></strong></span><strong><span style="color: #ff00ff;">1.0-</span></strong><span style="color: #000000;"><strong><span style="color: #ff00ff;">SNAPSHOT</span></strong>
+[INFO] </span>------------------------------------------------------------------------<span style="color: #000000;">
+[INFO]
+[INFO] </span><strong><span style="color: #ff00ff;">--- maven-clean-plugin</span></strong>:2.5:clean (<span style="color: #0000ff;">default</span>-clean) @ hello-world ---<span style="color: #000000;">
+[INFO]
+[INFO] </span><strong><span style="color: #ff00ff;">--- maven-resources-plugin</span></strong>:2.6:resources (<span style="color: #0000ff;">default</span>-resources) @ hello-world ---<span style="color: #000000;">
+[WARNING] Using platform encoding (GBK actually) to copy filtered resources, i.e. build is platform dependent</span>!<span style="color: #000000;">
+[INFO] skip non existing resourceDirectory D:\labs\hello</span>-<span style="color: #000000;">world\src\main\resources
+[INFO]
+[INFO] </span><strong><span style="color: #ff00ff;">--- maven-compiler-plugin</span></strong>:3.1:compile (<span style="color: #0000ff;">default</span>-compile) @ hello-world ---<span style="color: #000000;">
+[INFO] Changes detected </span>- recompiling the module!<span style="color: #000000;">
+[WARNING] File encoding has not been set, using platform encoding GBK, i.e. build is platform dependent</span>!<span style="color: #000000;">
+[INFO] Compiling </span>1 source file to D:\labs\hello-<span style="color: #000000;">world\target\classes
+[INFO] </span>------------------------------------------------------------------------<span style="color: #000000;">
+[INFO] BUILD SUCCESS
+[INFO] </span>------------------------------------------------------------------------<span style="color: #000000;">
+[INFO] Total time: </span>1.172<span style="color: #000000;"> s
+[INFO] Finished at: </span>2017-04-20T19:17:05+08:00<span style="color: #000000;">
+[INFO] Final Memory: 14M</span>/<span style="color: #000000;">109M
+[INFO] </span>------------------------------------------------------------------------</pre>
+</div>
+<p>plugin是插件的意思。</p>
+<p>&nbsp;</p>
+<p>3、编写测试代码</p>
+<p>在编写测试代码之前需要先要为项目添加依赖。例如：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version = "1.0" encoding = "UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> project是所有pom.xml的根元素 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0
+            http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> modelVersion指定当前POM模型的版本 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 最重要的三行，这三个元素定义了一个项目的基本坐标 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> groupId定义了当前项目属于那个组，与你的公司关联 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> artifactId定义了当前项目在组中的唯一ID </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> version指定了当前项目的版本 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>com.xkfx.mvnnote<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>hello-world<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.0-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> name元素不是必须的，但推荐使用，为项目定义一个对于用户更友好的名称 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>Maven Hello World Project<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">name</span><span style="color: #0000ff;">&gt;</span>
+<strong><span style="color: #ff00ff;">    &lt;dependencies&gt;
+        &lt;!--添加junit依赖--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.11&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;!-- 添加Hibernate依赖 --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+            &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+            &lt;version&gt;3.6.10.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;</span></strong>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、打包和运行</p>

@@ -1,0 +1,11 @@
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">for</span>( ; *s == *t; s++, t++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">if</span>(*s == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> *s - *<span style="color: #000000;">t;
+}</span></pre>
+</div>
+<p>strcmp 根据s按照字典顺序小于、等于或大于t的结果分别返回 负整数、0或正整数</p>
+<p>至于abcdefg与abcdef谁比较大要看'\0'的acsii码</p>

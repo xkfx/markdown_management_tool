@@ -1,0 +1,92 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">方法一：&nbsp;去掉Content Security Policy</a></li>
+<li><a href="#anchor1">方法二：不采用内联</a></li>
+<li><a href="#anchor2">CSP为什么禁止执行inline script？</a></li>
+<li><a href="#anchor3">方法三：修改CSP，列出允许执行的脚本代码的Hash值</a></li>
+</ul>
+</div>
+<p>不只是Electron页面，CSP（Content Security Policy）对于普通浏览器一样生效。</p>
+<h2><a name="anchor0"></a>方法一：&nbsp;去掉Content Security Policy</h2>
+<p>Refused to execute inline script because it violates the following Content Security Policy directive: "script-src 'self'". Either the 'unsafe-inline' keyword, a hash ('sha256-HiMSsnVwNlOS+BOeJa0RC003iWmHPCFbSrspL9cPFck='), or a nonce ('nonce-...') is required to enable inline execution.</p>
+<p>删除</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<strong>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Security-Policy"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="default-src 'self'; script-src 'self'"</span><span style="color: #0000ff;">&gt;</span>
+</strong>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-Content-Security-Policy"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="default-src 'self'; script-src 'self'"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+（省略号）
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>中的</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Security-Policy"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="default-src 'self'; script-src 'self'"</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>即可解决。但是会弱化应用的安全性：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security
+    Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+    this app to unnecessary security risks.
+
+For more information and help, consult
+<a href="https://electronjs.org/docs/tutorial/security" target="_blank">https://electronjs.org/docs/tutorial/security</a>.
+This warning will not show up
+once the app is packaged.</span></pre>
+</div>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202111/1042431-20211114215128858-588286866.png" alt="" loading="lazy" /></p>
+<h2><a name="anchor1"></a>方法二：不采用内联</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Security-Policy"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="default-src 'self'; script-src 'self'"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-Content-Security-Policy"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="default-src 'self'; script-src 'self'"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<strong>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="render.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></strong>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h2><a name="anchor2"></a>CSP为什么禁止执行inline script？</h2>
+<p>参考：<br /><a href="https://stackoverflow.com/questions/46256983/script-causes-refused-to-execute-inline-script-either-the-unsafe-inline-keyw" target="_blank">https://stackoverflow.com/questions/46256983/script-causes-refused-to-execute-inline-script-either-the-unsafe-inline-keyw</a></p>
+<p><a href="https://developers.google.com/web/fundamentals/security/csp/#if_you_absolutely_must_use_it" target="_blank">https://developers.google.com/web/fundamentals/security/csp/#if_you_absolutely_must_use_it</a></p>
+<p class="Post-Title"><a href="https://zhuanlan.zhihu.com/p/26177815" target="_blank">浅谈XSS攻击的那些事（附常用绕过姿势）https://zhuanlan.zhihu.com/p/26177815</a></p>
+<blockquote>
+<p>内联代码被视为是有害的。</p>
+<p>不过，基于来源的白名单无法解决 XSS 攻击带来的最大威胁: 内联脚本注入。如果攻击者可以注入一个 script 标记，在标记中直接包含一些恶意的负载(&lt;script&gt;sendMyDataToEvilDotCom();&lt;/script&gt;)，则浏览器将无法将它与合法内联脚本标记区分开来。CSP 可通过完全禁止内联脚本来解决此问题: 这是唯一确定有效的方式。（&hellip;&hellip;此处省略N段示例代码&hellip;&hellip;）除了能够更好地配合 CSP 外，重写的代码还具有许多优势；无论您是否使用 CSP，这都是最佳做法。 内联 JavaScript 混合结构和行为的方式正是您不应采用的方式。使用外部资源，浏览器更容易缓存，开发者也更容易理解，并有助于编译和压缩。如果您将代码移入外部资源，那么您可以编写更好的代码。 以相同方式处理内联样式: style 属性和 style 标记都应合并到外部样式表，以防范可通过 CSS 实现的各种极其狡猾的 数据渗漏方法。</p>
+
+
+
+
+</blockquote>
+<p>例如，你的网站有一个实时显示用户留言的功能，如果有个用户留言为</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">一段恶意的代码，将可能被运行在其它客户端上，浏览器无法分辨</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>这样子，&ldquo;浏览器将无法将它与合法内联脚本标记区分开来&rdquo;。</p>
+<h2><a name="anchor3"></a>方法三：修改CSP，列出允许执行的脚本代码的Hash值</h2>
+<p>参考：<a href="http://www.ruanyifeng.com/blog/2016/09/csp.html" target="_blank">http://www.ruanyifeng.com/blog/2016/09/csp.html</a></p>
+<p>nonce值的例子就不试了，因为貌似需要服务端的配合。。。。。。。。。。。。。</p>
+<p>修改CSP，添加对应脚本的Hash值：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202111/1042431-20211114230408618-1919067651.png" alt="" width="603" height="84" loading="lazy" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">script-src 'self' <strong>'sha256-7+h+PlvW2r7C/54Jfw3CKKxxm09qDfh5XfqJDZKp1t0='</strong></span><span style="color: #0000ff;"><br /></span></pre>
+</div>
+<p>Hash值对应的代码如下：</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+      console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">dasdas</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>这样这段inline script就可以顺利执行了。</p>

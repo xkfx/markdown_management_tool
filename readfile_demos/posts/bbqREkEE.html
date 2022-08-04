@@ -1,0 +1,59 @@
+<h2>例子</h2>
+<div class="cnblogs_code">
+<pre>#include&lt;cstdio&gt;<span style="color: #000000;">
+#include</span>&lt;stack&gt;
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    stack</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> my_stack;
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">my_stack.empty(): %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, my_stack.empty());
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> printf("my_stack.top(): %d", my_stack.top()); top前要先判断，不然程序抛锚    </span>
+    my_stack.push(<span style="color: #800080;">1</span><span style="color: #000000;">);
+    my_stack.push(</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+    my_stack.push(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">完成 push 。push 的值依次为 1 2 3 \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);    
+    
+    </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">my_stack.empty()) {         
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">my_stack.top(): %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, my_stack.top());
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">my_stack.size(): %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, my_stack.size());
+        my_stack.pop(); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 无 返回值 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span>
+        printf(<span style="color: #800000;">"</span><span style="color: #800000;">进行 一次 my_stack.pop() \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">my_stack.size(): %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, my_stack.size());
+    my_stack.pop(); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 栈为空再 继续 pop 也没事。  但是 top 之前一定要判空。 </span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">my_stack.pop() * 3 程序照常运行 \n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+Output
+
+my_stack.empty(): 1
+完成 push 。push 的值依次为 1 2 3
+my_stack.top(): 3
+my_stack.size(): 3
+进行 一次 my_stack.pop()
+my_stack.top(): 2
+my_stack.size(): 2
+进行 一次 my_stack.pop()
+my_stack.top(): 1
+my_stack.size(): 1
+进行 一次 my_stack.pop()
+my_stack.size(): 0
+my_stack.pop() * 3 程序照常运行
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="http://www.baidu.com/link?url=r74HfRKscr_RY_vt3PZk7dnHyqcoBFB5cKY0VQehM8wYkTETYHzZQUZ1vK4t31YbL1JTMSlEYMso6QbKql7y8K" target="_blank" data-click="{
+			'F':'778717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1585832108',
+						'y':'ECB9A1BF'
+												}">C++&nbsp;STL&nbsp;stack&nbsp;用法&nbsp;- 长岛冰茶、 - 博客园</a></p>

@@ -1,0 +1,175 @@
+<p>以前写过<a href="http://www.cnblogs.com/xkxf/p/7112978.html#a1" target="_blank">类似的东西</a>，用来自动生成数据。</p>
+<p>你可以将&nbsp;Stored Procedure 理解为可以重复使用的批处理文件。</p>
+<p>Stored Procedure 非常有用，我们应该尽可能地去使用它。</p>
+<p>那么，应用 Stored Procedure 有什么好处呢？</p>
+<ul>
+<li>封装过程，简化复杂的操作</li>
+<li>代码重用、共用，所有人都用同一个存储过程，减少出错的可能</li>
+<li>简化变更管理，如果业务逻辑发生改变，修改存储过程就可以了，上层软件甚至不需要知道发生了什么改变。</li>
+<li>提高性能，存储过程比单条执行要快</li>
+<li>MySQL 语言让存储过程更加强大和灵活</li>
+</ul>
+<p>查看已存在的存储过程（这个结果是可以过滤的！）：</p>
+<div class="cnblogs_code">
+<pre>SHOW <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> STATUS;
+SHOW </span><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span> procedure_name;</pre>
+</div>
+<p>调用一个已经存在的存储过程非常简单：</p>
+<div class="cnblogs_code">
+<pre>CALL productpricing(<span style="color: #008000;">@pricelow</span><span style="color: #000000;">,
+                    </span><span style="color: #008000;">@pricehigh</span><span style="color: #000000;">,
+                    </span><span style="color: #008000;">@priceaverage</span>);</pre>
+</div>
+<p>但是写起来就没那么简单了，首先看一个简单的例子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> productpricing()
+</span><span style="color: #0000ff;">BEGIN</span>
+   <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Avg</span>(prod_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> priceaverage
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+</span><span style="color: #0000ff;">END</span>;</pre>
+</div>
+<p>这个示例创建了一个叫 productpricing() 的存储过程，丢到命令行跑一下：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> productpricing()
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #808080;">-&gt;</span>    <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Avg</span>(prod_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> priceaverage
+    </span><span style="color: #808080;">-&gt;</span>    <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+ERROR </span><span style="color: #800000; font-weight: bold;">1064</span> (<span style="color: #800000; font-weight: bold;">42000</span>): You have an error <span style="color: #808080;">in</span> your SQL syntax; <span style="color: #0000ff;">check</span> the manual that corresponds <span style="color: #0000ff;">to</span> your MySQL server version <span style="color: #0000ff;">for</span> the <span style="color: #808080;">right</span> syntax <span style="color: #0000ff;">to</span> <span style="color: #0000ff;">use</span> near <span style="color: #ff0000;">''</span> at line <span style="color: #800000; font-weight: bold;">4</span></pre>
+</div>
+<p>由于分隔符原因，创建失败了， 解决方案是临时地改变分隔符：</p>
+<div class="cnblogs_code">
+<pre>DELIMITER <span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> productpricing()
+</span><span style="color: #0000ff;">BEGIN</span>
+   <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Avg</span>(prod_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> priceaverage
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;">
+
+DELIMITER ;</span></pre>
+</div>
+<p>再次丢进去跑，然后调用新创建的存储过程：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span><span style="color: #000000;"> CALL productpricing();
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------+</span>
+<span style="color: #808080;">|</span> priceaverage <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------+</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">16.133571</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+Query OK, </span><span style="color: #800000; font-weight: bold;">0</span> rows affected (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;删除这个存储过程：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span> productpricing;</pre>
+</div>
+<p>创建并调用一个升级版本的存储过程：</p>
+<div class="cnblogs_code">
+<pre>DELIMITER <span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> productpricing(
+   OUT pl </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+   OUT ph </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">),
+   OUT pa </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">)
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+   <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Min</span><span style="color: #000000;">(prod_price)
+   </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> pl
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+   </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Max</span><span style="color: #000000;">(prod_price)
+   </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> ph
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+   </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Avg</span><span style="color: #000000;">(prod_price)
+   </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> pa
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;">
+
+DELIMITER ;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> CALL productpricing(<span style="color: #008000;">@pricelow</span><span style="color: #000000;">,
+    </span><span style="color: #808080;">-&gt;</span>                     <span style="color: #008000;">@pricehigh</span><span style="color: #000000;">,
+    </span><span style="color: #808080;">-&gt;</span>                     <span style="color: #008000;">@priceaverage</span><span style="color: #000000;">);
+Query OK, </span><span style="color: #800000; font-weight: bold;">1</span> row affected, <span style="color: #800000; font-weight: bold;">1</span> warning (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #008000;">@pricelow</span>, <span style="color: #008000;">@pricehigh</span>, <span style="color: #008000;">@priceaverage</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+---------------+</span>
+<span style="color: #808080;">|</span> <span style="color: #008000;">@pricelow</span> <span style="color: #808080;">|</span> <span style="color: #008000;">@pricehigh</span> <span style="color: #808080;">|</span> <span style="color: #008000;">@priceaverage</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+---------------+</span>
+<span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">2.50</span> <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">55.00</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">16.13</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+---------------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>就像上面看到的，MySQL 的变量名必须以 @ 开头。MySQL 所允许的变量类型和表中允许的字段类型是一致的，对于存储过程参数而言，可以再分成三大类：IN参数 OUT参数 以及 INOUT参数，再次看一个简单的例子，创建如下存储过程：</p>
+<div class="cnblogs_code">
+<pre>DELIMITER <span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> ordertotal(
+   </span><span style="color: #808080;">IN</span> onumber <span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+   OUT ototal </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">)
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+   <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Sum</span>(item_price<span style="color: #808080;">*</span><span style="color: #000000;">quantity)
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems
+   </span><span style="color: #0000ff;">WHERE</span> order_num <span style="color: #808080;">=</span><span style="color: #000000;"> onumber
+   </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> ototal;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+
+DELIMITER ;</span></pre>
+</div>
+<p>查看 id 为 20006 的订单总价：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> CALL ordertotal(<span style="color: #800000; font-weight: bold;">20006</span>, <span style="color: #008000;">@total</span><span style="color: #000000;">);
+Query OK, </span><span style="color: #800000; font-weight: bold;">1</span> row affected (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #008000;">@total</span>
+    <span style="color: #808080;">-&gt;</span><span style="color: #000000;"> ;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+</span>
+<span style="color: #808080;">|</span> <span style="color: #008000;">@total</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+</span>
+<span style="color: #808080;">|</span>  <span style="color: #800000; font-weight: bold;">55.00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>我一直觉得存储过程这个翻译有歧义，可能改成&ldquo;被存储的过程&rdquo;会比较好懂。。。</p>
+<p>下面我们来创建一个更智能的存储过程，这才是存储过程真正的用途：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> Name: ordertotal</span><span style="color: #008080;">
+--</span><span style="color: #008080;"> Parameters: onumber = order number</span><span style="color: #008080;">
+--</span><span style="color: #008080;">             taxable = 0 if not taxable, 1 if taxable</span><span style="color: #008080;">
+--</span><span style="color: #008080;">             ototal = order total variable</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> ordertotal(
+   </span><span style="color: #808080;">IN</span> onumber <span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+   </span><span style="color: #808080;">IN</span><span style="color: #000000;"> taxable BOOLEAN,
+   OUT ototal </span><span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">)
+) COMMENT </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">Obtain order total, optionally adding tax</span><span style="color: #ff0000;">'</span>
+<span style="color: #0000ff;">BEGIN</span>
+
+   <span style="color: #008080;">--</span><span style="color: #008080;"> Declare variable for total</span>
+   <span style="color: #0000ff;">DECLARE</span> total <span style="color: #0000ff;">DECIMAL</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">);
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Declare tax percentage</span>
+   <span style="color: #0000ff;">DECLARE</span> taxrate <span style="color: #0000ff;">INT</span> <span style="color: #0000ff;">DEFAULT</span> <span style="color: #800000; font-weight: bold;">6</span><span style="color: #000000;">;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Get the order total</span>
+   <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">Sum</span>(item_price<span style="color: #808080;">*</span><span style="color: #000000;">quantity)
+   </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems
+   </span><span style="color: #0000ff;">WHERE</span> order_num <span style="color: #808080;">=</span><span style="color: #000000;"> onumber
+   </span><span style="color: #0000ff;">INTO</span><span style="color: #000000;"> total;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> Is this taxable?</span>
+   <span style="color: #0000ff;">IF</span> taxable <span style="color: #0000ff;">THEN</span>
+      <span style="color: #008080;">--</span><span style="color: #008080;"> Yes, so add taxrate to the total</span>
+      <span style="color: #0000ff;">SELECT</span> total<span style="color: #808080;">+</span>(total<span style="color: #808080;">/</span><span style="color: #800000; font-weight: bold;">100</span><span style="color: #808080;">*</span>taxrate) <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> total;
+   </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">IF</span><span style="color: #000000;">;
+
+   </span><span style="color: #008080;">--</span><span style="color: #008080;"> And finally, save to out variable</span>
+   <span style="color: #0000ff;">SELECT</span> total <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> ototal;
+
+</span><span style="color: #0000ff;">END</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>这个活由上层程序做比较好，还是数据库来做好？ - - - - 待更新</p>
+<p>&nbsp;</p>
+<p>更多详细内容参看<a href="https://dev.mysql.com/doc/search/?d=201&amp;p=1&amp;q=stored+procedure" target="_blank">官方文档&nbsp;https://dev.mysql.com/doc/search/?d=201&amp;p=1&amp;q=stored+procedure</a></p>

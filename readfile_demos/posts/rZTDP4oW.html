@@ -1,0 +1,50 @@
+<ol>
+<li>并发 的 应用。 -&nbsp;&nbsp; 有啥用</li>
+<li>写出 正确的 并发程序&nbsp; --&nbsp; 如何 用&nbsp;</li>
+<li>分析 &amp; 优化 已有的 并发 程序&nbsp; --&nbsp; 熟练 应用</li>
+</ol>
+<p>&nbsp;</p>
+<p>并发问题，</p>
+<ol>
+<li>要对共享的易变变量敏感，一般是存在race condition：<span class="fontstyle0">read-modify-write&nbsp;&nbsp;</span><span class="fontstyle0">check-then-act</span></li>
+<li><span class="fontstyle0">内存可见性问题</span></li>
+</ol>
+<p>-解决之道</p>
+<ol>
+<li>无状态的对象是绝对线程安全的</li>
+<li>通过并发包</li>
+<li>并发包只能解决局部问题，一般还是要依赖锁来解决</li>
+<li>内存可见性用 syn和volatile 解决</li>
+</ol>
+<p>- 性能调优</p>
+<ol>
+<li>合理用锁：申请锁释放锁都是有性能开支的，不要滥用</li>
+<li>合理规划锁的区域：长时间的计算问题别放锁里！</li>
+</ol>
+<p>- 深入技术</p>
+<ol>
+<li>syn 的用法：可重入，固有锁，对象锁，静态锁等</li>
+<li>volatile 什么时候用合适？</li>
+</ol>
+<p>&nbsp;</p>
+<p>希望尽可能 从 简单的 一小点 推出 各种东西 而不是 罗列。</p>
+<p>&nbsp;</p>
+<p>线程的基本概念</p>
+<p>&nbsp;</p>
+<p>如何启动线程</p>
+<p>&nbsp;</p>
+<p>基本的线程同步</p>
+<p>1 synchronized(obj) {</p>
+<p>　　xxx&nbsp;</p>
+<p>} 啥意思？。</p>
+<p>&nbsp;</p>
+<p>2 内存</p>
+<p>3 互斥锁</p>
+<p>4&nbsp;synchronized(this)&nbsp; 重点 锁定 的 不是 代码块 而是 当前对象</p>
+<p>5&nbsp; 4 的简化写法</p>
+<p>6&nbsp; 静态的可以&nbsp;synchronized(this ) 吗？ 如果 不能 该怎么 同步 - 锁定当前类的 class 对象</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201805/1042431-20180526203954362-403023999.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>7 分析方法 ： 内存空间 栈 空间、 堆 空间 ，&nbsp; new 一个 runnable　对象，　用运行多个 thread 对象，五个线程 共用 一个对象的 。&nbsp;</p>
+<p>8&nbsp; 实验 分析 法 ！ 线程 重入 . 。 解决方案 。&nbsp; --&gt; 解释&nbsp; sy 的意义 原子操作 ！ 不可分。</p>
+<p>&nbsp;</p>

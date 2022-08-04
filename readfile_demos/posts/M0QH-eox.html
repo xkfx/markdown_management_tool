@@ -1,0 +1,102 @@
+<p><a href="https://v3.router.vuejs.org/zh/guide/" target="_blank">https://v3.router.vuejs.org/zh/guide/</a></p>
+<h2>一个简单例子</h2>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220218212123268-1198669223.gif" alt="" width="373" height="175" loading="lazy" /></p>
+<p>先用脚手架创建一个原始项目，然后cd到项目根目录下</p>
+<p>①npm install vue-router@3（对应Vue2）</p>
+<p>②准备几个简单的组件备用（这种组件叫做路由组件，可以进一步和一般组件区分一下）</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220218211400687-31911764.png" alt="" width="319" height="212" loading="lazy" /></p>
+<p>Page1.vue：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>这是页面1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>路径参数测试<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>该组件是否会重复创建?<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>name:{{$route.params.name}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>  
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+  name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Page1</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+  beforeCreate() {
+    console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">beforeCreate被调用</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+  },
+  created() {
+    console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">created被调用</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+  },
+  mounted() {
+    console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">mounted被调用</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+    console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$route)
+  },
+}
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>③写配置</p>
+<p>./router/index.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import VueRouter from </span>'vue-router'<span style="color: #000000;">
+import Page1 from </span>'../components/Page1.vue'<span style="color: #000000;">
+import Page2 from </span>'../components/Page2.vue'<span style="color: #000000;">
+import Page3 from </span>'../components/Page3.vue'<span style="color: #000000;">
+
+Vue.use(VueRouter)
+
+export </span><span style="color: #0000ff;">default</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> VueRouter({
+  routes: [
+    {
+      path: </span>'/p1'<span style="color: #000000;">,
+      component: Page1,
+    },
+    {
+      path: </span>'/p2'<span style="color: #000000;">,
+      component: Page2,
+    },
+    {
+      path: </span>'/p3'<span style="color: #000000;">,
+      component: Page3,
+    },
+  ],
+})
+  </span></pre>
+</div>
+<p>④启用配置</p>
+<p>main.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<span style="color: #000000;">
+import router from </span>'./router'<span style="color: #000000;">
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span>
+
+<span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  render: h </span>=&gt;<span style="color: #000000;"> h(App),
+  router,
+}).$mount(</span>'#app')</pre>
+</div>
+<p>⑤应用到页面</p>
+<div class="cnblogs_code">
+<pre>&lt;template&gt;
+  &lt;div&gt;
+    &lt;router-link to="/p1"&gt;Go to P1&lt;/router-link&gt;
+    &lt;router-link to="/p2"&gt;Go to P2&lt;/router-link&gt;
+    &lt;router-link to="/p3"&gt;Go to P3&lt;/router-link&gt;
+    &lt;router-view&gt;&lt;/router-view&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span>'App'<span style="color: #000000;">,
+}
+</span>&lt;/script&gt;
+
+&lt;style&gt;<span style="color: #000000;">
+  a {
+    margin: 10px;
+    background</span>-<span style="color: #000000;">color: aquamarine;
+  }
+</span>&lt;/style&gt;</pre>
+</div>

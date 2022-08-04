@@ -1,0 +1,859 @@
+<p>算法盒子初代（为了提高学习算法的热情。。。）</p>
+<p>效果图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181121164123060-1970201220.png" alt="" width="362" height="217" /></p>
+<p>所有代码放在单个html中：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('eed4392f-f868-456b-b27b-f2e629f3b687')"><img id="code_img_closed_eed4392f-f868-456b-b27b-f2e629f3b687" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_eed4392f-f868-456b-b27b-f2e629f3b687" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('eed4392f-f868-456b-b27b-f2e629f3b687',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_eed4392f-f868-456b-b27b-f2e629f3b687" class="cnblogs_code_hide">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        &lt;textarea id="data-area" rows="25" cols="80" placeholder="paste your data here..."&gt;&lt;/textarea&gt;
+
+        &lt;p&gt;<span style="color: #000000;">Algorithm:
+            </span>&lt;select id="algorithms"&gt;
+                &lt;option value="Temp" style="color: #FF0000;"&gt;*临时测试&lt;/option&gt;
+                &lt;option value="EqualElement"&gt;相等元素&lt;/option&gt;
+                &lt;option value="Permutations"&gt;排列问题&lt;/option&gt;
+                &lt;option value="BinarySearch"&gt;二分查找&lt;/option&gt;    
+                &lt;option value="Quicksort"&gt;快速排序&lt;/option&gt;
+                &lt;option value="MergeSort"&gt;归并排序&lt;/option&gt;
+                &lt;option value="InsertSort"&gt;插入排序&lt;/option&gt;
+                &lt;option value="BinarySearchTree"&gt;二叉搜索树&lt;/option&gt;
+                &lt;option value="IntegerSum"&gt;整数和&lt;/option&gt;
+                &lt;option value="MaxSub"&gt;最大子段和&lt;/option&gt;
+                &lt;option value="theKnapsackProblem"&gt;0-1背包问题&lt;/option&gt;
+                &lt;option value="LCS"&gt;最长公共子序列&lt;/option&gt;
+                &lt;option value="HeapSort" selected&gt;堆排序&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;button id="run"&gt;run code&lt;/button&gt;
+        &lt;/p&gt;
+
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            let btn </span>= document.querySelector("#run"<span style="color: #000000;">);
+            btn.addEventListener(</span>"click"<span style="color: #000000;">, handleClick);
+
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> handleClick() {
+                let dataArea </span>= document.querySelector('#data-area'<span style="color: #000000;">);
+                let selector </span>= document.querySelector("#algorithms"<span style="color: #000000;">);
+                let data </span>=<span style="color: #000000;"> dataArea.value;
+                let algorithm </span>=<span style="color: #000000;"> algorithms[selector.value];
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> console.time(selector.value);</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> data = CommonUtil.handleData(data);</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> for (let i = 0; i != 100; ++i) {</span>
+<span style="color: #000000;">                algorithm.run(data);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">}</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> console.timeEnd(selector.value);</span>
+<span style="color: #000000;">            }
+        </span>&lt;/script&gt;
+
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class CommonUtil {
+                static handleData(data) {
+                    let result </span>=<span style="color: #000000;"> [];
+                    let digit </span>= /-?\d+\b/<span style="color: #000000;">g;
+                    let match;
+                    </span><span style="color: #0000ff;">while</span>(match =<span style="color: #000000;"> digit.exec(data)) {
+                        result.push(Number(match[</span>0<span style="color: #000000;">]));
+                    }
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }    
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 浅拷贝，对象的属性不能是对象</span>
+<span style="color: #000000;">                static lightCopy(obj) {
+                    let result </span>=<span style="color: #000000;"> {}
+                    Object.assign(result, obj); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 复制对象所有的属性</span>
+                    <span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+                
+                static deepCopy(obj) {
+                    let result </span>=<span style="color: #000000;"> JSON.parse(JSON.stringify(obj));
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+                
+                static zeros(x, y) {
+                    let result </span>=<span style="color: #000000;"> [];
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != x; ++<span style="color: #000000;">i) {
+                        result[i] </span>=<span style="color: #000000;"> [];
+                        </span><span style="color: #0000ff;">for</span> (let j = 0; j != y; ++<span style="color: #000000;">j) {
+                            result[i][j] </span>= 0<span style="color: #000000;">;
+                        }
+                    }
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class Temp {
+                static testMaxSub(data) {
+                    let arr </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    
+                    console.time(</span>"DP"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != 100; ++<span style="color: #000000;">i) {
+                        MaxSub.solve(arr, </span>0<span style="color: #000000;">, arr.length);
+                    }                
+                    console.timeEnd(</span>"DP"<span style="color: #000000;">);
+                    
+                    console.time(</span>"brute-force"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != 100; ++<span style="color: #000000;">i) {
+                        MaxSub.solve2(arr, </span>0<span style="color: #000000;">, arr.length);
+                    }    
+                    console.timeEnd(</span>"brute-force"<span style="color: #000000;">);
+                    
+                    console.time(</span>"recursive"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != 100; ++<span style="color: #000000;">i) {
+                        MaxSub.solve3(arr, </span>0<span style="color: #000000;">, arr.length);
+                    }    
+                    console.timeEnd(</span>"recursive"<span style="color: #000000;">);            
+                }
+                
+                static run(data) {
+                    Temp.testMaxSub(data);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class EqualElement {                
+                static hasEqualElement(digitSet) {
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != digitSet.length; ++<span style="color: #000000;">i) {
+                        </span><span style="color: #0000ff;">for</span> (let j = i + 1; j != digitSet.length; ++<span style="color: #000000;">j) {
+                            </span><span style="color: #0000ff;">if</span> (digitSet[i] == digitSet[j]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                        }
+                    }
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                }
+                
+                static run(data) {
+                    data </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    let numOFbatchs </span>=<span style="color: #000000;"> data.shift();
+                    </span><span style="color: #0000ff;">for</span> (let batch = 0; batch != numOFbatchs; ++<span style="color: #000000;">batch) {
+                        let numOFdigits </span>=<span style="color: #000000;"> data.shift();
+                        let digitSet </span>=<span style="color: #000000;"> [];
+                        </span><span style="color: #0000ff;">while</span> (numOFdigits &gt; 0<span style="color: #000000;">) {
+                            digitSet.push(data.shift());
+                            numOFdigits</span>--<span style="color: #000000;">;
+                        }
+
+                        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (EqualElement.hasEqualElement(digitSet)) {
+                            console.log(</span>"yes"<span style="color: #000000;">);
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            console.log(</span>"no"<span style="color: #000000;">);
+                        }
+                    }
+                }
+                
+            }
+        </span>&lt;/script&gt;
+
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class Permutations {            
+                static getSequences(arr) {
+                    </span><span style="color: #0000ff;">if</span> (arr.length == 2<span style="color: #000000;">) {
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> [arr, arr.slice().reverse()];
+                    }
+                    
+                    let result </span>=<span style="color: #000000;"> [];
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != arr.length; ++<span style="color: #000000;">i) {
+                        let subArr </span>= arr.slice(0, i).concat(arr.slice(i + 1<span style="color: #000000;">, arr.length));
+                        let subSequences </span>=<span style="color: #000000;"> Permutations.getSequences(subArr);
+                        let wrapped </span>= subSequences.map(subSeq =&gt;<span style="color: #000000;"> [arr[i]].concat(subSeq));
+                        result </span>=<span style="color: #000000;"> result.concat(wrapped);
+                    }
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+                
+                static run(data) {
+                    data </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    console.log(data);
+                    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (EqualElement.hasEqualElement(data)) {
+                        console.log(</span>"Invalid data."<span style="color: #000000;">);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        let result </span>=<span style="color: #000000;"> Permutations.getSequences(data);
+                        console.log(result);                        
+                    }
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class BinarySearch {
+                static find(x, arr, start, end) {
+                    </span><span style="color: #0000ff;">if</span> (start &gt; end) <span style="color: #0000ff;">return</span> { success: <span style="color: #0000ff;">false</span><span style="color: #000000;">};
+                    let mid </span>= Math.floor((start + end) / 2<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">if</span> (arr[mid] ==<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> { success: <span style="color: #0000ff;">true</span><span style="color: #000000;">, index: mid};
+                    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (arr[mid] &lt;<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> BinarySearch.find(x, arr, mid + 1<span style="color: #000000;">, end);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">return</span> BinarySearch.find(x, arr, start, mid - 1<span style="color: #000000;">);
+                    }
+                }
+                
+                static run(data) {
+                    data </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    </span><span style="color: #0000ff;">if</span> (data.length == 0<span style="color: #000000;">) {
+                        const DEFAULT_SIZE </span>= 10<span style="color: #000000;">;
+                        const MAX </span>= 100<span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">for</span> (let i = 0; i != DEFAULT_SIZE; ++<span style="color: #000000;">i) {
+                            data.push(Math.floor(Math.random() </span>*<span style="color: #000000;"> MAX));
+                        }
+                    }
+                    Quicksort.sort(data, </span>0, data.length - 1<span style="color: #000000;">);
+                    console.log(data);
+                    
+                    let x </span>= Number(prompt("请输入要查找的数据："<span style="color: #000000;">));
+                    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (Number.isNaN(x)) {
+                        console.log(</span>"非法输入！"<span style="color: #000000;">);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        let result </span>= BinarySearch.find(x, data, 0, data.length - 1<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (result.success) {
+                            console.log(`A[${result.index}]: ${x}`);
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            console.log(`元素 ${x} 不在数组中`);
+                        }
+                    }
+                    
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class Quicksort {
+                static sort(arr, start, end) {
+                    </span><span style="color: #0000ff;">if</span> (start &gt;= end) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                    
+                    let left </span>=<span style="color: #000000;"> start;
+                    let right </span>=<span style="color: #000000;"> end;                
+                    let x </span>=<span style="color: #000000;"> arr[left];
+                    
+                    </span><span style="color: #0000ff;">while</span> (left &lt;<span style="color: #000000;"> right) {
+                        </span><span style="color: #0000ff;">while</span> (left &lt; right &amp;&amp; arr[right] &gt; x) right--<span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">if</span> (left !=<span style="color: #000000;"> right) {
+                            arr[left] </span>=<span style="color: #000000;"> arr[right];
+                            left</span>++<span style="color: #000000;">;    
+                        }
+                        
+                        </span><span style="color: #0000ff;">while</span> (left &lt; right &amp;&amp; arr[left] &lt; x) left++<span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">if</span> (left !=<span style="color: #000000;"> right) {
+                            arr[right] </span>=<span style="color: #000000;"> arr[left];
+                            right</span>--<span style="color: #000000;">;    
+                        }
+                    }
+                    arr[left] </span>=<span style="color: #000000;"> x;
+                    Quicksort.sort(arr, start, left </span>- 1<span style="color: #000000;">);
+                    Quicksort.sort(arr, left </span>+ 1<span style="color: #000000;">, end);
+                }
+                
+                static run(data) {
+                    data </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    Quicksort.sort(data, </span>0, data.length - 1<span style="color: #000000;">);
+                    console.log(data);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class MergeSort {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> merge two sorted sequences: arr[start:mid] and arr[mid:end]</span>
+<span style="color: #000000;">                static merge(arr, start, mid, end) {
+                    let leftArr </span>= arr.slice(start, mid); <span style="color: #008000;">//</span><span style="color: #008000;"> arr[mid] is excluded</span>
+                    let rightArr = arr.slice(mid, end); <span style="color: #008000;">//</span><span style="color: #008000;"> arr[end] is excluded</span>
+                    
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> put on the buttom of each pile a sentinel </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> card, which contains a special value that</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> we use to simplify out codes</span>
+                    let sentinel =<span style="color: #000000;"> Infinity;
+                    leftArr.push(sentinel);
+                    rightArr.push(sentinel);
+                    
+                    let i </span>= 0, j = 0; <span style="color: #008000;">//</span><span style="color: #008000;"> index of leftArr and rightArr</span>
+                    <span style="color: #0000ff;">for</span> (let k = start; k &lt; end; ++<span style="color: #000000;">k) {
+                        arr[k] </span>= leftArr[i] &lt; rightArr[j] ? leftArr[i++] : rightArr[j++<span style="color: #000000;">];
+                    }
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> sort arr[start:end], arr[end] is excluded</span>
+<span style="color: #000000;">                static sort(arr, start, end) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> calling sort(arr, 0, 1) doesn't make </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> sense for there's only one element,</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> so just stop dividing/recursive and merge directly.</span>
+                    <span style="color: #0000ff;">if</span> (start + 1 &lt;<span style="color: #000000;"> end) { 
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> divide the problem into two subproblems</span>
+                        let mid = Math.floor((start + end) / 2<span style="color: #000000;">); 
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> recursively solve subproblems</span>
+<span style="color: #000000;">                        MergeSort.sort(arr, start, mid);
+                        MergeSort.sort(arr, mid, end);
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> combine the solutions to the subproblems into</span>
+                        <span style="color: #008000;">//</span><span style="color: #008000;"> the solution for the original problem.</span>
+<span style="color: #000000;">                        MergeSort.merge(arr, start, mid, end);
+                    }
+                }
+                
+                
+                static run(data) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> convert a string to a numeric array</span>
+                    data =<span style="color: #000000;"> CommonUtil.handleData(data); 
+                    
+                    MergeSort.sort(data, </span>0<span style="color: #000000;">, data.length);
+                    console.log(data);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class InsertSort {
+                static sort(arr, start, end) {
+                    </span><span style="color: #0000ff;">for</span> (let i = start + 1; i != end; ++<span style="color: #000000;">i) {
+                        let insertDate </span>=<span style="color: #000000;"> arr[i];
+                        let k </span>= i - 1<span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">while</span> (k &gt;= 0 &amp;&amp; arr[k] &gt;<span style="color: #000000;"> insertDate) {
+                            arr[k </span>+ 1] =<span style="color: #000000;"> arr[k];
+                            k</span>--<span style="color: #000000;">;
+                        }
+                        arr[k </span>+ 1] =<span style="color: #000000;"> insertDate;
+                    }
+                }
+                
+                static run(data) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> convert a string to a numeric array</span>
+                    data =<span style="color: #000000;"> CommonUtil.handleData(data); 
+                    
+                    InsertSort.sort(data, </span>0<span style="color: #000000;">, data.length);
+                    console.log(data);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class Node {
+                constructor(data) {
+                    </span><span style="color: #0000ff;">this</span>.data =<span style="color: #000000;"> data;
+                    </span><span style="color: #0000ff;">this</span>.left = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">this</span>.right = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+                }
+            }
+            
+            class BinarySearchTree {
+                constructor(firstData) {
+                    </span><span style="color: #0000ff;">this</span>.root = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(firstData); 
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> force user to provide a root, </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> avoid checking every time .</span>
+<span style="color: #000000;">                }
+                
+                insert(data, current</span>=<span style="color: #0000ff;">this</span><span style="color: #000000;">.root) {
+                    </span><span style="color: #0000ff;">if</span> (data &lt;=<span style="color: #000000;"> current.data) {
+                        </span><span style="color: #0000ff;">if</span> (current.left == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                            current.left </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(data);
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.insert(data, current.left);
+                        }
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">if</span> (current.right == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                            current.right </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node(data);
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.insert(data, current.right);
+                        }
+                    }
+                }
+                
+                toList() {
+                    </span><span style="color: #0000ff;">this</span>.result =<span style="color: #000000;"> [];
+                    </span><span style="color: #0000ff;">this</span>.inorder(<span style="color: #0000ff;">this</span><span style="color: #000000;">.root);
+                    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.result;
+                }
+                
+                inorder(node) {
+                    </span><span style="color: #0000ff;">if</span> (node == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.inorder(node.left);
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.result.push(node.data);
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.inorder(node.right);
+                }
+                
+                static run(data) {
+                    data </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    let bst </span>= <span style="color: #0000ff;">new</span> BinarySearchTree(data[0<span style="color: #000000;">]);
+                    </span><span style="color: #0000ff;">for</span> (let x of data.slice(1<span style="color: #000000;">)) {
+                        bst.insert(x);
+                    }
+                    console.log(bst.toList());
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class IntegerSum {
+                static searchSum(arr, start, end, x) {
+                    </span><span style="color: #0000ff;">if</span> (end - start &lt;= 1) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    
+                    let sum </span>= arr[start] + arr[end - 1<span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">if</span> (sum &lt;<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> IntegerSum.searchSum(arr, start + 1<span style="color: #000000;">, end, x);
+                    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (sum &gt;<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> IntegerSum.searchSum(arr, start, end - 1<span style="color: #000000;">, x);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        console.log(arr[start], arr[end </span>- 1<span style="color: #000000;">]);
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    }
+                }
+                
+                static run(data) {
+                    data </span>= CommonUtil.handleData(data); <span style="color: #008000;">//</span><span style="color: #008000;"> cn</span>
+                    MergeSort.sort(data, 0, data.length); <span style="color: #008000;">//</span><span style="color: #008000;"> cnlgn</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> let x = Number(prompt("please enter the value of x :"));</span>
+                    let x = Math.floor(Math.random() * 40<span style="color: #000000;">);
+                    console.log(</span>"data=" +<span style="color: #000000;"> data);
+                    console.log(</span>"x=" +<span style="color: #000000;"> x);
+                    
+                    let end </span>= -1<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span> (data[++end] &lt;= x); <span style="color: #008000;">//</span><span style="color: #008000;"> cn</span>
+<span style="color: #000000;">                    
+                    let result;
+                    let max </span>= data[end - 1] + data[end - 2<span style="color: #000000;">];
+                    let min </span>= data[0] + data[1<span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">if</span> (max &lt; x || min &gt; x) { <span style="color: #008000;">//</span><span style="color: #008000;"> deal with special situations </span>
+                        result = <span style="color: #0000ff;">false</span><span style="color: #000000;">; 
+                    }  </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (max == x || min ==<span style="color: #000000;"> x) {
+                        result </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;        
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        result </span>= IntegerSum.searchSum(data, 0, end, x); <span style="color: #008000;">//</span><span style="color: #008000;"> cn</span>
+<span style="color: #000000;">                    }
+                    console.log(result);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class MaxSub {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 解法1：动态规划 -- O(n)            </span>
+<span style="color: #000000;">                static solve(arr, start, end) {
+                    let s </span>= []; <span style="color: #008000;">//</span><span style="color: #008000;"> s[n]保存arr[start:n+1]的最大子段和</span>
+                    let b = []; <span style="color: #008000;">//</span><span style="color: #008000;"> b[n]保存由从arr[n]开始到arr[start]的逆向最大和</span>
+                    s[start] =<span style="color: #000000;"> {
+                        sum: arr[start],
+                        start: start,
+                        end: start </span>+ 1<span style="color: #000000;">
+                    }; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当数组只有一个元素的时候，最大子段和只能是这个元素                    </span>
+                    b[start] =<span style="color: #000000;"> CommonUtil.lightCopy(s[start]);
+                    
+                    </span><span style="color: #0000ff;">for</span> (let i = start + 1; i != end; ++<span style="color: #000000;">i) {
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> b[i] = max(b[i-1]+arr[i], arr[i])</span>
+                        <span style="color: #0000ff;">if</span> (b[i - 1].sum + arr[i] &gt;<span style="color: #000000;"> arr[i]) {                
+                            b[i] </span>= CommonUtil.lightCopy(b[i - 1<span style="color: #000000;">]);                            
+                            b[i].sum </span>+=<span style="color: #000000;"> arr[i];
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            b[i] </span>=<span style="color: #000000;"> {sum: arr[i], start: i};
+                        }        
+                        b[i].end </span>= i + 1<span style="color: #000000;">;
+                        
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> s[i] = max(s[i-1], b[i])</span>
+                        s[i] =<span style="color: #000000;"> CommonUtil.lightCopy(
+                            s[i </span>- 1].sum &gt;= b[i].sum ? s[i - 1<span style="color: #000000;">] : b[i]
+                        );    
+                    }
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 证明：假设s[n]是截至arr[n]的最大子段和（包括arr[n]）</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 当考察s[n+1]时，相当于往原序列添加一个新元素arr[n+1] </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 结果是生成了arr[0..n+1],arr[1..n+1]等n+1个新序列</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 我们选取这些新序列中最大的,即从arr[n+1]开始的"逆向最大和",</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 与旧序列的最大子段和s[n]比较，s[n+1]取两者中更大的一个</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> （其实就是在新和旧之间决策），因为考虑了所有可能的情况，</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 并且是大中选大，所以s[n+1]是截至arr[n+1]的最大子段和。            </span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 思路：先考虑一个元素的情况，显然最大子段和只能是那个元素</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 然后考虑2个元素的情况（在原基础上增加1个），要么仍是第</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 一个元素，要么就是逆向最大和，继续增加元素考虑，发现都是</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> 反复在做同样的决策....                    </span>
+                    <span style="color: #0000ff;">return</span> s[end - 1<span style="color: #000000;">];                    
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 解法2：暴力求解 -- O(n^2)    </span>
+<span style="color: #000000;">                static solve2(arr, start, end) {
+                    let result </span>=<span style="color: #000000;"> {
+                        sum: </span>-<span style="color: #000000;">Infinity,
+                        start: start,
+                        end: end
+                    };
+                    
+                    </span><span style="color: #0000ff;">for</span> (let i = start; i != end; ++<span style="color: #000000;">i) {
+                        let temp </span>=<span style="color: #000000;"> {
+                            sum: </span>0<span style="color: #000000;">,
+                            start: i
+                        };
+                        </span><span style="color: #0000ff;">for</span> (let j = i; j != end; ++<span style="color: #000000;">j) {
+                            temp.sum </span>+=<span style="color: #000000;"> arr[j];
+                            temp.end </span>= j + 1<span style="color: #000000;">; 
+                            </span><span style="color: #0000ff;">if</span> (temp.sum &gt;<span style="color: #000000;"> result.sum) {
+                                result </span>=<span style="color: #000000;"> CommonUtil.lightCopy(temp);
+                            }
+                        }
+                    }
+                    
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 解法3：递归（分治） -- O(nlgn),来自算法导论</span>
+<span style="color: #000000;">                static solve3(arr, start, end) {
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> findMaxCrossingSubarray(arr, start, mid, end) {
+                        let leftSum </span>= -<span style="color: #000000;">Infinity;
+                        let sum </span>= 0<span style="color: #000000;">;
+                        let maxLeft; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 开始下标</span>
+                        <span style="color: #0000ff;">for</span> (let i = mid - 1; i &gt;= start; --<span style="color: #000000;">i) {
+                            sum </span>= sum +<span style="color: #000000;"> arr[i];
+                            </span><span style="color: #0000ff;">if</span> (sum &gt;<span style="color: #000000;"> leftSum) {
+                                leftSum </span>=<span style="color: #000000;"> sum;
+                                maxLeft </span>=<span style="color: #000000;"> i;
+                            }
+                        }
+                        
+                        let rightSum </span>= -<span style="color: #000000;">Infinity;
+                        sum </span>= 0<span style="color: #000000;">;
+                        let maxRight; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 结束下标</span>
+                        <span style="color: #0000ff;">for</span> (let j = mid; j != end; ++<span style="color: #000000;">j) {
+                            sum </span>= sum +<span style="color: #000000;"> arr[j];
+                            </span><span style="color: #0000ff;">if</span> (sum &gt;<span style="color: #000000;"> rightSum) {
+                                rightSum </span>=<span style="color: #000000;"> sum;
+                                maxRight </span>=<span style="color: #000000;"> j;
+                            }
+                        }
+                        
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                            sum: leftSum </span>+<span style="color: #000000;"> rightSum,
+                            start: maxLeft,
+                            end: maxRight </span>+ 1<span style="color: #000000;">
+                        };
+                    }
+                    
+                    </span><span style="color: #0000ff;">if</span> (start + 1 == end) { <span style="color: #008000;">//</span><span style="color: #008000;"> base case</span>
+                        <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                            sum: arr[start],
+                            start: start,
+                            end: end
+                        };
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        let mid </span>= Math.floor((start + end) / 2<span style="color: #000000;">);
+                        let leftResult </span>=<span style="color: #000000;"> MaxSub.solve3(arr, start, mid);
+                        let rightResult </span>=<span style="color: #000000;"> MaxSub.solve3(arr, mid, end);
+                        let crossResult </span>=<span style="color: #000000;"> findMaxCrossingSubarray(arr, start, mid, end);
+                        
+                        let finalResult </span>=<span style="color: #000000;"> {
+                            sum: </span>-<span style="color: #000000;">Infinity,
+                        };
+                        
+                        </span><span style="color: #0000ff;">if</span> (leftResult.sum &gt; finalResult.sum) finalResult =<span style="color: #000000;"> CommonUtil.lightCopy(leftResult);
+                        </span><span style="color: #0000ff;">if</span> (rightResult.sum &gt; finalResult.sum) finalResult =<span style="color: #000000;"> CommonUtil.lightCopy(rightResult);
+                        </span><span style="color: #0000ff;">if</span> (crossResult.sum &gt; finalResult.sum) finalResult =<span style="color: #000000;"> CommonUtil.lightCopy(crossResult);
+                        
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> finalResult;
+                    }
+                }
+                
+                static run(data) {
+                    let arr </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    let result </span>= MaxSub.solve(arr, 0<span style="color: #000000;">, arr.length);
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> console.log(result);</span>
+<span style="color: #000000;">                    console.log(arr.slice(result.start, result.end));
+                    console.log(`max_sum </span>=<span style="color: #000000;"> ${result.sum}`);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class theKnapsackProblem {
+                static solve(wt, val, knapsackMaxWeight) {
+                    let numOfItems </span>= wt.length; <span style="color: #008000;">//</span><span style="color: #008000;"> 物品总数</span>
+<span style="color: #000000;">                    
+                    let maxValue </span>=<span style="color: #000000;"> [];
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i &lt;= numOfItems; ++<span style="color: #000000;">i) {
+                        maxValue[i] </span>=<span style="color: #000000;"> [];
+                        </span><span style="color: #0000ff;">for</span> (let j = 0; j &lt;= knapsackMaxWeight; ++<span style="color: #000000;">j) 
+                            maxValue[i][j] </span>= { val: 0<span style="color: #000000;">, items: []};
+                    } </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化边界，当可选物品为前0个，背包容量为0时显然最大价值只能是0</span>
+                    
+                    <span style="color: #0000ff;">for</span> (let i = 1; i &lt;= numOfItems; ++<span style="color: #000000;">i) {
+                        let current </span>= i - 1; <span style="color: #008000;">//</span><span style="color: #008000;"> wt,val的序号是从0开始的</span>
+                        <span style="color: #0000ff;">for</span> (let j = 1; j &lt;= knapsackMaxWeight; ++<span style="color: #000000;">j) {                    
+                            let notPut </span>= maxValue[i - 1<span style="color: #000000;">][j];
+                            </span><span style="color: #0000ff;">if</span> (wt[current] &lt;=<span style="color: #000000;"> j) {
+                                let put </span>=<span style="color: #000000;"> {
+                                    val: maxValue[i </span>- 1][j - wt[current]].val +<span style="color: #000000;"> val[current],
+                                    items: maxValue[i </span>- 1][j -<span style="color: #000000;"> wt[current]].items.concat(current)
+                                };
+                                maxValue[i][j] </span>= put.val &gt; notPut.val ?<span style="color: #000000;"> put : notPut;
+                            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                                maxValue[i][j] </span>=<span style="color: #000000;"> notPut;
+                            }
+                        }
+                    }
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> maxValue[numOfItems][knapsackMaxWeight];
+                }
+                
+                static run(data) {
+                    data </span>=<span style="color: #000000;"> CommonUtil.handleData(data);
+                    let batchs </span>=<span style="color: #000000;"> data.shift();
+                    </span><span style="color: #0000ff;">for</span> (let i = 0; i != batchs; ++<span style="color: #000000;">i) {
+                        let numOfItems </span>=<span style="color: #000000;"> data.shift();
+                        let knapsackMaxWeight </span>=<span style="color: #000000;"> data.shift();
+                        let wt </span>= [], val =<span style="color: #000000;"> [];
+                        </span><span style="color: #0000ff;">for</span> (let j = 0; j != numOfItems; ++<span style="color: #000000;">j) {
+                            wt.push(data.shift());
+                        }
+                        </span><span style="color: #0000ff;">for</span> (let j = 0; j != numOfItems; ++<span style="color: #000000;">j) {
+                            val.push(data.shift());
+                        }
+                        
+                        let result </span>=<span style="color: #000000;"> theKnapsackProblem.solve(wt, val, knapsackMaxWeight);
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 格式化输出结果&darr;</span>
+                        let items =<span style="color: #000000;"> [];
+                        console.log(result.items);
+                        </span><span style="color: #0000ff;">for</span> (let i = 0; i != numOfItems; ++<span style="color: #000000;">i) {
+                            </span><span style="color: #0000ff;">if</span> (result.items.indexOf(i) != -1<span style="color: #000000;">) {
+                                items.push(</span>1<span style="color: #000000;">);
+                            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                                items.push(</span>0<span style="color: #000000;">);
+                            }
+                        }
+                        console.log(result.val);
+                        console.log(items </span>+ ""<span style="color: #000000;">);
+                    }
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 证明：假设maxValue[i][j]是在仅可以选择前i个物品，</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 且背包的最大容量为j时，能够组合得到的最大总价值。</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 当考察maxValue[i+1][j]时，实际上就是考察放不放第</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> i+1个物品的问题，该决策取决于能不能得到最大价值，</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 放第i+1个物品产生的最大价值为maxValue[i][j-w]+v</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 不放的最大价值仍为maxValue[i][j]，放不放就是所有</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 情况，我们在所有情况里决策一个最大的就可以了。所以</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 这个迭代可以保持循环不变式。</span>
+<span style="color: #000000;">            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class LCS {
+                static solve(a, b) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化表</span>
+                    a.unshift(undefined); <span style="color: #008000;">//</span><span style="color: #008000;"> 便于处理，从a[1]开始存东西</span>
+<span style="color: #000000;">                    b.unshift(undefined); 
+                    let lcs </span>=<span style="color: #000000;"> CommonUtil.zeros(a.length, b.length);                 
+                    
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 填表</span>
+                    <span style="color: #0000ff;">for</span> (let i = 1; i != a.length; ++<span style="color: #000000;">i) {
+                        </span><span style="color: #0000ff;">for</span> (let j = 1; j != b.length; ++<span style="color: #000000;">j) {
+                            </span><span style="color: #0000ff;">if</span> (a[i] ==<span style="color: #000000;"> b[j]) {
+                                lcs[i][j] </span>= lcs[i - 1][j - 1] + 1<span style="color: #000000;">;
+                            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                                lcs[i][j] </span>= Math.max(lcs[i - 1][j], lcs[i][j - 1<span style="color: #000000;">]);
+                            }
+                        }
+                    }
+                    
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回结果</span>
+                    <span style="color: #0000ff;">return</span> lcs[a.length - 1][b.length - 1<span style="color: #000000;">];
+                }
+                
+                static run(data) {
+                    data </span>= data.split("\n"<span style="color: #000000;">);
+                    let a </span>= data[0].split(""<span style="color: #000000;">);
+                    let b </span>= data[1].split(""<span style="color: #000000;">);
+                    
+                    console.log(LCS.solve(a, b));
+                    </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+                     * test:
+                     * aebfc
+                     * abc
+                     * output=3
+                     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            class HeapSort {
+                static left(i) {
+                    </span><span style="color: #0000ff;">return</span> 2 *<span style="color: #000000;"> i;
+                }
+                
+                static right(i) {
+                    </span><span style="color: #0000ff;">return</span> 2 * i + 1<span style="color: #000000;">;
+                }
+                
+                static parent(i) {
+                    </span><span style="color: #0000ff;">return</span> Math.floor(i / 2<span style="color: #000000;">);
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 递归版本</span>
+<span style="color: #000000;">                static maxHeapify(arr, i) {
+                    let l </span>=<span style="color: #000000;"> HeapSort.left(i);
+                    let r </span>=<span style="color: #000000;"> HeapSort.right(i);
+                    let largest </span>=<span style="color: #000000;"> i;
+                    </span><span style="color: #0000ff;">if</span> (l &lt; arr.length &amp;&amp; arr[l] &gt;<span style="color: #000000;"> arr[largest]) {
+                        largest </span>=<span style="color: #000000;"> l;
+                    }
+                    </span><span style="color: #0000ff;">if</span> (r &lt; arr.length &amp;&amp; arr[r] &gt;<span style="color: #000000;"> arr[largest]) {
+                        largest </span>=<span style="color: #000000;"> r;
+                    }                
+                    </span><span style="color: #0000ff;">if</span> (largest !=<span style="color: #000000;"> i) {
+                        let temp </span>=<span style="color: #000000;"> arr[i];
+                        arr[i] </span>=<span style="color: #000000;"> arr[largest];
+                        arr[largest] </span>= temp; <span style="color: #008000;">//</span><span style="color: #008000;"> 此时arr[largest]已经被置换成更小的那个</span>
+<span style="color: #000000;">                        HeapSort.maxHeapify(arr, largest);
+                    }            
+                }
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 非递归修正版本，heapSize表示改动范围仅限于arr[1:heapSize+1]</span>
+<span style="color: #000000;">                static maxHeapify2(arr, i, heapSize) {
+                    let flag </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (flag) {
+                        let l </span>=<span style="color: #000000;"> HeapSort.left(i);
+                        let r </span>=<span style="color: #000000;"> HeapSort.right(i);
+                        let largest </span>=<span style="color: #000000;"> i;
+                        </span><span style="color: #0000ff;">if</span> (l &lt;= heapSize &amp;&amp; arr[l] &gt;<span style="color: #000000;"> arr[largest]) {
+                            largest </span>=<span style="color: #000000;"> l;
+                        }
+                        </span><span style="color: #0000ff;">if</span> (r &lt;= heapSize &amp;&amp; arr[r] &gt;<span style="color: #000000;"> arr[largest]) {
+                            largest </span>=<span style="color: #000000;"> r;
+                        }                
+                        </span><span style="color: #0000ff;">if</span> (largest !=<span style="color: #000000;"> i) {
+                            let temp </span>=<span style="color: #000000;"> arr[i];
+                            arr[i] </span>=<span style="color: #000000;"> arr[largest];
+                            arr[largest] </span>= temp; <span style="color: #008000;">//</span><span style="color: #008000;"> 此时arr[largest]已经被置换成更小的那个</span>
+                            i =<span style="color: #000000;"> largest;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            flag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                        }
+                    }            
+                }
+                
+                static buildMaxHeap(arr, heapSize) {
+                    </span><span style="color: #0000ff;">for</span> (let i = Math.floor(heapSize / 2); i &gt;= 1; --<span style="color: #000000;">i) {
+                        HeapSort.maxHeapify2(arr, i, heapSize);
+                    }
+                }
+                
+                static sort(arr) {
+                    let heapSize </span>= arr.length - 1<span style="color: #000000;">;
+                    HeapSort.buildMaxHeap(arr, heapSize);
+                    </span><span style="color: #0000ff;">for</span> (let i = arr.length - 1; i &gt;= 2; --<span style="color: #000000;">i) {
+                        let temp </span>=<span style="color: #000000;"> arr[i];
+                        arr[i] </span>= arr[1<span style="color: #000000;">];
+                        arr[</span>1] =<span style="color: #000000;"> temp;        
+                        HeapSort.maxHeapify2(arr, </span>1, --<span style="color: #000000;">heapSize);
+                    }
+                }
+                
+                static run(data) {
+                    let test1 </span>= [undefined, 16, 4, 10, 14, 7, 9, 3, 2, 8, 1<span style="color: #000000;">]; 
+                    HeapSort.sort(test1);
+                    console.log(test1);
+                }
+            }
+        </span>&lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            const algorithms </span>=<span style="color: #000000;"> {
+                </span>"Temp"<span style="color: #000000;">: Temp,
+                </span>"EqualElement"<span style="color: #000000;">: EqualElement,
+                </span>"Permutations"<span style="color: #000000;">: Permutations,
+                </span>"BinarySearch"<span style="color: #000000;">: BinarySearch,
+                </span>"Quicksort"<span style="color: #000000;">: Quicksort,
+                </span>"MergeSort"<span style="color: #000000;">: MergeSort,
+                </span>"InsertSort"<span style="color: #000000;">: InsertSort,
+                </span>"BinarySearchTree"<span style="color: #000000;">: BinarySearchTree,
+                </span>"IntegerSum"<span style="color: #000000;">: IntegerSum,
+                </span>"MaxSub"<span style="color: #000000;">: MaxSub,
+                </span>"theKnapsackProblem"<span style="color: #000000;">: theKnapsackProblem,
+                </span>"LCS"<span style="color: #000000;">: LCS,
+                </span>"HeapSort"<span style="color: #000000;">: HeapSort
+            };
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+ </pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>稍微模块化：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">textarea </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="data-area"</span><span style="color: #ff0000;"> rows</span><span style="color: #0000ff;">="25"</span><span style="color: #ff0000;"> cols</span><span style="color: #0000ff;">="80"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="paste your data here..."</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">textarea</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Algorithm:
+            </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="algorithms"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="EqualElement"</span><span style="color: #0000ff;">&gt;</span>相等元素<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="Permutations"</span><span style="color: #0000ff;">&gt;</span>排列问题<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="BinarySearch"</span><span style="color: #0000ff;">&gt;</span>二分查找<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>    
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="Quicksort"</span><span style="color: #0000ff;">&gt;</span>快速排序<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="MergeSort"</span><span style="color: #0000ff;">&gt;</span>归并排序<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="InsertSort"</span><span style="color: #0000ff;">&gt;</span>插入排序<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="BinarySearchTree"</span><span style="color: #0000ff;">&gt;</span>二叉搜索树<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="IntegerSum"</span><span style="color: #0000ff;">&gt;</span>整数和<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="MaxSub"</span><span style="color: #0000ff;">&gt;</span>最大子段和<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="theKnapsackProblem"</span><span style="color: #0000ff;">&gt;</span>0-1背包问题<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="LCS"</span><span style="color: #0000ff;">&gt;</span>最长公共子序列<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="HeapSort"</span><span style="color: #0000ff;">&gt;</span>堆排序<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="OptimalLoading"</span><span style="color: #ff0000;"> selected</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>最优装载问题<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="run"</span><span style="color: #0000ff;">&gt;</span>run code<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+            let btn </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#run</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+            btn.addEventListener(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">click</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">, handleClick);
+
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> handleClick() {
+                let dataArea </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#data-area</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);
+                let selector </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.querySelector(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#algorithms</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+                let data </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> dataArea.value;
+                let algorithm </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> algorithms[selector.value];
+                algorithm.run(data);
+            }
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/CommonUtil.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/EqualElement.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>    
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/Permutations.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/BinarySearch.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/Quicksort.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/MergeSort.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/InsertSort.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/BinarySearchTree.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>    
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/IntegerSum.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/MaxSub.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/theKnapsackProblem.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/LCS.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/HeapSort.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/OptimalLoading.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+            const algorithms </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">EqualElement</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: EqualElement,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Permutations</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: Permutations,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">BinarySearch</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: BinarySearch,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Quicksort</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: Quicksort,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">MergeSort</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: MergeSort,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">InsertSort</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: InsertSort,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">BinarySearchTree</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: BinarySearchTree,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">IntegerSum</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: IntegerSum,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">MaxSub</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: MaxSub,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">theKnapsackProblem</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: theKnapsackProblem,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">LCS</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: LCS,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">HeapSort</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: HeapSort,
+                </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">OptimalLoading</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">: OptimalLoading
+            };
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

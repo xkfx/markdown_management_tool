@@ -1,0 +1,120 @@
+<h3>【接口式编程】尚未遇见Spring --&gt; 代码量反而增加</h3>
+<p>1、增加约定，减少犯错的可能（不用直接去写字符串</p>
+<p>修改点1：命名空间</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170710131909087-1778151376.png" alt="" width="337" height="50" /></p>
+<p>修改点2：增加接口，方法名与配置文件中的id对应</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.bean.Message;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 
+ * 与配置文件Message相对应的接口
+ *
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> IMessage {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 代言SQL语句</span>
+    <span style="color: #0000ff;">public</span> List&lt;Message&gt;<span style="color: #000000;"> queryMessageList(Message message);
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> deleteOne(<span style="color: #0000ff;">int</span><span style="color: #000000;"> id);
+    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> deleteBatch(List&lt;Integer&gt;<span style="color: #000000;"> ids);
+}</span></pre>
+</div>
+<p>修改点3：修改DAO层调用SQL的方式</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.DriverManager;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.PreparedStatement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.apache.ibatis.session.SqlSession;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.bean.Message;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.imooc.db.DBAccess;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 和message表相关的数据库操作
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MessageDAO {
+    
+    </span><span style="color: #0000ff;">public</span> List&lt;Message&gt;<span style="color: #000000;"> queryMessageList(String command, String description) {
+        DBAccess dbAccess </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DBAccess();
+        SqlSession sqlSession </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        List</span>&lt;Message&gt; messageList = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            sqlSession </span>=<span style="color: #000000;"> dbAccess.getSqlSession();
+            Message message </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Message();
+            message.setCommand(command);
+            message.setDescription(description);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过sqlSession执行SQL语句</span>
+<strong><span style="color: #ff0000;">            IMessage iMessage = sqlSession.getMapper(IMessage.class);
+            messageList =</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;"> iMessage.queryMessageList(message);</span></strong>
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (sqlSession != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                sqlSession.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> messageList;
+    }
+    
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 单条删除
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> deletOne(<span style="color: #0000ff;">int</span><span style="color: #000000;"> id) {        
+        DBAccess dbAccess </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DBAccess();
+        SqlSession sqlSession </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            sqlSession </span>=<span style="color: #000000;"> dbAccess.getSqlSession();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过sqlSession执行SQL语句</span>
+<strong><span style="color: #ff0000;">            IMessage iMessage = sqlSession.getMapper(IMessage.class</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;">);
+            iMessage.deleteOne(id);
+            sqlSession.commit();</span></strong>
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (sqlSession != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                sqlSession.close();
+            }
+        }    
+    }
+    
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 删除多条消息
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> deleteBatch(List&lt;Integer&gt;<span style="color: #000000;"> ids) {
+        DBAccess dbAccess </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DBAccess();
+        SqlSession sqlSession </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            sqlSession </span>=<span style="color: #000000;"> dbAccess.getSqlSession();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 通过sqlSession执行SQL语句</span>
+<strong><span style="color: #ff0000;">            IMessage iMessage = sqlSession.getMapper(IMessage.class</span></strong><span style="color: #000000;"><strong><span style="color: #ff0000;">);
+            iMessage.deleteBatch(ids);
+            sqlSession.commit();</span></strong>
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (sqlSession != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                sqlSession.close();
+            }
+        }    
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>【只写接口，不写实现】</h2>
+<p>1、添加依赖包</p>
+<p>2、编写 XxxDAO 接口 （结果集 + 行为 + 参数）</p>
+<p>3、用 XxxDAO.xml 实现接口（ SQL）</p>
+<p>&nbsp;</p>

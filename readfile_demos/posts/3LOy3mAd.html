@@ -1,0 +1,52 @@
+<h3>1、Build a histogram</h3>
+<div class="cnblogs_code">
+<pre>In [1<span style="color: #000000;">]: help(plt.hist)
+Help on function hist </span><span style="color: #0000ff;">in</span><span style="color: #000000;"> module matplotlib.pyplot:
+
+hist(x, bins</span>=10, range=None, normed=False, weights=None, cumulative=False, bottom=None, histtype=<span style="color: #800000;">'</span><span style="color: #800000;">bar</span><span style="color: #800000;">'</span>, align=<span style="color: #800000;">'</span><span style="color: #800000;">mid</span><span style="color: #800000;">'</span>, orientation=<span style="color: #800000;">'</span><span style="color: #800000;">vertical</span><span style="color: #800000;">'</span>, rwidth=None, log=False, color=None, label=None, stacked=False, hold=None, data=None, **<span style="color: #000000;">kwargs)
+    Plot a histogram.</span></pre>
+</div>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114192508785-1020454890.png" alt="" width="460" height="296" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create histogram of life_exp data</span>
+<span style="color: #000000;">plt.hist(life_exp);
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Display histogram</span>
+plt.show()</pre>
+</div>
+<p>&nbsp;</p>
+<h3>2、Bins</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114192822738-1216698407.png" alt="" width="432" height="278" /><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180114192833910-171923473.png" alt="" width="422" height="272" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Build histogram with 5 bins</span>
+plt.hist(life_exp, bins = 5<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Show and clean up plot</span>
+<span style="color: #000000;">plt.show()
+plt.clf()
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Build histogram with 20 bins</span>
+plt.hist(life_exp, bins = 20<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Show and clean up again</span>
+<span style="color: #000000;">plt.show()
+plt.clf()</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>3、Compare</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Histogram of life_exp, 15 bins</span>
+<strong>plt.hist(<span style="color: #ff0000;">life_exp</span>, bins = 15<span style="color: #000000;">)
+
+</span></strong><span style="color: #008000;">#</span><span style="color: #008000;"> Show and clear plot</span>
+<span style="color: #000000;">plt.show()
+plt.clf()
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Histogram of life_exp1950, 15 bins</span>
+<strong>plt.hist(<span style="color: #ff0000;">life_exp1950</span>, bins = 15<span style="color: #000000;">)
+
+</span></strong><span style="color: #008000;">#</span><span style="color: #008000;"> Show and clear plot again</span>
+<span style="color: #000000;">plt.show()
+plt.clf()</span></pre>
+</div>
+<p>&nbsp;</p>

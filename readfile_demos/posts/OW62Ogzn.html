@@ -1,0 +1,801 @@
+<div id="diy_right_menu">
+<p>&nbsp;要点索引：</p>
+<ul>
+<li><a href="#a1">JSON</a></li>
+<li><a href="#a2">More ...</a></li>
+<li><a href="#a3">练习</a></li>
+</ul>
+</div>
+<p>1、补：js字符串的表达方式有三种： "" 和 '' 没什么区别，唯一区别在于 "" 中写 "要转义字符，在 '' 中写 ' 要转义字符。最后一种是 `` ，允许 'xx = ${算式}' 的简写方式。</p>
+<p>&nbsp;</p>
+<p>2、两种主要的访问对象属性的方式 &mdash;&mdash; 点号与 [ ]</p>
+<p>[ ] 会获取 [ ] 中的计算后字符串，点号则不会。</p>
+<p>必须用 [ ] 的场景是访问数组属性 x[1]， 因为点号后不能跟数字。</p>
+<p>&nbsp;</p>
+<p>3、js数组自带push和pop方法。</p>
+<p>队列也可以很容易实现：</p>
+<div class="cnblogs_code">
+<pre>let todoList =<span style="color: #000000;"> [];
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> remember(task) {
+  todoList.push(task);
+}
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> getTask() {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> todoList.shift();
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 紧急事件插入到队列前面</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> rememberUrgently(task) {
+  todoList.unshift(task);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、对象的属性中，非有效引用名（例如包含空格&darr;）必须用字符串形式表达：</p>
+<div class="cnblogs_code">
+<pre>let descriptions =<span style="color: #000000;"> {
+  work: </span>"Went to work"<span style="color: #000000;">,
+  </span>"touched tree": "Touched a tree"<span style="color: #000000;">
+};</span></pre>
+</div>
+<p>且必须要用 [ ] 访问该属性：</p>
+<div class="cnblogs_code">
+<pre>descriptions["touched tree"<span style="color: #000000;">]</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、js对象允许动态添加属性：</p>
+<div class="cnblogs_code">
+<pre>descriptions["another property"] = "new one";</pre>
+</div>
+<p>如果已经存在就替换。点号也是可以的，但 [ ] 比较通用。</p>
+<p>&nbsp;</p>
+<p>6、动态删除属性：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+ * 可以把对象想象成一只章鱼，对象的属性想象成带着便签
+ * 的章鱼触手，数组也是一种对象，typeof [];的结果是object
+ * 所以数组是一种触手上的便签全为顺序数字的章鱼。
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+let octopuse </span>=<span style="color: #000000;"> {
+    tentacleA: </span>1<span style="color: #000000;">,
+    tentacleB: </span>2<span style="color: #000000;">,
+    tentacleC: </span>3<span style="color: #000000;">
+};
+
+console.log(octopuse.tentacleA);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1</span>
+<span style="color: #0000ff;">delete</span><span style="color: #000000;"> octopuse.tentacleA;
+console.log(octopuse.tentacleA);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; undefined</span>
+console.log('tentacleA' <span style="color: #0000ff;">in</span><span style="color: #000000;"> octopuse);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>用in来判断属性是否存在才是准确的，因为值本身可能为undefined</p>
+<p>注意，delete删除是有后遗症的！并不会删除干净（会留引用）。所以能用filter尽量不用delete</p>
+<p>【PS. in和includes貌似可以互相替换？】</p>
+<p>&nbsp;</p>
+<p>7、列出对象的所有属性名：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">console.log(Object.keys(octopuse));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["tentacleB", "tentacleC"]</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>8、Object.assign：</p>
+<div class="cnblogs_code">
+<pre>let objectA = {a: 1, b: 2<span style="color: #000000;">};
+Object.assign(objectA, {b: </span>3, c: 4<span style="color: #000000;">});
+console.log(objectA);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {a: 1, b: 3, c: 4}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>9、多个引用可以指向同一个对象，obj1==obj2比较的是引用的值（只有指向同一个对象才返回true），而不是对象的内容。</p>
+<p>const obj只是引用的值不变，不能保证所指向对象的内容不变。</p>
+<p>（上述两点都可以类比Java）</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>10、直接传入绑定（键值对）：</p>
+<div class="cnblogs_code">
+<pre>let journal =<span style="color: #000000;"> [];
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> addEntry(events, squirrel) {
+  journal.push({events, squirrel});
+}</span></pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201808/1042431-20180828110316486-1238880706.png" alt="" width="580" height="498" /></p>
+<p>&nbsp;</p>
+<p>11、重写书上的示例（探究xxx变成松鼠的原因）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * getPhi返回变成松鼠和事件的
+ * 相关性，返回的值为-1~1，-1表示
+ * 负相关，1表示正相关，0表示毫无关系。
+ * table表示一个二维表，用于统
+ * 计下面四种事件发生的次数：
+ * 1、不变松鼠，事件没发生00=0，
+ * 2、不变松鼠，事件发生01=1，
+ * 3、变成松鼠，事件没发生10=2，
+ * 4、变成松鼠，事件发生11=3
+ * 测试：
+ * console.log(getPhi([76, 9, 4, 1]));
+ * &rarr; 0.06859943405700354
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+const getPhi </span>= (table) =&gt;<span style="color: #000000;"> {
+  </span><span style="color: #0000ff;">return</span> (table[3] * table[0] - table[2] * table[1]) /<span style="color: #000000;">
+    Math.sqrt((table[</span>2] + table[3]) *<span style="color: #000000;">
+              (table[</span>0] + table[1]) *<span style="color: #000000;">
+              (table[</span>1] + table[3]) *<span style="color: #000000;">
+              (table[</span>0] + table[2<span style="color: #000000;">]));
+};
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 获取特定事件对应的表格，测试：
+ * console.log(getTable(JOURNAL, "pizza"));
+ * &rarr; [76, 9, 4, 1]
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+const getTable </span>= (JOURNAL, specificEvent) =&gt;<span style="color: #000000;"> {
+    let result </span>= [0, 0, 0, 0<span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let someday of JOURNAL) {
+        let tableIndex </span>= 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (someday.squirrel) tableIndex += 2<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (someday.events.includes(specificEvent)) tableIndex += 1<span style="color: #000000;">;
+        result[tableIndex]</span>++<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 返回包括日志所记录的所有事件的字符串数组
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+const getAllEvents </span>= (JOURNAL) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let x of JOURNAL) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let theEvent of x.events) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">result.includes(theEvent)) {
+                result.push(theEvent);
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+
+const main </span>= () =&gt;<span style="color: #000000;"> {
+    let allEvents </span>=<span style="color: #000000;"> getAllEvents(JOURNAL);
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let specificEvent of allEvents) {
+        let table </span>=<span style="color: #000000;"> getTable(JOURNAL, specificEvent);
+        console.log(specificEvent </span>+ ":"<span style="color: #000000;">, getPhi(table));
+    }
+};</span></pre>
+</div>
+<p>数据：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('6a595f5e-746b-4f1b-8601-e9ce82dd8605')"><img id="code_img_closed_6a595f5e-746b-4f1b-8601-e9ce82dd8605" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_6a595f5e-746b-4f1b-8601-e9ce82dd8605" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('6a595f5e-746b-4f1b-8601-e9ce82dd8605',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_6a595f5e-746b-4f1b-8601-e9ce82dd8605" class="cnblogs_code_hide">
+<pre>let JOURNAL =<span style="color: #000000;"> [{
+        </span>"events": ["carrot", "exercise", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "pudding", "brushed teeth", "weekend", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "nachos", "brushed teeth", "cycling", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brussel sprouts", "ice cream", "brushed teeth", "computer", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "candy", "brushed teeth", "exercise", "weekend", "dentist"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brussel sprouts", "pudding", "brushed teeth", "running", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "brushed teeth", "computer", "work", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "beer", "brushed teeth", "cycling", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "brushed teeth", "cycling", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "nachos", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brushed teeth", "weekend", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "brushed teeth", "television", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brushed teeth", "computer", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "nachos", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "reading", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "brushed teeth", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "brushed teeth", "exercise", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "brushed teeth", "reading", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "ice cream", "brushed teeth", "television", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "nachos", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "ice cream", "brushed teeth", "cycling", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "peanuts", "computer", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "ice cream", "brushed teeth", "computer", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "ice cream", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["peanuts", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "exercise", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "ice cream", "computer", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "ice cream", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "candy", "reading", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "nachos", "brushed teeth", "running", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "beer", "work", "dentist"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "pudding", "cycling", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "brushed teeth", "reading", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "pudding", "television", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "brushed teeth", "exercise", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "peanuts", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "exercise", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brushed teeth", "exercise", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "brushed teeth", "television", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "cycling", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "brushed teeth", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "beer", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "peanuts", "candy", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "peanuts", "brushed teeth", "reading", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "peanuts", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "nachos", "brushed teeth", "exercise", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "peanuts", "brushed teeth", "television", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "brushed teeth", "cycling", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "peanuts", "brushed teeth", "computer", "work", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "brushed teeth", "television", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "brushed teeth", "computer", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "candy", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "nachos", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "pudding", "brushed teeth", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "brushed teeth", "exercise", "weekend", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brussel sprouts", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["candy", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brussel sprouts", "brushed teeth", "computer", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "brushed teeth", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "brushed teeth", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "candy", "television", "work", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "pudding", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "ice cream", "brushed teeth", "cycling", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["spaghetti", "peanuts", "exercise", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "beer", "computer", "weekend", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "peanuts", "brushed teeth", "work", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "brushed teeth", "television", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "reading", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["carrot", "peanuts", "reading", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["potatoes", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lasagna", "ice cream", "work", "touched tree"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "peanuts", "brushed teeth", "cycling", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["pizza", "brushed teeth", "running", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["lettuce", "brushed teeth", "work"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["bread", "brushed teeth", "television", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    },
+    {
+        </span>"events": ["cauliflower", "peanuts", "brushed teeth", "weekend"<span style="color: #000000;">],
+        </span>"squirrel": <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    }
+];</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;</p>
+<p>12、重写getPhi</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> phi([n00, n01, n10, n11]) {
+  </span><span style="color: #0000ff;">return</span> (n11 * n00 - n10 * n01) /<span style="color: #000000;">
+    Math.sqrt((n10 </span>+ n11) * (n00 + n01) *<span style="color: #000000;">
+              (n01 </span>+ n11) * (n00 +<span style="color: #000000;"> n10));
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a1"></a>13、JSON是方便在网络上传输的数据，详情直接阅读<a href="https://baike.baidu.com/item/JSON/2462549?fr=aladdin#2_3" target="_blank">百度百科</a>。它的格式规定是非常严格的：JSON的属性必须由双引号包围，JSON中不能有注释 ...</p>
+<div class="cnblogs_code">
+<pre>let obj =<span style="color: #000000;"> {
+    a: </span>123<span style="color: #000000;">,
+    b: </span>"456"<span style="color: #000000;">
+};
+
+console.log(obj);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {a: 123, b: "456"}</span>
+<span style="color: #000000;">
+let string </span>=<span style="color: #000000;"> JSON.stringify(obj);
+
+console.log(string);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {"a":123,"b":"456"}</span>
+<span style="color: #000000;">
+let obj2 </span>=<span style="color: #000000;"> JSON.parse(string);
+console.log(obj2);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {a: 123, b: "456"}</span>
+<span style="color: #000000;">
+console.log(obj </span>==<span style="color: #000000;"> obj2);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>PS. === 是精确比较，不会进行类型转换，== 会进行类型转换（例如 1 == '1' 是true），在类型确定相同的情况下可以用。</p>
+<p>&nbsp;</p>
+<p>14、<a id="link_post_title" class="link-post-title" href="https://www.cnblogs.com/xkxf/p/6617258.html">各种语言中的可变参数（java、python、c++、javascript）</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>15、More ...</p>
+<p><a href="http://eloquentjavascript.net/04_data.html" target="_blank">常用数组方法</a></p>
+<p><a href="http://eloquentjavascript.net/04_data.html" target="_blank">常用string方法</a></p>
+<p><a href="http://eloquentjavascript.net/04_data.html" target="_blank">常用Math方法</a></p>
+<p>大约在全文 2 /3 处&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>16、练习</p>
+<p>① 实现range(a, b)，返回[a, ... , b]。</p>
+<p>（省略sum）</p>
+<div class="cnblogs_code">
+<pre>onst range = (start, end, step=1) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">if</span> (start &lt;= end &amp;&amp; step &gt; 0<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">for</span> (let i = start; i &lt;= end; i+=<span style="color: #000000;">step) {
+            result.push(i);
+        }
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (step &lt; 0<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">for</span> (let i = start; i &gt;= end; i+=<span style="color: #000000;">step) {
+            result.push(i);
+        }        
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+console.log(range(</span>1, 10<span style="color: #000000;">));
+console.log(range(</span>5, 2, -1<span style="color: #000000;">));
+console.log(range(</span>5, 2, 1<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; [5, 4, 3, 2]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; []</span></pre>
+</div>
+<p>- - -- - - - - - -&nbsp; &nbsp; &nbsp; &nbsp; -- -&nbsp; -- -&nbsp; - -- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- -&nbsp; -- - - -- - - - - -- - - -- --&nbsp;</p>
+<p>② 字符串倒序</p>
+<div class="cnblogs_code">
+<pre>let x = ['A', 'b', 'C'<span style="color: #000000;">];
+console.log(x.reverse());
+console.log(x);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["C", "b", "A"]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; ["C", "b", "A"]</span>
+<span style="color: #000000;">
+const reverseArray </span>= arr =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != arr.length; ++<span style="color: #000000;">i) {
+        result.unshift(arr[i]); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 进队</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+console.log(reverseArray(x));
+console.log(x);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["A", "b", "C"]</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; ["C", "b", "A"]</span>
+<span style="color: #000000;">
+const reverseArrayInPlace </span>= arr =&gt;<span style="color: #000000;"> {
+    let start </span>= 0<span style="color: #000000;">;
+    let end </span>= arr.length - 1<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (start &lt;<span style="color: #000000;"> end) {
+        let temp </span>=<span style="color: #000000;"> arr[start];
+        arr[start</span>++] =<span style="color: #000000;"> arr[end];
+        arr[end</span>--] =<span style="color: #000000;"> temp;
+    }
+};
+
+console.log(reverseArrayInPlace(x));
+console.log(x);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; undefined</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; ["A", "b", "C"]</span></pre>
+</div>
+<p>- - -- - - - - - -&nbsp; &nbsp; &nbsp; &nbsp; -- -&nbsp; -- -&nbsp; - -- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- -&nbsp; -- - - -- - - - - -- - - -- --&nbsp;&nbsp;</p>
+<p>③ 单向链表</p>
+<div class="cnblogs_code">
+<pre>const arrayToList = arr =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 空数组直接返回null</span>
+    <span style="color: #0000ff;">if</span>(arr.length == 0) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    let index </span>= 0<span style="color: #000000;">;
+    let result </span>=<span style="color: #000000;"> {
+        value: arr[index</span>++<span style="color: #000000;">],
+        rest: </span><span style="color: #0000ff;">null</span><span style="color: #000000;">    
+    };
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 数组元素数量为1在初始化后立刻返回结果</span>
+    <span style="color: #0000ff;">if</span>(arr.length == 1) <span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 数组元素数量大于1继续添加元素到list</span>
+    let next =<span style="color: #000000;"> result;
+    </span><span style="color: #0000ff;">while</span>(index &lt;<span style="color: #000000;"> arr.length) {
+        next </span>= next.rest =<span style="color: #000000;"> {
+            value: arr[index],
+            rest: </span><span style="color: #0000ff;">null</span><span style="color: #000000;">
+        };
+        index</span>++<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+console.log(arrayToList([</span>10, 20, 30<span style="color: #000000;">]));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {value: 10, rest: {&hellip;}}</span>
+<span style="color: #000000;">
+const listToArray </span>= list =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> [];
+    
+    </span><span style="color: #0000ff;">while</span> (list.rest != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+        result.push(list.value);
+        list </span>=<span style="color: #000000;"> list.rest;
+    }
+    result.push(list.value);
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+console.log(listToArray(arrayToList([</span>10, 20, 30<span style="color: #000000;">])));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; [10, 20, 30]</span>
+<span style="color: #000000;">
+const prepend </span>= (x, list) =&gt;<span style="color: #000000;"> {
+    let result </span>=<span style="color: #000000;"> {
+        value: x,
+        rest: list
+    };
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+console.log(prepend(</span>10, prepend(20, <span style="color: #0000ff;">null</span><span style="color: #000000;">)));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {value: 10, rest: {&hellip;}}</span>
+<span style="color: #000000;">
+const nth </span>= (list, x) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i &lt; x; ++<span style="color: #000000;">i) {
+        list </span>=<span style="color: #000000;"> list.rest;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list.value;
+};
+
+console.log(nth(arrayToList([</span>10, 20, 30]), 1<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 20</span></pre>
+</div>
+<p>递归版本nth：</p>
+<div class="cnblogs_code">
+<pre>const nth = (list, x) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (x == 0) <span style="color: #0000ff;">return</span><span style="color: #000000;"> list.value;
+    </span><span style="color: #0000ff;">return</span> nth(list.rest, --<span style="color: #000000;">x);
+};</span></pre>
+</div>
+<p>课本解法（简洁了一倍。。）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> arrayToList(array) {
+  let list </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+  </span><span style="color: #0000ff;">for</span> (let i = array.length - 1; i &gt;= 0; i--<span style="color: #000000;">) {
+    list </span>=<span style="color: #000000;"> {value: array[i], rest: list};
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listToArray(list) {
+  let array </span>=<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">for</span> (let node = list; node; node =<span style="color: #000000;"> node.rest) {
+    array.push(node.value);
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> array;
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> prepend(value, list) {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {value, rest: list};
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> nth(list, n) {
+  </span><span style="color: #0000ff;">if</span> (!list) <span style="color: #0000ff;">return</span><span style="color: #000000;"> undefined;
+  </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (n == 0) <span style="color: #0000ff;">return</span><span style="color: #000000;"> list.value;
+  </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> nth(list.rest, n - 1<span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>- - -- - - - - - -&nbsp; &nbsp; &nbsp; &nbsp; -- -&nbsp; -- -&nbsp; - -- - - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -- -&nbsp; -- - - -- - - - - -- - - -- --&nbsp;&nbsp;</p>
+<p>④ 深度比较</p>
+<div class="cnblogs_code">
+<pre>const deepEqual = (a, b) =&gt;<span style="color: #000000;"> {
+    let typeA </span>= <span style="color: #0000ff;">typeof</span><span style="color: #000000;"> a;
+    let typeB </span>= <span style="color: #0000ff;">typeof</span><span style="color: #000000;"> b;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 类型不同直接返回false</span>
+    <span style="color: #0000ff;">if</span> (typeA != typeB) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断是不是可以直接比较的类型</span>
+    let comparedDirectly = ["boolean", "number", "string"<span style="color: #000000;">];
+    </span><span style="color: #0000ff;">if</span> (comparedDirectly.includes(typeA)) <span style="color: #0000ff;">return</span> a ===<span style="color: #000000;"> b;
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 先排除值为null的情况</span>
+    <span style="color: #0000ff;">if</span> (a == <span style="color: #0000ff;">null</span> &amp;&amp; b == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (a == <span style="color: #0000ff;">null</span> &amp;&amp; b != <span style="color: #0000ff;">null</span> || a !=<span style="color: #0000ff;">null</span> &amp;&amp; b == <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 递归判断</span>
+    <span style="color: #0000ff;">if</span> (typeA == "object"<span style="color: #000000;">) {
+        let keyA </span>=<span style="color: #000000;"> Object.keys(a);
+        let keyB </span>=<span style="color: #000000;"> Object.keys(b);
+        </span><span style="color: #0000ff;">if</span> (keyA.length != keyB.length) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let k of keyA) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (keyB.includes(k)) {
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> deepEqual(a[k], b[k]);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+        }
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 其它情况一律返回未定义</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> undefined;
+};
+
+let obj </span>= {here: {is: "an"}, object: 2<span style="color: #000000;">};
+console.log(deepEqual(obj, obj));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(deepEqual(obj, {here: 1, object: 2<span style="color: #000000;">}));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+console.log(deepEqual(obj, {here: {is: "an"}, object: 2<span style="color: #000000;">}));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;课本解法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> deepEqual(a, b) {
+  </span><span style="color: #0000ff;">if</span> (a === b) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> null == null 的情况在 a === b 时已经过滤掉了。</span>
+  <span style="color: #0000ff;">if</span> (a == <span style="color: #0000ff;">null</span> || <span style="color: #0000ff;">typeof</span> a != "object" ||<span style="color: #000000;">
+      b </span>== <span style="color: #0000ff;">null</span> || <span style="color: #0000ff;">typeof</span> b != "object") <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+
+  let keysA </span>= Object.keys(a), keysB =<span style="color: #000000;"> Object.keys(b);
+
+  </span><span style="color: #0000ff;">if</span> (keysA.length != keysB.length) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+
+  </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let key of keysA) {
+    </span><span style="color: #0000ff;">if</span> (!keysB.includes(key) || !deepEqual(a[key], b[key])) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+  }
+
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

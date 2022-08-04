@@ -1,0 +1,250 @@
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180316135321682-1635626150.png" alt="" width="703" height="65" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180316202633605-1961907579.png" alt="" width="578" height="304" /></p>
+<p>&nbsp;</p>
+<p>首先用书上的脚本尝试，失败。</p>
+<p>之后根据源文件的 README 编译，抛出：</p>
+<div class="cnblogs_code">
+<pre>root@linux:/opt/openjdk# <span style="color: #0000ff;">sh</span> ./get_source.<span style="color: #0000ff;">sh</span><span style="color: #000000;"> 
+ERROR: Need initial repository to use this script</span></pre>
+</div>
+<p>采用下面的方案解决：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">你jdk8版本太老了，但是你系统又比较新（很多工具，例如make也是最新的），导致很多不匹配。解决办法换成最新版本的jdk8吧。
+具体方法：hg clone http:</span><span style="color: #008000;">//</span><span style="color: #008000;">hg.openjdk.java.net/jdk8u/jdk8u/ &amp;&amp; sh get_source.sh. 后面就是一样的。 -- by baidu 乱乱我不乱 </span></pre>
+</div>
+<p>需要注意，要使用 hg 必须先：</p>
+<div class="cnblogs_code">
+<pre>apt <span style="color: #0000ff;">install</span> mercurial</pre>
+</div>
+<p>&nbsp;</p>
+<p>hg clone http://hg.openjdk.java.net/jdk9/jdk9 MyOpenJDK</p>
+<p>cd MyOpenJDK</p>
+<p>cat README</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Welcome to OpenJDK!
+</span>===================<span style="color: #000000;">
+
+For information about building OpenJDK, including how to fully retrieve all
+source code, please see either of these:
+
+  </span>* common/doc/<span style="color: #000000;">building.html   (html version)
+  </span>* common/doc/<span style="color: #000000;">building.md     (markdown version)
+
+See http:</span>//openjdk.java.net/ for more information about OpenJDK.</pre>
+</div>
+<p>&nbsp;cd ./common/doc/<br />firefox building.html </p>
+<p>&nbsp;cd /opt/MyOpenJDK/<br />sh get_source.sh</p>
+<p id="tldr-instructions-for-the-impatient">&nbsp;<code>bash configure</code></p>
+<div class="cnblogs_code">
+<pre>checking <span style="color: #0000ff;">for</span> X11/extensions/<span style="color: #000000;">shape.h... no
+configure: error: Could not </span><span style="color: #0000ff;">find</span> all X11 headers (shape.h Xrender.h XTest.h Intrinsic.h). You might be able to fix this by running <span style="color: #800000;">'</span><span style="color: #800000;">sudo apt-get install libx11-dev libxext-dev libxrender-dev libxtst-dev libxt-dev</span><span style="color: #800000;">'</span><span style="color: #000000;">.
+configure exiting with result code </span><span style="color: #800080;">1</span></pre>
+</div>
+<p>apt-get install libx11-dev libxext-dev libxrender-dev libxtst-dev libxt-dev</p>
+<p><code>bash configure</code></p>
+<div class="cnblogs_code">
+<pre>configure: error: Could not <span style="color: #0000ff;">find</span> cups! You might be able to fix this by running <span style="color: #800000;">'</span><span style="color: #800000;">sudo apt-get install libcups2-dev</span><span style="color: #800000;">'</span>. </pre>
+</div>
+<p>&nbsp;apt-get install libcups2-dev</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">在处理时有错误发生：
+ oracle</span>-java7-<span style="color: #000000;">installer
+E: Sub</span>-process /usr/bin/dpkg returned an error code (<span style="color: #800080;">1</span>)</pre>
+</div>
+<p>&nbsp;<code>bash configure</code></p>
+<div class="cnblogs_code">
+<pre>configure: error: Could not <span style="color: #0000ff;">find</span> freetype! You might be able to fix this by running <span style="color: #800000;">'</span><span style="color: #800000;">sudo apt-get install libfreetype6-dev</span><span style="color: #800000;">'</span>.</pre>
+</div>
+<p>apt-get install libfreetype6-dev</p>
+<div class="cnblogs_code">
+<pre>再次使用存在的到 download.oracle.com:<span style="color: #800080;">80</span><span style="color: #000000;"> 的连接。
+已发出 HTTP 请求，正在等待回应... </span><span style="color: #800080;">404</span><span style="color: #000000;"> Not Found
+</span><span style="color: #800080;">2018</span>-<span style="color: #800080;">03</span>-<span style="color: #800080;">17</span> <span style="color: #800080;">15</span>:<span style="color: #800080;">00</span>:<span style="color: #800080;">46</span> 错误 <span style="color: #800080;">404</span><span style="color: #000000;">：Not Found。
+
+download failed
+Oracle JDK </span><span style="color: #800080;">7</span><span style="color: #000000;"> is NOT installed.
+dpkg: 处理软件包 oracle</span>-java7-installer (--<span style="color: #000000;">configure)时出错：
+ 子进程 已安装 post</span>-installation 脚本 返回错误状态 <span style="color: #800080;">1</span><span style="color: #000000;">
+正在设置 libfreetype6:amd64 (</span><span style="color: #800080;">2.6</span>.<span style="color: #800080;">1</span>-<span style="color: #800080;">0</span>.1ubuntu2.<span style="color: #800080;">3</span><span style="color: #000000;">) ...
+正在设置 zlib1g</span>-dev:amd64 (<span style="color: #800080;">1</span>:<span style="color: #800080;">1.2</span>.<span style="color: #800080;">8</span>.dfsg-2ubuntu4.<span style="color: #800080;">1</span><span style="color: #000000;">) ...
+正在设置 libpng12</span>-dev:amd64 (<span style="color: #800080;">1.2</span>.<span style="color: #800080;">54</span>-<span style="color: #000000;">1ubuntu1) ...
+正在设置 libfreetype6</span>-dev:amd64 (<span style="color: #800080;">2.6</span>.<span style="color: #800080;">1</span>-<span style="color: #800080;">0</span>.1ubuntu2.<span style="color: #800080;">3</span><span style="color: #000000;">) ...
+正在处理用于 libc</span>-bin (<span style="color: #800080;">2.23</span>-<span style="color: #000000;">0ubuntu5) 的触发器 ...
+在处理时有错误发生：
+ oracle</span>-java7-<span style="color: #000000;">installer
+E: Sub</span>-process /usr/bin/dpkg returned an error code (<span style="color: #800080;">1</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre># <span style="color: #800080;">1</span><span style="color: #000000;">. oracle openjdk ppa source
+</span><span style="color: #0000ff;">sudo</span> add-apt-repository ppa:openjdk-r/<span style="color: #000000;">ppa
+</span><span style="color: #0000ff;">sudo</span> apt-<span style="color: #000000;">get update
+</span><span style="color: #0000ff;">sudo</span> apt-get <span style="color: #0000ff;">install</span> openjdk-<span style="color: #800080;">7</span>-jdk  <span style="color: #008000;">//</span><span style="color: #008000;"> OpenJdk 7安装：</span></pre>
+</div>
+<p>update-alternatives --config javac<br />update-alternatives --config java<br />改成 openJDK 7</p>
+<p>再次 &nbsp;<code>bash configure</code></p>
+<div class="cnblogs_code">
+<pre>====================================================<span style="color: #000000;">
+A new configuration has been <strong>successfully</strong> created </span><span style="color: #0000ff;">in</span>
+/opt/MyOpenJDK/build/linux-x86_64-normal-server-<span style="color: #000000;">release
+using default settings.
+
+Configuration summary:
+</span>*<span style="color: #000000;"> Debug level:    release
+</span>*<span style="color: #000000;"> HS debug level: product
+</span>*<span style="color: #000000;"> JDK variant:    normal
+</span>*<span style="color: #000000;"> JVM variants:   server
+</span>* OpenJDK target: OS: linux, CPU architecture: x86, address length: <span style="color: #800080;">64</span>
+* Version <span style="color: #0000ff;">string</span>: <span style="color: #800080;">9</span>-internal+<span style="color: #800080;">0</span>-adhoc.root.MyOpenJDK (<span style="color: #800080;">9</span>-<span style="color: #000000;">internal)
+
+Tools summary:
+</span>* Boot JDK:       openjdk version <span style="color: #800000;">"</span><span style="color: #800000;">1.8.0_151</span><span style="color: #800000;">"</span> OpenJDK Runtime Environment (build <span style="color: #800080;">1.8</span>.0_151-8u151-b12-0ubuntu0.<span style="color: #800080;">16.04</span>.<span style="color: #800080;">2</span>-b12) OpenJDK <span style="color: #800080;">64</span>-Bit Server VM (build <span style="color: #800080;">25.151</span>-b12, mixed mode)  (at /usr/lib/jvm/java-<span style="color: #800080;">8</span>-openjdk-<span style="color: #000000;">amd64)
+</span>* Toolchain:      <span style="color: #0000ff;">gcc</span><span style="color: #000000;"> (GNU Compiler Collection)
+</span>* C Compiler:     Version <span style="color: #800080;">5.4</span>.<span style="color: #800080;">0</span> (at /usr/bin/<span style="color: #0000ff;">gcc</span><span style="color: #000000;">)
+</span>* C++ Compiler:   Version <span style="color: #800080;">5.4</span>.<span style="color: #800080;">0</span> (at /usr/bin/g++<span style="color: #000000;">)
+
+Build performance summary:
+</span>* Cores to use:   <span style="color: #800080;">3</span>
+* Memory limit:   <span style="color: #800080;">3840</span> MB</pre>
+</div>
+<p>&nbsp;于是我 make images</p>
+<div class="cnblogs_code">
+<pre>root@linux:/opt/MyOpenJDK# <span style="color: #0000ff;">make</span><span style="color: #000000;"> images
+Building target </span><span style="color: #800000;">'</span><span style="color: #800000;">images</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">in</span> configuration <span style="color: #800000;">'</span><span style="color: #800000;">linux-x86_64-normal-server-release</span><span style="color: #800000;">'</span>
+/bin/bash: 第 <span style="color: #800080;">0</span> 行: cd: /opt/MyOpenJDK/hotspot/<span style="color: #0000ff;">make</span><span style="color: #000000;">: 没有那个文件或目录
+</span><span style="color: #0000ff;">make</span>[<span style="color: #800080;">2</span>]: *** [hotspot-server-gensrc] Error <span style="color: #800080;">1</span>
+<span style="color: #0000ff;">make</span>[<span style="color: #800080;">2</span>]: ***<span style="color: #000000;"> 正在等待未完成的任务....
+</span><span style="color: #0000ff;">make</span>/Main.gmk:<span style="color: #800080;">255</span>: recipe <span style="color: #0000ff;">for</span> target <span style="color: #800000;">'</span><span style="color: #800000;">hotspot-server-gensrc</span><span style="color: #800000;">'</span><span style="color: #000000;"> failed
+Compiling </span><span style="color: #800080;">8</span> files <span style="color: #0000ff;">for</span><span style="color: #000000;"> BUILD_TOOLS_LANGTOOLS
+
+ERROR: Build failed </span><span style="color: #0000ff;">for</span> target <span style="color: #800000;">'</span><span style="color: #800000;">images</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">in</span> configuration <span style="color: #800000;">'</span><span style="color: #800000;">linux-x86_64-normal-server-release</span><span style="color: #800000;">'</span> (exit code <span style="color: #800080;">2</span><span style="color: #000000;">) 
+
+</span>=== Make failed targets repeated here ===
+<span style="color: #0000ff;">make</span>/Main.gmk:<span style="color: #800080;">255</span>: recipe <span style="color: #0000ff;">for</span> target <span style="color: #800000;">'</span><span style="color: #800000;">hotspot-server-gensrc</span><span style="color: #800000;">'</span><span style="color: #000000;"> failed
+</span>=== End of repeated output ===<span style="color: #000000;">
+
+Hint: Try searching the build log </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> the name of the first failed target.
+Hint: See common</span>/doc/building.html#troubleshooting <span style="color: #0000ff;">for</span><span style="color: #000000;"> assistance.
+
+</span>/opt/MyOpenJDK/<span style="color: #0000ff;">make</span>/Init.gmk:<span style="color: #800080;">291</span>: recipe <span style="color: #0000ff;">for</span> target <span style="color: #800000;">'</span><span style="color: #800000;">main</span><span style="color: #800000;">'</span><span style="color: #000000;"> failed
+</span><span style="color: #0000ff;">make</span>[<span style="color: #800080;">1</span>]: *** [main] Error <span style="color: #800080;">1</span>
+/opt/MyOpenJDK/<span style="color: #0000ff;">make</span>/Init.gmk:<span style="color: #800080;">185</span>: recipe <span style="color: #0000ff;">for</span> target <span style="color: #800000;">'</span><span style="color: #800000;">images</span><span style="color: #800000;">'</span><span style="color: #000000;"> failed
+</span><span style="color: #0000ff;">make</span>: *** [images] Error <span style="color: #800080;">2</span></pre>
+</div>
+<p>（失败）</p>
+<p>&nbsp;再尝试 <code>bash configure</code></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">WARNING: The result of this configuration has overridden an older
+configuration. You </span>*should* run <span style="color: #800000;">'</span><span style="color: #800000;">make clean</span><span style="color: #800000;">'</span> to <span style="color: #0000ff;">make</span><span style="color: #000000;"> sure you get a
+proper build. Failure to </span><span style="color: #0000ff;">do</span> so might result <span style="color: #0000ff;">in</span> strange build problems.</pre>
+</div>
+<p>x</p>
+<p>我记得 opne jdk8u 目录下是有hotspot 的，但是jdk9 目录下找不到。正好没有把open jdk8u删掉，切进去试试。</p>
+<div class="cnblogs_code">
+<pre>/opt/jdk8u# bash configure </pre>
+</div>
+<p>通过配置检查，并得到下面的提示：</p>
+<div class="cnblogs_code">
+<pre>Build performance tip: ccache gives a tremendous speedup <span style="color: #0000ff;">for</span> C++<span style="color: #000000;"> recompilations.
+You </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> not have ccache installed. Try installing it.
+You might be able to fix this by running </span><span style="color: #800000;">'</span><span style="color: #800000;">sudo apt-get install ccache</span><span style="color: #800000;">'</span>.</pre>
+</div>
+<p>apt-get install ccache（失败）</p>
+<p>make images</p>
+<div class="cnblogs_code">
+<pre>警告: [options] 未与 -source <span style="color: #800080;">1.6</span><span style="color: #000000;"> 一起设置引导类路径
+</span><span style="color: #800080;">1</span><span style="color: #000000;"> 个警告
+Generating linux_amd64_docs</span>/<span style="color: #000000;">jvmti.html
+INFO: ENABLE_FULL_DEBUG_SYMBOLS</span>=<span style="color: #800080;">1</span><span style="color: #000000;">
+INFO: ALT_OBJCOPY</span>=/usr/bin/<span style="color: #000000;">objcopy
+INFO: </span>/usr/bin/<span style="color: #000000;">objcopy cmd found so will create .debuginfo files.
+INFO: STRIP_POLICY</span>=<span style="color: #000000;">min_strip
+INFO: ZIP_DEBUGINFO_FILES</span>=<span style="color: #800080;">1</span><span style="color: #000000;">
+## Finished hotspot (build </span><span style="color: #0000ff;">time</span> <span style="color: #800080;">00</span>:<span style="color: #800080;">04</span>:<span style="color: #800080;">56</span><span style="color: #000000;">)
+
+## Starting corba
+</span>/bin/<span style="color: #0000ff;">sh</span>: <span style="color: #800080;">1</span>: cd: can<span style="color: #800000;">'</span><span style="color: #800000;">t cd to /opt/jdk8u/corba/make</span>
+/opt/jdk8u<span style="color: #008000;">//</span><span style="color: #008000;">make/Main.gmk:89: recipe for target 'corba-only' failed</span>
+<span style="color: #0000ff;">make</span>: *** [corba-only] Error <span style="color: #800080;">2</span></pre>
+</div>
+<p>貌似是编译了一半。</p>
+<p>再试一次 make all</p>
+<div class="cnblogs_code">
+<pre>root@linux:/opt/jdk8u# <span style="color: #0000ff;">make</span><span style="color: #000000;"> all
+Building OpenJDK </span><span style="color: #0000ff;">for</span> target <span style="color: #800000;">'</span><span style="color: #800000;">all</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">in</span> configuration <span style="color: #800000;">'</span><span style="color: #800000;">linux-x86_64-normal-server-release</span><span style="color: #800000;">'</span><span style="color: #000000;">
+
+## Starting langtools
+## Finished langtools (build </span><span style="color: #0000ff;">time</span> <span style="color: #800080;">00</span>:<span style="color: #800080;">00</span>:<span style="color: #800080;">01</span><span style="color: #000000;">)
+
+## Starting hotspot
+## Finished hotspot (build </span><span style="color: #0000ff;">time</span> <span style="color: #800080;">00</span>:<span style="color: #800080;">00</span>:<span style="color: #800080;">00</span><span style="color: #000000;">)
+
+## Starting corba
+</span>/bin/<span style="color: #0000ff;">sh</span>: <span style="color: #800080;">1</span>: cd: can<span style="color: #800000;">'</span><span style="color: #800000;">t cd to /opt/jdk8u/corba/make</span>
+/opt/jdk8u<span style="color: #008000;">//</span><span style="color: #008000;">make/Main.gmk:89: recipe for target 'corba-only' failed</span>
+<span style="color: #0000ff;">make</span>: *** [corba-only] Error <span style="color: #800080;">2</span></pre>
+</div>
+<p>重头再来一遍，不行就用 vps 试一试。</p>
+<div class="cnblogs_code">
+<pre>hg clone http:<span style="color: #008000;">//</span><span style="color: #008000;">hg.openjdk.java.net/jdk9/jdk9</span>
+<span style="color: #000000;">cd jdk9
+bash get_source.</span><span style="color: #0000ff;">sh</span><span style="color: #000000;">
+bash configure
+</span><span style="color: #0000ff;">make</span><span style="color: #000000;"> images
+.</span>/build<span style="color: #008000;">/*</span><span style="color: #008000;">/images/jdk/bin/java -version
+make run-test-tier1</span></pre>
+</div>
+<p>&nbsp;还是失败了，<span style="color: #000000;">get_source.<span style="color: #0000ff;">sh</span></span> 的时候报了很多类似这样的：</p>
+<div class="cnblogs_code">
+<pre> abort: stream ended unexpectedly (got <span style="color: #800080;">115</span> bytes, expected <span style="color: #800080;">245</span>)</pre>
+</div>
+<p>还是一样的命令，换 vps :</p>
+<p><span style="color: #000000;">get_source.<span style="color: #0000ff;">sh&nbsp; <br /></span></span></p>
+<div class="cnblogs_code">
+<pre>WARNING: jaxws exited abnormally (<span style="color: #800080;">255</span><span style="color: #000000;">)
+root@xkfx:</span>/opt/jdk9# hg clone http:<span style="color: #008000;">//</span><span style="color: #008000;">hg.openjdk.java.net/jdk9/jdk9/jaxws jaxws</span> </pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">openjdk
+&mdash;&mdash; corba：不流行的多语言、分布式通讯接口
+&mdash;&mdash; hotspot：Java 虚拟机
+&mdash;&mdash; jaxp：XML 处理
+&mdash;&mdash; jaxws：一组 XML web services 的 Java API
+&mdash;&mdash; jdk：java 开发工具包
+&mdash;&mdash; &mdash;&mdash; 针对操作系统的部分
+&mdash;&mdash; &mdash;&mdash; share：与平台无关的实现
+&mdash;&mdash; langtools：Java 语言工具
+&mdash;&mdash; nashorn：JVM 上的 JavaScript 运行时</span></pre>
+</div>
+<p>来自 <a href="https://home.cnblogs.com/u/dennyzhangdd/">只会一点java</a></p>
+<p><span style="color: #000000;">get_source</span> 成功的话，目录应该是这样的</p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt/jdk9# <span style="color: #0000ff;">ls</span><span style="color: #000000;">
+ASSEMBLY_EXCEPTION  corba       jaxp   langtools  Makefile  test
+common            get_source.</span><span style="color: #0000ff;">sh</span><span style="color: #000000;">  jaxws  LICENSE    nashorn
+configure        hotspot       jdk      </span><span style="color: #0000ff;">make</span>         README</pre>
+</div>
+<p><span style="color: #000000;">bash configure</span></p>
+<div class="cnblogs_code">
+<pre>configure: error: Could not <span style="color: #0000ff;">find</span> required tool <span style="color: #0000ff;">for</span><span style="color: #000000;"> ZIPEXE
+configure exiting with result code </span><span style="color: #800080;">1</span></pre>
+</div>
+<p>apt-get install zip</p>
+<p><span>bash configure</span></p>
+<p><span>make clean&nbsp;</span></p>
+<p><span>make images</span></p>
+<p><span>然后挂在后台编译，</span></p>
+<div class="cnblogs_code">
+<pre>root@xkfx:/opt/jdk9/build/linux-x86_64-normal-server-release/images/jdk/bin# ./java -<span style="color: #000000;">version
+openjdk version </span><span style="color: #800000;">"</span><span style="color: #800000;">9-internal</span><span style="color: #800000;">"</span><span style="color: #000000;">
+OpenJDK Runtime Environment (build </span><span style="color: #800080;">9</span>-internal+<span style="color: #800080;">0</span>-<span style="color: #000000;">adhoc.root.jdk9)
+OpenJDK </span><span style="color: #800080;">64</span>-Bit Server VM (build <span style="color: #800080;">9</span>-internal+<span style="color: #800080;">0</span>-adhoc.root.jdk9, mixed mode)</pre>
+</div>
+<p>&nbsp;</p>
+<p>查看主要源代码：</p>
+<p>sudo apt-get install tree</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">tree 以树状图显示所有文件
+tree </span>-L N 以树状图显示所有文件，子文件夹显示到第 N 层</pre>
+</div>
+<p>root@xkfx:/opt/jdk9/hotspot/src# tree -L 1</p>
+<p><em id="__mceDel">.<br />├── cpu<br />├── jdk.aot<br />├── jdk.hotspot.agent<br />├── jdk.internal.vm.ci<br />├── jdk.internal.vm.compiler<br />├── os<br />├── os_cpu<br />└── share</em></p>

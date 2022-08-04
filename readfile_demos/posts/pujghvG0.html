@@ -1,0 +1,58 @@
+<p>将【新注册的用户的用户名和密码】保存到服务端本地</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">将注册成功的用户名和密码保存到本地</span><span style="color: #008000;">*/</span>    
+                <span style="color: #008000;">/*</span><span style="color: #008000;">定位</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                File f </span>= <span style="color: #0000ff;">new</span> File("D:/lab_2/用户名和密码.qq"<span style="color: #000000;">);
+            
+                </span><span style="color: #008000;">/*</span><span style="color: #008000;">建立管道</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                FileWriter fw </span>= <span style="color: #0000ff;">new</span> FileWriter(f , <span style="color: #0000ff;">true</span>);            <span style="color: #008000;">/*</span><span style="color: #008000;">注释：这里没有true是覆盖模式，有true是追加模式</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                PrintWriter pw </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PrintWriter(fw);        
+            
+                </span><span style="color: #008000;">/*</span><span style="color: #008000;">操作管道</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                pw.println(uandp);
+            
+                pw.close();                                            </span><span style="color: #008000;">/*</span><span style="color: #008000;">注释：将缓存到PrintWriter缓冲区的内容刷新（追加）到文件中</span><span style="color: #008000;">*/</span>
+            </pre>
+</div>
+<p>将【用户名和密码】发送到服务端</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent arg0){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">System.out.println(arg0);</span>
+        <span style="color: #0000ff;">if</span>(arg0.getActionCommand().equals(" CONFIRM "<span style="color: #000000;">)){
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+                </span><span style="color: #008000;">/*</span><span style="color: #008000;">获取用户名和密码 --&gt; 临时存储在字符串变量中</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                String user </span>=<span style="color: #000000;"> txtUser.getText();
+                String pass </span>=<span style="color: #000000;"> txtPass.getText();
+                String passRe </span>=<span style="color: #000000;"> txtPassRe.getText();
+                
+                Socket s </span>= <span style="color: #0000ff;">new</span> Socket("127.0.0.1" , 8000<span style="color: #000000;">);
+                
+                </span><span style="color: #008000;">/*</span><span style="color: #008000;">建立输出管道</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                OutputStream os </span>=<span style="color: #000000;"> s.getOutputStream();
+                OutputStreamWriter osw </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> OutputStreamWriter(os);
+                PrintWriter pw </span>= <span style="color: #0000ff;">new</span> PrintWriter(osw , <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+                
+                </span><span style="color: #008000;">/*</span><span style="color: #008000;">操作输出管道</span><span style="color: #008000;">*/</span>
+                <span style="color: #008000;">/*</span><span style="color: #008000;">判断两次密码输入是否一致</span><span style="color: #008000;">*/</span>
+                <span style="color: #0000ff;">if</span><span style="color: #000000;">(pass.equals(passRe)){
+                    </span><span style="color: #008000;">/*</span><span style="color: #008000;">向服务端发送用户名和密码</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                    pw.println(user</span>+"%"+<span style="color: #000000;"> pass);
+                    
+                    </span><span style="color: #008000;">/*</span><span style="color: #008000;">后续事件：显示成功对话框 --&gt; 让注册界面消失</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                    JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "success!"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">this</span>.setVisible(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                }
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                    </span><span style="color: #008000;">/*</span><span style="color: #008000;">显示错误对话框</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                    JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span>, "The passwords you typed do not match,type the same password in both text boxes."<span style="color: #000000;">);
+                    
+                    </span><span style="color: #008000;">/*</span><span style="color: #008000;">后续事件：.....</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+                    txtPassRe.setText(</span>""<span style="color: #000000;">);
+                }
+            }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+        }
+    }</span></pre>
+</div>
+<p>一些细节问题没有处理，比如：允许相同用户名重复注册。</p>
+<p>另外有个很严重的问题，如果两次密码输入不一致，那么接下来重新输入正确密码后，服务端将无法接受到用户端的消息，而客户端仍然提示成功。</p>

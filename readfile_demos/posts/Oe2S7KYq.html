@@ -1,0 +1,276 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">Logback's architecture</a></li>
+<li><a name="a6"></a><a href="#anchor1">Logger, Appenders and Layouts</a>
+<ul>
+<li><a href="#anchor2">Effective Level（有效等级）又名Level Inheritance</a></li>
+<li><a href="#anchor3">Retrieving Loggers - - 检索logger</a></li>
+<li><a href="#anchor4">Appenders and Layouts</a></li>
+<li><a name="x"></a><a href="#anchor5">A peek under the hood在引擎盖下面偷看一下。。</a>
+<ul>
+<li><a href="#anchor6">1. Get the filter chain decision</a></li>
+<li><a href="#anchor7">2. Apply the&nbsp;</a><a href="https://logback.qos.ch/manual/architecture.html#basic_selection">basic selection rule</a></li>
+<li><a href="#anchor8">3. Create a&nbsp;<code>LoggingEvent</code>&nbsp;object</a></li>
+<li><a href="#anchor9">4. Invoking appenders</a></li>
+<li><a href="#anchor10">5. Formatting the output</a></li>
+<li><a href="#anchor11">6. Sending out the&nbsp;<code>LoggingEvent</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#anchor12">Performance</a></li>
+</ol></ul>
+</div>
+<p>参杂着原文翻译和自己的话。。感谢有道翻译。</p>
+<p>全文注释：</p>
+<ul>
+<li>log请求=logging request=日志请求，指代logger.info、logger.debug之类的调用。</li>
+<li>祖先的意思根据语境变化，有时候也包含父母，大多数时候只指爷爷辈以上。</li>
+</ul>
+<h2><a name="anchor0"></a>Logback's architecture</h2>
+<p>logback被分成三个模块：logback-core, logback-classic和logback-access，其中core模块是其它两个模块的基础。classic模块是core模块的扩展，它对应着log4j的一个显著改进版本。logback-classic实现了<a href="http://www.slf4j.org/">SLF4J API</a>，这让你可以在各种日志系统（JUL、log4j等）和logback间无压力地切换。第三个名为access的模块与Servlet容器集成，以提供HTTP访问日志功能。文档的剩余部分，主要讲述logback-classic相关的内容。</p>
+<h2><a name="anchor1"></a><a name="a6"></a>Logger, Appenders and Layouts</h2>
+<p>Logback建立在三种主要类的基础上：<code>Logger</code>,&nbsp;<code>Appender以及</code><code>Layout。</code></p>
+<p>Logger类属于logback-classic模块，另外两个接口属于logback-core模块，作为一个通用模块，在logback-core模块中并没有logger的概念。</p>
+<h3 class="doAnchor">Logger context</h3>
+<p>任何日志API优于普通System.out.println的第一个也是最重要的优势在于：<span style="color: #ff0000; background-color: #ffff99;">日志API能够禁用特定的log语句，同时允许其他log语句不受阻碍地打印。</span>这暗示着log语句按照开发人员制定的标准分成若干类。在logback-classic中，这种分类是logger的固有部分。<strong>所有logger都共同隶属于一个LoggerContext</strong>，后者负责制造logger以及将它们排列在<strong>树状层次结构</strong>中。</p>
+<p><span>logger都是有名字的实体。</span><span>它们的名字是大小写敏感，并且遵循分层命名规则。例如说，名为&ldquo;com.mycompany&rdquo;的logger被称作名为&ldquo;com.mycompany.xxx&rdquo;的logger的父母（直接关系！）。类似地，&ldquo;com&rdquo;被称为&ldquo;com.mycompany.xxx&rdquo;的祖先（隔代关系）。</span></p>
+<p><span>root logger位于logger的树状层次结构的顶端（根部）。它的特殊之处在于它是任何logger树状层次结构的一部分。像其它Logger一样，可以通过名字拿到它：</span></p>
+<div class="cnblogs_code">
+<pre>        Logger rootLogger =<span style="color: #000000;"> LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+        rootLogger.debug(</span>"大家好！我是root logger");</pre>
+</div>
+<h3><a name="anchor2"></a>Effective Level（有效等级）又名Level Inheritance</h3>
+<p>logger可以被赋予等级，可以分配的等级有：TRACE, DEBUG, INFO, WARN和ERROR。Level类是final的，不能有子类！文档上的言下之意貌似是有更灵活的方式来改变Level类。如果，一个logger没有被赋予等级，则它的有效等级与和它最近的<strong>被赋予等级的</strong>祖先logger一样。言下之意就是，<span style="color: #ff0000; background-color: #ffff99;">所有logger虽然不一定都有<strong>赋予等级</strong>，但是都是具有&ldquo;<strong>有效等级</strong>&rdquo;的（继承自祖先）。</span>参考图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181116222051401-1310399447.png" alt="" width="501" height="173" /></p>
+<p>强调：子logger继承的是最近祖先的assigned level，而不是effective level！</p>
+<h3 class="doAnchor">Printing methods and the basic selection rule</h3>
+<p>形如logger.info("xxxxxxxx...")是一个等级为info的log请求。<span style="color: #ff0000; background-color: #ffff99;">只有在log请求的等级<strong>高于或者等于</strong>它的logger的有效等级时才是&ldquo;启用（enabled&nbsp;）&rdquo;的，否则称该请求被禁用（disabled）。</span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181117141519279-1843820548.png" alt="" width="526" height="86" /></p>
+<p>这个规则是logback的核心。它设定的级别（logger有效等级，log请求等级）顺序如下：TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR。</p>
+<p>basic selection rule例子程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">package org.sample.logback;
+
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LogbackTest {
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> testLogback() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> root logger的默认赋予等级，也就是有效等级为DEBUG</span>
+        Logger rootLogger =<span style="color: #000000;"> LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> This request is disabled, because TRACE &lt; DEBUG.</span>
+        rootLogger.trace(<span style="color: #800000;">"</span><span style="color: #800000;">trace：大家好！我是root logger</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> This request is enabled, because DEBUG &gt;= DEBUG</span>
+        rootLogger.debug(<span style="color: #800000;">"</span><span style="color: #800000;">debug：大家好！我是root logger</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> This request is enabled, because INFO &gt;= DEBUG</span>
+        rootLogger.info(<span style="color: #800000;">"</span><span style="color: #800000;">info：大家好！我是root logger</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> This request is enabled, because WARN &gt;= DEBUG</span>
+        rootLogger.warn(<span style="color: #800000;">"</span><span style="color: #800000;">warn：大家好！我是root logger</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+        output=
+        14:28:37.443 [main] DEBUG ROOT - debug：大家好！我是root logger
+        14:28:37.448 [main] INFO ROOT - info：大家好！我是root logger
+        14:28:37.448 [main] WARN ROOT - warn：大家好！我是root logger
+        PS. 唯独不见trace
+         </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+}</span></pre>
+</div>
+<h3><a name="anchor3"></a>Retrieving Loggers - - 检索logger</h3>
+<p>名字相同的logger就是同一个logger，给定logger的名字可以在应用程序中的任何地方拿到这个logger。</p>
+<p>按照生物学的观点，老子总是得先于孩子的。但是logback有那么点不同，它允许儿子先初始化、老子之后初始化，不过两个logger的父子关系在老子初始化后也会自动关联上去，让我们来看一个例子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.logback;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> ch.qos.logback.classic.Level;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.slf4j.Logger;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.slf4j.LoggerFactory;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LogbackTest {
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> testLogback() {
+        Logger son </span>= LoggerFactory.getLogger("father.son"); <span style="color: #008000;">//</span><span style="color: #008000;"> 儿子先进行初始化
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> son默认继承root logger的赋予等级，也就是son的有效等级是DEBUG</span>
+        son.trace("help！"); <span style="color: #008000;">//</span><span style="color: #008000;"> 这个log请求未被启用，因为 TRACE &lt; DEBUG
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Level类被定义在ch.qos.logback.classic里。所以必须用ch.qos.logback.classic.Logger才能设置它的level</span>
+        ch.qos.logback.classic.Logger father =<span style="color: #000000;">
+                (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(</span>"father"<span style="color: #000000;">); 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这个时候，初始化儿子他爹，将自动进行关联</span>
+        father.setLevel(Level.TRACE); <span style="color: #008000;">//</span><span style="color: #008000;"> 这样儿子的有效等级也变成TRACE了</span>
+<span style="color: #000000;">
+        son.trace(</span>"help！"); <span style="color: #008000;">//</span><span style="color: #008000;"> 结果就是上一句不打印，这一句打印</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>当然，在通常情况下，logger的配置在程序初始化的时候就完成了（通过<strong>读取配置文件</strong>）。用类全名来命名logger仍然是目前已知的最好的策略。</p>
+<h3><a name="anchor4"></a>Appenders and Layouts</h3>
+<p>允许选择性地启用和禁用log请求只是logback功能的一部分。Logback还允许将log请求打印到多个目的地。用logback里的术语来讲，日志的&ldquo;输出目的地&rdquo;被称为appender。一个logger可以有多个appender。</p>
+<p><a name="a2"></a>可以通过<a href="https://logback.qos.ch/apidocs/ch/qos/logback/classic/Logger.html#addAppender(ch.qos.logback.core.Appender)">addAppender</a>方法把一个appender添加到logger上。对于给定logger的每个enable的log请求都将被转发给<strong>该logger中的所有appender</strong>，<span style="color: #ff0000;"><strong>以及</strong></span>层次结构中更高所有appender（祖先、父母辈的appender）。换句话说，appender具有可加性。儿子能够共享老子（以及祖先，前提是老子没有setAdditive(false);）的所有appender。举个例子，在这里忽略root logger的存在，假设老子logger有且仅有一个输出到文件的appender，而儿子logger有且仅有一个输出到控制台的appender，那么老子就只能打印到文件，而儿子<strong>既</strong>打印到控制台<strong>也</strong>打印到文件，如果有一天儿子不想再打印到文件了，只要<span style="color: #ff0000;"><strong>setAdditive(false);</strong></span>就可以了，并且孙子（儿子的儿子）也不会打印到文件（等于儿子全家都和老子断绝关系了。）</p>
+<p>用户通常并不满足于决定&ldquo;输出目的地&rdquo;，还希望能够随意操控打印格式。要做到这一点很简单，只需把layout和相应的appender关联起来就ok了。layout负责按照用户的期望格式化log请求。PatternLayout是标准logback发行版的一部分，它允许用户根据类似于C语言printf函数的转换模式指定输出格式。</p>
+<h3 class="doAnchor">Parameterized logging参数化log请求</h3>
+<p>不用这样写：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">if</span><span style="color: #000000;">(logger.isDebugEnabled()) { 
+  logger.debug(</span>"Entry number: " + i + " is " +<span style="color: #000000;"> String.valueOf(entry[i]));
+}</span></pre>
+</div>
+<p>这样写就可以了&darr;</p>
+<div class="cnblogs_code">
+<pre>Object entry = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SomeObject(); 
+logger.debug(</span>"The entry is {}.", entry);</pre>
+</div>
+<p>以下两行将产生完全相同的输出。但是，如果log请求被禁用，那么第二个变体的性能要比第一个变体好至少<strong>30倍</strong>：</p>
+<div class="cnblogs_code">
+<pre>logger.debug("The new entry is "+entry+"."<span style="color: #000000;">);
+logger.debug(</span>"The new entry is {}.", entry);</pre>
+</div>
+<p>多个参数也是支持的。如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.logback;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.slf4j.Logger;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.slf4j.LoggerFactory;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LogbackTest {
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> testLogback() {
+        Logger logger </span>= LoggerFactory.getLogger(LogbackTest.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        logger.debug(</span>"Hello {} , how are {}", "xkfx", "you"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 15:57:16.196 [main] DEBUG org.sample.logback.LogbackTest - Hello xkfx , how are you</span>
+        logger.debug("Hello {} , how are {}, what is your {}", "xkfx", "you", "name"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt;15:58:03.783 [main] DEBUG org.sample.logback.LogbackTest - Hello xkfx , how are you, what is your name
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 还可以这样&darr;</span>
+        Object[] paramArray = {"xkfx", "you", "name"<span style="color: #000000;">};
+        logger.debug(</span>"Hello {} , how are {}, what is your {}", paramArray); <span style="color: #008000;">//</span><span style="color: #008000;"> 输出同上</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<h3><a name="anchor5"></a><a name="x"></a>A peek under the hood在引擎盖下面偷看一下。。</h3>
+<p>介绍完了logback的几个基本组件，我们已经可以描述logback框架在用户发起log请求时所采取的步骤。现在让我们分析一下当用户调用名为com.wombat的logger的info()方法时，logback所采取的步骤。接下来用单步调试跟踪一下logger.info("Hello World");</p>
+<h4><a name="anchor6"></a>1. Get the filter chain decision</h4>
+<p>首先step into进入logger.info方法：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181117194925060-1140132787.png" alt="" width="371" height="74" /></p>
+<p>出现一个看到名字想不出来具体含义的方法，继续step into进入filterAndLog_0_Or3Plus方法：</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> filterAndLog_0_Or3Plus(String localFQCN, Marker marker, Level level, String msg, Object[] params, Throwable t) {
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+        如果filter chain存在，则TurboFilter链将被调用
+        1、Turbo过滤器可以设置上下文范围的阈值，
+        2、或者根据特定的信息（Marker、Level、Logger、message以及与每个log请求关联的Throwable等）
+        过滤掉某些事件。
+        （PS. 硬翻，可能有错）
+         </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+        FilterReply decision </span>= <span style="color: #0000ff;">this</span>.loggerContext.getTurboFilterChainDecision_0_3OrMore(marker, <span style="color: #0000ff;">this</span><span style="color: #000000;">, level, msg, params, t);
+        </span><span style="color: #0000ff;">if</span>(decision ==<span style="color: #000000;"> FilterReply.NEUTRAL) {
+            </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.effectiveLevelInt &gt;<span style="color: #000000;"> level.levelInt) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这里就比较顾名思义了。。
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 因为level.levelInt=20000（INFO）&gt; 有效等级DEBUG的10000
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 所以logging request不会在这里被抛弃</span>
+                <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            }
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(decision ==<span style="color: #000000;"> FilterReply.DENY) {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.buildLoggingEventAndAppend(localFQCN, marker, level, msg, params, t);
+    }</span></pre>
+</div>
+<p>=&gt; 补充turbo filter的相关资料：在Logback-classic中提供两个类型的filters , 一种是regular filters，另一种是turbo filter。regular filters是与appender 绑定的，而turbo filter是与与logger context（logger上下文绑定的，区别就是，turbo filter过滤所有logging request（log请求），而regular filter只过滤某个appender的logging request。（作者：巫巫巫政霖，原文：<a href="https://blog.csdn.net/Doraemon_wu/article/details/52072360%20" target="_blank">https://blog.csdn.net/Doraemon_wu/article/details/52072360 </a>）</p>
+<h4><a name="anchor7"></a>2. Apply the&nbsp;<a href="https://logback.qos.ch/manual/architecture.html#basic_selection">basic selection rule</a></h4>
+<p>就是指上面代码中的这一段：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181117203705774-920069702.png" alt="" width="590" height="124" /></p>
+<p>如果decision == FilterReply.ACCEPT的话，就没有这个步骤了。</p>
+<h4><a name="anchor8"></a>3. Create a&nbsp;<code>LoggingEvent</code>&nbsp;object</h4>
+<p>step into进入buildLoggingEventAndAppend(localFQCN, marker, level, msg, params, t);</p>
+<p>参数情况：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181117204035430-770432707.png" alt="" width="334" height="130" /></p>
+<p>我们将用这些参数，以及当前时间、当前线程、各种类的相关数据、MDC等构造一个LoggingEvent对象。</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> buildLoggingEventAndAppend(String localFQCN, Marker marker, Level level, String msg, Object[] params, Throwable t) {
+        <strong>LoggingEvent le </strong></span><strong>= <span style="color: #0000ff;">new</span> LoggingEvent(localFQCN, <span style="color: #0000ff;">this</span></strong><span style="color: #000000;"><strong>, level, msg, t, params);</strong>
+        le.setMarker(marker);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.callAppenders(le);
+    }</span></pre>
+</div>
+<p>请注意，其中一些字段是惰性初始化的，只有在实际需要时才初始化。<strong>MDC用于附加上下文信息来修饰logging request</strong>。MDC在<a href="https://logback.qos.ch/manual/mdc.html" target="_blank">后面的一章</a>中讨论。</p>
+<h4><a name="anchor9"></a>4. Invoking appenders</h4>
+<p>在创建LoggingEvent对象之后，logback将调用所有当前logger可用的appender<a href="#a2">（就是自己的、老子的、祖先的）</a>的doAppend()方法。step into进入callAppenders(ILogginEvent event);&darr;</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> callAppenders(ILoggingEvent event) {
+        </span><span style="color: #0000ff;">int</span> writes = 0<span style="color: #000000;">;
+
+        </span><strong><span style="color: #0000ff;">for</span>(Logger l = <span style="color: #0000ff;">this</span>; l != <span style="color: #0000ff;">null</span>; l =<span style="color: #000000;"> l.parent) {
+            writes </span>+=<span style="color: #000000;"> l.appendLoopOnAppenders(event);
+            </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">l.additive) {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+
+        </span></strong><span style="color: #0000ff;">if</span>(writes == 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">this</span>.loggerContext.noAppenderDefinedWarning(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        }
+
+    }</span></pre>
+</div>
+<p>这个for循环写得也是非常酷炫。。首先检查com.wombat的AppenderAttachableImpl，发现没有，再找com的aai，发现也没有，最后找root logger的aai，终于找到了，于是对这个aai（应该是和logger的特定appender共同存亡的一个对象）调用AppenderAttachableImpl类的appendLoopOnAppenders(event)方法，如下所示，外围的appendLoopOnAppenders方法是属于ch.qos.logback.classic.Logger类的：</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> appendLoopOnAppenders(ILoggingEvent event) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.aai != <span style="color: #0000ff;">null</span>?<strong><span style="color: #0000ff;">this</span>.aai.appendLoopOnAppenders</strong>(event):0<span style="color: #000000;">;
+    }</span></pre>
+</div>
+<p>在appendLoopOnAppenders的方法体里拿到对应appender的引用，调用doAppend方法（传入logginevent对象作为参数）。所有logback发行版里的appender都继承自抽象类AppenderBase，这个抽象类在synchronized块里实现了doAppend方法，从而确保了线程安全。doAppend方法体中同样会调用appender所关联的过滤器，同样是会拿到一个FilterReply来决定要不要放弃掉这个logging request。</p>
+<p>但是我却进入了一个叫做UnsynchronizedAppenderBase的doAppend方法里，并没有看到synchronized块：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('7a17960b-057e-46e0-9f81-c8418480a158')"><img id="code_img_closed_7a17960b-057e-46e0-9f81-c8418480a158" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_7a17960b-057e-46e0-9f81-c8418480a158" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('7a17960b-057e-46e0-9f81-c8418480a158',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_7a17960b-057e-46e0-9f81-c8418480a158" class="cnblogs_code_hide">
+<pre>    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> doAppend(E eventObject) {
+        </span><span style="color: #0000ff;">if</span>(!Boolean.TRUE.equals(<span style="color: #0000ff;">this</span><span style="color: #000000;">.guard.get())) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.guard.set(Boolean.TRUE);
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">.started) {
+                    </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.getFilterChainDecision(eventObject) ==<span style="color: #000000;"> FilterReply.DENY) {
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                    }
+
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.append(eventObject);
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                }
+
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.statusRepeatCount++ &lt; 3<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">this</span>.addStatus(<span style="color: #0000ff;">new</span> WarnStatus("Attempted to append to non started appender [" + <span style="color: #0000ff;">this</span>.name + "].", <span style="color: #0000ff;">this</span><span style="color: #000000;">));
+                }
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception var6) {
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.exceptionCount++ &lt; 3<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">this</span>.addError("Appender [" + <span style="color: #0000ff;">this</span>.name + "] failed to append."<span style="color: #000000;">, var6);
+                }
+
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.guard.set(Boolean.FALSE);
+            }
+
+        }
+    }</span></pre>
+</div>
+<span class="cnblogs_code_collapse">doAppend</span></div>
+<h4><a name="anchor10"></a>5. Formatting the output</h4>
+<div>被调用的appender负责格式化logging&nbsp;event。然而，有些(但不是全部)appender将格式化logging&nbsp;event的任务委托给一个layout。layout格式化LoggingEvent实例并以字符串的形式返回结果。注意，有些appender(比如SocketAppender)不会将logging&nbsp;event转换为字符串，而是序列化它。因此，它们既没有也不需要layout。</div>
+<div>
+<h4><a name="anchor11"></a>6. Sending out the&nbsp;<code>LoggingEvent</code></h4>
+<p>logging event完全格式化后，由每个appender发送到其目的地。</p>
+<p>贴张自己做的图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201811/1042431-20181117221946860-509717905.png" alt="" width="726" height="358" /></p>
+<h3 class="doAnchor"><a name="anchor12"></a>Performance</h3>
+<p>详细参考<a href="https://logback.qos.ch/manual/architecture.html" target="_blank">原文末尾</a>。</p>
+</div>

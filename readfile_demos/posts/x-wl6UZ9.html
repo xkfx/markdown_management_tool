@@ -1,0 +1,41 @@
+<p>类(class)是构造对象的模板或蓝图。</p>
+<p>对象的行为是用可调用的方法定义的.</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.time.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> EmployeeTest{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Employee{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> instance fields --------&gt; object's state</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> salary;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> LocalDate hireDay;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> constructors -------&gt; create object</span>
+    <span style="color: #0000ff;">public</span> Employee(String name, <span style="color: #0000ff;">double</span> salary, <span style="color: #0000ff;">int</span> year, <span style="color: #0000ff;">int</span> month, <span style="color: #0000ff;">int</span><span style="color: #000000;"> day){
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+        </span><span style="color: #0000ff;">this</span>.salary =<span style="color: #000000;"> salary;
+        hireDay </span>=<span style="color: #000000;"> LocalDate.of(year, month, day);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> methods ----&gt; object's behavior</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">double</span><span style="color: #000000;"> getSalary(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> salary;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> LocalDate getHireDay(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> hireDay;
+    }
+
+
+}</span></pre>
+</div>
+<p>&nbsp;</p>

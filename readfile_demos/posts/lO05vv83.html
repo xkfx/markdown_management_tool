@@ -1,0 +1,217 @@
+<p>索引：</p>
+<ul>
+<li><a href="#html-input-type">HTML 输入类型</a></li>
+<li><a href="#xhtml">XHTML</a></li>
+<li><a href="#h5">HTML5</a></li>
+<li><a href="#important">HTML5 样式指南和代码约定</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><abbr title="World Health Organization">WHO</abbr> 成立于 1948 年。</p>
+<p>对缩写进行标记能够为浏览器、翻译系统以及搜索引擎提供有用的信息。</p>
+<p>&nbsp;&nbsp;</p>
+<p>code 元素不保留多余的空格和折行：</p>
+<p>如需解决该问题，您必须在 pre 元素中包围代码：</p>
+<pre>var person = {
+    firstName:"Bill",
+    lastName:"Gates",
+    age:50,
+    eyeColor:"blue"
+}
+</pre>
+<p>爱因斯坦的公式：</p>
+<p><var>E</var> = <var>m</var> <var>c</var><sup>2</sup></p>
+<p>&nbsp;</p>
+<p>通过使用 HTML4.0，所有的格式化代码均可移出 HTML 文档，然后移入一个独立的样式表。</p>
+<p>样式表分为三种，一种是把 CSS 放在单独的一个文件，叫做&ldquo;外部样式表&rdquo;，另外一种是把 CSS 放在 &lt;head&gt;&lt;/head&gt; 里面，叫做&ldquo;内部样式表&rdquo;，最后一种比较少用，类似于下面这样，叫做&ldquo;内联样式&rdquo;。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="color: red; margin-left: 20px"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+This is a paragraph
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">超链接</span></h4>
+<div class="cnblogs_code">
+<pre>注释：请始终将正斜杠添加到子文件夹。假如这样书写链接：href="http://www.w3school.com.cn/html"，就会向服务器产生两次 HTTP 请求。这是因为服务器会添加正斜杠到这个地址，然后创建一个新的请求，就像这样：href="http://www.w3school.com.cn/html/"。</pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML 图片</span></h4>
+<p>比较少用到的应该就是<a href="http://www.w3school.com.cn/tiy/t.asp?f=html_areamap" target="_blank">创建图像映射</a></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML &lt;div&gt; 和 &lt;span&gt;</span></h4>
+<p>块级元素在浏览器显示时，通常会以新行来开始（和结束）。</p>
+<p>例子：&lt;h1&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;table&gt;</p>
+<p>内联元素在显示时通常不会以新行开始。</p>
+<p>例子：&lt;b&gt;, &lt;td&gt;, &lt;a&gt;, &lt;img&gt;</p>
+<p>&lt;div&gt; 元素的另一个常见的用途是文档布局。它取代了使用表格定义布局的老式方法。使用 &lt;table&gt; 元素进行文档布局不是表格的正确用法。&lt;table&gt; 元素的作用是显示表格化的数据。</p>
+<p>HTML &lt;div&gt; 元素是块级元素。它能够用作其他 HTML 元素的容器。</p>
+<p>HTML &lt;span&gt; 元素是行内元素，能够用作文本的容器。</p>
+<p>设置 &lt;span&gt; 元素的类，能够为相同的 &lt;span&gt; 元素设置相同的样式。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML 响应式 Web 设计</span></h4>
+<p>一种方法是自己写，例如说：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">.city </span>{<strong><span style="color: #ff0000;">
+float</span>:<span style="color: #0000ff;"> left</span>;</strong><span style="color: #ff0000;">
+margin</span>:<span style="color: #0000ff;"> 5px</span>;<span style="color: #ff0000;">
+padding</span>:<span style="color: #0000ff;"> 15px</span>;<span style="color: #ff0000;">
+width</span>:<span style="color: #0000ff;"> 300px</span>;<span style="color: #ff0000;">
+height</span>:<span style="color: #0000ff;"> 300px</span>;<span style="color: #ff0000;">
+border</span>:<span style="color: #0000ff;"> 1px solid black</span>;
+} </pre>
+</div>
+<p>另一种方法是用&nbsp;Bootstrap ，好像本质上差不多。（引用外部样式表，遵循命名规定）</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML 框架</span></h4>
+<p><a href="http://www.w3school.com.cn/tiy/t.asp?f=html_frame_navigation" target="_blank">导航框架</a>&nbsp;&nbsp;<a href="http://www.w3school.com.cn/tiy/t.asp?f=html_frame_jump" target="_blank">跳转至框架内的一个指定的节</a></p>
+<p>通过使用框架，你可以在同一个浏览器窗口中显示不止一个页面。每份HTML文档称为一个框架，并且每个框架都独立于其他的框架。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">frameset </span><span style="color: #ff0000;">cols</span><span style="color: #0000ff;">="25%,50%,25%"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">frame </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/example/html/frame_a.html"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">frame </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/example/html/frame_b.html"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">frame </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/example/html/frame_c.html"</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">noframes</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>您的浏览器无法处理框架！<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">noframes</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">frameset</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>-&nbsp;iframe 用于在网页内显示网页。<iframe style="margin-top: 15px;" src="http://www.cnblogs.com/xkxf/" width="99%" height="300"></iframe></p>
+<p>&nbsp;</p>
+<h4>HTML script <span style="text-decoration: underline;">元素</span></h4>
+<p>- &lt;noscript&gt; 标签</p>
+<div class="cnblogs_code">
+<pre>&lt;script type="text/javascript"&gt;<span style="color: #000000;">
+document.write(</span>"Hello World!"<span style="color: #000000;">)
+</span>&lt;/script&gt;
+&lt;noscript&gt;Your browser does not support JavaScript!&lt;/noscript&gt;</pre>
+</div>
+<p>- 如何应付老式的浏览器</p>
+<div class="cnblogs_code">
+<pre>&lt;script type="text/javascript"&gt;
+&lt;!--<span style="color: #000000;">
+document.write(</span>"Hello World!"<span style="color: #000000;">)
+</span><span style="color: #008000;">//</span><span style="color: #008000;">--&gt;</span>
+&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML 头部元素</span></h4>
+<p>元数据（metadata）是关于数据的信息。</p>
+<p>&lt;meta&gt; 标签提供关于 HTML 文档的元数据。元数据不会显示在页面上，但是对于机器是可读的。</p>
+<p>典型的情况是，meta 元素被用于规定页面的描述、关键词、文档的作者、最后修改时间以及其他元数据。</p>
+<p>&lt;meta&gt; 标签始终位于 head 元素中。</p>
+<p>元数据可用于浏览器（如何显示内容或重新加载页面），搜索引擎（关键词），或其他 web 服务。</p>
+<p>一些搜索引擎会利用 meta 元素的 name 和 content 属性来索引您的页面。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="description"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="Free Web tutorials on HTML, CSS, XML"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="keywords"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="HTML, CSS, XML"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">URL 编码会将字符转换为可通过因特网传输的格式。</span></h4>
+<p><span style="text-decoration: underline;"><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180321144042674-1895876002.png" alt="" width="384" height="61" /></span></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180321144100248-1875853397.png" alt="" /></p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML 颜色名</span></h4>
+<p>选色可以参照<a href="http://www.w3school.com.cn/html/html_colornames.asp" target="_blank"> w3school 的颜色表</a>。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">HTML 表单</span></h4>
+<p>&lt;input type="submit"&gt;&nbsp;定义用于向表单处理程序（form-handler）提交表单的按钮。</p>
+<p>表单处理程序通常是包含用来处理输入数据的脚本的服务器页面。</p>
+<p>表单处理程序在表单的&nbsp;action&nbsp;属性中指定，如果省略 action 属性，则 action 会被设置为当前页面。</p>
+<p>method 属性规定在提交表单时所用的 HTTP 方法（GET&nbsp;或&nbsp;POST）</p>
+<p><strong>当您使用 GET 时，表单数据在页面地址栏中是可见的</strong> - 如果是 GET 的话可以直接编辑地址 然后回车， 而不用 在页面提交。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="html-input-type" href="http://www.w3school.com.cn/html/html_form_input_types.asp" target="_blank">HTML 输入类型</a></span></h4>
+<p>&nbsp;&lt;input type="button&gt;&nbsp;定义按钮。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><strong><span style="color: #ff0000;"> onclick</span><span style="color: #0000ff;">="alert('Hello World!')"</span></strong><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="Click Me!"</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&lt;input type="number"&gt;&nbsp;用于应该包含数字值的输入字段。</p>
+<p>您能够对数字做出限制。</p>
+<p>根据浏览器支持，限制可应用到输入字段。</p>
+<form>Quantity (between 1 and 5): <input type="number" name="quantity" /></form><form>Birthday: <input type="date" name="bday" /></form><form>
+<p>Select your favorite color: <input type="color" name="favcolor" /></p>
+</form><form><input type="range" name="points" /></form><form>Birthday (month and year): <input type="month" name="bdaymonth" /></form><form>Select a week: <input type="week" name="week_year" /></form><form>Select a time: <input type="time" name="usr_time" /></form><form>Birthday (date and time): <input type="datetime" name="bdaytime" /></form><form>Birthday (date and time): <input type="datetime-local" name="bdaytime" /></form><form>E-mail: <input type="email" name="email" /></form><form>Search Google: <input type="search" name="googlesearch" /></form><form>Telephone: <input type="tel" name="usrtel" /></form><form>
+<p>Add your homepage: <input type="url" name="homepage" /></p>
+<p>掌握<a href="http://www.w3school.com.cn/html/html_form_attributes.asp" target="_blank"> input 元素的各种属性</a>也是非常必要的。随便 COPY 几个：</p>
+</form><form action="demo_form.asp"> First name: <input type="text" name="fname" /><br />
+  Last name: <input type="text" name="lname" /><br />
+  <input type="submit" />
+</form><form id="form1" action="action_page.php">
+   First name: <input type="text" name="fname" /><br />
+   <input type="submit" value="Submit" />
+</form><form>（仍然属于上面那个 Submit）Last name: <input type="text" name="lname" /></form><form action="action_page.php">
+   First name: <input type="text" name="fname" /><br />
+   Last name: <input type="text" name="lname" /><br />
+   <input type="submit" value="Submit" /><br />
+   <input type="submit" value="Submit as admin" />
+</form><form action="action_page.php" method="get">
+   First name: <input type="text" name="fname" /><br />
+   Last name: <input type="text" name="lname" /><br />
+   <input type="submit" value="Submit" />
+   <input type="submit" value="Submit using POST" />
+</form><form>
+<p> 
+<input type="image" src="img_submit.gif" alt="Submit" />
+<input type="text" />
+   
+   
+   
+   
+ 
+Enter a date before 1980-01-01:
+<input type="date" name="bday" />
+
+ Enter a date after 2000-01-01:
+<input type="date" name="bday" />
+</p>
+<p>Select images: <input type="file" name="img" />
+</p>
+<p>（正则表达式）Country code: 
+<input title="Three letter country code" type="text" name="country_code" /></p>
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+
+</form>
+<h4><span style="text-decoration: underline;"><a name="xhtml"></a>XHTML - 属性</span></h4>
+<p>XHTML 是更严格更纯净的 HTML 版本</p>
+<p>例如它 禁止属性简写，&nbsp;这是错误的：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">checked</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">readonly</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">disabled</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">selected</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>这是正确的：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">checked</span><span style="color: #0000ff;">="checked"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">readonly</span><span style="color: #0000ff;">="readonly"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">disabled</span><span style="color: #0000ff;">="disabled"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">selected</span><span style="color: #0000ff;">="selected"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="h5"></a>HTML5</span></h4>
+<p>HTML5 是<strong>最新</strong>的 HTML 标准。</p>
+<p>HTML5 是专门为承载丰富的 web 内容而设计的，并且无需额外插件。</p>
+<p>HTML5 拥有新的语义、图形以及<strong>多媒体元素</strong>。</p>
+<p>HTML5 提供的新元素和新的 API 简化了 web 应用程序的搭建。</p>
+<p>HTML5 是<strong>跨平台</strong>的，被设计为在不同类型的硬件（PC、平板、手机、电视机等等）之上运行。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180322110812388-1834528525.png" alt="" width="572" height="201" /></p>
+<p>canvas 和 svg 是 HTML5 的，vidio 和 audio 也是。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;">新的语义/结构元素</span></h4>
+<p>footer header 等块级元素也是。</p>
+<p><strong>语义元素清楚地向浏览器和开发者描述其意义。</strong></p>
+<p>非语义元素的例子：&lt;div&gt; 和 &lt;span&gt; - 无法提供关于其内容的信息。</p>
+<p>语义元素的例子：&lt;form&gt;、&lt;table&gt; 以及 &lt;img&gt; - 清晰地定义其内容。</p>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="important"></a>HTML5 样式指南和代码约定</span></h4>
+<p>！详细从 <a href="http://www.w3school.com.cn/html/html5_syntax.asp" target="_blank">w3school 页面</a><strong>中部</strong>开始读起。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180322112058372-2053328983.png" alt="" width="404" height="103" /></p>
+<p>&nbsp;</p>

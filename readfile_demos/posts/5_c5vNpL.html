@@ -1,0 +1,59 @@
+<h2>题</h2>
+<p>例题5-8 Unix is 命令（Unix is，<span class="origin">UVA 400）。完整题目见参考[1]</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> maxcol = <span style="color: #800080;">60</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> maxn = <span style="color: #800080;">100</span> + <span style="color: #800080;">5</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> filenames[maxn];
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出字符串s ，长度不足 len时补字符 extra </span>
+<span style="color: #0000ff;">void</span> print(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;s, <span style="color: #0000ff;">int</span> len, <span style="color: #0000ff;">char</span><span style="color: #000000;"> extra)
+{
+    cout </span>&lt;&lt;<span style="color: #000000;"> s;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != len - s.length(); ++<span style="color: #000000;">i) {
+        cout </span>&lt;&lt;<span style="color: #000000;"> extra;
+    }
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> n) {
+        </span><span style="color: #0000ff;">int</span> M = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 最长文件最开始是不知道的，要自己去求 </span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+            cin </span>&gt;&gt;<span style="color: #000000;"> filenames[i];
+            M </span>= max(M, (<span style="color: #0000ff;">int</span>)filenames[i].length()); <span style="color: #008000;">//</span><span style="color: #008000;"> STL的max函数
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 强制转型是必要的，否则会有如下的错误 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> [Error] no matching function for call to 'max(int&amp;, std::basic_string&lt;char&gt;::size_type)' </span>
+<span style="color: #000000;">        }
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算列数 cols 和行数 rows
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 附加条件每行最多输出60个字符，在此条件下要求行最少。</span>
+        <span style="color: #0000ff;">int</span> cols = (maxcol - M) / (M + <span style="color: #800080;">2</span>) + <span style="color: #800080;">1</span>, rows = (n - <span style="color: #800080;">1</span>) / cols + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 最右列 有 M 个 字符 ，其它列都是 M + 2 个字符
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 确定了 列数，那么行数也唯一确定了 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> PS. 这里 n 之所以 -1主要是服务于 刚好整除的情况， 不减1 的话
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 应用这个算式就会多一行。 </span>
+        print(<span style="color: #800000;">""</span>, <span style="color: #800080;">60</span>, <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+        sort(filenames, filenames </span>+<span style="color: #000000;"> n);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> r = <span style="color: #800080;">0</span>; r != rows; ++<span style="color: #000000;">r) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> c = <span style="color: #800080;">0</span>; c != cols; ++<span style="color: #000000;">c) {
+                </span><span style="color: #0000ff;">int</span> idx = c * rows + r; <span style="color: #008000;">//</span><span style="color: #008000;"> 计算应该填入当前坐标的 filename 的id </span>
+                <span style="color: #0000ff;">if</span> (idx != n) print(filenames[idx], c == cols - <span style="color: #800080;">1</span> ? M : M + <span style="color: #800080;">2</span>, <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">);
+            }
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        } 
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://vjudge.net/problem/UVA-400" target="_blank">https://vjudge.net/problem/UVA-400</a></p>
+<p>[2] <a href="https://www.cnblogs.com/farewell-farewell/p/5254896.html" target="_blank">Unix is 命令（含样例输入）</a></p>
+<p>&nbsp;</p>

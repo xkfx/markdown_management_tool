@@ -1,0 +1,90 @@
+<p><span style="background-color: #ffff99;">P154~p159：</span><br /><span style="background-color: #ffff99;">语句</span><br />1、通常情况下顺序执行。</p>
+<p>&nbsp;</p>
+<p>2、C++提供一组<strong>控制流（flow-of-control）</strong>语句以支持更复杂的执行路径。</p>
+<p>&nbsp;</p>
+<p>3、<strong>空语句</strong>的作用：语法上需要一条语句，但是逻辑上不需要。</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">while</span>(val &lt;= <span style="color: #800080;">10</span><span style="color: #000000;">) {
+        ;    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 空语句</span>
+    }</pre>
+</div>
+<p>注意：<span style="text-decoration: underline;">使用空语句时加上注释，提高可读性。</span></p>
+<p>&nbsp;</p>
+<p>4、<strong>复合语句</strong>的作用：语法上需要一条语句，但是逻辑上需要多条语句。</p>
+<p>&nbsp;</p>
+<p>ps：复合语句也被叫做<strong>块（block）</strong>，一个块就是一个<strong>作用域</strong>。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">语句作用域</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">if语句</span><br />1、C++规定：<span style="text-decoration: underline;">else与离它最近的尚未匹配的if匹配。</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.1</span><br />见上文</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.2</span><br />见上文</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.3</span><br />可读性降低。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span>, val = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(val &lt;= <span style="color: #800080;">10</span>) sum += val, ++<span style="color: #000000;">val;
+    std::cout </span>&lt;&lt; sum &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.4</span><br />a iter没有初始化<br />b status应该定义在语句外部</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.5</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;vector&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> vector&lt;<span style="color: #0000ff;">string</span>&gt; scores = {<span style="color: #800000;">"</span><span style="color: #800000;">f</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">d</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">c</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">b</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">a</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">a++</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> lettergrade;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> grade;
+    std::cin </span>&gt;&gt;<span style="color: #000000;"> grade;
+    </span><span style="color: #0000ff;">if</span> (grade &lt; <span style="color: #800080;">60</span><span style="color: #000000;">) {
+        lettergrade </span>= scores[<span style="color: #800080;">0</span>]; <span style="color: #008000;">//</span><span style="color: #008000;"> vector支持下标访问</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        lettergrade </span>= scores[(grade - <span style="color: #800080;">50</span>)/<span style="color: #800080;">10</span><span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span> (grade != <span style="color: #800080;">100</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (grade % <span style="color: #800080;">10</span> &gt; <span style="color: #800080;">7</span><span style="color: #000000;">) {
+                lettergrade </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (grade % <span style="color: #800080;">10</span> &lt; <span style="color: #800080;">3</span><span style="color: #000000;">) {
+                lettergrade </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+        }
+    }
+    std::cout </span>&lt;&lt; lettergrade &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.6</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+#include</span>&lt;vector&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> vector&lt;<span style="color: #0000ff;">string</span>&gt; scores = {<span style="color: #800000;">"</span><span style="color: #800000;">f</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">d</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">c</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">b</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">a</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">a++</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> lettergrade;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> grade;
+    std::cin </span>&gt;&gt;<span style="color: #000000;"> grade;
+    lettergrade </span>= (grade &lt; <span style="color: #800080;">60</span>) ? scores[<span style="color: #800080;">0</span>] : (grade == <span style="color: #800080;">100</span>) ? scores[(grade - <span style="color: #800080;">50</span>)/<span style="color: #800080;">10</span>] : (grade % <span style="color: #800080;">10</span> &gt; <span style="color: #800080;">7</span>) ? scores[(grade - <span style="color: #800080;">50</span>)/<span style="color: #800080;">10</span>] + <span style="color: #800000;">"</span><span style="color: #800000;">+</span><span style="color: #800000;">"</span> : (grade % <span style="color: #800080;">10</span> &lt; <span style="color: #800080;">3</span>) ? scores[(grade - <span style="color: #800080;">50</span>)/<span style="color: #800080;">10</span>] + <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> : scores[(grade - <span style="color: #800080;">50</span>)/<span style="color: #800080;">10</span><span style="color: #000000;">];
+    std::cout </span>&lt;&lt; lettergrade &lt;&lt;<span style="color: #000000;"> std::endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 5.7</span><br />a 少了分号<br />b 缺少花括号<br />c ival要在括号外面定义<br />d ival未定义。（。。。）</p>
+<p><span style="background-color: #ffff99;">&nbsp;</span></p>
+<p><span style="background-color: #ffff99;">练习 5.8</span><br />书上有。else与离它最近的尚未匹配的if匹配。</p>

@@ -1,0 +1,342 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p><a href="#a">为什么用数据库连接池？</a></p>
+</li>
+<li>
+<p><a href="#b">HikariCP快速入门</a></p>
+<ol>
+<li><a href="#b1">依赖</a></li>
+<li><a href="#b2">简单的草稿程序</a></li>
+<li><a href="#b3">设置连接池参数（只列举常用的）</a></li>
+<li><a href="#b4">MySQL配置</a></li>
+<li><a href="#b5">修改Java连接数据库#02#中的代码</a></li>
+<li><a href="#b6">测试</a></li>
+</ol></li>
+</ul>
+</div>
+<h2><a name="a"></a>为什么用数据库连接池？</h2>
+<p>为什么要用数据库连接池？</p>
+<p>如果我们分析一下典型的【连接数据库】所涉及的步骤，我们将理解为什么：</p>
+<ol>
+<li>使用数据库驱动程序打开与数据库的连接</li>
+<li>打开<a href="https://en.wikipedia.org/wiki/Network_socket">TCP套接字</a>以读取/写入数据</li>
+<li>通过套接字读取/写入数据</li>
+<li>关闭连接</li>
+<li>关闭套接字</li>
+</ol>
+<p>很明显，【连接数据库】是相当昂贵的操作，因此，应该想办法尽可能地减少、避免这种操作。</p>
+<p>这就是数据库连接池发挥作用的地方。通过简单地实现数据库连接容器（允许我们重用大量现有连接），我们可以有效地节省执行大量昂贵【连接数据库】的成本，从而提高数据库驱动应用程序的整体性能。</p>
+<p>&uarr; 译自<a href="http://www.baeldung.com/java-connection-pooling" target="_blank">&nbsp;A Simple Guide to Connection Pooling in Java</a>&nbsp;，有删改</p>
+<h2><a name="b"></a>HikariCP快速入门</h2>
+<p>HikariCP是一个轻量级的高性能JDBC连接池。GitHub链接：<a href="https://github.com/brettwooldridge/HikariCP" target="_blank">https://github.com/brettwooldridge/HikariCP</a></p>
+<h3><a name="b1"></a>1、依赖</h3>
+<ol>
+<li><span style="color: #ff0000;"><strong>HikariCP</strong></span></li>
+<li><span style="color: #ff0000;"><strong>slf4j （不需要日志实现也能跑）</strong></span></li>
+<li>logback-core</li>
+<li>logback-classic</li>
+</ol>
+<p>1和2以及<strong>相应数据库的JDBC驱动</strong>是必要的，日志实现可以用其它方案。</p>
+<h3><a name="b2"></a>2、简单的草稿程序</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.zaxxer.hikari.HikariConfig;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.zaxxer.hikari.HikariDataSource;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.PreparedStatement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Test {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> HikariConfig config = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariConfig();
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> HikariDataSource ds;
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        config.setJdbcUrl(</span>"jdbc:mysql://127.0.0.1:3306/profiles?characterEncoding=utf8"<span style="color: #000000;">);
+        config.setUsername(</span>"root"<span style="color: #000000;">);
+        config.setPassword(</span>"???????"<span style="color: #000000;">);
+        config.addDataSourceProperty(</span>"cachePrepStmts", "true"<span style="color: #000000;">);
+        config.addDataSourceProperty(</span>"prepStmtCacheSize", "250"<span style="color: #000000;">);
+        config.addDataSourceProperty(</span>"prepStmtCacheSqlLimit", "2048"<span style="color: #000000;">);
+        ds </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariDataSource(config);
+        config </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariConfig();
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Connection getConnection() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ds.getConnection();
+    }
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Test(){}
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile();
+        profile.setUsername(</span>"testname3"<span style="color: #000000;">);
+        profile.setPassword(</span>"123"<span style="color: #000000;">);
+        profile.setNickname(</span>"testnickname"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> Test.getConnection();
+            String sql </span>= "INSERT ignore INTO `profiles`.`profile` (`username`, `password`, `nickname`) " +
+                    "VALUES (?, ?, ?)"; <span style="color: #008000;">//</span><span style="color: #008000;"> 添加ignore出现重复不会抛出异常而是返回0</span>
+            <span style="color: #0000ff;">try</span> (PreparedStatement ps =<span style="color: #000000;"> conn.prepareStatement(sql)) {
+                ps.setString(</span>1<span style="color: #000000;">, profile.getUsername());
+                ps.setString(</span>2<span style="color: #000000;">, profile.getPassword());
+                ps.setString(</span>3<span style="color: #000000;">, profile.getNickname());
+                i </span>=<span style="color: #000000;"> ps.executeUpdate();
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+        System.out.println(i);
+    }
+}</span></pre>
+</div>
+<h3><a name="b3"></a>3、设置连接池参数（只列举常用的）</h3>
+<p>一台四核的电脑基本可以全部采用默认设置？</p>
+<p>① <strong><span style="color: #ff0000;">autoCommit</span></strong>：控制由连接池所返回的connection默认的autoCommit状况。默认值为是true。<br />② <span style="color: #ff0000;"><strong>connectionTimeout</strong></span>：该参数决定无可用connection时的最长等待时间，超时将抛出SQLException。允许的最小值为250，默认值是30000（30秒）。 <br />③ <span style="color: #ff0000;"><strong>maximumPoolSize</strong></span>：该参数控制连接池所允许的最大连接数（包括在用连接和空闲连接）。基本上，此值将确定应用程序与数据库实际连接的最大数量。它的合理值最好由你的具体执行环境确定。当连接池达到最大连接数，并且没有空闲连接时，调用getConnection()将会被阻塞，最长等待时间取决于connectionTimeout。 对于这个值设定多少比较好，涉及的东西有点多，详细可参看<a href="https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing" target="_blank">About Pool Sizing</a>，一般可以简单用这个公式计算：<a href="https://blog.csdn.net/w05980598/article/details/78797310" target="_blank"><span style="text-decoration: underline;"><strong>连接数 = ((核心数 * 2) + 有效磁盘数)</strong></span></a>，默认值是10。<br />④ <span style="color: #ff0000;"><strong>minimumIdle</strong></span>：控制最小的空闲连接数，当连接池内空闲的连接数少于minimumIdle，且总连接数不大于maximumPoolSize时，HikariCP会尽力补充新的连接。出于性能方面的考虑，不建议设置此值，而是让HikariCP把连接池当做固定大小的处理，minimumIdle的默认值等于maximumPoolSize。<br />⑤ <span style="color: #ff0000;"><strong>maxLifetime</strong></span>：用来设置一个connection在连接池中的最大存活时间。一个使用中的connection永远不会被移除，只有在它关闭后才会被移除。用微小的负衰减来避免连接池中的connection一次性大量灭绝。我们强烈建议设置这个值，它应该比数据库所施加的时间限制短个几秒。如果设置为0，则表示connection的存活时间为无限大，当然还要受制于idleTimeout。默认值是1800000（30分钟）。（不大理解，然而mysql的时间限制不是8个小时？？？）<br />⑥ <span style="color: #ff0000;"><strong>idleTimeout</strong></span>：控制一个connection所被允许的最大空闲时间。当空闲的连接数超过minimumIdle时，一旦某个connection的持续空闲时间超过idleTimeout，就会被移除。只有当minimumIdle小于maximumPoolSize时，这个参数才生效。默认值是600000（10分钟）。<br />⑦ <span style="color: #ff0000;"><strong>poolName</strong></span>：用户定义的连接池名称，主要显示在日志记录和JMX管理控制台中，以标识连接池以及它的配置。默认值由HikariCP自动生成。</p>
+<h3><a name="b4"></a>4、MySQL配置</h3>
+<p>参阅<a href="https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration" target="_blank">MySQL Configuration</a>：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">jdbcUrl=jdbc:mysql://127.0.0.1:3306/profiles?characterEncoding=utf8
+username=root
+password=test
+dataSource.cachePrepStmts=true
+dataSource.prepStmtCacheSize=250
+dataSource.prepStmtCacheSqlLimit=2048
+dataSource.useServerPrepStmts=true
+dataSource.useLocalSessionState=true
+dataSource.rewriteBatchedStatements=true
+dataSource.cacheResultSetMetadata=true
+dataSource.cacheServerConfiguration=true
+dataSource.elideSetAutoCommits=true
+dataSource.maintainTimeStats=false</span></pre>
+</div>
+<h3><a name="b5"></a>5、修改<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/9426140.html">Java连接数据库#02#</a>中的代码</h3>
+<p>①&nbsp;HikariCPDataSource.java，hikari.properties如上所示。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.db;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.zaxxer.hikari.HikariConfig;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.zaxxer.hikari.HikariDataSource;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HikariCPDataSource {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String HIKARI_PROPERTIES_FILE_PATH = "/hikari.properties"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> HikariConfig config = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariConfig(HIKARI_PROPERTIES_FILE_PATH);
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> HikariDataSource ds = <span style="color: #0000ff;">new</span><span style="color: #000000;"> HikariDataSource(config);
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Connection getConnection() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ds.getConnection();
+    }
+}</span></pre>
+</div>
+<p>- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p>② ConnectionFactory.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.db;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 线程池版
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ConnectionFactory {
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> ConnectionFactory() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Exists to defeat instantiation</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ThreadLocal&lt;Connection&gt; LocalConnectionHolder = <span style="color: #0000ff;">new</span> ThreadLocal&lt;&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Connection getConnection() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Connection conn </span>=<span style="color: #000000;"> LocalConnectionHolder.get();
+        </span><span style="color: #0000ff;">if</span> (conn == <span style="color: #0000ff;">null</span> ||<span style="color: #000000;"> conn.isClosed()) {
+            conn </span>=<span style="color: #000000;"> HikariCPDataSource.getConnection();
+            LocalConnectionHolder.set(conn);
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> conn;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> removeLocalConnection() {
+        LocalConnectionHolder.remove();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -&nbsp;- - - - - - - - -</p>
+<p>③&nbsp;ConnectionProxy.java（代码分层有错误！）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.manager;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.db.ConnectionFactory;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 对应线程池版本ConnectionFactory，方便在Service层进行事务控制
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ConnectionProxy {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> setAutoCommit(<span style="color: #0000ff;">boolean</span><span style="color: #000000;"> autoCommit) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> ConnectionFactory.getConnection();
+            conn.setAutoCommit(autoCommit);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> commit() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> ConnectionFactory.getConnection();
+            conn.commit();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> rollback() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> ConnectionFactory.getConnection();
+            conn.rollback();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> close() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Connection conn </span>=<span style="color: #000000;"> ConnectionFactory.getConnection();
+            conn.close();
+            ConnectionFactory.removeLocalConnection();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> DaoException(e);
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO 设置隔离级别</span>
+}</pre>
+</div>
+<p>其它地方把LocalConnectionFactory改为ConnectionFactory，LocalConnectionProxy改为ConnectionProxy就行了！后续如果要换其它连接池，只需要改变ConnectionFactory.java里的一小点代码。</p>
+<h3><a name="b6"></a>6、测试</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.manager;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.ProfileDAO;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.dao.impl.ProfileDAOImpl;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.entity.Profile;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.exception.DaoException;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Collections;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.LinkedList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.CountDownLatch;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.ExecutorService;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.Executors;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.concurrent.TimeUnit;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.logging.Logger;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.junit.Assert.assertTrue;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DaoTest {
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Logger LOGGER = Logger.getLogger(DaoTest.<span style="color: #0000ff;">class</span><span style="color: #000000;">.getName());
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String ORIGIN_STRING = "hello"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String RandomString() {
+        </span><span style="color: #0000ff;">return</span> Math.random() + ORIGIN_STRING +<span style="color: #000000;"> Math.random();
+    }
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Profile RandomProfile() {
+        Profile profile </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Profile(RandomString(), ORIGIN_STRING, RandomString());
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> profile;
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> ProfileDAO PROFILE_DAO =<span style="color: #000000;"> ProfileDAOImpl.INSTANCE;
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> Worker <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> Profile profile =<span style="color: #000000;"> RandomProfile();
+
+        @Override
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+            LOGGER.info(Thread.currentThread().getName() </span>+ " has started his work"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> ConnectionProxy.setAutoCommit(false);</span>
+<span style="color: #000000;">                PROFILE_DAO.saveProfile(profile);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> ConnectionProxy.commit();</span>
+            } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (DaoException e) {
+                e.printStackTrace();
+            } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    ConnectionProxy.close();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (DaoException e) {
+                    e.printStackTrace();
+                }
+            }
+            LOGGER.info(Thread.currentThread().getName() </span>+ " has finished his work"<span style="color: #000000;">);
+        }
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * numTasks指并发线程数。
+     * -- 不用连接池：
+     * numTasks&lt;=100正常运行，完成100个任务耗时大概是550ms~600ms
+     * numTasks&gt;100报错&ldquo;too many connections&rdquo;，偶尔不报错，这是来自mysql数据库本身的限制
+     * -- 采用连接池
+     * numTasks&gt;10000仍正常运行，完成10000个任务耗时大概是26s（池大小是10）
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> NUM_TASKS = 2000<span style="color: #000000;">;
+
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> test() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        List</span>&lt;Runnable&gt; workers = <span style="color: #0000ff;">new</span> LinkedList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0; i != NUM_TASKS; ++<span style="color: #000000;">i) {
+            workers.add(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Worker());
+        }
+        assertConcurrent(</span>"Dao test "<span style="color: #000000;">, workers, Integer.MAX_VALUE);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> assertConcurrent(<span style="color: #0000ff;">final</span> String message, <span style="color: #0000ff;">final</span> List&lt;? <span style="color: #0000ff;">extends</span> Runnable&gt; runnables, <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> maxTimeoutSeconds) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> InterruptedException {
+        </span><span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> numThreads =<span style="color: #000000;"> runnables.size();
+        </span><span style="color: #0000ff;">final</span> List&lt;Throwable&gt; exceptions = Collections.synchronizedList(<span style="color: #0000ff;">new</span> ArrayList&lt;Throwable&gt;<span style="color: #000000;">());
+        </span><span style="color: #0000ff;">final</span> ExecutorService threadPool =<span style="color: #000000;"> Executors.newFixedThreadPool(numThreads);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">final</span> CountDownLatch allExecutorThreadsReady = <span style="color: #0000ff;">new</span><span style="color: #000000;"> CountDownLatch(numThreads);
+            </span><span style="color: #0000ff;">final</span> CountDownLatch afterInitBlocker = <span style="color: #0000ff;">new</span> CountDownLatch(1<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">final</span> CountDownLatch allDone = <span style="color: #0000ff;">new</span><span style="color: #000000;"> CountDownLatch(numThreads);
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">final</span><span style="color: #000000;"> Runnable submittedTestRunnable : runnables) {
+                threadPool.submit(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {
+                    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                        allExecutorThreadsReady.countDown();
+                        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                            afterInitBlocker.await();
+                            submittedTestRunnable.run();
+                        } </span><span style="color: #0000ff;">catch</span> (<span style="color: #0000ff;">final</span><span style="color: #000000;"> Throwable e) {
+                            exceptions.add(e);
+                        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                            allDone.countDown();
+                        }
+                    }
+                });
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> wait until all threads are ready</span>
+            assertTrue("Timeout initializing threads! Perform long lasting initializations before passing runnables to assertConcurrent", allExecutorThreadsReady.await(runnables.size() * 10<span style="color: #000000;">, TimeUnit.MILLISECONDS));
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> start all test runners</span>
+<span style="color: #000000;">            afterInitBlocker.countDown();
+            assertTrue(message </span>+" timeout! More than" + maxTimeoutSeconds + "seconds"<span style="color: #000000;">, allDone.await(maxTimeoutSeconds, TimeUnit.SECONDS));
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            threadPool.shutdownNow();
+        }
+        assertTrue(message </span>+ "failed with exception(s)" +<span style="color: #000000;"> exceptions, exceptions.isEmpty());
+    }
+}</span></pre>
+</div>
+<p>本来打算调整连接池参数观察对性能影响的，结果发现即使参数不变，运行时间起伏也有点大。所以暂时先这样了。。。具体原因待探究！</p>

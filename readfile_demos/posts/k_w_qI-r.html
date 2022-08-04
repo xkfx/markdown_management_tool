@@ -1,0 +1,113 @@
+<p>p164~p170：</p>
+<p><span style="background-color: #ffff99;">大致内容</span></p>
+<p><span style="color: #ff0000;">迭代语句</span></p>
+<p>1、while语句。</p>
+<p>&nbsp;</p>
+<p>2、传统for。</p>
+<p>&nbsp;</p>
+<p>3、范围for。<br />两个注意点是：1- 通常使用<strong>auto</strong>来确保类型相容，2- 如果需要修改元素则需要使用<strong>&amp;</strong>符（还可以避免拷贝元素）。</p>
+<p>&nbsp;</p>
+<p>4、do while。<br />两个特点：1- 条件部分不允许定义变量，2- 不管条件怎么样，都确保至少执行一次循环体。</p>
+<p><br /><span style="background-color: #ffff99;">练习</span></p>
+<p><span style="color: #ff0000;">5.14</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保存解</span>
+    <span style="color: #0000ff;">int</span> maxl = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span> maxs = <span style="color: #800000;">""</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">bool</span> twoMax = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前单词</span>
+    <span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span> word = <span style="color: #800000;">""</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+    cin &gt;&gt;<span style="color: #000000;"> word;
+    </span><span style="color: #0000ff;">string</span> lastw =<span style="color: #000000;"> word;
+    k </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 迭代处理</span>
+    <span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> word) {
+        </span><span style="color: #0000ff;">if</span> (word ==<span style="color: #000000;"> lastw) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前单词和上一个单词相同</span>
+            ++<span style="color: #000000;">k;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前单词和上一个单词不同</span>
+            <span style="color: #0000ff;">if</span> (k &gt;=<span style="color: #000000;"> maxl) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 处理特殊情况：有两个最大值</span>
+                twoMax = (k == maxl)? <span style="color: #0000ff;">true</span> : <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                maxl </span>=<span style="color: #000000;"> k;
+                maxs </span>=<span style="color: #000000;"> lastw;
+            } 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 重置计数</span>
+            lastw =<span style="color: #000000;"> word;
+            k </span>= <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">if</span> (twoMax == <span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Without answer</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">maxl=</span><span style="color: #800000;">"</span> &lt;&lt; maxl &lt;&lt;<span style="color: #000000;"> endl;
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">maxs=</span><span style="color: #800000;">"</span> &lt;&lt; maxs &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.15</span><br />a - ix仅在for语句块中可用<br />b - 缺少init-statement<br />c - 逻辑错误</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.16</span><br />略。倾向于是用传统for</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.17</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这种初始化方式只有c++11才能编译通过</span>
+    vector&lt;<span style="color: #0000ff;">int</span>&gt; v1{<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span><span style="color: #000000;">};
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; v2{<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">8</span><span style="color: #000000;">};
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 挑出长度较短的那个</span>
+    <span style="color: #0000ff;">int</span> shortl = (v1.size() &gt; v2.size()) ?<span style="color: #000000;"> v2.size() : v1.size();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 标志变量</span>
+    <span style="color: #0000ff;">bool</span> is_front = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != shortl; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (v1[i] !=<span style="color: #000000;"> v2[i]) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只要有一个元素不同就退出循环</span>
+            is_front = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出结论</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (is_front) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">是前缀！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">不是前缀。</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.18</span><br />略！</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">5.19</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s1, s2;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> short_one;
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入两个字符串：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        cin </span>&gt;&gt; s1 &gt;&gt;<span style="color: #000000;"> s2;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 赋值号的优先级巨低，要加上括号！！！</span>
+        cout &lt;&lt; (short_one = (s1.size() &gt; s2.size()) ? s2 : s1) &lt;&lt;<span style="color: #000000;"> endl;
+    } </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

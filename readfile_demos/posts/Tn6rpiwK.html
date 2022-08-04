@@ -1,0 +1,11 @@
+<p>操作系统：win10</p>
+<p>大概过程：首先得有java环境，android studio（用来安装各种sdk、tool等），然后安装flutter，通过flutter doctor指令的提示配置环境。</p>
+<p>在配置flutter开发环境过程中遇到问题：Flutter requires Android SDK 29 and the Android BuildTools 28.0.3</p>
+<p>症状和该链接问题完全一致：https://stackoverflow.com/questions/65221509/flutter-requires-android-sdk-29-and-the-android-buildtools-28-0-3-while-having-b</p>
+<p>截取部分截图如下&darr;</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211018113031922-1087720134.png" alt="" loading="lazy" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202110/1042431-20211018113229257-242681915.png" alt="" width="717" height="489" loading="lazy" /></p>
+<p>已经安装所有需要的SDK和buildtools不能解决。最后发现是更换安卓sdk路径后没有配置环境变量，重新配置环境变量后修复这个问题</p>
+<p>设置ANDROID_HOME为D:\android_sdk（你的SDK所在路径）</p>
+<p>并将%ANDROID_HOME%\build-tools和%ANDROID_HOME%\tools添加到Path</p>
+<p>&nbsp;</p>

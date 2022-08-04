@@ -1,0 +1,16 @@
+<h2>MySQL 5.5卸载</h2>
+<p><span style="text-decoration: line-through;">①关闭程序</span></p>
+<p>②卸载程序。直接用360软件管家卸载，然后在C盘删掉整个MySQL文件夹</p>
+<p>③编辑环境变量。将...MySQL Server 5.5\bin从环境变量Path中删除</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220122213228469-1856155133.png" alt="" width="638" height="68" loading="lazy" /></p>
+<h2>MySQL 5.7安装配置</h2>
+<p>①MySQL分社区版和企业版，找到社区版进行下载，因本人操作系统是windows，所以先下载相应版本的<a href="https://dev.mysql.com/downloads/installer/" target="_blank">MySQL Installer for Windows</a></p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220122215039343-627205213.png" alt="" width="665" height="148" loading="lazy" /></p>
+<p>因为网络问题，会有亿点点慢，建议下载之前先&ldquo;优化&rdquo;网络。</p>
+<p>②开始安装步骤。因为主要是服务于Java开发，选择Server only就行了，客户端程序没什么用，<a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java" target="_blank">MySQL Connectors也可以在开发时通过maven很方便的添加</a></p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220122220747777-2050249558.png" alt="" width="437" height="330" loading="lazy" /></p>
+<p>③配置用户和密码。其它全部保持默认配置Next就行。</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202201/1042431-20220122221627266-610547989.png" alt="" width="462" height="299" loading="lazy" /></p>
+<p>④配置环境变量。方便起见，把mysql文件下的bin目录添加到系统变量Path中去。</p>
+<p>⑤测试。打开cmd，输入mysql -u用户名 -p敲回车输入密码连接mysql，连接成功则安装配置成功。</p>
+<p>&nbsp;</p>

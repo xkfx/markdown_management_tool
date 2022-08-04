@@ -1,0 +1,192 @@
+<h4 style="text-align: left;">索引</h4>
+<ul>
+<li><a href="#a1">理解 GROUP BY</a></li>
+<li><a href="#a2">过滤数据 vs. 过滤分组</a></li>
+<li><a href="#a3">GROUP BY 与 ORDER BY 之不成文的规定</a></li>
+<li><a href="#a4">子查询 vs. 联表查询</a></li>
+<li><a href="#a5">相关子查询和不相关子查询. 增量构造复杂查询</a></li>
+<li><span class="docEmphStrong" style="color: #ff0000;"><strong>Always More Than One Solution</strong> As explained earlier in this chapter, although the sample code shown here works, it is often not the most efficient way to perform this type of data retrieval. You will revisit this example in a later chapter.</span></li>
+</ul>
+<p>&nbsp;</p>
+<h4><a name="a1"></a>Understanding Data Grouping</h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> num_prods
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> vend_id<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1003</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+</span>
+<span style="color: #808080;">|</span> num_prods <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+</span>
+<span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">7</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>我们可以通过改变 WHERE 条件中与 vend_id 判等的值（1003. 1004. 1005 .. .）来获取各个供货商的产品数量，但是没办法一次性把它们罗列出来，GROUP BY 恰好可以解决这个问题：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> vend_id, <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> num_prods
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> vend_id;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+</span>
+<span style="color: #808080;">|</span> vend_id <span style="color: #808080;">|</span> num_prods <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">3</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">2</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">7</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">2</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;分组允许把数据分为多个逻辑组，以便能对每个组进行聚集计算。</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> vend_id, <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> num_prods
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> products
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span> vend_id <strong><span style="color: #0000ff;">WITH</span><span style="color: #000000;"> ROLLUP;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+</span>
+<span style="color: #808080;">|</span> vend_id <span style="color: #808080;">|</span> num_prods <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">3</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">2</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">7</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span>         <span style="color: #800000; font-weight: bold;">2</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>    <span style="color: #0000ff;">NULL</span> <span style="color: #808080;">|</span>        <span style="color: #800000; font-weight: bold;">14</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">5</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&uarr; 利用该 关键字可以同时拿到汇总值。</p>
+<p class="docList"><span style="color: #ff0000;">The <tt>GROUP BY</tt> clause must come after any <tt>WHERE</tt> clause and before any <tt>ORDER BY</tt> clause.</span></p>
+<p class="docList">&nbsp;</p>
+<h4><a name="a2"></a>Filtering Groups</h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> cust_id, <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> cust_id
+    </span><strong><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #808080;">&gt;=</span> <span style="color: #800000;">2</span><span style="color: #000000;">;
+</span></strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+--------+</span>
+<span style="color: #808080;">|</span> cust_id <span style="color: #808080;">|</span> orders <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+--------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">10001</span> <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">2</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+--------+</span>
+<span style="color: #800000; font-weight: bold;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>如果有 WHERE 那必须是在 GROUP BY 的上面。</p>
+<p>&nbsp;<tt>WHERE</tt> filters before data is grouped, and <tt>HAVING</tt> filters after data is grouped.</p>
+<p>&nbsp;</p>
+<h4><a name="a3"></a>Grouping and Sorting</h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> order_num, <span style="color: #ff00ff;">SUM</span>(quantity<span style="color: #808080;">*</span>item_price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> ordertotal
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> order_num
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">SUM</span>(quantity<span style="color: #808080;">*</span>item_price) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">50</span>
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> ordertotal; # Finally, the output <span style="color: #0000ff;">is</span> sorted using the <span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> clause.
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+</span>
+<span style="color: #808080;">|</span> order_num <span style="color: #808080;">|</span> ordertotal <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20006</span> <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">55.00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20008</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">125.00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20005</span> <span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">149.87</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">20007</span> <span style="color: #808080;">|</span>    <span style="color: #800000; font-weight: bold;">1000.00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p><span class="docEmphStrong"><span style="color: #ff0000;">Don't Forget <tt>ORDER BY</tt></span> As a rule, anytime you use a <tt>GROUP BY</tt> clause, you should also specify an <tt>ORDER BY</tt> clause. That is the only way to ensure that data is sorted properly. Never rely on <tt>GROUP BY</tt> to sort your data.</span></p>
+<p><span class="docEmphStrong">总之，最好在用 GROUP BY 的时候顺手给出 ORDER BY ， 除非你完全不在意顺序。</span></p>
+<p>多个字段的 GROUP BY 可以参考<a href="https://segmentfault.com/a/1190000006821331" target="_blank">这篇文章</a>。</p>
+<p>&nbsp;</p>
+<h4 class="docSection1Title"><a name="a4"></a>Understanding Subqueries</h4>
+<p>设计数据库需要遵循一些范式，而做范式的基本手段就是拆表，因此数据被分散都若干个表中是不可避免的，很多时候，采用子查询会让事情变得更简单。下面是一个简单的例子：</p>
+<p>即将用到的几张表 &darr;</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> 
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span> LIMIT <span style="color: #800000; font-weight: bold;">3</span><span style="color: #000000;">;
+</span><strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+---------------------+---------+</span>
+<span style="color: #808080;">|</span> order_num <span style="color: #808080;">|</span> order_date          <span style="color: #808080;">|</span> cust_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+---------------------+---------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20005</span> <span style="color: #808080;">|</span> <span style="color: #800000;">2005</span><span style="color: #808080;">-</span><span style="color: #800000;">09</span><span style="color: #808080;">-</span><span style="color: #800000;">01</span> <span style="color: #800000;">00</span>:<span style="color: #800000;">00</span>:<span style="color: #800000;">00</span> <span style="color: #808080;">|</span>   <span style="color: #800000;">10001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20006</span> <span style="color: #808080;">|</span> <span style="color: #800000;">2005</span><span style="color: #808080;">-</span><span style="color: #800000;">09</span><span style="color: #808080;">-</span><span style="color: #800000;">12</span> <span style="color: #800000;">00</span>:<span style="color: #800000;">00</span>:<span style="color: #800000;">00</span> <span style="color: #808080;">|</span>   <span style="color: #800000;">10003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20007</span> <span style="color: #808080;">|</span> <span style="color: #800000;">2005</span><span style="color: #808080;">-</span><span style="color: #800000;">09</span><span style="color: #808080;">-</span><span style="color: #800000;">30</span> <span style="color: #800000;">00</span>:<span style="color: #800000;">00</span>:<span style="color: #800000;">00</span> <span style="color: #808080;">|</span>   <span style="color: #800000;">10004</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+---------------------+---------+</span></strong>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> 
+    <span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems 
+    </span><span style="color: #808080;">-&gt;</span> LIMIT <span style="color: #800000; font-weight: bold;">3</span><span style="color: #000000;">;
+</span><strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+---------+----------+------------+</span>
+<span style="color: #808080;">|</span> order_num <span style="color: #808080;">|</span> order_item <span style="color: #808080;">|</span> prod_id <span style="color: #808080;">|</span> quantity <span style="color: #808080;">|</span> item_price <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+---------+----------+------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20005</span> <span style="color: #808080;">|</span>          <span style="color: #800000;">1</span> <span style="color: #808080;">|</span> ANV01   <span style="color: #808080;">|</span>       <span style="color: #800000;">10</span> <span style="color: #808080;">|</span>       <span style="color: #800000;">5.99</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20005</span> <span style="color: #808080;">|</span>          <span style="color: #800000;">2</span> <span style="color: #808080;">|</span> ANV02   <span style="color: #808080;">|</span>        <span style="color: #800000;">3</span> <span style="color: #808080;">|</span>       <span style="color: #800000;">9.99</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20005</span> <span style="color: #808080;">|</span>          <span style="color: #800000;">3</span> <span style="color: #808080;">|</span> TNT2    <span style="color: #808080;">|</span>        <span style="color: #800000;">5</span> <span style="color: #808080;">|</span>      <span style="color: #800000;">10.00</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+------------+---------+----------+------------+</span></strong>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_id, cust_name 
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customers  
+    </span><span style="color: #808080;">-&gt;</span> LIMIT <span style="color: #800000; font-weight: bold;">3</span><span style="color: #000000;">;
+</span><strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-------------+</span>
+<span style="color: #808080;">|</span> cust_id <span style="color: #808080;">|</span> cust_name   <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-------------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">10001</span> <span style="color: #808080;">|</span> Coyote Inc. <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">10002</span> <span style="color: #808080;">|</span> Mouse House <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">10003</span> <span style="color: #808080;">|</span> Wascals     <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+-------------+</span></strong>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;假设你现在希望得到购买了 TNT2 的顾客的清单，实际上可以分成下面几个查询：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180329204237456-1883338247.png" alt="" width="432" height="105" /></p>
+<p>先找出所有 'TNT2' 相关的订单号，然后通过订单号可以找到对应的顾客号，最后通过顾客号再找到顾客信息：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_num
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">TNT2</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><strong><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+</span>
+<span style="color: #808080;">|</span> order_num <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20005</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000;">20007</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">---------+</span></strong>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_id
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> order_num <span style="color: #808080;">IN</span><strong> (<span style="color: #800000;">20005</span>,<span style="color: #800000;">20007</span><span style="color: #000000;">);
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+</span>
+<span style="color: #808080;">|</span> cust_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">10001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000;">10004</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------+</span></strong>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>... / 这好几个查询是可以写在一起的：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> cust_name, cust_contact
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customers
+    </span><span style="color: #808080;">-&gt;</span> <strong><span style="color: #0000ff;">WHERE</span> <span style="color: #ff00ff;">cust_id</span> <span style="color: #808080;">IN</span> (<span style="color: #0000ff;">SELECT</span><span style="color: #ff00ff;"> cust_id
+    </span></strong><span style="color: #808080;">-&gt;</span>                   <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orders
+    </span><span style="color: #808080;">-&gt;</span>                   <strong><span style="color: #0000ff;">WHERE</span> <span style="color: #800000;">order_num</span> <span style="color: #808080;">IN</span> (<span style="color: #0000ff;">SELECT</span><span style="color: #800000;"> order_num
+    </span></strong><span style="color: #808080;">-&gt;</span>                                       <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> orderitems
+    </span><span style="color: #808080;">-&gt;</span>                                       <span style="color: #0000ff;">WHERE</span> prod_id <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">TNT2</span><span style="color: #ff0000;">'</span><span style="color: #000000;">));
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------+--------------+</span>
+<span style="color: #808080;">|</span> cust_name      <span style="color: #808080;">|</span> cust_contact <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------+--------------+</span>
+<span style="color: #808080;">|</span> Coyote Inc.    <span style="color: #808080;">|</span> Y Lee        <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> Yosemite Place <span style="color: #808080;">|</span> Y Sam        <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------------+--------------+</span>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>仅从拿数据的角度分析上面的命令：x. 最终是要拿到 cust_name 和 cust_contact ，所以首先 SELECT cust_name, cust_contact ，从哪里拿呢？FROM customers，约束条件. cust_id 必须在某个集合内，然后 又 回到 x. 重复，一层一层写下去 ...</p>
+<p>效率问题：<span class="docEmphStrong"><strong><span style="color: #ff0000;">Subqueries and Performance</span> </strong>The code shown here works, and it achieves the desired result. However, using subqueries is<span style="color: #ff0000;"> not always</span> the most efficient way to perform this type of data retrieval,<span style="color: #ff0000;"> although it might be</span>. More on this is in <a class="docLink">Chapter 15</a>, "Joining Tables," where you will revisit this same example.</span></p>
+<p>&nbsp;</p>
+<h4 class="docSection1Title"><a name="a5"></a>Using Subqueries As Calculated Fields</h4>
+<p><strong>&nbsp;相关子查询就像是一个嵌套的 for 循环 ...</strong></p>
+<pre>SELECT cust_name,
+       cust_state,
+<strong>       (SELECT COUNT(*)
+        FROM orders
+        WHERE orders.cust_id = customers.cust_id) AS orders</strong>
+FROM customers
+ORDER BY cust_name;</pre>
+<p class="docText"><strong>使用字段全名是必要的（这可以算是相关子查询的一个特征），否则 mysql 会把 cust_id = cust_id 当成内查询的表字段自己和自己比较。</strong></p>
+<p class="docText"><strong>外查询每找到一条记录就会 执行 一次 子查询，类似于 SELECT x - 2017 ，每找到一条记录都要做一次运算（这里是减2017）。</strong></p>
+<p class="docText"><span class="docEmphStrong"><span style="color: #ff0000;"><strong>Build Queries with Subqueries Incrementally&nbsp;</strong></span>Testing and debugging queries with subqueries can be tricky, particularly as these statements grow in complexity. The safest way to build (and test) queries with subqueries is to do so incrementally, in much the same way as MySQL processes them. Build and test the innermost query first. Then build and test the outer query with hard-coded data, and only after you have verified that it is working embed the subquery. Then test it again. And keep repeating these steps as for each additional query. This will take just a little longer to construct your queries, but doing so saves you lots of time later (when you try to figure out why queries are not working) and significantly increases the likelihood of them working the first time.</span></p>

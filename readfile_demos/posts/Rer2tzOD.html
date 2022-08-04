@@ -1,0 +1,54 @@
+<p>p172~p177：<br /><span style="text-decoration: underline;">c++的try语句块和异常处理：</span></p>
+<p>1、通常，与用户交互的代码和对象相加（底层的代码）是分离开的，异常由<strong>与用户交互的代码</strong>处理（底层代码抛出异常就可以了）。</p>
+<p>2、C++的runtime_error和Java的有很大的不同！！！</p>
+<p>3、编写异常安全的代码非常困难。</p>
+<p>4、寻找处理代码的过程与函数调用链刚好相反，首先从抛出该异常的函数开始找匹配的catch子句。</p>
+<p>5、好好理解这句话：异常中断了程序的正常的流程。</p>
+<p>6、仍然不是很理解异常处理机制，暂时理解到：在必须使用的时候使用（例如文件，socket等），如果try catch能让程序更易于理解就使用它（而不是if-else），调用一个方法要知道这个方法可能抛出怎样的异常。</p>
+<p>想问的问题：<br />1、能不能完全用if-else代替throw-try-catch？</p>
+<p>2、使用try-catch的时机？</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">练习：</span></p>
+<p><span style="text-decoration: underline;">5.23</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a, b;
+    cin </span>&gt;&gt; a &gt;&gt;<span style="color: #000000;"> b;
+    cout </span>&lt;&lt; a / b &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">5.24</span><br />程序最终没找到匹配的catch子句。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170316150723791-218734155.png" alt="" width="331" height="165" /></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">5.25</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #008000;">//</span><span style="color: #008000;">#include &lt;stdexcept&gt;    不写也一样编译。</span>
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> x, y;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt; x &gt;&gt;<span style="color: #000000;"> y) {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (y == <span style="color: #800080;">0</span><span style="color: #000000;">) 
+                </span><span style="color: #0000ff;">throw</span> runtime_error(<span style="color: #800000;">"</span><span style="color: #800000;">!!!</span><span style="color: #800000;">"</span>);    <span style="color: #008000;">//</span><span style="color: #008000;"> 抛出异常会导致函数终止，控制权被转移到catch子句！</span>
+            <span style="color: #0000ff;">int</span> i = x /<span style="color: #000000;"> y;
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (runtime_error err) {
+            cout </span>&lt;&lt; err.what() &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n y or n?</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+            </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+            cin </span>&gt;&gt;<span style="color: #000000;"> c;
+            </span><span style="color: #0000ff;">if</span> (c == <span style="color: #800000;">'</span><span style="color: #800000;">n</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;ps:起初我认为 3 / 0自动会throw exception。。。</p>

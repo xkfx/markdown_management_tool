@@ -1,0 +1,33 @@
+<ul>
+<li><span style="font-size: 18pt;"><strong>创建账户</strong></span></li>
+</ul>
+<p>　　　　创建账号成功后将得到一个个人的公开页面URL：https://github.com/xkfx。</p>
+<ul>
+<li><span style="font-size: 18pt;"><strong>设置头像</strong></span></li>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<li><span style="font-size: 18pt;"><strong>设置SSH Key</strong></span></li>
+</ul>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt;"><span style="font-size: 14px;">SSH 为&nbsp;<a href="http://baike.baidu.com/view/2118359.htm" target="_blank">Secure Shell</a>&nbsp;的缩写。</span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt;"><span style="font-size: 14px;">from baidu:</span></span></p>
+<div class="para">&nbsp;</div>
+<div class="para">从客户端来看，SSH提供两种级别的安全验证。</div>
+<div class="para">&nbsp;</div>
+<div class="para">第一种级别（基于口令的安全验证）</div>
+<div class="para">　　</div>
+<div class="para">　　只要你知道自己帐号和口令，就可以登录到远程主机。所有传输的数据都会被加密，但是不能保证你正在连接的服务器就是你想连接的<a href="http://baike.baidu.com/view/899.htm" target="_blank">服务器</a>。可能会有别的服务器在冒充真正的服务器，也就是受到&ldquo;中间人&rdquo;这种方式的攻击。</div>
+<div class="para">&nbsp;</div>
+<div class="para"><span style="color: #ff0000; background-color: #ffff00;">第二种级别（基于密匙的安全验证）</span></div>
+<div class="para">　　</div>
+<div class="para">　　需要依靠<a href="http://baike.baidu.com/view/1489402.htm" target="_blank">密匙</a>，也就是你必须为自己创建一对密匙，<span style="text-decoration: underline; color: #ff0000;">并把公用密匙放在需要访问的服务器上</span>。如果你要连接到SSH服务器上，客户端软件就会向服务器发出请求，请求用你的密匙进行安全验证。服务器收到请求之后，先在该服务器上你的主目录下寻找你的公用密匙，然后把它和你发送过来的公用密匙进行比较。如果两个密匙一致，<span style="text-decoration: underline; color: #ff0000;">服务器就用公用密匙加密&ldquo;质询&rdquo;（challenge）并把它发送给客户端软件。客户端软件收到&ldquo;质询&rdquo;之后就可以用你的私人密匙解密再把它发送给服务器。</span></div>
+<div class="para">用这种方式，你必须知道自己密匙的<a href="http://baike.baidu.com/view/626861.htm" target="_blank">口令</a>。但是，与第一种级别相比，第二种级别不需要在网络上传送口令。</div>
+<div class="para">&nbsp;</div>
+<div class="para">第二种级别不仅加密所有传送的数据，而且&ldquo;中间人&rdquo;这种攻击方式也是不可能的（因为他没有你的私人密匙）。但是整个登录的过程可能需要10秒。</div>
+<div class="para">&nbsp;</div>
+<div class="para">　　我们要做的就是创建一对密匙，然后将公用密匙上传到github，今后就可以用私有密匙认证了。</div>
+<div class="para">&nbsp;</div>
+<div class="para">　　　参考&nbsp;http://blog.csdn.net/hustpzb/article/details/8230454/</div>
+<div class="para">&nbsp;</div>

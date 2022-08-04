@@ -1,0 +1,154 @@
+<div class="cnblogs_code" onclick="cnblogs_code_show('1ae84069-5af8-4beb-a5ee-ae63d1c7e14b')"><img id="code_img_closed_1ae84069-5af8-4beb-a5ee-ae63d1c7e14b" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_1ae84069-5af8-4beb-a5ee-ae63d1c7e14b" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('1ae84069-5af8-4beb-a5ee-ae63d1c7e14b',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_1ae84069-5af8-4beb-a5ee-ae63d1c7e14b" class="cnblogs_code_hide">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            let log </span>=<span style="color: #000000;"> console.log.bind(console);
+            
+            </span><span style="color: #0000ff;">function</span> makeObj(value=0, n=<span style="color: #0000ff;">null</span>, p=<span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                let obj </span>=<span style="color: #000000;"> {
+                    key: value,
+                    next: n,
+                    prev: p,
+                };        
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> obj;
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> makeLinkedList(arr) {
+                let list </span>=<span style="color: #000000;"> {};
+                list.head </span>= makeObj(arr[0<span style="color: #000000;">]);
+                let temp </span>=<span style="color: #000000;"> list.head;
+                </span><span style="color: #0000ff;">for</span> (let i = 1; i != arr.length; ++<span style="color: #000000;">i) {
+                    temp.next </span>=<span style="color: #000000;"> makeObj(arr[i]);
+                    temp.next.prev </span>=<span style="color: #000000;"> temp;
+                    temp </span>=<span style="color: #000000;"> temp.next;
+                }
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listSearch(list, key) {
+                let temp </span>=<span style="color: #000000;"> list.head;
+                </span><span style="color: #0000ff;">while</span> (temp != <span style="color: #0000ff;">null</span> &amp;&amp; temp.key !=<span style="color: #000000;"> key) {
+                    temp </span>=<span style="color: #000000;"> temp.next;
+                }
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> temp;
+            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listInsert(list, obj) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注意是插入到链表的前面</span>
+                obj.next =<span style="color: #000000;"> list.head;
+                </span><span style="color: #0000ff;">if</span> (list.head != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    list.head.prev </span>=<span style="color: #000000;"> obj;
+                }
+                list.head </span>=<span style="color: #000000;"> obj;
+                
+                </span><span style="color: #0000ff;">return</span> list; <span style="color: #008000;">//</span><span style="color: #008000;"> 便于打印。。</span>
+<span style="color: #000000;">            }
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listDelete(list, obj) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 要拿到相应元素的引用，并且确保obj确实在list里</span>
+                <span style="color: #0000ff;">if</span> (obj.prev != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    obj.prev.next </span>=<span style="color: #000000;"> obj.next;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    list.head </span>=<span style="color: #000000;"> obj.next;
+                }
+                </span><span style="color: #0000ff;">if</span> (obj.next != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    obj.next.prev </span>=<span style="color: #000000;"> obj.prev;
+                }
+                
+                </span><span style="color: #0000ff;">return</span> list; <span style="color: #008000;">//</span><span style="color: #008000;"> 便于打印。。</span>
+<span style="color: #000000;">            }
+            
+            let list </span>= makeLinkedList([9, 16, 4, 1<span style="color: #000000;">]);
+            log(list); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 9, 16, 4, 1</span>
+            log(listSearch(list, 4<span style="color: #000000;">));
+            log(listInsert(list, makeObj(</span>3))); <span style="color: #008000;">//</span><span style="color: #008000;"> 3, 9, 16, 4, 1</span>
+            log(listDelete(list, listSearch(list, 4))); <span style="color: #008000;">//</span><span style="color: #008000;"> 3, 9, 16, 1</span>
+        &lt;/script&gt;
+        
+        &lt;script type="text/javascript"&gt;
+            <span style="color: #008000;">/*</span><span style="color: #008000;">*
+             * 哨兵版本（双向循环列表）。
+             * 不能降低增长量级，但是可以降低常数因子。
+             * 假如有多个很短的链表，它们的哨兵所占用的
+             * 额外存储空间会造成严重的存储浪费。
+             * 注意：哨兵元素是不存储数据的！！！
+             * 空的双向循环列表中仍有一个哨兵元素
+             </span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> makeLinkedList2(arr) {
+                let list </span>=<span style="color: #000000;"> {};
+                list.nil </span>= makeObj(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+                let temp </span>=<span style="color: #000000;"> list.nil; 
+                </span><span style="color: #0000ff;">for</span> (let i = 0; i != arr.length; ++<span style="color: #000000;">i) { 
+                    temp.next </span>=<span style="color: #000000;"> makeObj(arr[i]);
+                    temp.next.prev </span>=<span style="color: #000000;"> temp;
+                    temp </span>=<span style="color: #000000;"> temp.next;
+                }
+                list.nil.prev </span>=<span style="color: #000000;"> temp; 
+                temp.next </span>=<span style="color: #000000;"> list.nil; 
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+            }    
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listDelete2(list, obj) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 要拿到相应元素的引用，并且确保obj确实在list里</span>
+                obj.prev.next =<span style="color: #000000;"> obj.next;
+                obj.next.prev </span>=<span style="color: #000000;"> obj.prev;                
+                </span><span style="color: #0000ff;">return</span> list; <span style="color: #008000;">//</span><span style="color: #008000;"> 便于打印</span>
+<span style="color: #000000;">            }    
+            
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listSearch2(list, key) {
+                let temp </span>= list.nil.next; <span style="color: #008000;">//</span><span style="color: #008000;"> 注意此处的修改</span>
+                <span style="color: #0000ff;">while</span> (temp != list.nil &amp;&amp; temp.key !=<span style="color: #000000;"> key) {
+                    temp </span>=<span style="color: #000000;"> temp.next;
+                }
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> temp;
+            }
+
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> listInsert2(list, obj) {
+                obj.next </span>=<span style="color: #000000;"> list.nil.next;
+                list.nil.next.prev </span>=<span style="color: #000000;"> obj;
+                list.nil.next </span>=<span style="color: #000000;"> obj;
+                obj.prev </span>=<span style="color: #000000;"> list.nil;
+                </span><span style="color: #0000ff;">return</span> list; <span style="color: #008000;">//</span><span style="color: #008000;"> 便于打印</span>
+<span style="color: #000000;">            }
+            
+            log(</span>"=======list 2========="<span style="color: #000000;">);
+            let list2 </span>= makeLinkedList2([1, 2, 3<span style="color: #000000;">]);
+            log(list2); </span><span style="color: #008000;">//</span><span style="color: #008000;"> null, 1, 2, 3</span>
+            log(listSearch2(list2, 3<span style="color: #000000;">));
+            log(listInsert2(list2, makeObj(</span>4))); <span style="color: #008000;">//</span><span style="color: #008000;"> null, 4, 1, 2, 3</span>
+            let x = listSearch2(list2, 4<span style="color: #000000;">);
+            log(listDelete2(list2, x)); </span><span style="color: #008000;">//</span><span style="color: #008000;"> null, 1, 2, 3</span>
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<span class="cnblogs_code_collapse">双向链表+有哨兵的双向循环链表</span></div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-1</span></p>
+<p>这个得区分往哪insert，以及delete是指定delete还是delete首元素或者尾元素。</p>
+<p>如果按照书上的算法：insert可以，delete不行。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-2</span></p>
+<p>略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-3</span></p>
+<p>略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-4</span></p>
+<p>该检查的目的就在于防止死循环，解决这个问题，只要把k作为哨兵关键字key的value就可以了。在搜索结束后再把空值赋还给哨兵。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-5</span></p>
+<p>实现略。</p>
+<p>按照书上的算法：INSERT是O(1)，DELETE是O(n)，SEARCH也是O(n)</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-6</span></p>
+<p>双向循环链表。直接把一个链表接到另外一个链表的首尾都可以。如果有中间元素的引用，直接往中间插也是O(1)的。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">10.2-7</span></p>
+<p>扫描一遍list，把next反向指一下就行了。需要一个额外的temp临时存储下一个元素。</p>

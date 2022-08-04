@@ -1,0 +1,227 @@
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201612/1042431-20161229180800586-826943159.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> student{
+    </span><span style="color: #0000ff;">char</span> name[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> No;
+    </span><span style="color: #0000ff;">int</span> sub[<span style="color: #800080;">4</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> sum;
+};
+
+</span><span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; s[i] == t[i]; i ++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">if</span>(s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> s[i] -<span style="color: #000000;"> t[i];
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">struct</span> student stu[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">struct</span> student sort_byname[<span style="color: #800080;">10</span>], sort_byNo[<span style="color: #800080;">10</span>], sort_bysum[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, j, a, b, c;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> last_three;
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> open file</span>
+    FILE *<span style="color: #000000;">fp;
+    fp </span>= fopen(<span style="color: #800000;">"</span><span style="color: #800000;">info.dat</span><span style="color: #800000;">"</span> , <span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> operate file</span>
+    i = a = b = c = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(!<span style="color: #000000;">feof(fp)){
+        fscanf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">%s %d %d %d %d %d</span><span style="color: #800000;">"</span>, &amp;stu[i].name, &amp;stu[i].No, &amp;stu[i].sub[<span style="color: #800080;">0</span>], &amp;stu[i].sub[<span style="color: #800080;">1</span>], &amp;stu[i].sub[<span style="color: #800080;">2</span>], &amp;stu[i].sub[<span style="color: #800080;">3</span><span style="color: #000000;">]);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> printf("%s %d %d %d %d %d\n", stu[i].name, stu[i].No, stu[i].sub[0], stu[i].sub[1], stu[i].sub[2], stu[i].sub[3]);</span>
+        last_three = stu[i].No % <span style="color: #800080;">1000</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> printf("%d\n", last_three);</span>
+        <span style="color: #0000ff;">if</span>(last_three%<span style="color: #800080;">3</span> == <span style="color: #800080;">2</span><span style="color: #000000;">)
+            sort_byname[a</span>++] =<span style="color: #000000;"> stu[i];
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(last_three%<span style="color: #800080;">3</span> == <span style="color: #800080;">1</span><span style="color: #000000;">)
+            sort_byNo[b</span>++] =<span style="color: #000000;"> stu[i];
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(last_three%<span style="color: #800080;">3</span> == <span style="color: #800080;">0</span><span style="color: #000000;">)
+            sort_bysum[c</span>++] =<span style="color: #000000;"> stu[i];
+        i</span>++<span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span>; k &lt; i; k++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> l = <span style="color: #800080;">0</span>; l &lt; <span style="color: #800080;">4</span>; l++<span style="color: #000000;">)
+            stu[k].sum </span>+=<span style="color: #000000;"> stu[k].sub[l];
+        
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">printf("%s\n", sort_byname[1].name);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> printf("x = %d\n", strcmp("abcd" , "zabcd"));
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> close file</span>
+<span style="color: #000000;">    fclose(fp);
+    
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> student temp;
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; a; i++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(j = <span style="color: #800080;">0</span>; j &lt; a-i-<span style="color: #800080;">1</span>; j++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(strcmp(sort_byname[j].name , sort_byname[j+<span style="color: #800080;">1</span>].name) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">){
+                temp </span>=<span style="color: #000000;"> sort_byname[j];
+                sort_byname[j] </span>= sort_byname[j+<span style="color: #800080;">1</span><span style="color: #000000;">];
+                sort_byname[j</span>+<span style="color: #800080;">1</span>] =<span style="color: #000000;"> temp;
+            }
+            
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; b; i++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(j = <span style="color: #800080;">0</span>; j &lt; b-i-<span style="color: #800080;">1</span>; j++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(sort_byNo[j].No &gt;<span style="color: #000000;"> sort_byNo[j].No){
+                temp </span>=<span style="color: #000000;"> sort_byname[j];
+                sort_byname[j] </span>= sort_byname[j+<span style="color: #800080;">1</span><span style="color: #000000;">];
+                sort_byname[j</span>+<span style="color: #800080;">1</span>] =<span style="color: #000000;"> temp;
+            }
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; c; i++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(j = <span style="color: #800080;">0</span>; j &lt; c-i-<span style="color: #800080;">1</span>; j++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(sort_bysum[j].sum &gt;<span style="color: #000000;"> sort_bysum[j].sum){
+                temp </span>=<span style="color: #000000;"> sort_byname[j];
+                sort_byname[j] </span>= sort_byname[j+<span style="color: #800080;">1</span><span style="color: #000000;">];
+                sort_byname[j</span>+<span style="color: #800080;">1</span>] =<span style="color: #000000;"> temp;
+            }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> open file</span>
+    FILE *<span style="color: #000000;">fp2;
+    fp2 </span>= fopen(<span style="color: #800000;">"</span><span style="color: #800000;">infosort.dat</span><span style="color: #800000;">"</span> , <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> operate file</span>
+    fprintf(fp2, <span style="color: #800000;">"</span><span style="color: #800000;">sort_byname:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; a; i++<span style="color: #000000;">)
+        fprintf(fp2, </span><span style="color: #800000;">"</span><span style="color: #800000;">%s %d %d %d %d %d\n</span><span style="color: #800000;">"</span>, sort_byname[i].name, sort_byname[i].No, sort_byname[i].sub[<span style="color: #800080;">0</span>], sort_byname[i].sub[<span style="color: #800080;">1</span>], sort_byname[i].sub[<span style="color: #800080;">2</span>], sort_byname[i].sub[<span style="color: #800080;">3</span><span style="color: #000000;">]);
+    
+    fprintf(fp2, </span><span style="color: #800000;">"</span><span style="color: #800000;">sort_byNo:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; b; i++<span style="color: #000000;">)
+        fprintf(fp2, </span><span style="color: #800000;">"</span><span style="color: #800000;">%s %d %d %d %d %d\n</span><span style="color: #800000;">"</span>, sort_byNo[i].name, sort_byNo[i].No, sort_byNo[i].sub[<span style="color: #800080;">0</span>], sort_byNo[i].sub[<span style="color: #800080;">1</span>], sort_byNo[i].sub[<span style="color: #800080;">2</span>], sort_byNo[i].sub[<span style="color: #800080;">3</span><span style="color: #000000;">]);
+    
+    fprintf(fp2, </span><span style="color: #800000;">"</span><span style="color: #800000;">sort_bysum:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; c; i++<span style="color: #000000;">)
+        fprintf(fp2, </span><span style="color: #800000;">"</span><span style="color: #800000;">%s %d %d %d %d %d\n</span><span style="color: #800000;">"</span>, sort_bysum[i].name, sort_bysum[i].No, sort_bysum[i].sub[<span style="color: #800080;">0</span>], sort_bysum[i].sub[<span style="color: #800080;">1</span>], sort_bysum[i].sub[<span style="color: #800080;">2</span>], sort_bysum[i].sub[<span style="color: #800080;">3</span><span style="color: #000000;">]);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> close file</span>
+<span style="color: #000000;">    fclose(fp2);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;注释是在写的中途的测试</p>
+<p>&nbsp;</p>
+<p>以下是由于没写测试写崩的代码（没有正确结果）：</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> MAX 100
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> student{
+    </span><span style="color: #0000ff;">char</span> name[<span style="color: #800080;">20</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+    </span><span style="color: #0000ff;">int</span> score[<span style="color: #800080;">4</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> sum;
+};
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> student stu[MAX];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, j, k;
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> student sort_byname[MAX], sort_bynum[MAX], sort_bysum[MAX];
+    </span><span style="color: #0000ff;">int</span> a, b, c; <span style="color: #008000;">//</span><span style="color: #008000;"> 统计各类学生的数目
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1-从文件info.dat读入数据并分类</span>
+    FILE *<span style="color: #000000;">fp;
+    fp </span>= fopen(<span style="color: #800000;">"</span><span style="color: #800000;">info.dat</span><span style="color: #800000;">"</span> , <span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    i </span>= a = b = c = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(!<span style="color: #000000;">feof){
+        fscanf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">stu[i].name);
+        fscanf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">stu[i].num);
+        </span><span style="color: #0000ff;">for</span>(k = <span style="color: #800080;">0</span>; k &lt; <span style="color: #800080;">4</span>; k++<span style="color: #000000;">){
+            fscanf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">stu[i].score[k]);
+            stu[i].sum </span>+= stu[i].score[k]; <span style="color: #008000;">//</span><span style="color: #008000;"> 统计总分</span>
+<span style="color: #000000;">        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 分类</span>
+        <span style="color: #0000ff;">if</span>(stu[i].num%<span style="color: #800080;">3</span> == <span style="color: #800080;">2</span><span style="color: #000000;">)
+            sort_byname[a</span>++] =<span style="color: #000000;"> stu[i];
+        </span><span style="color: #0000ff;">if</span>(stu[i].num%<span style="color: #800080;">3</span> == <span style="color: #800080;">1</span><span style="color: #000000;">)
+            sort_bynum[b</span>++] =<span style="color: #000000;"> stu[i];
+        </span><span style="color: #0000ff;">if</span>(stu[i].num%<span style="color: #800080;">3</span> == <span style="color: #800080;">0</span><span style="color: #000000;">)
+            sort_bysum[c</span>++] =<span style="color: #000000;"> stu[i];
+        i</span>++<span style="color: #000000;">;
+    }
+    
+    fclose(fp);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2-对数据进行排序</span>
+    <span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t);
+    </span><span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">struct</span> student *s, <span style="color: #0000ff;">struct</span> student *<span style="color: #000000;">t);
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; a; i ++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(j = <span style="color: #800080;">0</span>; j &lt; a-i-<span style="color: #800080;">1</span>; j ++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(strcmp(sort_byname[j].name , sort_byname[j+<span style="color: #800080;">1</span>].name) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+                swap(</span>&amp;sort_byname[j] , &amp;sort_byname[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+            
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; b; i ++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(j = <span style="color: #800080;">0</span>; j &lt; b-i-<span style="color: #800080;">1</span>; j ++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(sort_bynum[j].num &gt; sort_bynum[j+<span style="color: #800080;">1</span><span style="color: #000000;">].num)
+                swap(</span>&amp;sort_bynum[j] , &amp;sort_bynum[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+            
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; c; i ++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">for</span>(j = <span style="color: #800080;">0</span>; j &lt; c-i-<span style="color: #800080;">1</span>; j ++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(sort_bynum[j].sum &gt; sort_bynum[j+<span style="color: #800080;">1</span><span style="color: #000000;">].sum)
+                swap(</span>&amp;sort_bysum[j] , &amp;sort_bysum[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+            
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3-将数据写入 infosort.dat 以下可以用函数实现。。。。。。</span>
+    fp = fopen(<span style="color: #800000;">"</span><span style="color: #800000;">infosort.dat</span><span style="color: #800000;">"</span> , <span style="color: #800000;">"</span><span style="color: #800000;">w</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    
+    fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">sort_byname:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; a; i ++<span style="color: #000000;">){
+        fprintf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%s </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_byname[i].name);
+        fprintf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_byname[i].num);
+        </span><span style="color: #0000ff;">for</span>(k = <span style="color: #800080;">0</span>; k &lt; <span style="color: #800080;">4</span>; k++<span style="color: #000000;">)
+            fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_byname[i].score[k]);
+    }
+    fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">sort_bynum:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; b; i ++<span style="color: #000000;">){
+        fprintf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%s </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_bynum[i].name);
+        fprintf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_bynum[i].num);
+        </span><span style="color: #0000ff;">for</span>(k = <span style="color: #800080;">0</span>; k &lt; <span style="color: #800080;">4</span>; k++<span style="color: #000000;">)
+            fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_bynum[i].score[k]);
+    }
+    fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">sort_bysum:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; c; i ++<span style="color: #000000;">){
+        fprintf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%s </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_bysum[i].name);
+        fprintf(fp , </span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_bysum[i].num);
+        </span><span style="color: #0000ff;">for</span>(k = <span style="color: #800080;">0</span>; k &lt; <span style="color: #800080;">4</span>; k++<span style="color: #000000;">)
+            fprintf(fp, </span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, sort_bysum[i].score[k]);
+    }
+    
+    fclose(fp);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span> strcmp(<span style="color: #0000ff;">char</span> *s, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; s[i] == t[i]; i ++<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">if</span>(s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> s[i] -<span style="color: #000000;"> t[i];
+}
+
+</span><span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">struct</span> student *s, <span style="color: #0000ff;">struct</span> student *<span style="color: #000000;">t)
+{
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> student temp;
+    
+    temp </span>= *<span style="color: #000000;">s;
+    </span>*s = *<span style="color: #000000;">t;
+    </span>*t =<span style="color: #000000;"> temp;
+}</span></pre>
+</div>
+<p>测试文件：</p>
+<div class="cnblogs_code">
+<pre>wang <span style="color: #800080;">12301</span> <span style="color: #800080;">67.5</span> <span style="color: #800080;">78.9</span> <span style="color: #800080;">88.0</span> <span style="color: #800080;">99.2</span><span style="color: #000000;">
+zhang </span><span style="color: #800080;">12302</span> <span style="color: #800080;">89.7</span> <span style="color: #800080;">45.6</span> <span style="color: #800080;">78.8</span> <span style="color: #800080;">85.7</span><span style="color: #000000;">
+tang </span><span style="color: #800080;">12303</span> <span style="color: #800080;">56.6</span> <span style="color: #800080;">77.7</span> <span style="color: #800080;">89.9</span> <span style="color: #800080;">85.7</span><span style="color: #000000;">
+li </span><span style="color: #800080;">12304</span> <span style="color: #800080;">56.6</span> <span style="color: #800080;">45.6</span> <span style="color: #800080;">56.6</span> <span style="color: #800080;">85.7</span><span style="color: #000000;">
+ren </span><span style="color: #800080;">12305</span> <span style="color: #800080;">99.9</span> <span style="color: #800080;">77.7</span> <span style="color: #800080;">89.9</span> <span style="color: #800080;">85.7</span><span style="color: #000000;">
+fa </span><span style="color: #800080;">12306</span> <span style="color: #800080;">44.4</span> <span style="color: #800080;">55.5</span> <span style="color: #800080;">56.6</span> <span style="color: #800080;">85.7</span><span style="color: #000000;">
+compu </span><span style="color: #800080;">12307</span> <span style="color: #800080;">56.6</span> <span style="color: #800080;">77.7</span> <span style="color: #800080;">89.9</span> <span style="color: #800080;">85.7</span></pre>
+</div>
+<p>&nbsp;</p>

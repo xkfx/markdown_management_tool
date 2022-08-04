@@ -1,0 +1,140 @@
+<p>笔记性质、非教程</p>
+<p>&nbsp;</p>
+<p><a href="#a1">CHAPTER-1 尝试&nbsp;</a></p>
+<p><a href="#a2">CHAPTER-2 从零开始学正则</a></p>
+<p>&nbsp;</p>
+<p><a href="http://www.cnblogs.com/xkxf/p/6850552.html" target="_blank">CHAPTER-3&nbsp;THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.</a></p>
+<p>&nbsp;</p>
+<p>参考：</p>
+<p>1、入门 --&gt;&nbsp;<a href="http://www.cnblogs.com/huxi/archive/2010/07/04/1771073.html" target="_blank">here</a></p>
+<p>2、菜鸟教程 --&gt; <a href="http://www.runoob.com/python/python-reg-expressions.html" target="_blank">here</a></p>
+<p>3、常用正则表达式 --&gt; <a href="http://www.cnblogs.com/lzq198754/p/5780340.html" target="_blank">here</a></p>
+<p>&nbsp;</p>
+<p>正文：</p>
+<p><strong><a name="a1"></a>CHAPTER-1 尝试</strong></p>
+<p>1、匹配qq号。（5到10位任意数字）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+numbers </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">1234</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">123456</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">12345678901</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> numbers:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">^\d{5,10}$</span><span style="color: #800000;">'</span>, x))</pre>
+</div>
+<p>2、匹配用户名（由字母和数字组成，必须由字母开头，4到10位）注：\w会匹配数字。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">abc</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1abcd</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1997abc</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">a199</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">abc1997</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">^[a-zA-z][0-9a-zA-z]{3,9}$</span><span style="color: #800000;">'</span>, x))</pre>
+</div>
+<p>3、匹配邮箱</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">@qq.com</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">33@</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">22@ee.</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">5566@qq.net</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">3dsd_xx@vip.ccc.com</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">^\w{1,20}@(|vip.)[a-z0-9]{1,12}(.com|.net)$</span><span style="color: #800000;">'</span>, x))</pre>
+</div>
+<p>4、匹配类似这样的日期2017-05-04</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">19-2-1</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1997-10</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1999-2-2</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1777-19-19</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1889-12-31</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">^\d{4}-\d{2}-\d{2}$</span><span style="color: #800000;">'</span>, x))</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><a name="a2"></a>CHAPTER-2 从零开始学正则</strong></p>
+<p>参考：《Introducing Regular Expressions》</p>
+<p>1、匹配北美电话号码。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">770-827-7019</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">770-827-7019</span><span style="color: #800000;">'</span>, x)) <span style="color: #008000;">#</span><span style="color: #008000;"> 用string literal匹配目标字符串</span>
+    <span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">7</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">output:
+</span>&lt;_sre.SRE_Match object; span=(0, 12), match=<span style="color: #800000;">'</span><span style="color: #800000;">770-827-7019</span><span style="color: #800000;">'</span>&gt;
+&lt;_sre.SRE_Match object; span=(0, 1), match=<span style="color: #800000;">'</span><span style="color: #800000;">7</span><span style="color: #800000;">'</span>&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、形如[0-9]被视为<strong>character class（字符组）</strong>或<strong>character set（字符集）</strong>，用更具体的数字可以得到同样的结果，如[0123456789]。</p>
+<p>[]被称为<strong>metacharacter（元字符），特征是：不参与匹配。</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">770-827-7019</span><span style="color: #800000;">'</span><span style="color: #000000;">, ]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">[0-9]</span><span style="color: #800000;">'</span><span style="color: #000000;">, x)) 
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">[0123789]</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> output:</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 1), match='7'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 1), match='7'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770-827-7019'&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、在2中的[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]显然显得过于冗长，为了消除这种&ldquo;冗长&rdquo;，引入了character shorthand（字符简写式）例如可以用<strong>\d</strong>来完全替代[0-9],用<strong>\D</strong>来匹配所有非数字。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">770-827-7019</span><span style="color: #800000;">'</span><span style="color: #000000;">, ]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">[0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]</span><span style="color: #800000;">'</span>, x)) <span style="color: #008000;">#</span><span style="color: #008000;"> 原始形式</span>
+    <span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">\d\d\d-\d\d\d-\d\d\d\d</span><span style="color: #800000;">'</span>, x)) <span style="color: #008000;">#</span><span style="color: #008000;"> 简写形式</span>
+    <span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">\d\d\d\D\d\d\d\D\d\d\d\d</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> output:</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770-827-7019'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770-827-7019'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770-827-7019'&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、用.匹配所有字符。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> re
+strs </span>= [<span style="color: #800000;">'</span><span style="color: #800000;">770-827-7019</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">770%827%7019</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">770|827|7019</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">\d\d\d.\d\d\d.\d\d\d\d</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> output:</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770-827-7019'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770%827%7019'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='770|827|7019'&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、<strong>capturing group</strong>（捕获分组）和<strong>backreference</strong>。例如(\d)\d\1，(\d)匹配第一个数字并将其&ldquo;捕获&rdquo;，\d匹配第二个数字而不&ldquo;捕获&rdquo;，\1用前面&ldquo;捕获&rdquo;的<strong>具体的数字</strong>&ldquo;再次&rdquo;进行匹配。例如下面的\1等价于数字&ldquo;7&rdquo;：</p>
+<div class="cnblogs_code">
+<pre>strs = [<span style="color: #800000;">'</span><span style="color: #800000;">.707</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">.708</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">\D(\d)\d\1</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> output:</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 4), match='.707'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> None</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>6、<strong>quantifier（量词），让正则表达式更加简洁：</strong><span style="color: #3366ff;">{3，4}</span> （3或4）、<span style="color: #3366ff;">?</span>（0或1）、<span style="color: #3366ff;">+</span>（1或多）、<span style="color: #3366ff;">*</span> (0或多)</p>
+<p>重写匹配北美电话号码的正则（效果上等价于\d\d\d[.-]?\d\d\d[.-]?\d\d\d\d，但是形式上更为简洁）：</p>
+<div class="cnblogs_code">
+<pre>strs = [<span style="color: #800000;">'</span><span style="color: #800000;">707-827-7019</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">707-827-701</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> strs:
+    </span><span style="color: #0000ff;">print</span>(re.match(r<span style="color: #800000;">'</span><span style="color: #800000;">(\d{3}[.-]?){2}\d{4}</span><span style="color: #800000;">'</span><span style="color: #000000;">, x))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> output:</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> &lt;_sre.SRE_Match object; span=(0, 12), match='707-827-7019'&gt;</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> None</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>7、正则表达式在线测试：<a href="http://tool.chinaz.com/regex" target="_blank">http://tool.chinaz.com/regex</a></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512002533941-2054063425.png" alt="" /></p>
+<p>刚开始不理解书上|后面的^，然后测试发现无论正则前面加多少个^都是不影响的（仍是匹配行首）。</p>
+<p>源正则：^<span style="color: #ffff00;"><strong>(</strong><span style="color: #ff99cc;">\(\d{3}\)</span><strong>|</strong><span style="color: #ff99cc;">^\d{3}[.-]?</span><strong>)</strong></span>?\d{3}<strong>[.-]?</strong>\d{4}$ （手动高亮），匹配北美电话，括号、区号都是可选的</p>
+<p>&nbsp;</p>
+<p>8、在notepad++中使用正则表达式</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512215559332-1547593402.png" alt="" width="495" height="307" /></p>
+<p>&nbsp;</p>
+<p>9、为什么有那么多编写正则表达式的方法？</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512215822566-821235052.png" alt="" width="576" height="140" /></p>
+<p>&nbsp;</p>

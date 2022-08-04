@@ -1,0 +1,37 @@
+<h2>例子</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+ 
+<span style="color: #008000;">//</span><span style="color: #008000;"> 左移运算符</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">10</span> ; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">1 &lt;&lt; %d: %d \n</span><span style="color: #800000;">"</span>, i, <span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> i);
+    }
+        
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+输出是 
+1 &lt;&lt; 0: 1 即2^0 二进制 1 （把 1 左移了n位）
+1 &lt;&lt; 1: 2 即2^1 二进制 10 （把 1 左移了1位）
+1 &lt;&lt; 2: 4 即2^2 二进制 100 （把 1 左移了2位）
+1 &lt;&lt; 3: 8
+1 &lt;&lt; 4: 16
+1 &lt;&lt; 5: 32
+1 &lt;&lt; 6: 64
+1 &lt;&lt; 7: 128
+1 &lt;&lt; 8: 256
+1 &lt;&lt; 9: 512
+所以 1 &lt;&lt; n 是 2^n 二进制 1后面跟着n个0 （把 1 左移了n位） 
+
+用二进制数表达状态。 
+1位二进制只可以表达 2 种状态 0 与 1 
+而 2位二进制就可以表达 2 * 2 = 4 种状态 2 ^ 2  
+3位可以表达 2 * 2 * 2 = 8种状态 2 ^ 3 
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://zhidao.baidu.com/question/222877925.html" target="_blank">i&lt;&lt;4在C++中是什么意思_百度知道</a></p>

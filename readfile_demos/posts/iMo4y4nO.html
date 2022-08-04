@@ -1,0 +1,112 @@
+<p>HTTP Status 500&nbsp;&nbsp;<span style="color: #ff00ff;">※</span>&nbsp;&nbsp;jsp 放在 WEB-INF 外面&nbsp; <span style="color: #ff00ff;">※</span> 使用 JDBC 时需要 close 什么<span style="color: #ff00ff;">&nbsp;※</span>&nbsp;execute 和 executeUpdate&nbsp;<span style="color: #ff00ff;">※&nbsp;</span>How can I read context parameter/web.xml values in a non-servlet java file?</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>1、明明写了 servlet 却抛出这个，环境：IntelliJ IDEA</h3>
+<p>HTTP Status 500 - Error instantiating servlet class com.example.web.BeerSelect</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180311100852053-493596517.png" alt="" width="264" height="140" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180311094628213-697178436.png" alt="" width="463" height="355" /></p>
+<p>临时解决方案：手动把编译出来的 .class 复制到 web/WEB-INF/classes 目录下。</p>
+<p>持续化解决方案：<a id="cb_post_title_url" href="http://www.cnblogs.com/xuange306/p/7012341.html" target="_blank">IntelliJ IDEA 2017 配置Tomcat 运行Web项目</a></p>
+<p>总之是要在 Project Structure --&gt; Modules 中把 compiler output 和 WEB-INF/classes 以及 依赖包和 WEB-INF/lib 相对应起来，具体操作看上面教程。</p>
+<p>后来发现，classes 是不需要自己建立的（lib 最好自建一下），&nbsp;compiler output 和 WEB-INF/classes 也不需要手动去关联，开发环境帮你做好了。保持默认设置比较不容易出错。。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180311104840357-994770206.png" alt="" width="295" height="124" /></p>
+<p>&nbsp;</p>
+<h3>2、把 jsp 放在 WEB-INF 外面并直接访问会发生什么</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180311111232422-1985029266.png" alt="" width="431" height="106" />可能是这样的。</p>
+<p>所以 最好 尽量 把 jsp 放 在 WEB-INF 内， WEB-INF 外放 无状态（没有先决条件）的入口 .html&nbsp;</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201803/1042431-20180311111602254-976687494.png" alt="" width="287" height="132" />像这样。</p>
+<p>&nbsp;</p>
+<h3>3、使用 JDBC 时需要 close 什么？</h3>
+<p><a href="http://blog.csdn.net/wc0077/article/details/51083374" target="_blank">http://blog.csdn.net/wc0077/article/details/51083374</a></p>
+<p>总之&nbsp;PreparedStatement 和 resultset 最好都放在 finally 里关掉。</p>
+<p>&nbsp;</p>
+<h3>4、<a href="http://www.iteye.com/problems/64517" target="_blank">PreparedStatement 的 execute方法和executeUpdate方法有性能方面的区别吗</a></h3>
+<div class="cnblogs_code">
+<pre>通常我们没有必要使用execute方法来执行SQL语句，而是使用executeQuery或executeUpdate更适合，但如果在不清楚SQL语句的类型时则只能使用execute方法来执行该SQL语句了 </pre>
+</div>
+<p>&nbsp;</p>
+<h3>5、<a class="question-hyperlink" href="https://stackoverflow.com/questions/4195688/how-can-i-read-context-parameter-web-xml-values-in-a-non-servlet-java-file" target="_blank">How can I read context parameter/web.xml values in a non-servlet java file?</a>&nbsp;-- from stackoverflow</h3>
+<p>我的动机和提问者相同，打算从 web.xml 读数据库的配置（用户名、密码什么的）。</p>
+<p>本来是采用方案一（<code><span class="pun">&lt;<span class="pln">env<span class="pun">-<span class="pln">entry<span class="pun">&gt; 那个</span></span></span></span></span></code>），后来发现对代码结构影响很不良就放弃了</p>
+<pre class="lang-java prettyprint prettyprinted"><code><span class="typ">Context<span class="pln"> env <span class="pun">=<span class="pln"> <span class="pun">(<span class="typ">Context<span class="pun">)<span class="kwd">new<span class="pln"> <span class="typ">InitialContext<span class="pun">().<span class="pln">lookup<span class="pun">(<span class="str">"java:comp/env"<span class="pun">);</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>于是就用方案二，增设一个&nbsp;ServletContextListener，步骤如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.example.model;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletContext;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletContextEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletContextListener;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> DbConfig <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ServletContextListener {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String JDBC_DRIVER;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String DB_URL;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String USER;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String PASS;
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> contextInitialized(ServletContextEvent servletContextEvent) {
+        ServletContext context </span>=<span style="color: #000000;"> servletContextEvent.getServletContext();
+
+        JDBC_DRIVER </span>= context.getInitParameter("JDBC_DRIVER"<span style="color: #000000;">);
+        DB_URL </span>= context.getInitParameter("DB_URL"<span style="color: #000000;">);
+        USER </span>= context.getInitParameter("USER"<span style="color: #000000;">);
+        PASS </span>= context.getInitParameter("PASS"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 之后在其它类里临时创建该对象拿数据</span>
+<span style="color: #000000;">    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> contextDestroyed(ServletContextEvent servletContextEvent) {
+
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>web.xml</p>
+<div class="cnblogs_code">
+<pre>    &lt;context-param&gt;
+        &lt;param-name&gt;JDBC_DRIVER&lt;/param-name&gt;
+        &lt;param-value&gt;org.gjt.mm.mysql.Driver&lt;/param-value&gt;
+    &lt;/context-param&gt;
+
+    &lt;context-param&gt;
+        &lt;param-name&gt;DB_URL&lt;/param-name&gt;
+        &lt;param-value&gt;jdbc:mysql:<span style="color: #008000;">//</span><span style="color: #008000;">localhost:3306/mangast&lt;/param-value&gt;</span>
+    &lt;/context-param&gt;
+
+    &lt;context-param&gt;
+        &lt;param-name&gt;USER&lt;/param-name&gt;
+        &lt;param-value&gt;root&lt;/param-value&gt;
+    &lt;/context-param&gt;
+
+    &lt;context-param&gt;
+        &lt;param-name&gt;PASS&lt;/param-name&gt;
+        &lt;param-value&gt;&lt;/param-value&gt;
+    &lt;/context-param&gt;
+
+<strong>    &lt;listener&gt;
+        &lt;listener-<span style="color: #0000ff;">class</span>&gt;<span style="color: #000000;">
+            com.example.model.DbConfig
+        </span>&lt;/listener-<span style="color: #0000ff;">class</span>&gt;
+    &lt;/listener&gt;</strong></pre>
+</div>
+<p>/</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> Connection conn = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+    加载数据库驱动
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        DbConfig dbConfig </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DbConfig();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Class.forName(dbConfig.JDBC_DRIVER);
+            conn </span>=<span style="color: #000000;"> DriverManager.getConnection(dbConfig.DB_URL, dbConfig.USER, dbConfig.PASS);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClassNotFoundException e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (SQLException e) {
+            e.printStackTrace();
+        }
+    }</span></pre>
+</div>
+<p>&nbsp;算是一种冷门的读取方式&nbsp; :p</p>

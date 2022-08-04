@@ -1,0 +1,52 @@
+<p><span style="background-color: #ffff00;">p24~p29:</span></p>
+<p>1、<strong>基本类型的作用域</strong>由花括号的位置所决定，</p>
+<p>需要注意的是：在C和C++里屏蔽外部变量的做法，在Java里是不允许的。</p>
+<p><br />2、对象的作用域：引用的作用域和基本类型的相同。而对象却可以存活于作用域之外，</p>
+<p><strong>只要你需要，就会一直保留下去。</strong></p>
+<p>&nbsp;</p>
+<p>3、Java垃圾回收器：这一机制保证了程序不会发生&ldquo;内存泄漏&rdquo;。它监控用new创建的所有对象（在堆中），</p>
+<p>并辨别那些不会再被引用的对象，随后，释放这些对象的内存空间。</p>
+<p>&nbsp;</p>
+<p>4、如果一切都是对象，那么是什么决定了某一类对象的外观与行为？</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;"><strong>class</strong></span></p>
+<p>1、可以在类中设置两种类型的元素：字段和方法</p>
+<p>&nbsp;</p>
+<p>2、基本数据类型作为类的字段时Java将确保给定默认值，</p>
+<p>但不适用于在方法中定义的变量（包括引用），<span style="color: #ff0000;">在方法内的变量必须人工初始化，即便是null或0，</span></p>
+<p>例如：connection &nbsp;conn = null 作为类的字段则不<span style="text-decoration: underline;">必</span>要。</p>
+<p>（<strong>优于C++的地方</strong>：如果方法中声明的变量没有初始化，Java会在编译时返回一个错误）</p>
+<p>&nbsp;</p>
+<p>3、方法签名 = 方法名 + 参数列表。（唯一确定某个方法）</p>
+<p>&nbsp;</p>
+<p>4、通过参数传递对象：像Java中任何传递对象的场合一样，<strong><span style="color: #ff0000;">实际上都是将对象传递给另一个引用</span></strong>。</p>
+<p>&nbsp;</p>
+<p>5、return的两方面含义：1）已经做完，离开此方法。2）返回一个值。（如果有的话）</p>
+<p>例如，如果不想返回任何值：void nothing(){ return; }</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;"><strong>Java程序</strong></span></p>
+<p>1、Java解决名字冲突：反转域名来命名类库。</p>
+<p>&nbsp;</p>
+<p>2、运用其他构件：import</p>
+<p>&nbsp;</p>
+<p>3、创建类就是在描述那个类的对象的外观与行为。</p>
+<p>&nbsp;</p>
+<p>4、<strong>除非用new创建那个类的对象，否则，实际上并未获得任何对象。</strong></p>
+<p><strong>但是经常会碰到两种情况：</strong><span style="color: #ff0000;"><strong>一种情形是，只想为某特定域分配单一空间（例如序号），</strong></span></p>
+<p><span style="color: #ff0000;"><strong>而不去考虑究竟创建多少对象。另一种情形是，希望没有创建对象，也能够调用某一个方法。</strong></span></p>
+<p>&nbsp;</p>
+<p>5、static关键字：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> StaticTest {
+  </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> i = 47<span style="color: #000000;">;      
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">StaticTest st1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> StaticTest();
+StaticTest st2 </span>= <span style="color: #0000ff;">new</span> StaticTest();</pre>
+</div>
+<p>1）<strong>静态的只有一份</strong>。（StaticTest.i只有一份存储空间，st1和st2所引用的对象共享一个i）</p>
+<p>2）<strong><span style="color: #ff0000;">可以通过类名直接访问静态成员，并且应该作为首选方式</span></strong>。</p>
+<p>（这不仅是因为它强调了变量的静态结构，而且在某些情况下还为编译器优化提供了更好的机会）</p>
+<p>3）static关键字的最典型应用就是：定义main()方法。</p>
+<p>&nbsp;</p>

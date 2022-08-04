@@ -1,0 +1,72 @@
+<p>参考<a href="https://blog.csdn.net/qq_14982047/article/details/50903868" target="_blank">&nbsp;java中的类的初始化顺序详解</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample;
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Bread {
+    Bread() { System.out.println(</span>"Bread()"<span style="color: #000000;">); }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Cheese {
+    Cheese() { System.out.println(</span>"Cheese()"<span style="color: #000000;">); }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Lettuce {
+    Lettuce() { System.out.println(</span>"Lettuce()"<span style="color: #000000;">); }
+}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestOrder {
+
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        System.out.println(</span>"static block - 1 has been executed."<span style="color: #000000;">);
+    }
+
+    {
+        System.out.println(</span>"non-static - 1 block has been executed."<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Bread bread = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bread();
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Cheese cheese = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Cheese();
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> {
+        System.out.println(</span>"static block - 2 has been executed."<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Lettuce lettuce = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lettuce();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> Bread bread1 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bread();
+    {
+        System.out.println(</span>"non-static - 2 block has been executed."<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> Cheese cheese1 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Cheese();
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span> Lettuce lettuce1 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lettuce();
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        System.out.println(</span>"run static method."<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> TestOrder() {
+        System.out.println(</span>"create object."<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        TestOrder.run();
+        </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> TestOrder();
+    }
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+output=
+static block - 1 has been executed.
+Bread()
+Cheese()
+static block - 2 has been executed.
+Lettuce()
+<strong>run static method.</strong>
+non-static - 1 block has been executed.
+Bread()
+non-static - 2 block has been executed.
+Cheese()
+Lettuce()
+<strong>create object.
+ </strong></span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>之所以补充上面的代码，主要是为了强调：【实例域以及初始化块】的执行也是依赖于代码书写顺序的（自上而下），而并非随机执行或者按照某种优先顺序。不过，一些特殊情况可能需要另当别论。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><br /><br /></p>

@@ -1,0 +1,44 @@
+<p>参考：</p>
+<p>1、http://www.w3school.com.cn/html5/html_5_canvas.asp</p>
+<p>2、http://blog.csdn.net/qq_27626333/article/details/51595138</p>
+<p>效果图：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170421212858087-850652315.png" alt="" width="317" height="400" /></p>
+<p>思路：</p>
+<p>1、创建一个画布。</p>
+<p>2、在画布上绘制一个圆。</p>
+<p>3、把画布放到HTML页面上。</p>
+<p>代码：</p>
+<p>index.html</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="utf-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>draw a Ball<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/ball.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>ball.js</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Create the canvas</span>
+<span style="color: #0000ff;">var</span> canvas = document.createElement("canvas"); <span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个画布</span>
+<span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"); <span style="color: #008000;">//</span><span style="color: #008000;"> 可以把ctx理解成一支画笔！</span>
+canvas.width = 1024<span style="color: #000000;">;
+canvas.height </span>= 768<span style="color: #000000;">;
+document.body.appendChild(canvas);
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> DRAW THE BALL</span>
+ctx.fillStyle="crimson"<span style="color: #000000;">;
+ctx.beginPath();
+ctx.arc(</span>300,400,250,0,Math.PI*2,<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">绘制弧线，使用arc(x,y,radius,startAngle,endAngle,counterclockwise)方法  </span><span style="color: #008000;">
+//</span><span style="color: #008000;">以(x,y)为圆心绘制一条弧线，弧线半径为radius，起始和结束角度（用弧度表示）分别为startAngle  </span><span style="color: #008000;">
+//</span><span style="color: #008000;">和endAngle。最后一个参数表示是否按逆时针方向计算，值为false表示顺时针方向计算。</span><span style="color: #008000;">
+//</span><span style="color: #008000;">内容来自http://blog.csdn.net/qq_27626333/article/details/51595138！</span>
+<span style="color: #000000;">ctx.closePath();
+ctx.fill();</span></pre>
+</div>
+<p>&nbsp;</p>

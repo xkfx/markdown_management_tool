@@ -1,0 +1,353 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> （1）用子查询查询员工&ldquo;张小娟&rdquo;所做的订单信息。</span>
+<span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+<span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master
+</span><span style="color: #0000ff;">WHERE</span> saler_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee
+    </span><span style="color: #0000ff;">WHERE</span> employee_name <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">张小娟</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （2）查询没有订购商品的且在北京地区的客户编号，客户名称和邮政编码，并按邮政编码降序排序。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no, customer_name, zip
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer x
+</span><span style="color: #0000ff;">WHERE</span> address <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">北京市</span><span style="color: #ff0000;">'</span>
+    <span style="color: #808080;">AND</span> <span style="color: #808080;">NOT</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+        <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master y
+        </span><span style="color: #0000ff;">WHERE</span> x.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+    )
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> zip <span style="color: #0000ff;">DESC</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （3）查询订购了&ldquo;32M DRAM&rdquo;商品的订单编号，订货数量和订货单价。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_no, quantity, price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+</span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+    </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">32M DRAM</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+);
+
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （4）查询与员工编号&ldquo;E2008005&rdquo;在同一个部门的员工编号，姓名，性别，所属部门。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_no, employee_name, sex, department
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee
+</span><span style="color: #0000ff;">WHERE</span> department <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> department
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee
+    </span><span style="color: #0000ff;">WHERE</span> employee_no <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">E2008005</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;">（5）查询既订购了P2005001商品，又订购了P2007002商品的客户编号，订单编号和订单金额</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no, order_no, order_sum
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master x
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+        <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail y
+        </span><span style="color: #0000ff;">WHERE</span> x.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+            </span><span style="color: #808080;">AND</span> product_no <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">P2005001</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+    )
+    </span><span style="color: #808080;">AND</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+        <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail z
+        </span><span style="color: #0000ff;">WHERE</span> x.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.order_no
+            </span><span style="color: #808080;">AND</span> product_no <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">P2007002</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+    );
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> NOT EXISTS VS. NOT IN 写两个然后比较性能</span><span style="color: #008080;">
+--</span><span style="color: #008080;">（6）查询没有订购&ldquo;52倍速光驱&rdquo;或&ldquo;17寸显示器&rdquo;的客户编号，客户名称。    </span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no, customer_name
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer
+</span><span style="color: #0000ff;">WHERE</span> customer_no <span style="color: #808080;">NOT</span> <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master
+    </span><span style="color: #0000ff;">WHERE</span> order_no <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_no
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+        </span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+            </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+            </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+            </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">IN</span> (<span style="color: #ff0000;">'</span><span style="color: #ff0000;">52倍速光驱</span><span style="color: #ff0000;">'</span>, <span style="color: #ff0000;">'</span><span style="color: #ff0000;">17寸显示器</span><span style="color: #ff0000;">'</span><span style="color: #000000;">)
+        )
+    )
+);
+
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> ORDER BY VS. ALL VS MIN MAX</span><span style="color: #008080;">
+--</span><span style="color: #008080;">（7）查询订单金额最高的订单编号，客户姓名，销售员名称和相应的订单金额。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_no
+    , (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer y
+        </span><span style="color: #0000ff;">WHERE</span> y.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.customer_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> customer_name
+    , (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee
+        </span><span style="color: #0000ff;">WHERE</span> employee_no <span style="color: #808080;">=</span><span style="color: #000000;"> saler_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> employee_name, order_sum
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master x
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> order_sum <span style="color: #0000ff;">DESC</span><span style="color: #000000;">
+LIMIT </span><span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> IN 与 = 以及 OR </span><span style="color: #008080;">
+--</span><span style="color: #008080;">（8）查询订购了&ldquo;52倍速光驱&rdquo;商品的订购数量，订购平均价和订购总金额。</span>
+<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">SUM</span>(quantity), <span style="color: #ff00ff;">AVG</span><span style="color: #000000;">(price)
+    , (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_sum
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master y
+        </span><span style="color: #0000ff;">WHERE</span> y.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.order_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> order_sum
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail x
+</span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+    </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">52倍速光驱</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> BETWEEN 2 AND 4</span><span style="color: #008080;">
+--</span><span style="color: #008080;">（9）查询订购了&ldquo;52倍速光驱&rdquo;商品且订货数量界于2~4之间的订单编号，订货数量和订货金额。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_no, quantity, price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+</span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+        </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">52倍速光驱</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+    )
+    </span><span style="color: #808080;">AND</span> quantity <span style="color: #808080;">BETWEEN</span> <span style="color: #800000; font-weight: bold;">2</span> <span style="color: #808080;">AND</span> <span style="color: #800000; font-weight: bold;">4</span><span style="color: #000000;">;
+
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> GROUP BY</span><span style="color: #008080;">
+--</span><span style="color: #008080;">（10）在订单主表中查询每个业务员的订单数量</span>
+<span style="color: #0000ff;">SELECT</span> saler_no, <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> order_num
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> saler_no;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> COUNT(*) VS. COUNT(id) 任何性能对比都是基于特定 的存储引擎！</span><span style="color: #008080;">
+--</span><span style="color: #008080;">（11）统计在业务科工作且在1973年或1967年出生的员工人数和平均工资。</span>
+<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(employee_no) <span style="color: #0000ff;">AS</span> employee_num, <span style="color: #ff00ff;">AVG</span><span style="color: #000000;">(salary)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee
+</span><span style="color: #0000ff;">WHERE</span> department <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">业务科</span><span style="color: #ff0000;">'</span>
+    <span style="color: #808080;">AND</span> <span style="color: #ff00ff;">YEAR</span>(birthday) <span style="color: #808080;">IN</span> (<span style="color: #800000; font-weight: bold;">1973</span>, <span style="color: #800000; font-weight: bold;">1967</span><span style="color: #000000;">);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （12）在订单明细表中统计每种商品的销售数量和金额，并按销售金额的升序排序输出。</span>
+<span style="color: #0000ff;">SELECT</span> product_no, <span style="color: #ff00ff;">SUM</span>(quantity) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> quantity
+    , </span><span style="color: #ff00ff;">SUM</span>(quantity <span style="color: #808080;">*</span> price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> total
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> product_no
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> total;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （13）统计客户号为&ldquo;C20050001&rdquo;的客户的订单数，订货总额和平均订货金额</span>
+<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>), <span style="color: #ff00ff;">SUM</span><span style="color: #000000;">(order_sum)
+    , </span><span style="color: #ff00ff;">AVG</span><span style="color: #000000;">(order_sum)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master
+</span><span style="color: #0000ff;">WHERE</span> customer_no <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">C2005001</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （14）统计每个客户的订单数，订货总额和平均订货金额。</span>
+<span style="color: #0000ff;">SELECT</span> customer_no, <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>), <span style="color: #ff00ff;">SUM</span><span style="color: #000000;">(order_sum)
+    , </span><span style="color: #ff00ff;">AVG</span><span style="color: #000000;">(order_sum)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> customer_no;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （15）查询订单中至少包含3种（含3种）以上商品的订单编号及订购次数，且订购的商品数量在3件（含3件）以上。</span>
+<span style="color: #0000ff;">SELECT</span> order_no, <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> order_no
+</span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span> product_no) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">3</span>
+<span style="color: #808080;">AND</span> <span style="color: #ff00ff;">SUM</span>(quantity) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">3</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （16）查找订购了&ldquo;32M DRAM&rdquo;的商品的客户编号，客户名称，订货总数量和订货总金额。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no
+    , (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer y
+        </span><span style="color: #0000ff;">WHERE</span> y.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.customer_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> customer_name
+    , (
+        </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">SUM</span><span style="color: #000000;">(quantity)
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail z
+        </span><span style="color: #0000ff;">WHERE</span> z.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.order_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> total_quantity, order_sum
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master x
+</span><span style="color: #0000ff;">WHERE</span> order_no <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> order_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail
+    </span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+        </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">=</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">32M DRAM</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+    )
+);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;">（17）查询每个客户订购的商品编号，商品所属类别，商品数量及订货金额，结果显示客户名称，商品所属类别，商品数量及订货金额，并按客户编号升序和按订货金额的降序排序输出。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer n
+        </span><span style="color: #0000ff;">WHERE</span> n.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> m.customer_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> customer_name, product_class, quantity, price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> (
+            </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no
+            </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master x
+            </span><span style="color: #0000ff;">WHERE</span> x.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.order_no
+        ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> customer_no
+        , (
+            </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_class
+            </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product y
+            </span><span style="color: #0000ff;">WHERE</span> y.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.product_no
+        ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> product_class, quantity, price
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail z
+) m
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> customer_no, price <span style="color: #0000ff;">DESC</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （18）按商品类别查询每类商品的订货平均单价在280元（含280元）以上的订货总数量，订货平均单价和订货总金额。</span>
+<span style="color: #0000ff;">SELECT</span> product_class, <span style="color: #ff00ff;">SUM</span>(quantity), <span style="color: #ff00ff;">AVG</span><span style="color: #000000;">(price)
+    , </span><span style="color: #ff00ff;">SUM</span>(quantity <span style="color: #808080;">*</span><span style="color: #000000;"> price)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail x
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> product y <span style="color: #0000ff;">ON</span> x.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.product_no
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> product_class
+</span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">AVG</span>(price) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">280</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （19）查找至少有2次销售的业务员名称和销售日期。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee
+        </span><span style="color: #0000ff;">WHERE</span> employee_no <span style="color: #808080;">=</span><span style="color: #000000;"> saler_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> employee_name, order_date
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master x
+</span><span style="color: #0000ff;">WHERE</span> x.saler_no <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> y.saler_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master y
+    </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> saler_no
+    </span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">
+)
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> saler_no;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （20）查询销售金额最大的客户名称和总货款额</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer y
+        </span><span style="color: #0000ff;">WHERE</span> y.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.customer_no
+    ) </span><span style="color: #0000ff;">AS</span> customer_name, <span style="color: #ff00ff;">SUM</span>(order_sum) <span style="color: #0000ff;">AS</span> <span style="color: #ff00ff;">sum</span>
+<span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master x
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> customer_no
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> <span style="color: #ff00ff;">sum</span> <span style="color: #0000ff;">DESC</span><span style="color: #000000;">
+LIMIT </span><span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （21）查找销售总额小于5000元的销售员编号，姓名和销售额</span>
+<span style="color: #0000ff;">SELECT</span> x.employee_no, employee_name, <span style="color: #ff00ff;">SUM</span><span style="color: #000000;">(order_sum)
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee x
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.employee_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.saler_no
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> employee_no
+</span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">SUM</span>(order_sum) <span style="color: #808080;">&lt;</span> <span style="color: #800000; font-weight: bold;">5000</span>
+<span style="color: #808080;">OR</span> <span style="color: #ff00ff;">SUM</span>(order_sum) <span style="color: #0000ff;">IS</span> <span style="color: #0000ff;">NULL</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （22）查找至少订购了3种商品的客户编号，客户名称，商品编号，商品名称，数量和金额。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> e.customer_no, e.customer_name, r.product_no, r.product_name, quantity
+    , price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail q
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master w <span style="color: #0000ff;">ON</span> w.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> q.order_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> customer e <span style="color: #0000ff;">ON</span> e.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> w.customer_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> product r <span style="color: #0000ff;">ON</span> r.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> q.product_no
+</span><span style="color: #0000ff;">WHERE</span> q.order_no <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> t.order_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail t
+    </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> t.order_no
+    </span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">3</span><span style="color: #000000;">
+)
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> w.customer_no;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 待修改，剪掉冗余中间表、无用列，用 EXISTS 重写</span><span style="color: #008080;">
+--</span><span style="color: #008080;">（23）查找同时订购了商品为&ldquo;P2007002&rdquo;和商品编号为&ldquo;P2007001&rdquo;的商品的客户编号，客户姓名，商品编号，商品名称和销售数量，按客户编号排序输出。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> a.customer_no, a.customer_name, e.product_no, e.product_name, d.quantity
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer a
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master s <span style="color: #0000ff;">ON</span> a.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> s.customer_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail d <span style="color: #0000ff;">ON</span> s.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> d.order_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> product e <span style="color: #0000ff;">ON</span> e.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> d.product_no
+</span><span style="color: #0000ff;">WHERE</span> a.customer_no <span style="color: #808080;">IN</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> (
+            </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> x.customer_no, x.customer_name, m.product_no, m.product_name, quantity
+            </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer x
+                </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+                </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail z <span style="color: #0000ff;">ON</span> z.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+                </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> product m <span style="color: #0000ff;">ON</span> m.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.product_no
+            </span><span style="color: #0000ff;">WHERE</span> m.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> "P2007001"
+            </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> x.customer_no
+            </span><span style="color: #0000ff;">UNION</span> <span style="color: #808080;">ALL</span>
+            <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> x.customer_no, x.customer_name, m.product_no, m.product_name, quantity
+            </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer x
+                </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+                </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail z <span style="color: #0000ff;">ON</span> z.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+                </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> product m <span style="color: #0000ff;">ON</span> m.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.product_no
+            </span><span style="color: #0000ff;">WHERE</span> m.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> "P2007002"
+            </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> x.customer_no
+        ) p
+        </span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> p.customer_no
+        </span><span style="color: #0000ff;">HAVING</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #808080;">*</span>) <span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">
+    )
+    </span><span style="color: #808080;">AND</span> e.product_no <span style="color: #808080;">IN</span><span style="color: #000000;"> ("P2007001", "P2007002")
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> a.customer_no;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （24）计算每一商品每月的销售金额总和，并将结果首先按销售月份然后按订货金额降序排序输出。</span>
+<span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">MONTH</span>(order_date) <span style="color: #0000ff;">AS</span> <span style="color: #ff00ff;">month</span><span style="color: #000000;">, x.product_no, product_name
+    , </span><span style="color: #ff00ff;">SUM</span>(quantity <span style="color: #808080;">*</span> price) <span style="color: #0000ff;">AS</span><span style="color: #000000;"> totoal
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product x
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail y <span style="color: #0000ff;">ON</span> x.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.product_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master z <span style="color: #0000ff;">ON</span> z.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+</span><span style="color: #0000ff;">GROUP</span> <span style="color: #0000ff;">BY</span> <span style="color: #ff00ff;">MONTH</span><span style="color: #000000;">(order_date), x.product_no
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span> <span style="color: #ff00ff;">MONTH</span>(order_date), totoal <span style="color: #0000ff;">DESC</span><span style="color: #000000;">;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （25）查询订购了&ldquo;键盘&rdquo;商品的客户姓名，订货数量和订货日期</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer z
+        </span><span style="color: #0000ff;">WHERE</span> z.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+    ) </span><span style="color: #0000ff;">AS</span><span style="color: #000000;"> customer_name, quantity, order_date
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail x
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+</span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+    </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">=</span><span style="color: #000000;"> "键盘"
+);
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （26）查询每月订购&ldquo;键盘&rdquo;商品的客户名称。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> (
+        </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_name
+        </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer z
+        </span><span style="color: #0000ff;">WHERE</span> z.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+    ) </span><span style="color: #0000ff;">AS</span> customer_name, <span style="color: #ff00ff;">MONTH</span>(order_date) <span style="color: #0000ff;">AS</span> <span style="color: #ff00ff;">month</span>
+<span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_detail x
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+</span><span style="color: #0000ff;">WHERE</span> product_no <span style="color: #808080;">=</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> product_no
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> product
+    </span><span style="color: #0000ff;">WHERE</span> product_name <span style="color: #808080;">=</span><span style="color: #000000;"> "键盘"
+)
+</span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> order_date;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （27）查询至少销售了5种商品的销售员编号，姓名，商品名称，数量及相应的单价，并按销售员编号排序输出。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> employee_no, employee_name, product_name, quantity, price
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> employee x
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.employee_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.saler_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail z <span style="color: #0000ff;">ON</span> z.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.order_no
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> product m <span style="color: #0000ff;">ON</span> m.product_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.product_no
+</span><span style="color: #0000ff;">WHERE</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span> <span style="color: #ff00ff;">COUNT</span>(<span style="color: #0000ff;">DISTINCT</span><span style="color: #000000;"> product_no)
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master w
+        </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_detail e <span style="color: #0000ff;">ON</span> w.order_no <span style="color: #808080;">=</span><span style="color: #000000;"> e.order_no
+    </span><span style="color: #0000ff;">WHERE</span> w.saler_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.employee_no
+) </span><span style="color: #808080;">&gt;=</span> <span style="color: #800000; font-weight: bold;">5</span>
+<span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> employee_no;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> （28）查询没有订购商品的客户编号和客户名称。</span>
+<span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> customer_no, customer_name
+</span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> customer x
+</span><span style="color: #0000ff;">WHERE</span> <span style="color: #808080;">NOT</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> (
+    </span><span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span>
+    <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> order_master y
+    </span><span style="color: #0000ff;">WHERE</span> y.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> x.customer_no
+)</span></pre>
+</div>
+<p>&nbsp;</p>

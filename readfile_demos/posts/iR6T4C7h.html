@@ -1,0 +1,71 @@
+<p><a href="#a1">Doing Math &amp;&nbsp;Logic</a></p>
+<p><a href="#a2">Conditional &amp;&nbsp;Looping</a></p>
+<p><a href="#a3">Functions</a></p>
+<p><a href="#a4">Objects</a></p>
+<p><a href="#a5">Arrays</a></p>
+<h3><a name="a1"></a>Doing Math &amp;&nbsp;Logic</h3>
+<p>1、JavaScript变量使用&ldquo;驼峰命名法&rdquo;</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615180331587-1047125662.png" alt="" /></p>
+<p>2、JavaScript运算符的优先级遵循一般规律</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615180655665-630397740.png" alt="" /></p>
+<p>3、JavaScript的逻辑运算&mdash;&mdash;唯一比较特别的就是&ldquo;三重等号&rdquo;，含义是<strong>严格等于</strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615181437290-915462195.png" alt="" /></p>
+<h3>&nbsp;</h3>
+<h3><a name="a2"></a>Conditional&nbsp;&amp;&nbsp;Looping</h3>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615203951228-1624357902.png" alt="" width="635" height="237" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615204835009-1394573310.png" alt="" width="637" height="251" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615204917603-13946760.png" alt="" width="637" height="159" /></p>
+<h3>&nbsp;</h3>
+<h3><a name="a3"></a>Functions</h3>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615205253462-1503173979.png" alt="" width="646" height="127" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615205329806-2060963728.png" alt="" width="636" height="161" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615205422884-991522221.png" alt="" width="635" height="92" /></p>
+<p>&nbsp;</p>
+<h3><a name="a4"></a>Objects</h3>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210005040-1333149448.png" alt="" width="628" height="245" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210059993-132239586.png" alt="" width="638" height="513" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210132384-1386982269.png" alt="" width="635" height="75" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210149587-780976949.png" alt="" width="635" height="74" /></p>
+<p>属性可以是任何东西，数组、对象都可以；创建一个空的对象再往里添加方法和属性也是允许的。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210603290-1999132334.png" alt="" width="638" height="128" /></p>
+<p>&nbsp;</p>
+<h3><a name="a5"></a>Arrays</h3>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210829431-889174114.png" alt="" width="647" height="130" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210840165-881130506.png" alt="" width="645" height="153" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210853165-1905696804.png" alt="" width="650" height="155" /></p>
+<p>获取数组长度</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615210942009-914197601.png" alt="" width="652" height="149" /></p>
+<p>JavaScript里的数组长度理论上是没有限制的，可以通过push和pop添加、移除元素</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170615211159415-1643293053.png" alt="" width="656" height="338" /></p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        &lt;script type="text/javascript"&gt;
+            <span style="color: #0000ff;">var</span> helloFrom = <span style="color: #0000ff;">function</span><span style="color: #000000;">(personName) {
+                </span><span style="color: #0000ff;">return</span> "Hello from " +<span style="color: #000000;"> personName;
+            } </span><span style="color: #008000;">//</span> 
+
+            <span style="color: #0000ff;">var</span> people = ['Tom', 'Yoda', 'Ron'<span style="color: #000000;">];
+
+            people.push(</span>'Bob'<span style="color: #000000;">);
+            people.push(</span>'Dr Evil'<span style="color: #000000;">);
+
+            people.pop();
+
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; people.length; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">var</span> greeting =<span style="color: #000000;"> helloFrom(people[i]);
+                alert(greeting);
+            }
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>

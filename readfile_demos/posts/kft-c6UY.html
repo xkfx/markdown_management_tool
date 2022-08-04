@@ -1,0 +1,75 @@
+<h2>题</h2>
+<p>例题5-3 反片语（Ananagrams, UVa 156）完整题目见参考[1]</p>
+<p>思路：首先把未标准化的单词逐个存到一个vector中，在存的过程中，将标准化后的单词，例如RIDE标准化后是deir，通过map存储并统计其出现的次数。然后根据map中所存储的信息进一步从第一个vector中筛选出符合条件的答案，存储到另外一个vector中，最后排序，输出。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;cctype&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;map&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+map</span>&lt;<span style="color: #0000ff;">string</span>, <span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> cnt;
+vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> words;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 将单词标准化 </span>
+<span style="color: #0000ff;">string</span> repr(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">s)
+{
+    </span><span style="color: #0000ff;">string</span> ans =<span style="color: #000000;"> s;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != ans.length(); ++<span style="color: #000000;">i) {
+        ans[i] </span>=<span style="color: #000000;"> tolower(ans[i]);
+    }
+    sort(ans.begin(), ans.end()); 
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> ans;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> s;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> s) {
+        </span><span style="color: #0000ff;">if</span> (s[<span style="color: #800080;">0</span>] == <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        words.push_back(s);
+        </span><span style="color: #0000ff;">string</span> r =<span style="color: #000000;"> repr(s);
+        </span><span style="color: #0000ff;">if</span> (!cnt.count(r)) cnt[r] = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        cnt[r]</span>++<span style="color: #000000;">;
+    }
+    
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> ans;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != words.size(); ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (cnt[repr(words[i])] == <span style="color: #800080;">1</span><span style="color: #000000;">) ans.push_back(words[i]);
+    }
+    sort(ans.begin(), ans.end());
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != ans.size(); ++<span style="color: #000000;">i) {
+        cout </span>&lt;&lt; ans[i] &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="http://www.baidu.com/link?url=ZCTT-LmdmrPlDUmc_ndODb97Dxb6AKgHv7ZbluOy1ECK6ak6mToNFXCyLkikXvsHP8b39A0ODVCVWwgqqFE8ofGZ0RLm7cH2o2Mbamt4D2_" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586486269',
+						'y':'B7FF53CC'
+												}">反片语(map) - Not-Bad - 博客园</a></p>
+<p>[2]&nbsp;<a href="https://www.baidu.com/link?url=U2iW8VeIOxecCvX0B27uT5hkolyXcm8KqN_O6eTAYzR9uQpfpOn0qV8mR6zglaeYO-NuKubJI0B8WHp9ECUA_tpvMzDF4PoTfNTh5mVJQYe&amp;wd=&amp;eqid=e2d7933800010510000000055e8fe3f6" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586488311',
+						'y':'C47D7AE7'
+												}">c++&nbsp;stl&nbsp;关于map的find和count的使用 - sugarbliss - CSDN博客</a></p>
+<p>[3]&nbsp;<a href="https://www.baidu.com/link?url=RCM2EN9igqOJ_i-Sd8OJuAAyODDZKvLFEeGpIZrlbkoL6us_SCW1yUscRtJ66xwi&amp;wd=&amp;eqid=9446412e000023fc000000055e8ff2b5" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DD6B',
+			'F3':'54E5243F',
+			'T':'1586492085',
+						'y':'FFFFF379'
+												}">STL教程:C++&nbsp;STL快速入门(非常详细)</a></p>

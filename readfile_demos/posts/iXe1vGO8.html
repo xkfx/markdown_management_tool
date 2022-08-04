@@ -1,0 +1,82 @@
+<p><span style="background-color: #ffff99;">Java 中的多态</span><br />1、引用的多态：<span style="text-decoration: underline;">意思就是父类的句柄既可以持有本类的对象，也可以持有子类的对象。</span></p>
+<p>&nbsp;</p>
+<p>2、方法的多态：<span style="text-decoration: underline;">注意点是当父类句柄持有子类对象的时候，无法调用子类特有的方法。</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">多态中的引用类型转换</span><br />1、重写override的时候有个典型的向下转换，并且在转换之前执行了检查。</p>
+<p>&nbsp;</p>
+<p>2、检查向下转换安全性的另一个方法：父对象 instanceof 子类。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的抽象类</span> <br />1、通常用接口取代抽象类:<span style="text-decoration: underline;">a)两者都可以作为子类对象的持有者。b)两者都可以约定子类必须实现的方法。c)实现接口相比继承抽象类复杂度更低。</span></p>
+<p>&nbsp;</p>
+<p>2、接口和抽象类的差异在于：<span style="text-decoration: underline;">抽象只能单继承，而一个类可以实现多个接口。</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">Java 中的接口</span><br />1、接口规定了一批类所需要遵守的<strong>规范</strong>，规定类里必须提供某些方法。</p>
+<p>&nbsp;</p>
+<p>2、接口中的属性都是常量，即使定义时不显示设置public static final，系统也会自动加上。（并且不加是一种比较好的习惯，不做多余的事情。）</p>
+<p>&nbsp;</p>
+<p>3、接口中的方法都是<strong>抽象方法</strong>，<span style="text-decoration: underline;">遵守一个接口就必须实现接口中的方法</span>。</p>
+<p>&nbsp;</p>
+<p>4、使用接口：<span style="text-decoration: underline;">类实现接口、作为对象持有者、与匿名内部类配合使用</span>。</p>
+<p>&nbsp;</p>
+<p>5、接口的命名规范：要与类区分，通常I开头或者InterfaceXX</p>
+<p>ps：<span style="text-decoration: underline;">参考阿里的开发手册，接口规范Xxx配合XxxImpl，方法直接void f()而不要加上public abstract等前缀，接口常量也是一样，不要加多余的前缀。</span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;"><strong>匿名内部类（经常与接口配合使用）</strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/3/11.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestAnimal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 使用匿名内部类的第一种方式</span>
+        Animal a1 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Animal() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                System.out.println(</span>"使用匿名内部类的第一种方式"<span style="color: #000000;">);
+            }
+        };
+        a1.run();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 使用匿名内部类的第二种方式</span>
+        <span style="color: #0000ff;">new</span><span style="color: #000000;"> Animal() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                System.out.println(</span>"使用匿名内部类的第二种方式"<span style="color: #000000;">);
+            }
+        }.run();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 　　　　　　　　┏┓　　　┏┓
+ * 　　　　　　　┏┛┻━━━┛┻┓
+ * 　　　　　　　┃　　　　　　　┃ 　
+ * 　　　　　　　┃　　　━　　　┃
+ * 　　　　　　　┃　＞　　　＜　┃
+ * 　　　　　　　┃　　　　　　　┃
+ * 　　　　　　　┃...　⌒　...　┃
+ * 　　　　　　　┃　　　　　　　┃
+ * 　　　　　　　┗━┓　　　┏━┛
+ * 　　　　　　　　　┃　　　┃　Code is far away from bug with the animal protecting　　　　　　　　　　
+ * 　　　　　　　　　┃　　　┃   神兽保佑,代码无bug
+ * 　　　　　　　　　┃　　　┃　　　　　　　　　　　
+ * 　　　　　　　　　┃　　　┃  　　　　　　
+ * 　　　　　　　　　┃　　　┃
+ * 　　　　　　　　　┃　　　┃　　　　　　　　　　　
+ * 　　　　　　　　　┃　　　┗━━━┓
+ * 　　　　　　　　　┃　　　　　　　┣┓
+ * 　　　　　　　　　┃　　　　　　　┏┛
+ * 　　　　　　　　　┗┓┓┏━┳┓┏┛
+ * 　　　　　　　　　　┃┫┫　┃┫┫
+ * 　　　　　　　　　　┗┻┛　┗┻┛
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">UML 简介（用的并不多）</span></p>
+<p>1、用例图：表达用户需求。</p>
+<p>&nbsp;</p>
+<p>2、序列图：对象间的交互关系。</p>
+<p>&nbsp;</p>
+<p>3、类图：最常用。</p>
+<p>&nbsp;</p>

@@ -1,0 +1,337 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+有新生来报到，要逐个录入其信息，如：学生姓名，性别，专业，出生日期，家庭地址，英语入学成绩。
+要求设计链表类来实现，并统计学生人数。文本界面为：
+1)    新增学生信息
+2)    删除学生信息
+3)    导入学生信息（已经保存于的文件信息）
+4)    学生信息搜索（按姓名）
+5)    学生信息统计（按专业或性别或年龄---年龄要自动计算）
+6)    按英语成绩排序
+7)    学生信息保存
+8)    退出
+******请选择：
+</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+#include </span>&lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;fstream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;
+<span style="color: #0000ff;">#define</span> NOW 2017
+<span style="color: #0000ff;">#define</span> REPAINT() system("cls")
+<span style="color: #0000ff;">#define</span> PAUSE() system("pause")
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -------------model------------------
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ---object---</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Student {
+
+friend ostream </span>&amp;print(ostream&amp;, <span style="color: #0000ff;">const</span> Student&amp;<span style="color: #000000;">);
+friend istream </span>&amp;read(istream&amp;, Student&amp;<span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Student() {}
+    Student(</span><span style="color: #0000ff;">string</span> name, <span style="color: #0000ff;">int</span> sex, <span style="color: #0000ff;">int</span> birth, <span style="color: #0000ff;">string</span> home, <span style="color: #0000ff;">string</span> major, <span style="color: #0000ff;">double</span><span style="color: #000000;"> score):
+        name(name), sex(sex), birth(birth), home(home), major(major), score(score) {}
+
+    </span><span style="color: #0000ff;">void</span> setName(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp; name) { <span style="color: #0000ff;">this</span>-&gt;name =<span style="color: #000000;"> name; }
+    </span><span style="color: #0000ff;">string</span> getName() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> name; }
+
+    </span><span style="color: #0000ff;">void</span> setSex(<span style="color: #0000ff;">int</span> sex) { <span style="color: #0000ff;">this</span>-&gt;sex =<span style="color: #000000;"> sex; }
+    </span><span style="color: #0000ff;">int</span> getSex() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> sex; }
+
+    </span><span style="color: #0000ff;">void</span> setBirth(<span style="color: #0000ff;">int</span> birth) { <span style="color: #0000ff;">this</span>-&gt;birth =<span style="color: #000000;"> birth; }
+    </span><span style="color: #0000ff;">int</span> getBirth() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> birth; }
+
+    </span><span style="color: #0000ff;">void</span> setHome(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp; home) { <span style="color: #0000ff;">this</span>-&gt;home =<span style="color: #000000;"> home; }
+    </span><span style="color: #0000ff;">string</span> getHome() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> home; }
+
+    </span><span style="color: #0000ff;">void</span> setMajor(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp; major) { <span style="color: #0000ff;">this</span>-&gt;major =<span style="color: #000000;"> major; }
+    </span><span style="color: #0000ff;">string</span> getMajor() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> major; }
+
+    </span><span style="color: #0000ff;">void</span> setScore(<span style="color: #0000ff;">double</span> score) { <span style="color: #0000ff;">this</span>-&gt;score =<span style="color: #000000;"> score; }
+    </span><span style="color: #0000ff;">double</span> getScore() <span style="color: #0000ff;">const</span> { <span style="color: #0000ff;">return</span><span style="color: #000000;"> score; }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> basic info</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> sex;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> birth;
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> home;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> details</span>
+    <span style="color: #0000ff;">string</span><span style="color: #000000;"> major;    
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> score;
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> print</span>
+ostream &amp;print(ostream &amp;os, <span style="color: #0000ff;">const</span> Student &amp;<span style="color: #000000;">person)
+{
+    os </span>&lt;&lt; person.name &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; person.sex &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; person.birth &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> person.home
+        </span>&lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; person.major &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> person.score;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> os;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> read</span>
+istream &amp;read(istream &amp;<span style="color: #0000ff;">is</span>, Student &amp;<span style="color: #000000;">person)
+{
+    </span><span style="color: #0000ff;">is</span> &gt;&gt; person.name &gt;&gt; person.sex &gt;&gt; person.birth &gt;&gt; person.home &gt;&gt; person.major &gt;&gt;<span style="color: #000000;"> person.score;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">is</span><span style="color: #000000;">;
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ---fileIO----</span>
+vector&lt;Student&gt;<span style="color: #000000;"> student;
+</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> FILENAME;
+
+</span><span style="color: #0000ff;">void</span> setIO(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> str) {
+    FILENAME </span>=<span style="color: #000000;"> str;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> readFile() {
+    ifstream input(FILENAME.c_str());
+    Student x;
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (read(input, x)) {
+        student.push_back(x);
+    }
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> writeFile() {
+    ofstream output(FILENAME.c_str());
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != student.size(); ++<span style="color: #000000;">i) {
+        print(output, student[i]) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ---CRUD------</span>
+<span style="color: #0000ff;">void</span> insertStudent(Student &amp;<span style="color: #000000;">person) {
+    student.push_back(person);
+}
+
+</span><span style="color: #0000ff;">void</span> removeStudent(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> name) {
+    </span><span style="color: #0000ff;">for</span> (vector&lt;Student&gt;::iterator it =<span style="color: #000000;"> student.begin();
+     it </span>!= student.end(); ++<span style="color: #000000;">it) {  
+        </span><span style="color: #0000ff;">if</span> (name == it-&gt;<span style="color: #000000;">getName()) { 
+            student.erase(it);
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }  
+}
+
+Student</span>&amp; getStudent(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> name) {
+    </span><span style="color: #0000ff;">for</span> (vector&lt;Student&gt;::iterator it =<span style="color: #000000;"> student.begin();
+     it </span>!= student.end(); ++<span style="color: #000000;">it) {  
+        </span><span style="color: #0000ff;">if</span> (name == it-&gt;<span style="color: #000000;">getName()) { 
+            </span><span style="color: #0000ff;">return</span> *<span style="color: #000000;">it;
+        }
+    }  
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -----functions--</span>
+<span style="color: #0000ff;">void</span> importInfo(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> file) {
+    setIO(file.c_str());
+    readFile();
+    setIO(FILENAME.c_str());
+}
+
+</span><span style="color: #0000ff;">void</span> listStudentByMajor(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> major) {
+    </span><span style="color: #0000ff;">for</span> (vector&lt;Student&gt;::iterator it =<span style="color: #000000;"> student.begin();
+     it </span>!= student.end(); ++<span style="color: #000000;">it) {  
+        </span><span style="color: #0000ff;">if</span> (major == it-&gt;<span style="color: #000000;">getMajor()) { 
+            print(cout, </span>*it) &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }  
+}
+
+</span><span style="color: #0000ff;">void</span> listStudentBySex(<span style="color: #0000ff;">int</span><span style="color: #000000;"> sex) {
+    </span><span style="color: #0000ff;">for</span> (vector&lt;Student&gt;::iterator it =<span style="color: #000000;"> student.begin();
+     it </span>!= student.end(); ++<span style="color: #000000;">it) {  
+        </span><span style="color: #0000ff;">if</span> (sex == it-&gt;<span style="color: #000000;">getSex()) { 
+            print(cout, </span>*it) &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }  
+}
+
+</span><span style="color: #0000ff;">void</span> listStudentByAge(<span style="color: #0000ff;">int</span><span style="color: #000000;"> age) {
+    </span><span style="color: #0000ff;">for</span> (vector&lt;Student&gt;::iterator it =<span style="color: #000000;"> student.begin();
+     it </span>!= student.end(); ++<span style="color: #000000;">it) {  
+        </span><span style="color: #0000ff;">if</span> (age == NOW-it-&gt;getBirth()/<span style="color: #800080;">10000</span><span style="color: #000000;">) { 
+            print(cout, </span>*it) &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }  
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ----------------view-----------------</span>
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> view() {
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">注意：默认的学生信息保存到student.log文件下！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">1-新增学生信息\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">2-删除学生信息\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">3-导入学生信息\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">4-学生信息搜索\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">5-学生信息统计\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">6-按英语成绩排序\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">7-学生信息保存\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">8-退出\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">******请选择：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> view1() {
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">依次填入姓名, 性别(0表示女，１表示男), 出生年月(例如19980312), 家庭住址, 专业, 英语成绩,请输入学生信息:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> view5() {
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">1-按专业\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">2-按性别\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">3-按年龄\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">4-返回\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">******请选择：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ----------------tester--------------</span>
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> StudentTest() {
+    Student s(</span><span style="color: #800000;">"</span><span style="color: #800000;">wang</span><span style="color: #800000;">"</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">19971019</span>, <span style="color: #800000;">"</span><span style="color: #800000;">fz</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">software</span><span style="color: #800000;">"</span>, <span style="color: #800080;">99.8</span><span style="color: #000000;">);
+    print(cout, s) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    read(cin, s);
+    print(cout, s) </span>&lt;&lt;<span style="color: #000000;"> endl;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> FileTest() {
+    readFile();
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != student.size(); ++<span style="color: #000000;">i) {
+        print(cout, student[i]) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    }
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> getStudentTest() {
+    setIO(</span><span style="color: #800000;">"</span><span style="color: #800000;">student.log</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    readFile();
+
+    Student s(</span><span style="color: #800000;">"</span><span style="color: #800000;">wang</span><span style="color: #800000;">"</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">19971019</span>, <span style="color: #800000;">"</span><span style="color: #800000;">fz</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">software</span><span style="color: #800000;">"</span>, <span style="color: #800080;">99.8</span><span style="color: #000000;">);
+    insertStudent(s);
+
+    print(cout, getStudent(</span><span style="color: #800000;">"</span><span style="color: #800000;">wang</span><span style="color: #800000;">"</span>)) &lt;&lt;<span style="color: #000000;"> endl;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> --------------controller------------</span>
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> service1() {
+    view1();
+
+    Student x;
+    read(cin, x);
+
+    insertStudent(x);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">成功添加学生信息！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    PAUSE();
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> service2() {
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入要删除的学生姓名：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    cin </span>&gt;&gt;<span style="color: #000000;"> name;
+    removeStudent(name);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">成功删除学生信息！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    PAUSE();
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> service3() {
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请确保文件存在！输入要导入的文件名字:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> file;
+    cin </span>&gt;&gt;<span style="color: #000000;"> file;
+    importInfo(file);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">成功导入文件！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    PAUSE();
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> service4() {
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">请输入要查找学生姓名：</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    cin </span>&gt;&gt;<span style="color: #000000;"> name;
+    print(cout, getStudent(name)) </span>&lt;&lt;<span style="color: #000000;"> endl;
+    PAUSE();
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> service5() {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> order;
+
+    </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+        view5();
+        cin </span>&gt;&gt;<span style="color: #000000;"> order;
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">enter major:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+            </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> major;
+            cin </span>&gt;&gt;<span style="color: #000000;"> major;
+            listStudentByMajor(major);
+        }
+
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">enter sex:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+            </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> sex;
+            cin </span>&gt;&gt;<span style="color: #000000;"> sex;
+            listStudentBySex(sex);
+        }
+
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">3</span><span style="color: #000000;">) {
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">enter age:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+            </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> age;
+            cin </span>&gt;&gt;<span style="color: #000000;"> age;
+            listStudentBySex(age);
+        }
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">4</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }    
+    PAUSE();
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> service6() {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != student.size() - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) 
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != student.size() - i - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j)
+            </span><span style="color: #0000ff;">if</span> (student[j].getScore() &gt; student[j+<span style="color: #800080;">1</span>].getScore()) swap(student[j], student[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">排序完成！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> startService() {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> order;
+
+    </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+        REPAINT();
+        view();
+        cin </span>&gt;&gt;<span style="color: #000000;"> order;
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">1</span><span style="color: #000000;">) service1();
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">2</span><span style="color: #000000;">) service2();
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">3</span><span style="color: #000000;">) service3();
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">4</span><span style="color: #000000;">) service4();
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">5</span><span style="color: #000000;">) service5();
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">6</span><span style="color: #000000;">) service6();
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">7</span><span style="color: #000000;">) { 
+            writeFile();
+            cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">保存完成！</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (order &gt; <span style="color: #800080;">8</span>) cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">无效的命令！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">if</span> (order == <span style="color: #800080;">8</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">程序结束！</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    PAUSE();
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -----------main---------------------</span>
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> work() {
+    startService();
+    writeFile();
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    setIO(</span><span style="color: #800000;">"</span><span style="color: #800000;">student.log</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    readFile();
+    work();
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,99 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">思路1：暴力搜索</a></li>
+<li><a href="#anchor1">思路2：聪明一点的搜索</a></li>
+<li><a href="#anchor2">思路3：利用HashMap巧解</a></li>
+</ol></ul>
+</div>
+<p>问题描述：https://leetcode.com/problems/two-sum/</p>
+<h2><a name="anchor0"></a>思路1：暴力搜索</h2>
+<p>根据排列组合原理，列举Cn取2对数字，逐对进行判断，效率是O(n^2-1/2n)，代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">var</span> twoSum = <span style="color: #0000ff;">function</span><span style="color: #000000;">(nums, target) {
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != nums.length; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (let j = i + 1; j != nums.length; ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">if</span> (nums[i] + nums[j] ==<span style="color: #000000;"> target) {
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> [i, j];
+            }
+        }
+    }
+};</span></pre>
+</div>
+<h2><a name="anchor1"></a>思路2：聪明一点的搜索</h2>
+<p>先将数组排序，这个nlgn内可以完成，然后弄两个下标分别指向头和尾，边做判断边根据判断结果缩小搜索范围，这样一般在扫描完整个数组之前（n以内）就可以找到相应元素了，不过需要额外的空间来保存元素和原下标间的映射关系。最终效率是O(nlgn)：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> O(nlgn)</span>
+<span style="color: #0000ff;">var</span> twoSum2 = <span style="color: #0000ff;">function</span><span style="color: #000000;">(nums, target) {
+    let copy </span>= nums.map((x, i) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+            val: x,
+            index: i,
+        };
+    }); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保存元素的下标值</span>
+    copy.sort((a, b) =&gt; a.val - b.val); <span style="color: #008000;">//</span><span style="color: #008000;"> 按照元素值从小到大排序</span>
+<span style="color: #000000;">
+    let i </span>= 0, j = copy.length - 1<span style="color: #000000;">;
+    let sum;
+    </span><span style="color: #0000ff;">while</span> ((sum = copy[i].val + copy[j].val) !=<span style="color: #000000;"> target) {
+        sum </span>&gt; target ? j-- : i++<span style="color: #000000;">;
+    }
+
+    i </span>=<span style="color: #000000;"> copy[i].index;
+    j </span>=<span style="color: #000000;"> copy[j].index;
+    </span><span style="color: #0000ff;">return</span> i &lt; j ?<span style="color: #000000;"> [i, j] : [j, i];
+};</span></pre>
+</div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('3ca8ec82-3708-4689-89c3-d4015d39ce83')"><img id="code_img_closed_3ca8ec82-3708-4689-89c3-d4015d39ce83" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_3ca8ec82-3708-4689-89c3-d4015d39ce83" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('3ca8ec82-3708-4689-89c3-d4015d39ce83',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_3ca8ec82-3708-4689-89c3-d4015d39ce83" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">正确性我也是纠结了一会儿，毕竟数学很菜。。。所以给出一个乱七八糟。。又不严谨的。。。&ldquo;证明&rdquo;&darr;
+
+我们证明这个循环不变式：按照从有序数组的外围朝向内侧的搜索顺序，如果(sum </span>= copy[i].val + copy[j].val) != target那么要找的元素一定在i+1..j或者i..j-1范围中，至于变化i还是j取决于copy[i].val +<span style="color: #000000;"> copy[j].val相对target是大了还是小了：大了一定减j，小了一定加i。
+
+初始化：单看i</span>=0以及j=copy.length - 1;的话是显然成立的，不过这属于特殊情况，属于没路走了，只能i+1或者j-1。选取一个稍普通些的情形i+1..j-1（i=0且j=copy.length - 1），这个时候i和j都是可进可退的，那么当sum &gt; target的时候为什么一定是j-1-1而不是i+1-1呢（这两种操作都会让sum更接近target）？一个直觉且没毛病的理由是i..j-1在上个（或者上上个）迭代已经判断过了，所以此路明显不通，所以就只能是j-1-1了。然而我们需要考察更普通的情形，连续n次迭代sum都小于target，于是i先加了n，之后m次迭代sum都大于target，j才随后减去m，那么在j逐步-1的过程中i可不可以尝试回退一步（-1，回退n步和1步情形都是一样的，假设回退一步方便讨论）呢？因为这么做确实也让sum变小了，并且容易知道i+n-1..j-m这对数并没有判断过（i累计加了n的时候j仍可能还在原地踏步）。不妨假设[i+n-1, j-m]就是原问题的解，即i前进到i+n又回退到i+n-1并且copy[i+n-1].val + copy[j-m].val == target成立。仔细考察&ldquo;有序数组&rdquo;这一前置条件，会发现倘若i和j是原问题的解，也就是copy[i].val + copy[j].val == target成立，那么copy[i].val + copy[任何大于j的下标值].val总是大于target，这是因为copy[任何大于j的下标值].val &gt; copy[j].val，言下之意，考虑最终的情形，必定i和j是有一方会先到达要找的元素之一且在原地等待，不存在什么走过头再回头的情形，于是就推翻假设了。。。此时已经考虑了所有情况，因此循环不变式成立。当sum &lt;<span style="color: #000000;"> target时类似。
+
+保持：假设对于某个i..j（i</span>&gt;0且j&lt;copy.length - 1）循环不变式成立，也就是要找的元素一定在i+1..j或者i..j-1中。那么再进行一次迭代，也就是在i+1..j或者i..j-<span style="color: #000000;">1中搜索，这又回到了初始化的情形，所以循环不变式仍然成立。
+
+终止：因为题目确保了一定有那么一对元素存在，迭代终止的时候就是sun </span>== target找到答案的时候。</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h2><a name="anchor2"></a>思路3：利用HashMap巧解</h2>
+<p>事实上在给出target和一个元素后，另外一个元素就已经随之确定了。因此可以构建一个map，用另外一个元素的值作为key（或者自己本身的值），而value部分可以用来存当前元素的下标，这样一来，只需要至多扫描一遍数组（或者一遍以内），就可以得到答案了。效率是O(n)。js代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> O(n)</span>
+<span style="color: #0000ff;">var</span> twoSum3 = <span style="color: #0000ff;">function</span><span style="color: #000000;">(nums, target) {
+    let obj </span>=<span style="color: #000000;"> {};
+    nums.forEach((x, i) </span>=&gt; obj[target - x] =<span style="color: #000000;"> i);
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != nums.length; ++<span style="color: #000000;">i) {
+        let j </span>=<span style="color: #000000;"> obj[nums[i]];
+        </span><span style="color: #0000ff;">if</span> (j != undefined &amp;&amp; j !=<span style="color: #000000;"> i) {
+            </span><span style="color: #0000ff;">return</span> i &lt; j ?<span style="color: #000000;"> [i, j] : [j, i];
+        }
+    }
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> O(n),渐进性没有改善,不过去掉了一些尾巴</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> Runtime: 52 ms, faster than 100.00% of JavaScript online submissions for Two Sum.</span>
+<span style="color: #0000ff;">var</span> twoSum4 = <span style="color: #0000ff;">function</span><span style="color: #000000;">(nums, target) {
+    let obj </span>= {}, j; <span style="color: #008000;">//</span><span style="color: #008000;"> 用obj作为map</span>
+    <span style="color: #0000ff;">for</span> (let i = 0; i != nums.length; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> ((j = obj[nums[i]]) !=<span style="color: #000000;"> undefined) {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> [j, i];
+        }
+        obj[target </span>- nums[i]] =<span style="color: #000000;"> i;
+    }
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 这个和上一个是一样的，纯粹为了测试一下用obj作map快还是new Map()快。结果是慢了一点。</span>
+<span style="color: #0000ff;">var</span> twoSum5 = <span style="color: #0000ff;">function</span><span style="color: #000000;">(nums, target) {
+    let map </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Map();
+    let obj </span>=<span style="color: #000000;"> {}, j;
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != nums.length; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> ((j = map.get(nums[i])) !=<span style="color: #000000;"> undefined) {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> [j, i];
+        }
+        map.set(target </span>-<span style="color: #000000;"> nums[i], i);
+    }
+};</span></pre>
+</div>
+<p>&nbsp;</p>

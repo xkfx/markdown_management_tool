@@ -1,0 +1,105 @@
+<h2>题</h2>
+<p>完整题目见参考[1]。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> T, n, num; <span style="color: #008000;">//</span><span style="color: #008000;"> 数据组数,商品种数,种商品的数量</span>
+    <span style="color: #0000ff;">float</span> price, sum; <span style="color: #008000;">//</span><span style="color: #008000;"> 某种商品的价格,某组数据的总价 </span>
+<span style="color: #000000;">    
+    cin </span>&gt;&gt;<span style="color: #000000;"> T;    
+    </span><span style="color: #0000ff;">while</span> (T--<span style="color: #000000;">) {
+        sum </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        cin </span>&gt;&gt;<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%f %d</span><span style="color: #800000;">"</span>, &amp;price, &amp;num); <span style="color: #008000;">//</span><span style="color: #008000;"> double 则为 %lf </span>
+            sum += price *<span style="color: #000000;"> num;
+        }
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%.2f\n</span><span style="color: #800000;">"</span>, sum); <span style="color: #008000;">//</span><span style="color: #008000;"> double 则为 %.2lf </span>
+<span style="color: #000000;">    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>V字型数列 - 穷举法。完整题目见参考[3]。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> MAXN = <span style="color: #800080;">20</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a[MAXN];
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> T; <span style="color: #008000;">//</span><span style="color: #008000;"> 数据组数 </span>
+    cin &gt;&gt;<span style="color: #000000;"> T;
+    </span><span style="color: #0000ff;">while</span> (T--<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">int</span> n, cnt = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 数列长度，v字形数列的个数 </span>
+        scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+        </span><span style="color: #0000ff;">if</span> (n &lt; <span style="color: #800080;">3</span><span style="color: #000000;">) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">cnt: 0\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, a + i);    <span style="color: #008000;">//</span><span style="color: #008000;"> 同 &amp;a[i] 的写法    </span>
+<span style="color: #000000;">        }
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n - <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j != n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = j + <span style="color: #800080;">1</span>; k != n; ++<span style="color: #000000;">k) {
+                    </span><span style="color: #0000ff;">if</span> (a[i] &gt; a[j] &amp;&amp; a[j] &lt; a[k]) cnt++<span style="color: #000000;">;
+                }
+            }
+        }
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">cnt: %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, cnt);
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>V字型数列 -&nbsp;还是穷举。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n - <span style="color: #800080;">2</span>; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = i + <span style="color: #800080;">1</span>; j != n - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j) {
+                </span><span style="color: #0000ff;">if</span> (a[i] &gt;<span style="color: #000000;"> a[j]) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = j + <span style="color: #800080;">1</span>; k != n; ++<span style="color: #000000;">k) {
+                        </span><span style="color: #0000ff;">if</span> (a[j] &lt; a[k]) cnt++<span style="color: #000000;">;
+                    }                    
+                }
+            }
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p class="t">[1]&nbsp;<a href="https://www.baidu.com/link?url=RGUgv5j93d5lCF9eFotPXWHKiGwn0Je7fkRFEPd-pIkexniWgcurrmuyO_Qh0MsxNTy8TNcVOfFzlhzOStUfhnx5EiXk1eNaxy4RJglheZ7&amp;wd=&amp;eqid=96c4809b0001e486000000055e90184c" target="_blank" data-click="{
+			'F':'F78717E8',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DD6B',
+			'F3':'54E5243D',
+			'T':'1586501709',
+						'y':'BFF3958F'
+												}">【题目】Problem A.超市结账_Java_漆黑梦工厂-CSDN博客</a></p>
+<p class="t">[2]&nbsp;<a href="https://www.zhihu.com/question/36125544/answer/66031885" target="_blank" data-click="{
+			'F':'778717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586502726',
+						'y':'FFFD227B'
+												}">循环内还是循环外定义变量更好?</a></p>
+<p class="t">[3]&nbsp;<a href="https://www.baidu.com/link?url=Uzjpt27Y_T-_nW2-M77EL_9a2X7wugB28hYMrfuuv5An4CFTEKYPv-q6q6f3SL_RLOSZ3pWYRDZyETl6e2HqZBEwttDJFksS7No8RwGaxoK&amp;wd=&amp;eqid=91ffa49300000b7f000000055e90225e" target="_blank" data-click="{
+			'F':'F78717EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586504286',
+						'y':'3FF3BB7F'
+												}">【题目】Problem B.V字型数列_Java_漆黑梦工厂-CSDN博客</a></p>
+<p class="t">&nbsp;</p>

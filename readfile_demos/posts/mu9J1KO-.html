@@ -1,0 +1,58 @@
+<p>1、会话管理的核心在于&ldquo;交换会话ID&rdquo;，来回传递cookie是最简单的方法，容器通过客户端发来的<strong>JSSESIONID</strong>查找匹配的对话。</p>
+<p>&nbsp;</p>
+<p>2、如果浏览器禁用了cookie，那就意味着浏览器将忽略响应首部中的set-cookie，cookie都设置不了，那么浏览器拿什么信息去<strong>&ldquo;匹配会话&rdquo;</strong>呢？</p>
+<p>&nbsp;</p>
+<p>3、解决这个问题的方法就是<strong>URL重写</strong>，每次切换页面都把&ldquo;会话ID&rdquo;添加到URL的后面，容器利用这个<strong>&ldquo;URL后缀信息&rdquo;</strong>去匹配会话。</p>
+<ul>
+<li>客户端<span style="color: #ff0000;"><strong>&lt;&mdash;&mdash;</strong></span>url重写（类似于set-cookie，只不过形式不同）<span style="color: #ff0000;"><strong>&mdash;&mdash;</strong></span>服务器</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607222931153-700244684.png" alt="" width="826" height="241" /></p>
+<ul>
+<li>客户端<strong><span style="color: #ff0000;">&mdash;&mdash;</span></strong>url重写（携带着jsession后缀到服务器认证）<strong><span style="color: #ff0000;">&mdash;&mdash;&gt;</span></strong>服务器，提取url后缀信息查找对应回话</li>
+</ul>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170607223348575-349106018.png" alt="" width="861" height="297" /></p>
+<p>&nbsp;</p>
+<p>4、cookies就是一些字典、键值对，存在于客户端本地、由HTTP请求的首部携带；</p>
+<p>session存在于服务端JVM中，是一个存储会话信息的对象，需要对应的JSESSIONID查找、访问。</p>
+<p>&nbsp;</p>
+<p>5、url重写的流程分析。这是进行URL重写的登陆程序，</p>
+<div class="cnblogs_code">
+<pre>     <span style="color: #0000ff;">if</span>(userID.equals(user) &amp;&amp;<span style="color: #000000;"> password.equals(pwd)){
+            HttpSession session </span>=<span style="color: #000000;"> request.getSession();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个session,同时向response添加一个含有JSESSIONID的cookie
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 相当与执行了 request.createSession(); response.addCookie(new Cookie("JSESSIONID", 7DDE0B5AB1BECF68DCDC46F56619F0ED));</span>
+            session.setAttribute("user", "Pankaj"<span style="color: #000000;">);
+
+            session.setMaxInactiveInterval(</span>30*60); <span style="color: #008000;">//</span><span style="color: #008000;">setting session to expiry in 30 mins</span>
+            Cookie userName = <span style="color: #0000ff;">new</span> Cookie("user"<span style="color: #000000;">, user);
+            response.addCookie(userName);
+
+<strong><span style="color: #ff0000;">            String encodedURL </span></strong></span><strong><span style="color: #ff0000;">= response.encodeRedirectURL("LoginSuccess.jsp");
+            // 编码重定向URL</span></strong>
+<span style="color: #000000;">            response.sendRedirect(encodedURL);
+        }</span></pre>
+</div>
+<p>&nbsp;没有进行URL重写的程序，</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">if</span>(userID.equals(user) &amp;&amp;<span style="color: #000000;"> password.equals(pwd)){
+            HttpSession session </span>=<span style="color: #000000;"> request.getSession();
+            session.setAttribute(</span>"user", "Pankaj"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">setting session to expiry in 30 mins</span>
+            session.setMaxInactiveInterval(30*60<span style="color: #000000;">);
+            Cookie userName </span>= <span style="color: #0000ff;">new</span> Cookie("user"<span style="color: #000000;">, user);
+            userName.setMaxAge(</span>30*60<span style="color: #000000;">);
+            response.addCookie(userName);
+            response.sendRedirect(</span>"LoginSuccess.jsp"<span style="color: #000000;">);<br /></span></pre>
+</div>
+<pre><span><strong>我们发现，除了String encodedURL </strong><strong>= response.encodeRedirectURL("LoginSuccess.jsp");这一句外两者没有任何差别，但是，对于程序2而言，一旦浏览器禁用cookie将完全无法使用，<br />而对于程序1，不论是否禁用cookie都一样能用，url重写的好处就很明显了。<br />观察一下程序1的运行状况，当我们成功登陆的时候，可以看到url栏的变化：<br /><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170608141528637-1561485056.png" alt="" /><br />&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;登陆后，将变化为&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&gt;<br /><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170608141623668-1394584007.png" alt="" /></strong></span></pre>
+<pre><span><strong>&nbsp;<br /></strong><br /></span></pre>
+<p>&nbsp;6、在我们一般使用电脑的使用，cookie都是未禁用的，url重写只是作为一个&ldquo;后备方法&rdquo;！只有在cookie禁用的时候才生效，就实现URL重写的代码而言，并不需要加很多的代码，简单的encodeURL就好了。</p>
+<p>&nbsp;</p>
+<p>7、另外一些问题：</p>
+<ol>
+<li>Q：既然url重写只是后备方法，那么容器怎么知道何时启用url重写？A：容器在第一次与客户端通信的时候会同时使用两种方式（cookie和url重写），以此作为一种<strong>安全的&ldquo;试探&rdquo;</strong>，认真观察一下<a href="http://www.cnblogs.com/xkxf/p/6942192.html#a4">Java Servlet中的会话管理&mdash;&mdash;URL重写</a>中程序的运行情况就很清楚了，第一次切换页面<strong>url一定会重写</strong>。</li>
+<li>url重写只存在于动态页面。这里需要考虑一个性能问题。</li>
+<li>特定的Web容器解析特定的&ldquo;重写的URL&rdquo;，例如Tomcat解析的重写URL的分隔符是;号。</li>
+<li>URL编码只与响应有关。切不可在request上调用encodeURL！</li>
+</ol>
+<pre><span><strong><br /><br /></strong></span></pre>

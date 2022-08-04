@@ -1,0 +1,199 @@
+<p>需求分析：</p>
+<p>逐步完善一个&ldquo;qq仿真&rdquo;程序。</p>
+<p>参考：</p>
+<p>1、文本框与文本区：http://www.weixueyuan.net/view/6062.html</p>
+<p>2、java布局：http://www.cnblogs.com/hthuang/p/3460234.html</p>
+<p>&nbsp;</p>
+<p>效果：</p>
+<p>login界面:</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170427174857678-555469677.png" alt="" width="141" height="96" /></p>
+<p>主界面：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170427181707678-1766545733.png" alt="" width="180" height="181" /></p>
+<p>思路：</p>
+<p>1、先完成&ldquo;精简&rdquo;的本地版本</p>
+<p>2、考虑与服务器交互</p>
+<p>3、逐步完善功能</p>
+<p>&nbsp;</p>
+<p>代码：</p>
+<p>窗体大小方案一：</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #008000;">//</span><span style="color: #008000;"> 取得屏幕的尺寸</span>
+        Toolkit kit =<span style="color: #000000;"> Toolkit.getDefaultToolkit();
+        Dimension screenSize </span>=<span style="color: #000000;"> kit.getScreenSize();
+        </span><span style="color: #0000ff;">int</span> screenWidth =<span style="color: #000000;"> screenSize.width;
+        </span><span style="color: #0000ff;">int</span> screenHeight =<span style="color: #000000;"> screenSize.height;
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置窗体尺寸、位置</span>
+        setSize(screenWidth/6, screenHeight/6<span style="color: #000000;">);
+        setLocationRelativeTo(</span><span style="color: #0000ff;">null</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 居中</span></pre>
+</div>
+<p>&nbsp;QQLogin：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.ui;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionListener;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> QQLogin <span style="color: #0000ff;">extends</span> JFrame <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ActionListener {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> DEFAULT_WIDTH = 300<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> DEFAULT_HEIGHT = 200<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> JButton btnLogin = <span style="color: #0000ff;">new</span> JButton("Sign in"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> JButton btnRegister = <span style="color: #0000ff;">new</span> JButton("Sign up"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> JLabel labUsername = <span style="color: #0000ff;">new</span> JLabel("Username"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> JLabel labPassword = <span style="color: #0000ff;">new</span> JLabel("Password"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">private</span> JTextField txtUsername = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+    </span><span style="color: #0000ff;">private</span> JTextField txtPassword = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setComponents() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 组件1</span>
+        JPanel panUser = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panUser.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(2, 2<span style="color: #000000;">));
+
+        panUser.add(labUsername);
+        panUser.add(txtUsername);
+        panUser.add(labPassword);
+        panUser.add(txtPassword);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 组件2</span>
+        JPanel panBtn = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panBtn.setLayout(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> FlowLayout());
+
+        panBtn.add(btnLogin);
+        panBtn.add(btnRegister);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 组合</span>
+        setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+
+        add(panUser, BorderLayout.CENTER);
+        add(panBtn, BorderLayout.SOUTH);
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> listenComponents() {
+        btnLogin.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        btnRegister.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> QQLogin() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置窗体大小和位置</span>
+<span style="color: #000000;">        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setResizable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        setLocationRelativeTo(</span><span style="color: #0000ff;">null</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 居中
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置组件</span>
+<span style="color: #000000;">        setComponents();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置监听组件</span>
+<span style="color: #000000;">        listenComponents();
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent e) {
+        </span><span style="color: #0000ff;">if</span> (e.getActionCommand().equals("Sign in"<span style="color: #000000;">)) {
+            System.out.println(</span>"用户点击了登陆"<span style="color: #000000;">);
+        }
+
+        </span><span style="color: #0000ff;">if</span> (e.getActionCommand().equals("Sign up"<span style="color: #000000;">)) {
+            System.out.println(</span>"用户点击了注册"<span style="color: #000000;">);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 其实这里不需要暴露actionPerformed方法，但是无法设置成private。。。</span>
+<span style="color: #000000;">}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> QQLoginTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 暂时简单地把这里看作启动Swing程序的神器代码</span>
+        EventQueue.invokeLater(() -&gt;<span style="color: #000000;"> {
+            JFrame frame </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> QQLogin();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 关闭窗体就结束程序。默认情况下，当关闭窗体时只是把窗体&ldquo;隐藏&rdquo;起来。</span>
+            frame.setVisible(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        });
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;QQMain：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.ui;
+
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionEvent;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.awt.event.ActionListener;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> QQMain <span style="color: #0000ff;">extends</span> JFrame <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ActionListener {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> DEFAULT_WIDTH = 400<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> DEFAULT_HEIGHT = 400<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">private</span> JTextField txtMessage = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+    </span><span style="color: #0000ff;">private</span> JComboBox cmbUser = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JComboBox();
+    </span><span style="color: #0000ff;">private</span> JButton btnSend = <span style="color: #0000ff;">new</span> JButton("Send"<span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">private</span> JTextArea txtArea = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextArea();
+    </span><span style="color: #0000ff;">private</span> JScrollPane spArea = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JScrollPane(txtArea);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">（参考书）</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setComponents() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 组件1</span>
+        JPanel panSmall = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panSmall.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(1, 2<span style="color: #000000;">));
+
+        panSmall.add(cmbUser);
+        panSmall.add(btnSend);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 组件2</span>
+        JPanel panBig = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panBig.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(2, 1<span style="color: #000000;">));
+
+        panBig.add(txtMessage);
+        panBig.add(panSmall);
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 组合</span>
+        setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+
+        add(txtArea, BorderLayout.CENTER);
+        add(panBig, BorderLayout.NORTH);
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> listenComponents() {
+        btnSend.addActionListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> QQMain() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置窗体大小和位置</span>
+<span style="color: #000000;">        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setResizable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        setLocationRelativeTo(</span><span style="color: #0000ff;">null</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 居中
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置组件</span>
+<span style="color: #000000;">        setComponents();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置监听组件</span>
+<span style="color: #000000;">        listenComponents();
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent e) {
+        </span><span style="color: #0000ff;">if</span> (e.getActionCommand().equals("Send"<span style="color: #000000;">)) {
+            System.out.println(</span>"用户点击了发送"<span style="color: #000000;">);
+        }
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> QQMainTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        EventQueue.invokeLater(() </span>-&gt;<span style="color: #000000;"> {
+            JFrame frame </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> QQMain();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+            frame.setVisible(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        });
+    }
+}</span></pre>
+</div>
+<p>&nbsp;后续 &amp; 补充：</p>
+<p>1、用blog来管理代码多少有点不方便。。。因为代码是不断修改的。。。等到一定规模考虑搬到github上去。。。</p>
+<p>2、用git管理本地代码。根据个人经验，小量的本地代码只需要用到：git init、git add --all、git commit -m "words"、git reflog、git reset --hard hashcode就行了。。。（防止代码被改烂。。）</p>

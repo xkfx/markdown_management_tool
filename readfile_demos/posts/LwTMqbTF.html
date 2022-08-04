@@ -1,0 +1,549 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li>
+<p>Notes</p>
+<ol>
+<li><a href="#a1">this</a></li>
+<li><a href="#a2">Prototype</a></li>
+<li><a href="#a3">类</a></li>
+<li><a href="#a4">class符号</a></li>
+<li><a href="#a5">覆盖派生属性</a></li>
+<li><a href="#a6">Maps</a></li>
+<li><a href="#a7">Symbols</a></li>
+<li><a href="#a8">iterator接口</a></li>
+<li><a href="#a9">Getters, setters, and statics</a></li>
+<li><a href="#a10">继承</a></li>
+<li><a href="#a11">instanceof</a></li>
+</ol></li>
+<li>
+<p>Excercise</p>
+<ol>
+<li><a href="#b1">A vector type</a></li>
+<li><a href="#b2">Groups</a></li>
+<li><a href="#b3">Iterable groups</a></li>
+<li><a href="#b4">Borrowing a method</a></li>
+</ol></li>
+</ul>
+</div>
+<h2>Notes</h2>
+<p><a name="a1"></a>1、this</p>
+<p>① 隐式传入this参数</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> speak(line) {
+  console.log(`The ${</span><span style="color: #0000ff;">this</span>.type} rabbit says '${line}'<span style="color: #000000;">`);
+}
+let whiteRabbit </span>= {type: "white"<span style="color: #000000;">, speak};
+let hungryRabbit </span>= {type: "hungry", speak};</pre>
+</div>
+<p>② 通过call显式传入this参数</p>
+<div class="cnblogs_code">
+<pre>speak.call(hungryRabbit, "Burp!");</pre>
+</div>
+<p>③ 对于箭头函数而言this指的是外围函数的this</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> normalize() {
+  console.log(</span><span style="color: #0000ff;">this</span>.coords.map(<strong>n =&gt; n / <span style="color: #0000ff;">this</span></strong><span style="color: #000000;"><strong>.length</strong>));
+}
+normalize.call({coords: [</span>0, 2, 3], length: 5<span style="color: #000000;">});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; [0, 0.4, 0.6]</span></pre>
+</div>
+<p>用function关键词定义该函数然后传入，或者把箭头函数独立定义在外面，上面的代码都不会正常运行：</p>
+<div class="cnblogs_code">
+<pre><strong>const f = n =&gt; n / <span style="color: #0000ff;">this</span><span style="color: #000000;">.length;
+
+</span></strong><span style="color: #0000ff;">function</span><span style="color: #000000;"> normalize() {
+  console.log(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.coords.map(f));
+}
+normalize.call({coords: [</span>0, 2, 3], length: 5<span style="color: #000000;">});
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; [NaN, Infinity, Infinity]</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、原型Prototype</p>
+<p>对象接到调用后首先搜索自身的属性，找不到就在原型中查找。</p>
+<p>js中的原型构成一个三角关系，最根部是Object.prototype，而Function.prototype和Array.prototype则是两个分支。</p>
+<div class="cnblogs_code">
+<pre>console.log(Object.getPrototypeOf({}) ==<span style="color: #000000;">
+            Object.prototype);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+<span style="color: #000000;">console.log(Object.getPrototypeOf(Object.prototype));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; null</span>
+console.log(Object.getPrototypeOf(Math.max) ==<span style="color: #000000;">
+            Function.prototype);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(Object.getPrototypeOf([]) ==<span style="color: #000000;">
+            Array.prototype);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;可以用Object.create创捷具有特定原型的对象：</p>
+<div class="cnblogs_code">
+<pre>let protoRabbit =<span style="color: #000000;"> {
+  speak(line) {
+    console.log(`The ${</span><span style="color: #0000ff;">this</span>.type} rabbit says '${line}'<span style="color: #000000;">`);
+  }
+};
+let killerRabbit </span>=<span style="color: #000000;"> Object.create(protoRabbit);
+killerRabbit.type </span>= "killer"<span style="color: #000000;">;
+killerRabbit.speak(</span>"SKREEEE!"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; The killer rabbit says 'SKREEEE!'</span></pre>
+</div>
+<p>在上面的例子中，speak方法是所有兔子共有的，而type属性则是杀手兔子私有的。</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、类</p>
+<p>在java中兔子类的构造方法应该是这样的：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Rabbit {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String type;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> speak() {}
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 构造器</span>
+<strong>    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Rabbit(String type) {
+        </span><span style="color: #0000ff;">this</span>.type =</strong><span style="color: #000000;"><strong> type;
+    }</strong>
+}</span></pre>
+</div>
+<p>然而在js里却要这样实现：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> makeRabbit(type) {
+  let rabbit </span>=<span style="color: #000000;"> Object.create(protoRabbit);
+  rabbit.type </span>=<span style="color: #000000;"> type;
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> rabbit;
+}</span></pre>
+</div>
+<p>正常的兔子都应该通过该函数实例化，这样才可以保证兔子们共享speak，又具备自己独立的type。</p>
+<p>js提供了一种方式让定义这类函数更加简单：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> Rabbit(type) {
+  </span><span style="color: #0000ff;">this</span>.type =<span style="color: #000000;"> type;
+}
+Rabbit.prototype.speak </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(line) {
+  console.log(`The ${</span><span style="color: #0000ff;">this</span>.type} rabbit says '${line}'<span style="color: #000000;">`);
+};
+
+let weirdRabbit </span>= <span style="color: #0000ff;">new</span> Rabbit("weird");</pre>
+</div>
+<p>事实上，js中的所有函数都具有一个prototype属性，它是一个派生自Object.prototyp的空对象。你可以用其它对象覆盖它，或者像上面那样改造它。构造函数、构造函数的<code>prototype</code>属性指向的对象、通过构造函数创建的对象之间的关系如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201808/1042431-20180829221033079-1655633337.png" alt="" width="417" height="454" /></p>
+<p>PS. 独家制作&uarr;</p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、class符号（since 2015）</p>
+<p><strong>类实质上就是一个函数，而函数其实也是个对象。</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Rabbit {
+  constructor(type) {
+    </span><span style="color: #0000ff;">this</span>.type =<span style="color: #000000;"> type;
+  }
+  speak(line) {
+    console.log(`The ${</span><span style="color: #0000ff;">this</span>.type} rabbit says '${line}'<span style="color: #000000;">`);
+  }
+}
+
+let killerRabbit </span>= <span style="color: #0000ff;">new</span> Rabbit("killer"<span style="color: #000000;">);
+let blackRabbit </span>= <span style="color: #0000ff;">new</span> Rabbit("black");</pre>
+</div>
+<p>相对于3只是换了一种书写方式，且在class定义中只允许添加函数到原型。</p>
+<p>匿名类：</p>
+<div class="cnblogs_code">
+<pre>let obj = <span style="color: #0000ff;">new</span><span style="color: #000000;"> class {
+  constructor(word) {
+    </span><span style="color: #0000ff;">this</span>.word =<span style="color: #000000;"> word;
+  }
+  speak() {
+    console.log(</span>'speak.'<span style="color: #000000;">);
+  }
+} (</span>"hello"<span style="color: #000000;">);
+
+obj.word;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; "hello"</span>
+<span style="color: #000000;">obj.speak();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; speak.</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5、覆盖派生属性</p>
+<p>类似java，接收到调用之后，js总是搜索当前对象，找不到才会逐个地搜索上一级原型对象，因此，如果子对象和父对象有同名的属性，那么父对象属性理所当然要被子对象的属性&ldquo;覆盖&rdquo;掉。</p>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6、Maps</p>
+<p>如果用对象实现map：</p>
+<div class="cnblogs_code">
+<pre>let obj =<span style="color: #000000;"> {
+    a: </span>"abc"<span style="color: #000000;">,
+    b: </span>"bca"<span style="color: #000000;">,
+    c: </span>"cab"<span style="color: #000000;">
+};</span></pre>
+</div>
+<p>然而它存在一些问题：</p>
+<div class="cnblogs_code">
+<pre>let obj =<span style="color: #000000;"> {
+    a: </span>"abc"<span style="color: #000000;">,
+    b: </span>"bca"<span style="color: #000000;">,
+    c: </span>"cab"<span style="color: #000000;">
+};
+
+console.log(</span>"a" <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -&gt; true</span>
+console.log("toString" <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -&gt; true</span></pre>
+</div>
+<p>原型对象的属性也会被作为键。针对这个问题，有两个比较容易的解决方案&mdash;&mdash;创建没原型的对象：</p>
+<div class="cnblogs_code">
+<pre>let obj = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+obj.a </span>= "abc"<span style="color: #000000;">;
+
+console.log(</span>"a" <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -&gt; true</span>
+console.log("toString" <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> -&gt; false</span></pre>
+</div>
+<p>或者用Object.keys或者hasOwnProperty代替in，它们都不会把原型属性包含在范畴内。</p>
+<p>不过还存在一个问题，对象的属性只能是字符串，这就意味着没有办法用对象作为键，因此最佳的方案还是采用js内建的Map类：</p>
+<div class="cnblogs_code">
+<pre>let myMap = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Map();
+
+let obj1 </span>=<span style="color: #000000;"> {};
+let obj2 </span>=<span style="color: #000000;"> {};
+let obj3 </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+myMap.set(obj1, </span>"a"<span style="color: #000000;">);
+myMap.set(obj2, </span>"b"<span style="color: #000000;">);
+myMap.set(obj3, </span>"c"<span style="color: #000000;">);
+
+console.log(myMap.get(obj1));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; a</span>
+<span style="color: #000000;">console.log(myMap.has(obj2));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+<span style="color: #000000;">console.log(myMap.get(obj3));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; c</span>
+console.log(myMap.get(<span style="color: #0000ff;">null</span><span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; c</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7、Symbols</p>
+<p>参考文章：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/zczhangcui/p/6435652.html">js-ES6学习笔记-Symbol</a></p>
+<div class="cnblogs_code">
+<pre>let sym = Symbol("name"<span style="color: #000000;">);
+console.log(sym </span>== Symbol("name"<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+Rabbit.prototype[sym] = 55<span style="color: #000000;">;
+console.log(blackRabbit[sym]);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 55</span></pre>
+</div>
+<p>/ 示例2</p>
+<div class="cnblogs_code">
+<pre>const toStringSymbol = Symbol("toString"<span style="color: #000000;">);
+Array.prototype[toStringSymbol] </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+  </span><span style="color: #0000ff;">return</span> `${<span style="color: #0000ff;">this</span><span style="color: #000000;">.length} cm of blue yarn`;
+};
+
+console.log([</span>1, 2<span style="color: #000000;">].toString());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 1,2</span>
+console.log([1, 2<span style="color: #000000;">][toStringSymbol]());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 2 cm of blue yarn</span></pre>
+</div>
+<p>/&nbsp;示例3</p>
+<div class="cnblogs_code">
+<pre>let stringObject =<span style="color: #000000;"> {
+  [toStringSymbol]() { </span><span style="color: #0000ff;">return</span> "a jute rope"<span style="color: #000000;">; }
+};
+console.log(stringObject[toStringSymbol]());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; a jute rope</span></pre>
+</div>
+<p>/ 示例4</p>
+<div class="cnblogs_code">
+<pre>let sy1 = Symbol("just a description"<span style="color: #000000;">);
+let sy2 </span>= Symbol("just a description"<span style="color: #000000;">);
+
+console.log(sy1 </span>==<span style="color: #000000;"> sy2);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+<span style="color: #000000;">
+let obj </span>=<span style="color: #000000;"> {
+    sy1: </span>"a"<span style="color: #000000;">,
+    [sy1]: </span>"b"<span style="color: #000000;">,
+    [sy2]: </span>"c"<span style="color: #000000;">,
+    sy3: Symbol(</span>"just a description"<span style="color: #000000;">)
+};
+
+console.log(obj.sy1);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; a</span>
+console.log(obj["sy1"<span style="color: #000000;">]);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; a</span>
+<span style="color: #000000;">console.log(obj[sy1]);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; b </span>
+<span style="color: #000000;">console.log(Object.keys(obj));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["sy1", "sy3"]</span></pre>
+</div>
+<p><strong>在你仅仅只是需要一个独一无二的符号而不论它是什么的时候可以用它。</strong></p>
+<p>优点：降低代码（由于语义产生的）耦合性。</p>
+<p>注意点：symbol作为属性，必须像上面那样用方括号包含对symbol的绑定进行声明（方括号会导致计算），并且只能用方括号+对symbol的绑定访问那个属性。</p>
+<p>&nbsp;</p>
+<p><a name="a8"></a>8、iterator接口</p>
+<p>&nbsp;所有可迭代（可以通过<code>for</code>/<code>of</code>遍历）对象其实都包含一个由Symbol.iterator定义的方法。该方法返回一个实现了next方法的（iterator）对象。</p>
+<p>可以直接调用这个方法拿到这种对象：</p>
+<div class="cnblogs_code">
+<pre>let okIterator = "OK"<span style="color: #000000;">[Symbol.iterator]();
+console.log(okIterator.next());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {value: "O", done: false}</span>
+<span style="color: #000000;">console.log(okIterator.next());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {value: "K", done: false}</span>
+<span style="color: #000000;">console.log(okIterator.next());
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; {value: undefined, done: true}</span></pre>
+</div>
+<p>自定义实现该接口的矩阵对象（课本实例）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Matrix {
+  constructor(width, height, element </span>= (x, y) =&gt;<span style="color: #000000;"> undefined) {
+    </span><span style="color: #0000ff;">this</span>.width =<span style="color: #000000;"> width;
+    </span><span style="color: #0000ff;">this</span>.height =<span style="color: #000000;"> height;
+    </span><span style="color: #0000ff;">this</span>.content =<span style="color: #000000;"> [];
+
+    </span><span style="color: #0000ff;">for</span> (let y = 0; y &lt; height; y++<span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">for</span> (let x = 0; x &lt; width; x++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">this</span>.content[y * width + x] =<span style="color: #000000;"> element(x, y);
+      }
+    }
+  }
+
+  get(x, y) {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.content[y * <span style="color: #0000ff;">this</span>.width +<span style="color: #000000;"> x];
+  }
+  set(x, y, value) {
+    </span><span style="color: #0000ff;">this</span>.content[y * <span style="color: #0000ff;">this</span>.width + x] =<span style="color: #000000;"> value;
+  }
+}
+
+class MatrixIterator {
+  constructor(matrix) {
+    </span><span style="color: #0000ff;">this</span>.x = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.y = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.matrix =<span style="color: #000000;"> matrix;
+  }
+
+  next() {
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.y == <span style="color: #0000ff;">this</span>.matrix.height) <span style="color: #0000ff;">return</span> {done: <span style="color: #0000ff;">true</span><span style="color: #000000;">};
+
+    let value </span>= {x: <span style="color: #0000ff;">this</span><span style="color: #000000;">.x,
+                 y: </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.y,
+                 value: </span><span style="color: #0000ff;">this</span>.matrix.get(<span style="color: #0000ff;">this</span>.x, <span style="color: #0000ff;">this</span><span style="color: #000000;">.y)};
+    </span><span style="color: #0000ff;">this</span>.x++<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.x == <span style="color: #0000ff;">this</span><span style="color: #000000;">.matrix.width) {
+      </span><span style="color: #0000ff;">this</span>.x = 0<span style="color: #000000;">;
+      </span><span style="color: #0000ff;">this</span>.y++<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> {value, done: <span style="color: #0000ff;">false</span><span style="color: #000000;">};
+  }
+}
+
+Matrix.prototype[Symbol.iterator] </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> MatrixIterator(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+};
+
+let matrix </span>= <span style="color: #0000ff;">new</span> Matrix(2, 2, (x, y) =&gt;<span style="color: #000000;"> `value ${x},${y}`);
+</span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let {x, y, value} of matrix) {
+  console.log(x, y, value);
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 0 0 value 0,0</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 1 0 value 1,0</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 0 1 value 0,1</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; 1 1 value 1,1</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a9"></a>9、Getters, setters, and statics</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Temperature {
+  constructor(celsius) {
+    </span><span style="color: #0000ff;">this</span>.celsius =<span style="color: #000000;"> celsius;
+  }
+  get fahrenheit() {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.celsius * 1.8 + 32<span style="color: #000000;">;
+  }
+  set fahrenheit(value) {
+    </span><span style="color: #0000ff;">this</span>.celsius = (value - 32) / 1.8<span style="color: #000000;">;
+  }
+
+  static fromFahrenheit(value) {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Temperature((value - 32) / 1.8<span style="color: #000000;">);
+  }
+}
+
+let temp </span>= <span style="color: #0000ff;">new</span> Temperature(22<span style="color: #000000;">);
+console.log(temp.fahrenheit);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 71.6</span>
+temp.fahrenheit = 86<span style="color: #000000;">;
+console.log(temp.celsius);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 30<br /><span style="color: #000000;">Temperature.fromFahrenheit(100)</span><br /></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a10"></a>10、继承</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class SymmetricMatrix extends Matrix {
+  constructor(size, element </span>= (x, y) =&gt;<span style="color: #000000;"> undefined) {
+    super(size, size, (x, y) </span>=&gt;<span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">if</span> (x &lt; y) <span style="color: #0000ff;">return</span><span style="color: #000000;"> element(y, x);
+      </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span><span style="color: #000000;"> element(x, y);
+    });
+  }
+
+  set(x, y, value) {
+    super.set(x, y, value);
+    </span><span style="color: #0000ff;">if</span> (x !=<span style="color: #000000;"> y) {
+      super.set(y, x, value);
+    }
+  }
+}
+
+let matrix </span>= <span style="color: #0000ff;">new</span> SymmetricMatrix(5, (x, y) =&gt;<span style="color: #000000;"> `${x},${y}`);
+console.log(matrix.get(</span>2, 3<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 3,2</span></pre>
+</div>
+<p>封装和多态可以将增强代码的独立性，而继承却强化了类之间的关系，制造更多的纠纷。当采用继承的时候，你必须知道它是如何工作的，而不仅仅简单的去用它。继承是有用的工具，但不应当作为解决问题的首选。</p>
+<p>&nbsp;</p>
+<p><a name="a11"></a>11、instanceof</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> X() {
+    
+}
+
+let obj </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> X();
+
+console.log(obj </span><span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Object);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(obj <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> X);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>Exercises</h2>
+<p><a name="b1"></a>①&nbsp;A vector type</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Vec {
+    constructor(x, y) {
+        </span><span style="color: #0000ff;">this</span>.x =<span style="color: #000000;"> x;
+        </span><span style="color: #0000ff;">this</span>.y =<span style="color: #000000;"> y;
+    }
+    
+    plus(v) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Vec(v.x + <span style="color: #0000ff;">this</span>.x, v.y + <span style="color: #0000ff;">this</span><span style="color: #000000;">.y);
+    }
+    
+    minus(v) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Vec(<span style="color: #0000ff;">this</span>.x - v.x, <span style="color: #0000ff;">this</span>.y -<span style="color: #000000;"> v.y);
+    }
+    
+    get length() {
+        </span><span style="color: #0000ff;">return</span> Math.sqrt(<span style="color: #0000ff;">this</span>.x * <span style="color: #0000ff;">this</span>.x + <span style="color: #0000ff;">this</span>.y * <span style="color: #0000ff;">this</span><span style="color: #000000;">.y);
+    }
+}
+
+
+console.log(</span><span style="color: #0000ff;">new</span> Vec(1, 2).plus(<span style="color: #0000ff;">new</span> Vec(2, 3<span style="color: #000000;">)));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Vec{x: 3, y: 5}</span>
+console.log(<span style="color: #0000ff;">new</span> Vec(1, 2).minus(<span style="color: #0000ff;">new</span> Vec(2, 3<span style="color: #000000;">)));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Vec{x: -1, y: -1}</span>
+console.log(<span style="color: #0000ff;">new</span> Vec(3, 4<span style="color: #000000;">).length);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 5</span></pre>
+</div>
+<p>&nbsp;&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - - -&nbsp; &nbsp; &nbsp; &nbsp;-- - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -</p>
+<p><a name="b2"></a>② Groups</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Group {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> Your code here.</span>
+<span style="color: #000000;">  constructor() {
+      </span><span style="color: #0000ff;">this</span>.container =<span style="color: #000000;"> [];
+  }
+  
+  static from(iterable) {
+      let group </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Group();
+      </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let x of iterable) {
+          group.add(x);
+      }
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> group;
+  }
+  
+  add(x) {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.container.includes(x)) {
+          </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.container.push(x);
+      }    
+  }
+  
+  </span><span style="color: #0000ff;">delete</span><span style="color: #000000;">(x) {
+      </span><span style="color: #0000ff;">this</span>.container = <span style="color: #0000ff;">this</span>.container.filter(a =&gt; !(a ===<span style="color: #000000;"> x));
+  }
+  
+  has(x) {
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.container.includes(x);
+  }
+}
+
+let group </span>= Group.from([10, 20<span style="color: #000000;">]);
+console.log(group.has(</span>10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span>
+console.log(group.has(30<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span>
+group.add(10<span style="color: #000000;">);
+group.</span><span style="color: #0000ff;">delete</span>(10<span style="color: #000000;">);
+console.log(group.has(</span>10<span style="color: #000000;">));
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; false</span></pre>
+</div>
+<p>&nbsp;&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - - -&nbsp; &nbsp; &nbsp; &nbsp;-- - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -</p>
+<p><a name="b3"></a>③ Iterable groups</p>
+<p>实践证明，class和function一样可以无视在文本中定义的位置。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">class Group {
+  constructor() {
+      </span><span style="color: #0000ff;">this</span>.container =<span style="color: #000000;"> [];
+  }
+  
+  static from(iterable) {
+      let group </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Group();
+      </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let x of iterable) {
+          group.add(x);
+      }
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> group;
+  }
+  
+  add(x) {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.container.includes(x)) {
+          </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.container.push(x);
+      }    
+  }
+  
+  </span><span style="color: #0000ff;">delete</span><span style="color: #000000;">(x) {
+      </span><span style="color: #0000ff;">this</span>.container = <span style="color: #0000ff;">this</span>.container.filter(a =&gt; !(a ===<span style="color: #000000;"> x));
+  }
+  
+  has(x) {
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.container.includes(x);
+  }
+  
+  [Symbol.iterator]() {
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> GroupIterator(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+  }
+}
+
+class GroupIterator {
+  constructor(x) {
+      </span><span style="color: #0000ff;">this</span>.index = 0<span style="color: #000000;">;
+      </span><span style="color: #0000ff;">this</span>.container =<span style="color: #000000;"> x.container;
+  }    
+  
+  next() {
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.index === <span style="color: #0000ff;">this</span>.container.length) <span style="color: #0000ff;">return</span> {done: <span style="color: #0000ff;">true</span><span style="color: #000000;">};
+      let value </span>= <span style="color: #0000ff;">this</span>.container[<span style="color: #0000ff;">this</span>.index++<span style="color: #000000;">];
+      </span><span style="color: #0000ff;">return</span> {value, done: <span style="color: #0000ff;">false</span><span style="color: #000000;">};
+  }
+}
+
+</span><span style="color: #0000ff;">for</span> (let value of Group.from(["a", "b", "c"<span style="color: #000000;">])) {
+  console.log(value);
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; a</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; b</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> &rarr; c</span></pre>
+</div>
+<p>&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - - -&nbsp; &nbsp; &nbsp; &nbsp;-- - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -&nbsp;- -- - -&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - --&nbsp; - - -</p>
+<p><a name="b4"></a>④ Borrowing a method</p>
+<div class="cnblogs_code">
+<pre>let map = {one: <span style="color: #0000ff;">true</span>, two: <span style="color: #0000ff;">true</span>, hasOwnProperty: <span style="color: #0000ff;">true</span><span style="color: #000000;">};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> Fix this call</span>
+console.log(Object.hasOwnProperty.call(map, "one"<span style="color: #000000;">););
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; true</span></pre>
+</div>
+<p>&nbsp;</p>

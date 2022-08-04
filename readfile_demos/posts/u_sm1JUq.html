@@ -1,0 +1,19 @@
+<p>终于结束这本书了，最后两章的内容在官方文档中都有详细介绍，简单过一遍。。</p>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/" target="_blank"><img src="https://images2018.cnblogs.com/blog/1042431/201804/1042431-20180426105309780-1858773237.png" alt="" width="442" height="89" /></a></p>
+<p>&nbsp;首先是数据备份，最简单直接的就是用 mysql 的内置工具 mysqldump</p>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/mysqldump-sql-format.html" target="_blank">MySQL 8.0 Reference Manual&nbsp;&nbsp;/&nbsp;&nbsp;<span id="hidden-breadcrumbs" class="hidden">Backup and Recovery&nbsp;&nbsp;/&nbsp;&nbsp;Using mysqldump for Backups&nbsp;&nbsp;/&nbsp;&nbsp;Dumping Data in SQL Format with mysqldump</span></a></p>
+<p><span class="hidden">导入也巨简单，因为导出文件是 .sql 直接用 source 就 ok 了。</span></p>
+<p><span class="hidden">另外，需要注意的是，在备份之前最好先&nbsp;<tt>FLUSH TABLES&nbsp;</tt>一下，确保所有数据都写进硬盘了。</span></p>
+<p><span class="hidden">EXAMPLE：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">--</span><span style="color: #008080;"> 备份整个数据库</span>
+root<span style="color: #008000;">@xkfx</span>:<span style="color: #808080;">~</span># <strong>mysqldump <span style="color: #008080;">--</span></strong><span style="color: #008080;"><strong>all-databases &gt; dump.sql</strong> -uroot -p</span>
+<span style="color: #000000;">Enter password: 
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 恢复数据</span>
+mysql<span style="color: #808080;">&gt;</span> <strong>source <span style="color: #ff0000;">'</span><span style="color: #ff0000;">dump.sql</span><span style="color: #ff0000;">'</span>的绝对路径</strong></pre>
+</div>
+<p>&nbsp;然后是查看 mysql 日志，需要知道 mysql 文件的各种路径</p>
+<p>详见&nbsp;<a id="cb_post_title_url" href="http://www.cnblogs.com/shihaiming/p/6038307.html" target="_blank">Linux下查看MySQL的安装路径</a>、<a id="cb_post_title_url" href="http://www.cnblogs.com/songxingzhu/p/5304908.html" target="_blank">MYSQL启用日志，和查看日志</a></p>
+<p>还有性能优化，这个话题太大。。 。</p>
+<p>有需要的话认真读一下 官方doc。 。。&nbsp;</p>

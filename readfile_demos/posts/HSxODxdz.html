@@ -1,0 +1,123 @@
+<p><span style="color: #000000;">【用构造器确保初始化】</span></p>
+<p><span style="color: #ff00ff;">【方法重载】</span></p>
+<p><span style="text-decoration: underline; color: #000000;">涉及基本类型的重载</span></p>
+<p><span style="color: #000000;">1、如果传入的数据类型小于方法中声明的形式参数类型：实际数据类型会被提升。</span></p>
+<p><span style="color: #000000;">&nbsp;</span></p>
+<p><span style="color: #000000;">2、如果传入的数据类型大于方法中声明的形式参数类型：编译器报错，应该通过类型转换来执行窄化转换。</span></p>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5; color: #000000;">【默认构造器】</span></p>
+<p><span style="color: #ff00ff;">【this关键字】</span></p>
+<p><span style="color: #000000;">1、不要画蛇添足！！！在必要的地方写出this！！！（例如，在方法内部调用同一个类的另一个方法，就没必要写出this）遵循一种一致而直观的编程风格能节省时间和金钱。</span></p>
+<p><span style="color: #000000;">&nbsp;</span></p>
+<p><span style="color: #000000;">2、this关键字的应用：a.将自身传递给外部方法。b.在构造器中调用另一个构造器（避免重写代码）c.避免参数名与数据成员重名（例如：this.name = name）</span></p>
+<p><span style="color: #000000;">&nbsp;</span></p>
+<p><span style="color: #000000;">3、更全面地理解static的含义：static方法就是没有this的方法。&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【清理：终结处理和垃圾回收】</span></p>
+<p><span style="color: #000000;">要记住的三点：</span></p>
+<p>&nbsp;1、对象可能不被垃圾回收！finalize()是随着垃圾回收事件的发生而被调用的，而垃圾回收事件在程序的整个执行过程中可能发生也可能不发生（具有不确定性），因此不该将其作为通用的清理方法。</p>
+<p>&nbsp;&nbsp;</p>
+<p><span>2、垃圾回收并不等于&ldquo;析构&rdquo;。</span></p>
+<p>&nbsp;&nbsp;</p>
+<p><span>3、垃圾回收只与内存有关。</span></p>
+<p>&nbsp;&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="color: #000000; text-decoration: underline;">finalize()的用途何在？</span></span></p>
+<p>释放本地方法所分配的内存，本地方法是一种在Java中调用非Java代码的方法，例如调用c和c++的代码。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="color: #000000; text-decoration: underline;">你必须实施清理</span></span></p>
+<p><span style="color: #000000;">1、在c++中，如果对象是用new创建的，程序员一旦忘记调用delete，那么永远不会调用析构函数！</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">2、在Java中，所有对象都是由new创建的，由垃圾回收器追踪和清理，但是这种机制并不能完全替代析构函数。</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">3、垃圾回收本身也是有开销的，因此若不是内存耗尽，Jvm是不会浪费时间去执行垃圾回收恢复内存的！</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><span style="text-decoration: underline;">终结条件</span>：finalize中的条件语句</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">p89练习10：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Rubbish {
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> finalize() {
+        System.</span><span style="color: #0000ff;">out</span>.println(<span style="color: #800000;">"</span><span style="color: #800000;">我被回收啦！</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Rubbish a </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Rubbish();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> a所引用的对象最终可能没有被垃圾回收。</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>练习11：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Rubbish {
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> finalize() {
+        System.out.println(</span>"我被回收啦！"<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #0000ff;">new</span> Rubbish(); <span style="color: #008000;">//</span><span style="color: #008000;"> 不理解的地方：如果这句是Rubbish a = new Rubbish();则最后不会输出&ldquo;我被回收啦&rdquo;。</span>
+<span style="color: #000000;">        System.gc();
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><span style="color: #000000; text-decoration: underline;">垃圾回收机如何工作</span></span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">【成员初始化】</span></p>
+<p><a href="http://www.cnblogs.com/xkxf/p/6181125.html" target="_blank"><span style="color: #ff00ff;">【构造器初始化】</span></a></p>
+<p><span style="color: #ff00ff;"><span style="color: #000000;">强调一点：静态初始化动作只执行一次，在首次生成那个类的对象的时候（构造器实际也是静态的）或者首次访问那个类的静态成员的时候。</span></span></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【数组初始化】</span></p>
+<p><span style="color: #000000;">1、Java中的数组是允许直接拷贝的！a1 = a2;但实质上两个引用操控同一个对象。</span></p>
+<p>&nbsp;</p>
+<p>2、Java中允许先创建数组引用int[] a1;之后再进行初始化。（这一点可以用来创建&ldquo;全局&rdquo;数组）</p>
+<p>&nbsp;</p>
+<p>3、非基本类型的数组其实是引用数组，声明方式：ClassName[] a = new ClassName[10];</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000;">4、</span>Java中的可变参数的函数：<strong>void f(ClassName... objects);</strong>实际上是用一个数组（这里的数组名叫objects）收集数量不确定的位置参数，可以通过foreach语句遍历打印objects数组中的元素。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【枚举类型】</span></p>
+<p><span style="color: #000000;">1、枚举类型属于非常普遍的需求。</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">2、在Java中，你可以将enum当作其他任何类来处理。</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">3、在创建enum时，编译器会自动添加一些有用的特性：toString()、static value()、ordinal()等。</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">4、enum还有一个特性是可以在switch中使用。</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">4、具体实现方面，写了个简单的例子：</span></p>
+<p><span style="color: #000000;">创建一个枚举类：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">enum</span><span style="color: #000000;"> Colors {
+    RED, YELLOW, BLUE, GREEN
+}</span></pre>
+</div>
+<p>enum的使用与特性：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestColors {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Colors myColor </span>=<span style="color: #000000;"> Colors.BLUE;
+        System.out.println(myColor); </span><span style="color: #008000;">//</span><span style="color: #008000;"> toString()
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> static values() &amp; ordinal()</span>
+        <span style="color: #0000ff;">for</span><span style="color: #000000;"> (Colors c : Colors.values()) {
+            System.out.println(c </span>+ ", ordinal " +<span style="color: #000000;"> c.ordinal());
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> switch</span>
+        myColor =<span style="color: #000000;"> Colors.RED;
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (myColor) {
+            </span><span style="color: #0000ff;">case</span> RED:   System.out.println("My color is red!"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+        }
+    }
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> Output:
+BLUE
+RED, ordinal 0
+YELLOW, ordinal 1
+BLUE, ordinal 2
+GREEN, ordinal 3
+My color is red!
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【总结】</span></p>
+<p><span style="font-family: 黑体;"><strong>&nbsp;构造器</strong></span>、垃圾回收机。</p>

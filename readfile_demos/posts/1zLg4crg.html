@@ -1,0 +1,64 @@
+<h1><a href="https://www.datacamp.com/home" target="_blank">源：DataCamp</a></h1>
+<p>&nbsp;</p>
+<p>datacamp 的 DAILY PRACTICE&nbsp; + 日常收集。</p>
+<p><a href="#a1">&nbsp;How much is your $100 worth after 7 years?</a></p>
+<p><a href="#a2">&nbsp;Guess the type</a></p>
+<p><a href="#a3">&nbsp;convert Python values into any type</a></p>
+<p><a href="#a4">&nbsp;Which one of these will throw an error?</a></p>
+<p>&nbsp;</p>
+<h3><a name="a1"></a>How much is your $100 worth after 7 years?</h3>
+<p>Suppose you have $100, which you can invest with a 10% return each year. After one year, it's&nbsp;<span id="MathJax-Element-1-Frame" class="MathJax" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mn&gt;100&lt;/mn&gt;&lt;mo&gt;&amp;#x00D7;&lt;/mo&gt;&lt;mn&gt;1.1&lt;/mn&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;110&lt;/mn&gt;&lt;/math&gt;"><span id="MathJax-Span-1" class="math"><span id="MathJax-Span-2" class="mrow"><span id="MathJax-Span-3" class="mn">100<span id="MathJax-Span-4" class="mo">&times;<span id="MathJax-Span-5" class="mn">1.1<span id="MathJax-Span-6" class="mo">=<span id="MathJax-Span-7" class="mn">110</span></span></span></span></span></span></span><span class="MJX_Assistive_MathML">100&times;1.1=110&nbsp;dollars, and after two years it's&nbsp;<span id="MathJax-Element-2-Frame" class="MathJax" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mn&gt;100&lt;/mn&gt;&lt;mo&gt;&amp;#x00D7;&lt;/mo&gt;&lt;mn&gt;1.1&lt;/mn&gt;&lt;mo&gt;&amp;#x00D7;&lt;/mo&gt;&lt;mn&gt;1.1&lt;/mn&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mn&gt;121&lt;/mn&gt;&lt;/math&gt;"><span id="MathJax-Span-8" class="math"><span id="MathJax-Span-9" class="mrow"><span id="MathJax-Span-10" class="mn">100<span id="MathJax-Span-11" class="mo">&times;<span id="MathJax-Span-12" class="mn">1.1<span id="MathJax-Span-13" class="mo">&times;<span id="MathJax-Span-14" class="mn">1.1<span id="MathJax-Span-15" class="mo">=<span id="MathJax-Span-16" class="mn">121</span></span></span></span></span></span></span></span></span><span class="MJX_Assistive_MathML">100&times;1.1&times;1.1=121. Add code on the right to calculate how much money you end up with after 7 years.</span></span></span></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> How much is your $100 worth after 7 years?</span>
+<span style="color: #0000ff;">print</span>(100 * 1.1 ** 7)</pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="exercise--title"><a name="a2"></a>Guess the type</h3>
+<p class="exercise--title">Suppose you've defined a variable&nbsp;<code>a</code>, but you forgot the type of this variable.&nbsp;</p>
+<div class="cnblogs_code">
+<pre>In [1<span style="color: #000000;">]: type(a)
+Out[</span>1<span style="color: #000000;">]: float
+
+In [</span>2<span style="color: #000000;">]: type(b)
+Out[</span>2<span style="color: #000000;">]: str
+
+In [</span>3<span style="color: #000000;">]: type(c)
+Out[</span>3<span style="color: #000000;">]: bool
+
+In [</span>4]: </pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="a3"></a>Convert Python values into any type</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Definition of savings and result</span>
+savings = 100<span style="color: #000000;">
+result </span>= 100 * 1.10 ** 7
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Fix the printout</span>
+<span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">I started with $</span><span style="color: #800000;">"</span> + str(savings) + <span style="color: #800000;">"</span><span style="color: #800000;"> and now have $</span><span style="color: #800000;">"</span> + str(result) + <span style="color: #800000;">"</span><span style="color: #800000;">. Awesome!</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Definition of pi_string</span>
+pi_string = <span style="color: #800000;">"</span><span style="color: #800000;">3.1415926</span><span style="color: #800000;">"</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Convert pi_string into float: pi_float</span>
+pi_float = float(pi_string)</pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="a4"></a>Which one of these will throw an error?</h3>
+<div class="cnblogs_code">
+<pre>In [1]: <span style="color: #800000;">"</span><span style="color: #800000;">I can add integers, like </span><span style="color: #800000;">"</span> + str(5) + <span style="color: #800000;">"</span><span style="color: #800000;"> to strings.</span><span style="color: #800000;">"</span><span style="color: #000000;">
+Out[</span>1]: <span style="color: #800000;">'</span><span style="color: #800000;">I can add integers, like 5 to strings.</span><span style="color: #800000;">'</span><span style="color: #000000;">
+
+In [</span>2]: <span style="color: #800000;">"</span><span style="color: #800000;">I said </span><span style="color: #800000;">"</span> + (<span style="color: #800000;">"</span><span style="color: #800000;">Hey </span><span style="color: #800000;">"</span> * 2) + <span style="color: #800000;">"</span><span style="color: #800000;">Hey!</span><span style="color: #800000;">"</span><span style="color: #000000;">
+Out[</span>2]: <span style="color: #800000;">'</span><span style="color: #800000;">I said Hey Hey Hey!</span><span style="color: #800000;">'</span><span style="color: #000000;">
+
+In [</span>3]: True +<span style="color: #000000;"> False
+Out[</span>3]: 1<span style="color: #000000;">
+
+In [</span>4]: <span style="color: #800000;">"</span><span style="color: #800000;">The correct answer to this multiple choice exercise is answer number </span><span style="color: #800000;">"</span> + 2<span style="color: #000000;">
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;
+    <span style="color: #800000;">"</span><span style="color: #800000;">The correct answer to this multiple choice exercise is answer number </span><span style="color: #800000;">"</span> + 2<span style="color: #000000;">
+TypeError: Can</span><span style="color: #800000;">'</span><span style="color: #800000;">t convert </span><span style="color: #800000;">'</span>int<span style="color: #800000;">'</span><span style="color: #800000;"> object to str implicitly</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,85 @@
+<div id="diy_right_menu">
+<p>索引：</p>
+<ul>
+<li><a href="#a1">java</a></li>
+<li><a href="#a2">python</a></li>
+<li><a href="#a3">c++</a></li>
+<li><a href="#a4">js</a></li>
+</ul>
+</div>
+<p><a name="a1"></a>1、Java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 接受可变参数的方法</span>
+    <strong><span style="color: #0000ff;">void</span></strong><span style="color: #000000;"><strong> eat(String... Objects)</strong> {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (String x : Objects) {
+            System.out.println(</span>"我吃了一个" + x + "!"<span style="color: #000000;">);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 调用示例</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Animal dada </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Animal();
+        dada.eat(</span>"苹果", "南瓜饼", "土豆"<span style="color: #000000;">);
+    }
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> outputs:
+        我吃了一个苹果!
+        我吃了一个南瓜饼!
+        我吃了一个土豆!
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2、Python</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">def</span> f(*args, **<span style="color: #000000;">kw):
+...     </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(args)
+...     </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(kw)
+...
+</span>&gt;&gt;&gt; f(1, 2, 3, name = <span style="color: #800000;">'</span><span style="color: #800000;">dada</span><span style="color: #800000;">'</span>, age = 5<span style="color: #000000;">)
+(</span>1, 2, 3<span style="color: #000000;">)
+{</span><span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span>: 5, <span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">dada</span><span style="color: #800000;">'</span>}</pre>
+</div>
+<p>可以理解为将位置参数<span style="color: #000000;">收集</span>为一个叫做args的tuple，将关键字参数收集为一个叫做kw的dict。</p>
+<p>PS. 位置参数、关键字参数应该是Python特有的...</p>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3、C++</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;initializer_list&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span> sum(initializer_list&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> il)
+{
+    </span><span style="color: #0000ff;">int</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (auto &amp;<span style="color: #000000;">x : il) {
+        sum </span>+=<span style="color: #000000;"> x;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sum;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; sum({<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span>}) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output=15</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4、js</p>
+<div class="cnblogs_code">
+<pre>const ilike = (...foods) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (let x of foods) {
+        console.log(`i like eat ${x}`);
+    }
+};</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>ilike('apple', 'chicken'<span style="color: #000000;">);
+=&gt; </span><span style="color: #000000;">i like eat apple
+=&gt; </span>i like eat chicken</pre>
+</div>
+<p>PS. 请忽略语法错误...</p>
+<p>三点号还能这么用：</p>
+<div class="cnblogs_code">
+<pre>let words = ["never", "fully"<span style="color: #000000;">];
+console.log([</span>"will", ...words, "understand"<span style="color: #000000;">]);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; ["will", "never", "fully", "understand"]</span></pre>
+</div>
+<p>&nbsp;</p>

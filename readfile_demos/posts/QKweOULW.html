@@ -1,0 +1,130 @@
+<p>同样是实验存档。//。。</p>
+<p>依然以生产者消费者问题作为背景。</p>
+<p>管程（=&ldquo;资源管理程序&rdquo;）将资源和对资源的操作封装起来，资源使用者通过接口操作资源就ok，不用去考虑进程同步的问题。</p>
+<p>管程：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> entity.producerconsumer;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Monition {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Buffer buffer;
+
+    </span><span style="color: #0000ff;">public</span> Monition(<span style="color: #0000ff;">int</span><span style="color: #000000;"> bufferSize) {
+        buffer </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Buffer(bufferSize);
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 如果放入产品成功返回 true
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> put() {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (buffer.notFull()) {
+            buffer.putItem();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 如果取出产品成功返回 true
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> get() {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (buffer.notEmpty()) {
+            buffer.getItem();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getStatus() {
+        </span><span style="color: #0000ff;">return</span> "" +<span style="color: #000000;"> buffer;
+    }
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">&nbsp;生产者 &amp; 消费者：</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> entity.producerconsumer;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Produc <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 统计生产者数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 生产者个体的 id
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Monition PC;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Produc(Monition monition) {
+        id </span>= ++<span style="color: #000000;">total;
+        PC </span>=<span style="color: #000000;"> monition;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (PC.put()) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果操作成功打印缓冲区状态</span>
+                System.out.println(id + " 号生产者: " +<span style="color: #000000;"> PC.getStatus());
+            }
+        }
+    }
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">/</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> entity.producerconsumer;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Consu <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 统计消费者数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 消费者个体的 id
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Monition PC;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Consu(Monition monition) {
+        id </span>= ++<span style="color: #000000;">total;
+        PC </span>=<span style="color: #000000;"> monition;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (PC.get()) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果操作成功打印缓冲区状态</span>
+                System.out.println(id + " 号消费者: " +<span style="color: #000000;"> PC.getStatus());
+            }
+        }
+    }
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">/</span></p>
+<p><a href="http://www.cnblogs.com/xkxf/p/7866956.html#x" target="_blank"><span style="font-family: 楷体;">Buffer.java</span></a></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 楷体;">测试：</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> test;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> entity.producerconsumer.Consu;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> entity.producerconsumer.Monition;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> entity.producerconsumer.Produc;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MonitionTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Monition PC </span>= <span style="color: #0000ff;">new</span> Monition(10<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建 5 个生产者和 5 个消费者</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 5; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Produc(PC)).start();
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Consu(PC)).start();
+        }
+    }
+}</span></span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,38 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">查看JVM以及SERVLET/接口的情况</a></li>
+<li><a href="#anchor1">动态管理WEB应用</a></li>
+</ul>
+</div>
+<p>Tomcat自带了一个基于网页的web应用管理工具，可以帮助我们监控&amp;管理部署上去的WEB APP。恰好之前碰到的一个相关的BUG，借BUG简略介绍下。</p>
+<p>先记录下BUG：把Spring Boot融进旧的WEB程序中，不过依然是打包成WAR部署到本地的TOMCAT跑。都一次可以运行，然而日志有点冲突（<a href="https://blog.csdn.net/kxcfzyk/article/details/38613861" target="_blank">LOGBACK与LOG4J循环调用</a>），去掉Spring Boot默认的LOGBACK日志改用LOG4J2就行了。</p>
+<p>第二次运行的时候就出问题了，TOMCAT的日志并没有显示任何错误，但是请求好几个接口都是返回404</p>
+<p>解决BUG的过程：</p>
+<p>1、先检查代码。。。按照惯例，看不出什么问题</p>
+<h2><a name="anchor0"></a>查看JVM以及SERVLET/接口的情况</h2>
+<p>2、查看接口相关的信息</p>
+<p>通过<span style="color: #3366ff;"><strong>http://localhost:8080/manager/html</strong></span>进入汤姆猫的管理界面（需要用户/密码，可通过TOMCAT配置文件自定义）</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190201114649340-234205229.png" alt="" width="459" height="211" /></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e617c7b2-a3ac-4747-b6b4-3be0aacd47d4')"><img id="code_img_closed_e617c7b2-a3ac-4747-b6b4-3be0aacd47d4" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_e617c7b2-a3ac-4747-b6b4-3be0aacd47d4" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('e617c7b2-a3ac-4747-b6b4-3be0aacd47d4',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_e617c7b2-a3ac-4747-b6b4-3be0aacd47d4" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">user </span><span style="color: #ff0000;">username</span><span style="color: #0000ff;">="tomcat"</span><span style="color: #ff0000;"> password</span><span style="color: #0000ff;">="2333"</span><span style="color: #ff0000;"> roles</span><span style="color: #0000ff;">="manager-gui,manager-script,manager-jmx,admin-gui"</span><span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">tomcat-users.xml</span></div>
+<p>点击进入<strong><span style="color: #3366ff;">Server Status</span></strong>：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190201010250060-1669723055.png" alt="" width="524" height="189" /></p>
+<p>此时会列出<span style="color: #3366ff;"><strong>JVM相关</strong></span>的一些信息。继续点击<span style="color: #3366ff;"><strong>Complete Server Status</strong></span>：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190201010436160-456742150.png" alt="" width="528" height="139" /></p>
+<p>可以看到该TOMCAT管理的所有<strong>WEB应用</strong>：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190201010530830-1802878855.png" alt="" width="303" height="207" /></p>
+<p>找到刚部署上去的WEB应用，点击。。。</p>
+<p>跳转到TEST应用的<strong>SERVLET/接口相关</strong>信息：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190201010659259-227419640.png" alt="" width="215" height="264" /></p>
+<p>发现TEST应用除了jsp与dispatcherServlet之外空空如也。。</p>
+<h2><a name="anchor1"></a>动态管理WEB应用</h2>
+<p>3、直接进入TOMCAT根目录下的webapp文件夹中检查TEST应用的情况，发现TEST应用由WAR解压出来的实际文件并不完整（WAR包有20MB，实际文件所占空间却远远比它小）。</p>
+<p>于是再次来到TOMCAT的应用管理页面下，点击<span style="color: #3366ff;"><strong>List Applications</strong></span>找到TEST：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190201115426102-1866791830.png" alt="" width="844" height="59" /></p>
+<p>点击RELOAD问题就解决了！（如图，除了RELOAD还有其它管理选项，功能都顾名思义）</p>
+<p>&nbsp;</p>
+<p>后续：尝试重现一下BUG但是失败了，并不知道是什么原因导致的，推测是由于上次部署的残留文件（瞎猜）。</p>

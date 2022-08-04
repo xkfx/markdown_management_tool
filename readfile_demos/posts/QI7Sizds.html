@@ -1,0 +1,106 @@
+<p><span style="background-color: #ffff00;">《c++ primer, 5E》</span></p>
+<p><span style="background-color: #ffff00;">第91页到第94页，笔记:</span></p>
+<p>1、vector支持的操作。</p>
+<p>v.empty()、v.size()、v.push_back(t)、v[n]</p>
+<p>&nbsp;</p>
+<p>2、试图通过下标访问不存在vector元素不会被编译器发现，</p>
+<p>而是在运行时产生不可预知的值。</p>
+<p>&nbsp;</p>
+<p>3、确保下标合法的有效手段：尽可能使用范围for</p>
+<p>&nbsp;</p>
+<p>4、vector的小结：vector的初始化、vector支持的操作、vector的遍历与随机访问</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff00;">遇到的问题：</span><br /> </p>
+<p><span style="background-color: #ffff00;">&nbsp;</span></p>
+<p><span style="background-color: #ffff00;">课后练习:</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.16</span></p>
+<p>正确。</p>
+<p>并且验证 (10, "hi")和{10 , "hi"}等效，</p>
+<p>而{10} 和（10）的效果取决vector元素的类型。</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">&nbsp;</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.17</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> word;
+    vector</span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;"> svec;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> word){
+        svec.push_back(word);
+    }
+    </span><span style="color: #0000ff;">for</span>(auto &amp;<span style="color: #000000;">word: svec){
+        </span><span style="color: #0000ff;">for</span>(auto &amp;<span style="color: #000000;">ch: word){
+            ch </span>=<span style="color: #000000;"> toupper(ch);
+        }
+        cout </span>&lt;&lt; word &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.18</span></p>
+<p>不合法。非法访问。 改为 ivec.push_back(42);</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">&nbsp;</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.19</span></p>
+<p>反正最好的是 vector&lt;int&gt; v(10 , 42);</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.20</span></p>
+<p>1</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> temp){
+        v.push_back(temp);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">随机访问</span>
+    <span style="color: #0000ff;">for</span>(decltype(v.size()) index = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        index </span>!= v.size()-<span style="color: #800080;">1</span>; ++<span style="color: #000000;">index)
+        cout </span>&lt;&lt; v[index]+ v[index+<span style="color: #800080;">1</span>] &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>2</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> v;
+    </span><span style="color: #0000ff;">while</span>(cin &gt;&gt;<span style="color: #000000;"> temp){
+        v.push_back(temp);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">随机访问</span>
+    decltype(v.size()) head = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    auto tail </span>= v.size()-<span style="color: #800080;">1</span><span style="color: #000000;">;    
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;">(;
+    head </span>&lt;= tail; ++head, --<span style="color: #000000;">tail){
+        cout </span>&lt;&lt; v[head]+v[tail] &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

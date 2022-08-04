@@ -1,0 +1,169 @@
+<p>参考：</p>
+<p>1、JS&nbsp;元素位置&nbsp;设置元素位置：http://blog.sina.com.cn/s/blog_a2ec891e01011v9f.html</p>
+<p>2、<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/kevinhuang/archive/2010/05/24/1743039.html">用JavaScript修改CSS属性</a></p>
+<p>3、使用JavaScript动态更改CSS样式：http://www.jianshu.com/p/0260cddff86a、http://kimi.it/289.html、http://www.jb51.net/article/65625.htm</p>
+<p>效果图：</p>
+<p>思路：</p>
+<p>1、绘制的静态小球。</p>
+<p>2、定义小球的四种飞行状态。</p>
+<p>3、初始化小球状态，定义切换状态的条件。</p>
+<p>代码：</p>
+<p>1、初步实现。。。缺点是无法根据屏幕大小调整&ldquo;墙&rdquo;的位置。。还需要小改一下。</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;Dynamic Ball&lt;/title&gt;
+        &lt;style&gt;<span style="color: #000000;">
+            html {
+                background: #F2F2F2;
+            }
+            
+            p {
+                text</span>-<span style="color: #000000;">align: center;
+            }
+            
+            .ball {
+                width: 100px;
+                height: 100px;
+                
+                background: black;
+                border</span>-radius: 50%<span style="color: #000000;">;
+                
+                position: absolute;
+                left: 100px;
+                top: 300px;
+            }
+        </span>&lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;Dynamic Ball&lt;/p&gt;
+        &lt;div class="ball"&gt;&lt;/div&gt;
+        &lt;script&gt;
+            <span style="color: #0000ff;">function</span><span style="color: #000000;"> setPosition(x , y) {
+                target.style.left </span>= x + "px"<span style="color: #000000;">;
+                target.style.top </span>= y + "px"<span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">var</span> target = document.querySelector('.ball'<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义一对变量来管理target的位置        </span>
+            <span style="color: #0000ff;">var</span> X = Math.random()*1024<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">var</span> Y = Math.random()*768<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义一个变量管理target的飞行状态</span>
+            <span style="color: #0000ff;">var</span> STATE = 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f1() {
+                X</span>++<span style="color: #000000;">;
+                Y</span>++<span style="color: #000000;">;
+                STATE </span>= 1<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f2() {
+                X</span>--<span style="color: #000000;">;
+                Y</span>++<span style="color: #000000;">;
+                STATE </span>= 2<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f3() {
+                X</span>++<span style="color: #000000;">;
+                Y</span>--<span style="color: #000000;">;
+                STATE </span>= 3<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f4() {
+                X</span>--<span style="color: #000000;">;
+                Y</span>--<span style="color: #000000;">;
+                STATE </span>= 4<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> checkDirection() {
+                </span><span style="color: #0000ff;">if</span> (X &gt; 1024 &amp;&amp; STATE == 1) STATE = 2<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (X &gt; 1024 &amp;&amp; STATE == 3) STATE = 4<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (X &lt; 0 &amp;&amp; STATE == 4) STATE = 3<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (X &lt; 0 &amp;&amp; STATE == 2) STATE = 1<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &gt; 768 &amp;&amp; STATE == 1) STATE = 3<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &gt; 768 &amp;&amp; STATE == 2) STATE = 4<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &lt; 0 &amp;&amp; STATE == 4) STATE = 2<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &lt; 0 &amp;&amp; STATE == 3) STATE = 1<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (STATE == 1<span style="color: #000000;">) f1();
+                </span><span style="color: #0000ff;">if</span> (STATE == 2<span style="color: #000000;">) f2();
+                </span><span style="color: #0000ff;">if</span> (STATE == 3<span style="color: #000000;">) f3();
+                </span><span style="color: #0000ff;">if</span> (STATE == 4<span style="color: #000000;">) f4();
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> start() {
+                setInterval(</span>"checkDirection()", 10<span style="color: #000000;">);
+            }
+            setPosition(X, Y);
+            start();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> target.f1 target.f2 target.f3 target.f4</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> target.setPosition(randomX, randomY);</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> target.start();</span>
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;2、改。参考：http://www.cnblogs.com/Henllyee/archive/2008/04/20/1162517.html</p>
+<div class="cnblogs_code">
+<pre>&lt;script&gt;
+            <span style="color: #0000ff;">var</span> screenWidth =<span style="color: #000000;"> document.documentElement.clientWidth;
+            </span><span style="color: #0000ff;">var</span> screenHeight =<span style="color: #000000;"> document.documentElement.clientHeight;
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> setPosition(x , y) {
+                target.style.left </span>= x + "px"<span style="color: #000000;">;
+                target.style.top </span>= y + "px"<span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">var</span> target = document.querySelector('.ball'<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义一对变量来管理target的位置        </span>
+            <span style="color: #0000ff;">var</span> X = Math.random()*<span style="color: #000000;">screenWidth;
+            </span><span style="color: #0000ff;">var</span> Y = Math.random()*<span style="color: #000000;">screenHeight;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义一个变量管理target的飞行状态</span>
+            <span style="color: #0000ff;">var</span> STATE = 1<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f1() {
+                X</span>++<span style="color: #000000;">;
+                Y</span>++<span style="color: #000000;">;
+                STATE </span>= 1<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f2() {
+                X</span>--<span style="color: #000000;">;
+                Y</span>++<span style="color: #000000;">;
+                STATE </span>= 2<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f3() {
+                X</span>++<span style="color: #000000;">;
+                Y</span>--<span style="color: #000000;">;
+                STATE </span>= 3<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> f4() {
+                X</span>--<span style="color: #000000;">;
+                Y</span>--<span style="color: #000000;">;
+                STATE </span>= 4<span style="color: #000000;">;
+                setPosition(X, Y);
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> checkDirection() {
+                screenWidth </span>=<span style="color: #000000;"> document.documentElement.clientWidth;
+                screenHeight </span>=<span style="color: #000000;"> document.documentElement.clientHeight;
+                </span><span style="color: #0000ff;">if</span> (X &gt; screenWidth &amp;&amp; STATE == 1) STATE = 2<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (X &gt; screenWidth &amp;&amp; STATE == 3) STATE = 4<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (X &lt; 0 &amp;&amp; STATE == 4) STATE = 3<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (X &lt; 0 &amp;&amp; STATE == 2) STATE = 1<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &gt; screenHeight &amp;&amp; STATE == 1) STATE = 3<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &gt; screenHeight &amp;&amp; STATE == 2) STATE = 4<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &lt; 0 &amp;&amp; STATE == 4) STATE = 2<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (Y &lt; 0 &amp;&amp; STATE == 3) STATE = 1<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span> (STATE == 1<span style="color: #000000;">) f1();
+                </span><span style="color: #0000ff;">if</span> (STATE == 2<span style="color: #000000;">) f2();
+                </span><span style="color: #0000ff;">if</span> (STATE == 3<span style="color: #000000;">) f3();
+                </span><span style="color: #0000ff;">if</span> (STATE == 4<span style="color: #000000;">) f4();
+            }
+            </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> start() {
+                setInterval(</span>"checkDirection()", 10<span style="color: #000000;">);
+            }
+            setPosition(X, Y);
+            start();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> target.f1 target.f2 target.f3 target.f4</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> target.setPosition(randomX, randomY);</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> target.start();</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>

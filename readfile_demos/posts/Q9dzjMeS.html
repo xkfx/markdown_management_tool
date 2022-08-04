@@ -1,0 +1,135 @@
+参考：
+
+[Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
+[Annotated Controllers](https://docs.spring.io/spring-framework/docs/5.3.16/reference/html/web.html#mvc-controller)
+[ResponseEntity](https://docs.spring.io/spring-framework/docs/current/javadoc-api/)
+[Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
+
+①创建数据库
+
+```sql
+mysql> create database db_laser; -- Creates the new database
+mysql> create user 'lasermaster'@'%' identified by 'ThePassword'; -- Creates the user
+mysql> grant all on db_laser.* to 'lasermaster'@'%'; -- Gives all privileges to the new user on the newly created database
+```
+
+
+
+②通过[https://start.spring.io/](https://start.spring.io/)创建项目，添加`Spring Web`, `Spring Data JPA`, 和`MySQL Driver`这三个依赖。
+
+
+
+③编辑`application.properties`文件
+
+```properties
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_laser
+spring.datasource.username=lasermaster
+spring.datasource.password=ThePassword
+spring.datasource.driver-class-name =com.mysql.cj.jdbc.Driver
+#spring.jpa.show-sql: true
+```
+
+
+
+④Create the `@Entity` Model
+
+```java
+package com.example.laser;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity // This tells Hibernate to make a table out of this class
+public class DemoEntity {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
+
+    private String string;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getString() {
+        return string;
+    }
+
+    public void setString(String string) {
+        this.string = string;
+    }
+}
+```
+
+
+
+⑤Create the Repository
+
+```java
+package com.example.laser;
+
+import org.springframework.data.repository.CrudRepository;
+
+// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
+// CRUD refers Create, Read, Update, Delete
+
+public interface DemoEntityRepository extends CrudRepository<DemoEntity, Integer> {
+}
+```
+
+
+
+⑥Create a Controller
+
+```java
+package com.example.laser;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("api/v1/demo-entities")
+public class DemoEntityController {
+
+    @Autowired
+    private DemoEntityRepository demoEntityRepository;
+
+    @GetMapping
+    public Iterable<DemoEntity> all() {
+        return demoEntityRepository.findAll();
+    }
+
+    @PostMapping
+    public DemoEntity newDemoEntity(DemoEntity demoEntity) {
+        return demoEntityRepository.save(demoEntity);
+    }
+}
+```
+
+⑦通过mvn package把源代码编译打包成一个jar并运行这个jar
+
+
+⑧人工测试。
+
+通过下面的指令POST多条数据：
+
+```shell
+curl localhost:8080/api/v1/demo-entities -d string=mytest4
+```
+
+请求数据：
+
+```shell
+curl localhost:8080/api/v1/demo-entities
+```

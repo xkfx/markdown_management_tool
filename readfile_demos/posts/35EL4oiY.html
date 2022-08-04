@@ -1,0 +1,25 @@
+<p>HTTP相当于裸奔 传明文</p>
+<p>只需要 在HTTP上套一层SSL就变成了HTTPS，</p>
+<p>重要特征是 增加了一个第三方认证机构，</p>
+<p>宏观效果就是实现了 HTTP裸奔内容 的加密 以及 确认发送方身份 消息是否篡改等。</p>
+<p><span class="fontstyle0">HTTP+ <span class="fontstyle2">加密 <span class="fontstyle0">+ <span class="fontstyle2">认证 <span class="fontstyle0">+ <span class="fontstyle2">完整性保护 <span class="fontstyle0">=HTTPS</span></span></span></span></span></span></span></p>
+<h2>最简单的权限控制&mdash;&mdash;不做权限控制，你说是就是</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190217105157507-1186963426.png" alt="" /></p>
+<p>转化成RESTFUL接口调用大概是：api/xx?uid=101</p>
+<p>然而实际情况是即便大家素质足够高，也可能出现不小心错误调用的情形。。。</p>
+<p>PS. 这里假设服务提供方是一个超级脸盲，xx是只有101才能访问的资源</p>
+<h2>再进一步&mdash;&mdash;提供密码</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190217113432282-1804816798.png" alt="" /></p>
+<p>再次转化成RESTFUL接口调用：api/xx?uid=101&amp;pwd=123（错误 认证信息不应该放在这里）</p>
+<p>然而如果访问资源非常频繁，每次都进行密码验证就显得很麻烦。。。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201902/1042431-20190217115323630-377976347.png" alt="" /></p>
+<p>又一次转化成RESTFUL接口调用：api/xx?token=ED321ASWE</p>
+<p>&nbsp;x</p>
+<p>现在已经提供了最简单的认证方式（uid+pwd）和权限控制，如果仅仅是构建一个玩具式程序，那么到这里就OK了。然而一旦切换到真实的网络环境中，这种方案就完全不可行了。。。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>x</p>

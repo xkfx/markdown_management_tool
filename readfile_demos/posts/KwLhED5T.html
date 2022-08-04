@@ -1,0 +1,28 @@
+<p><span style="background-color: #ffff99;">今天完成的事：</span><br />1、根据学员报名贴内容创建了一个基本数据表。</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310200003873-1012823473.png" alt="" width="659" height="164" /></p>
+<p>create_at、update_at都是按照要求做的，而id设置为primary key、&nbsp;auto_increment保证了id的唯一性（要不然一个id对应好几个人）。</p>
+<p>&nbsp;</p>
+<p>2、尝试mysql插入和查找、修改数据。其中create_at字段内容是参考<a href="http://blog.csdn.net/lujianxin1098/article/details/18709845" target="_blank">网上的资料</a>填上去的，估计不规范。</p>
+<p>（插入）</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310201612717-310233839.png" alt="" width="553" height="46" /></p>
+<p>（查找）</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310201658920-1352702200.png" alt="" width="440" height="98" /></p>
+<p>（修改）</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310205438686-153909015.png" alt="" width="858" height="66" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310210023764-1144879365.png" alt="" width="684" height="118" /></p>
+<p>&nbsp;</p>
+<p>3、尝试对数据表进行备份、恢复。参考资料1-<a href="http://www.111cn.net/database/mysql/33830.htm" target="_blank">mysql导出数据库几种方法</a>2-<a href="http://www.cnblogs.com/kissdodog/p/4174421.html" target="_blank">MySQL 数据备份与还原</a></p>
+<p>（导出）</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310211757670-1734457114.png" alt="" width="471" height="36" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310211830764-533389614.png" alt="" width="365" height="26" /></p>
+<p>&nbsp;（恢复）</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310212429014-1318993739.png" alt="" width="251" height="37" /></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170310213420670-1623230857.png" alt="" width="542" height="44" /></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">遇到的问题：</span></p>
+<p>1、根据<a href="http://www.2cto.com/database/201410/341144.html" target="_blank">网上资料</a>貌似只能暂时解决mysql数据表插入、显示中文的问题。</p>
+<p>然后就到群里问，得到了解决方案：每次在cmd进入mysql后，输入set&nbsp;names&nbsp;'gbk';（java-548）问题主要出在cmd和mysql的字符不匹配上。</p>
+<p><br /><span style="background-color: #ffff99;">收获：</span></p>
+<p>1、缓存一下索引的相关知识。<a href="http://www.cnblogs.com/hustcat/archive/2009/10/28/1591648.html" target="_blank">理解MySQL&mdash;&mdash;索引与优化</a></p>
+<p><br /><span style="background-color: #ffff99;">总结：</span></p>
+<p>距离上次写日报隔了太久，所以直接重新开始做任务了，希望这次能坚持久一点。。。</p>

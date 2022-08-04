@@ -1,0 +1,68 @@
+<p><span style="text-decoration: underline;">6.5-1</span></p>
+<p>略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-2</span></p>
+<p>略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-3</span></p>
+<p><a id="homepage1_HomePageDays_DaysList_ctl01_DayList_TitleUrl_0" class="postTitle2" href="https://www.cnblogs.com/xkxf/p/9786422.html" target="_blank">#005# 优先队列</a></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-4</span></p>
+<p>为了正确复用Heap-increase-key中的代码</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-5</span></p>
+<p>初始化：显然满足</p>
+<p>保持：如果在迭代之前循环不变式为真，那么要么不再进行迭代（A[parent(i)]&gt;A[i]），此时已经保持了循环不变式，要么进行一次交换令A[parent(i)]&gt;A[i]，并令i=parent(i)此时也保持了循环不变式，所以迭代之后循环不变式仍然为真。</p>
+<p>终止：在停止的时候，原来的A[i]（唯一的例外因素）已经被调整到合适的位置，数组整体必定满足A[parent(i)]&gt;A[i]</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-6</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">                static increasePriority(A, i, newPriority) {
+                    </span><span style="color: #0000ff;">if</span> (newPriority &lt;<span style="color: #000000;"> A[i].priority) {
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                    }
+                    
+                    let temp </span>= A[i]; <span style="color: #008000;">//</span><span style="color: #008000;"> 待插入元素</span>
+                    temp.priority =<span style="color: #000000;"> newPriority;
+                    </span><span style="color: #0000ff;">while</span> (i &gt; 1 &amp;&amp; A[Heap.parent(i)].priority &lt;<span style="color: #000000;"> newPriority) {
+                        A[i] </span>=<span style="color: #000000;"> A[Heap.parent(i)];        
+                        i </span>=<span style="color: #000000;"> Heap.parent(i);
+                    } </span><span style="color: #008000;">//</span><span style="color: #008000;"> 寻找合适的插入位置</span>
+                    A[i] = temp; <span style="color: #008000;">//</span><span style="color: #008000;"> 插入元素</span>
+                }</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-7</span></p>
+<div class="cnblogs_code">
+<pre>            <span style="color: #008000;">//</span><span style="color: #008000;"> 用优先队列实现先进先出队列</span>
+            let queue = <span style="color: #0000ff;">new</span><span style="color: #000000;"> PriorityQueue();
+            let priorityOfQueue </span>= 100<span style="color: #000000;">;
+            queue.insertWithPriority(</span>"first in", priorityOfQueue--<span style="color: #000000;">);
+            queue.insertWithPriority(</span>"second in", priorityOfQueue--<span style="color: #000000;">);
+            console.log(queue.pullHighestPriorityElement());
+            console.log(queue.pullHighestPriorityElement());
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+             * output=
+             * first in 
+             * second in 
+             </span><span style="color: #008000;">*/</span>
+            
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 用优先队列实现栈</span>
+            let stack = <span style="color: #0000ff;">new</span><span style="color: #000000;"> PriorityQueue();
+            let priorityOfStack </span>= 0<span style="color: #000000;">;
+            stack.insertWithPriority(</span>"first in", priorityOfStack++<span style="color: #000000;">);
+            stack.insertWithPriority(</span>"second in", priorityOfStack++<span style="color: #000000;">);
+            console.log(stack.pullHighestPriorityElement());
+            console.log(stack.pullHighestPriorityElement());
+            </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+             * output=
+             * second in 
+             * first in 
+             </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-8</span></p>
+<p>略。。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.5-9</span></p>
+<p>可参考<a href="https://www.jianshu.com/p/d26c0a85ab5f?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=reader_share&amp;utm_source=weixin" target="_blank">算法导论第六章-堆排序（五）</a></p>

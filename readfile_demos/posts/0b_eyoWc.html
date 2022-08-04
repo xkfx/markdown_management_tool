@@ -1,0 +1,41 @@
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">#define</span> BUFSIZE 100
+
+<span style="color: #0000ff;">char</span><span style="color: #000000;"> buf[BUFSIZE];
+</span><span style="color: #0000ff;">int</span> bufp = <span style="color: #800080;">0</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">int</span> getch(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+{
+    </span><span style="color: #0000ff;">return</span> (bufp &gt; <span style="color: #800080;">0</span>)? buf[--<span style="color: #000000;">bufp] : getchar();
+}
+
+</span><span style="color: #0000ff;">void</span> ungetch(<span style="color: #0000ff;">int</span><span style="color: #000000;"> c)
+{
+     </span><span style="color: #0000ff;">if</span>(bufp &gt;=<span style="color: #000000;"> BUFSIZE)
+         printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">ungetch: too many characters\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+     </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+         buf[bufp</span>++] =<span style="color: #000000;"> c;
+}
+
+#include</span>&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c %c</span><span style="color: #800000;">"</span><span style="color: #000000;">, getch(), getch());
+}</span></pre>
+</div>
+<pre><span>形如--&gt;printf("%c %c"<span>, getch(), getch()); <br />----整型数会被强制转化为对应的字符(ascii)输出。<br />而--&gt;</span></span>return (bufp &gt; 0)? buf[--bufp] : getchar();<br />中，由getchar()所读入的字符也会转化为相应的整形数 作为 getch()函数的返回值。</pre>
+<pre>ungetch(int<span> c)函数也是同理，参数是整型，但是允许输入字符，自动转化为对应整型数。</span></pre>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;
+    
+    c </span>= <span style="color: #800080;">97</span><span style="color: #000000;">;
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c</span><span style="color: #800000;">"</span><span style="color: #000000;">, c);
+}</span></pre>
+</div>
+<p>上面的代码可以正常运行，输出结果是 a</p>
+<pre>所以 当读入一个超大整数 到buf 时会怎么样呢？</pre>

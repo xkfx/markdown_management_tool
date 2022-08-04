@@ -1,0 +1,317 @@
+<p><span style="color: #ff00ff;"><strong>JSP &mdash;&mdash;&mdash;&mdash;&gt; servlet</strong></span></p>
+<p>我的第1个Java Web应用程序&mdash;&mdash;<a href="#a1">index.jsp</a></p>
+<p>我的第2个Java Web应用程序&mdash;&mdash;<a href="#a2">welcome-file</a></p>
+<p>我的第3个Java Web应用程序&mdash;&mdash;<a href="#a3">conf/server.xml</a></p>
+<p>我的第4个Java Web应用程序&mdash;&mdash;<a href="#a4">jsp page</a></p>
+<p>我的第5个Java Web应用程序&mdash;&mdash;<a href="#a5">jsp 脚本</a></p>
+<p>我的第6个Java Web应用程序&mdash;&mdash;<a href="#a6">jsp 声明</a></p>
+<p>我的第7个Java Web应用程序&mdash;&mdash;<a href="#a7">JSP 表达式&nbsp;</a></p>
+<p>我的第8个Java Web应用程序&mdash;&mdash;<a href="#a8">JSP页面生命周期</a></p>
+<p>我的第9个Java Web应用程序&mdash;&mdash;<a href="#a9">我的乘法口诀表！</a></p>
+<p>&nbsp;</p>
+<p><a name="a1"></a>1</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">doctype html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+ <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="Generator"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="EditPlus&reg;"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="Author"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="Keywords"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="Description"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+ <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+ <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>???????<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+ <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a2"></a>2</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">welcome-file-list</span><span style="color: #0000ff;">&gt;</span>
+             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">welcome-file</span><span style="color: #0000ff;">&gt;</span>/index.jsp<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">welcome-file</span><span style="color: #0000ff;">&gt;</span>
+         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">welcome-file-list</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a3"></a>3</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609153158309-238638427.png" alt="" width="349" height="166" /></p>
+<p>&nbsp;</p>
+<p><a name="a4"></a>4</p>
+<p>jsp=java server page</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609153639043-769842226.png" alt="" width="530" height="135" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609153910122-1726381814.png" alt="" width="413" height="212" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609154155122-2049904045.png" alt="" width="508" height="148" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;"><strong>&lt;%@ page language="java" import="java.util.*" contentType="text/html;charset=utf-8" %&gt;</strong></span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">align</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;</span>啤酒推荐<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%
+            List </span><span style="color: #ff0000;">styles </span><span style="color: #0000ff;">= (List)request.getAttribute("styles");
+            </span><span style="color: #ff0000;">Iterator it </span><span style="color: #0000ff;">= styles.iterator();
+            </span><span style="color: #ff0000;">while (it.hasNext()) {
+                out.print("&lt;br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">try: " + it.next());
+            }
+        %&gt;
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609155632606-2061367519.png" alt="" width="448" height="238" /></p>
+<p>&nbsp;</p>
+<p><a name="a5"></a>5</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609160656481-2071646395.png" alt="" width="438" height="94" /></p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page language="java" <span style="color: #0000ff;">import</span>="java.util.*" contentType="text/html;charset=utf-8" %&gt;
+
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;h1 align="center"&gt;啤酒推荐&lt;/h1&gt;
+        &lt;p&gt;
+        &lt;%<span style="color: #000000;">
+            List styles </span>= (List)request.getAttribute("styles"<span style="color: #000000;">);
+            Iterator it </span>=<span style="color: #000000;"> styles.iterator();
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (it.hasNext()) {
+                out.print(</span>"&lt;br&gt;try: " +<span style="color: #000000;"> it.next());
+            }
+        </span>%&gt;
+<span style="color: #ff0000;"><strong>        &lt;%
+            out.print("&lt;br /&gt;&lt;br /&gt;今天天气貌似不错！");
+            // out是一个内置的对象！
+        %&gt;</strong></span>
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a6"></a>6</p>
+<p>两种声明方式的差异。参考：http://www.cnblogs.com/zengmiaogen/archive/2012/04/15/2450414.html</p>
+<p>我们既可以在&lt;%%&gt;中声明变量，也可以在&lt;%!%&gt;中声明变量，</p>
+<p>那么，这两种声明方式有什么区别呢？事实上，&lt;%!%&gt;相当于类的实例域，而&lt;%%&gt;相当于方法体。</p>
+<p><span style="color: #888888;">// TO-DO</span></p>
+<p>&nbsp;</p>
+<p><a name="a7"></a>7</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609175441809-79446102.png" alt="" width="706" height="150" /></p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page language="java" <span style="color: #0000ff;">import</span>="java.util.*" contentType="text/html;charset=utf-8" %&gt;
+
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;p&gt;<span style="color: #0000ff;">this</span> is a simple test&lt;/p&gt;
+        &lt;%!<span style="color: #000000;">
+            String words </span>= "this is a simple test."<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+                </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+            }
+        </span>%&gt;
+        &lt;p&gt;words=<span style="color: #ff0000;"><strong>&lt;%=words%&gt;</strong></span>&lt;/p&gt;
+        &lt;p&gt;3+4=<strong><span style="color: #ff0000;">&lt;%=sum(3,4)%&gt;</span></strong>&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609180832590-1168077495.png" alt="" width="345" height="155" /></p>
+<p>&nbsp;</p>
+<p><a name="a8"></a>8</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609181246543-1611918958.png" alt="" width="546" height="206" /></p>
+<p>当我们访问jsp页面的时候，jsp引擎（web容器）首先判断是否是第一次请求...</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609181513793-1332703915.png" alt="" width="477" height="129" /></p>
+<p>这个时候我就想，要是可以直接看到它编译出来的字节码就好了，那么到哪里查看呢？&mdash;&mdash;答案是在tomcat的work目录下，不仅有字节码，还有源代码，我们查看一下上一节的代码。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+ * Generated by the Jasper component of Apache Tomcat
+ * Version: Apache Tomcat/7.0.77
+ * Generated at: 2017-06-09 10:07:20 UTC
+ * Note: The last modified time of this file was set to
+ *       the last modified time of the source file after
+ *       generation to assist with modification tracking.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">package</span><span style="color: #000000;"> org.apache.jsp;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.jsp.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.util.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">class</span> test_jsp <span style="color: #0000ff;">extends</span><span style="color: #000000;"> org.apache.jasper.runtime.HttpJspBase
+    </span><span style="color: #0000ff;">implements</span><span style="color: #000000;"> org.apache.jasper.runtime.JspSourceDependent {
+
+
+            String words </span>= "this is a simple test."<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span> sum(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {
+                </span><span style="color: #0000ff;">return</span> x +<span style="color: #000000;"> y;
+            }
+        
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> javax.servlet.jsp.JspFactory _jspxFactory =<span style="color: #000000;">
+          javax.servlet.jsp.JspFactory.getDefaultFactory();
+
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> java.util.Map&lt;java.lang.String,java.lang.Long&gt;<span style="color: #000000;"> _jspx_dependants;
+
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">volatile</span><span style="color: #000000;"> javax.el.ExpressionFactory _el_expressionfactory;
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">volatile</span><span style="color: #000000;"> org.apache.tomcat.InstanceManager _jsp_instancemanager;
+
+  </span><span style="color: #0000ff;">public</span> java.util.Map&lt;java.lang.String,java.lang.Long&gt;<span style="color: #000000;"> getDependants() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _jspx_dependants;
+  }
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> javax.el.ExpressionFactory _jsp_getExpressionFactory() {
+    </span><span style="color: #0000ff;">if</span> (_el_expressionfactory == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">synchronized</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span> (_el_expressionfactory == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+          _el_expressionfactory </span>=<span style="color: #000000;"> _jspxFactory.getJspApplicationContext(getServletConfig().getServletContext()).getExpressionFactory();
+        }
+      }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _el_expressionfactory;
+  }
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> org.apache.tomcat.InstanceManager _jsp_getInstanceManager() {
+    </span><span style="color: #0000ff;">if</span> (_jsp_instancemanager == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">synchronized</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span> (_jsp_instancemanager == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+          _jsp_instancemanager </span>=<span style="color: #000000;"> org.apache.jasper.runtime.InstanceManagerFactory.getInstanceManager(getServletConfig());
+        }
+      }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _jsp_instancemanager;
+  }
+
+  </span><span style="color: #ff0000;"><strong>public void _jspInit() {
+  }
+
+  </strong></span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> _jspDestroy() {
+  }
+
+  </span><span style="color: #ff0000;"><strong>public void _jspService(final javax.servlet.http.HttpServletRequest request, final javax.servlet.http.HttpServletResponse response)
+        throws java.io.IOException, javax.servlet.ServletException {
+
+    final javax.servlet.jsp.PageContext pageContext;
+    javax.servlet.http.HttpSession session = null;
+    final javax.servlet.ServletContext application;
+    final javax.servlet.ServletConfig config;
+    javax.servlet.jsp.JspWriter out = null;
+    final java.lang.Object page = this;
+    javax.servlet.jsp.JspWriter _jspx_out = null;
+    javax.servlet.jsp.PageContext _jspx_page_context = null;
+
+
+    try {
+      response.setContentType("text/html;charset=utf-8");
+      pageContext = _jspxFactory.getPageContext(this, request, response,
+                  null, true, 8192, true);
+      _jspx_page_context = pageContext;
+      application = pageContext.getServletContext();
+      config = pageContext.getServletConfig();
+      session = pageContext.getSession();
+      out = pageContext.getOut();
+      _jspx_out = out;
+
+      out.write("\r\n");
+      out.write("\r\n");
+      out.write("&lt;html&gt;\r\n");
+      out.write("    &lt;body&gt;\r\n");
+      out.write("    \t&lt;p&gt;this is a simple test&lt;/p&gt;\r\n");
+      out.write("    \t");
+      out.write("\r\n");
+      out.write("    \t&lt;p&gt;words=");
+      out.print(words);
+      out.write("&lt;/p&gt;\r\n");
+      out.write("    \t&lt;p&gt;3+4=");
+      out.print(sum(3,4));
+      out.write("&lt;/p&gt;\r\n");
+      out.write("    &lt;/body&gt;\r\n");
+      out.write("&lt;/html&gt;");
+    } catch (java.lang.Throwable t) {
+      if (!(t instanceof javax.servlet.jsp.SkipPageException)){
+        out = _jspx_out;
+        if (out != null &amp;&amp; out.getBufferSize() != 0)
+          try {
+            if (response.isCommitted()) {
+              out.flush();
+            } else {
+              out.clearBuffer();
+            }
+          } catch (java.io.IOException e) {}
+        if (_jspx_page_context != null) _jspx_page_context.handlePageException(t);
+        else throw new ServletException(t);
+      }
+    } finally</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong> {
+      _jspxFactory.releasePageContext(_jspx_page_context);
+    }
+  }</strong></span>
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a9"></a>9</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page language="java" <span style="color: #0000ff;">import</span>="java.util.*" contentType="text/html;charset=utf-8" %&gt;
+
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;p&gt;这是我的乘法口诀表！&lt;/p&gt;
+
+        &lt;%
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 9; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 1; j &lt;= i; ++<span style="color: #000000;">j) {
+                    out.print(i </span>+ " * " + j + " = " + i*j + "   "<span style="color: #000000;">);
+                }
+                out.print(</span>"&lt;br /&gt;"<span style="color: #000000;">);
+            }
+        </span>%&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609184128340-134220476.png" alt="" width="865" height="281" /></p>
+<p>&nbsp;看完视频后修改了一下，<span style="color: #ff0000;">&amp;nbsp;是空格占位符<span style="color: #000000;"><br /></span></span></p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page language="java" <span style="color: #0000ff;">import</span>="java.util.*" contentType="text/html;charset=utf-8" %&gt;
+
+&lt;html&gt;
+    &lt;body&gt;
+        &lt;p&gt;这是我的乘法口诀表！&lt;/p&gt;
+        
+        &lt;%!
+            <span style="color: #0000ff;">void</span><span style="color: #000000;"> printTable() {
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 1; i &lt;= 9; ++<span style="color: #000000;">i) {
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 1; j &lt;= i; ++<span style="color: #000000;">j) {
+                        out.print(i </span>+ " * " + j + " = " + i*j + "<span style="color: #ff0000;"><strong>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</strong></span>"<span style="color: #000000;">);
+                    }
+                    out.print(</span>"&lt;br /&gt;"<span style="color: #000000;">);
+                }
+            }
+        </span>%&gt;
+
+        &lt;%<span style="color: #000000;">
+            printTable();
+        </span>%&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>10什么是内置对象</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609205949418-628506088.png" alt="" width="522" height="213" /></p>
+<p>&nbsp;</p>
+<p>11 jsp有哪些内置对象</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609210104059-1843747165.png" alt="" width="464" height="211" /></p>
+<p>12&nbsp;<a href="https://docs.oracle.com/cd/E19159-01/819-3669/bnajx/index.html">jsp内置对象的官方文档</a></p>
+<p>&nbsp;</p>

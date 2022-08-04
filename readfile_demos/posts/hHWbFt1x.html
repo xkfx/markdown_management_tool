@@ -1,0 +1,54 @@
+<p>内容来自html dog.</p>
+<p>&nbsp;</p>
+<p>css的格式为&nbsp;&lsquo;<strong>property: value</strong>&rsquo;&nbsp;</p>
+<p>给html插入css样式的方式有三种：内联、内部css、外部css文件，如下所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="color: red"</span><span style="color: #0000ff;">&gt;</span>text<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>CSS Example<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+
+    p </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> red</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+    <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+    a </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> blue</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+    <span style="background-color: #f5f5f5; color: #000000;">}</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+...</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>My first web page<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<strong>  <span style="color: #ff0000;">  &lt;link rel="stylesheet" href="style.css"&gt;</span></strong>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+...</span></pre>
+</div>
+<p>&nbsp;css要设定html的样式，首先必须先获得html元素的选择器，</p>
+<p>最简单的选择器就是直接使用html元素名称，如下所示</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618140239775-1747705892.png" alt="" width="397" height="162" /></p>
+<h3>css中的度量单位：</h3>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618140413025-1470728461.png" alt="" width="538" height="263" /></p>
+<h3>css中的颜色：</h3>
+<p>分为两种表示方式，还有一些预定义的颜色，css3还会有一些高级设置。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618140916384-1291635160.png" alt="" width="449" height="170" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618141127415-697289018.png" alt="" width="454" height="213" /></p>
+<h3>&nbsp;css中的文字</h3>
+<p>不同的计算机中有不同的字体，有时候你设置的字体在其它计算机上是无效的。</p>
+<p>但是也有那么些安全的字体，比如：Arial，Verdana、Times New Roman等</p>
+<p>比较保险的方法是设置多个字体（用逗号分割），这样浏览器在找不到第一种字体的情况下就会去寻找第二种字体、依次下去</p>
+<p>需要注意的是，如果字体多于一个字，那么应该把它放进双引号里，<span>如</span><code>font-family: "Times New Roman"</code><span>。</span></p>
+<p>下面是字体相关的几个css属性：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618141923040-795488573.png" alt="" width="508" height="239" /></p>
+<p>补充：font-size是修改文字大小，各种划线是text-decoration，在整体样式上还有一些如下</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618142417337-1198631808.png" alt="" width="609" height="361" /></p>
+<p>不过我想应该不会经常用。。。</p>
+<p>&nbsp;</p>

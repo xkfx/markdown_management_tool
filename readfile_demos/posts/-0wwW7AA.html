@@ -1,0 +1,184 @@
+<h2>题</h2>
+<p>例题3-3 蛇形填数</p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+
+<span style="color: #0000ff;">#define</span> maxn 20
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> a[maxn][maxn];
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> n, x, y, tot = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;n); <span style="color: #008000;">//</span><span style="color: #008000;"> 表示方阵大小 </span>
+    memset(a, <span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span><span style="color: #000000;">(a));
+     
+    tot </span>= a[x = <span style="color: #800080;">0</span>][y = n - <span style="color: #800080;">1</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">while</span> (tot &lt; n *<span style="color: #000000;"> n) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> ++x 是事前加，而不是事后。 x++是事后 </span>
+        <span style="color: #0000ff;">while</span> (x + <span style="color: #800080;">1</span> &lt; n &amp;&amp; !a[x + <span style="color: #800080;">1</span>][y]) a[++x][y] = ++tot; <span style="color: #008000;">//</span><span style="color: #008000;"> 先往下走</span>
+        <span style="color: #0000ff;">while</span> (y - <span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; !a[x][y-<span style="color: #800080;">1</span>]) a[x][--y] = ++tot; <span style="color: #008000;">//</span><span style="color: #008000;"> 左 </span>
+        <span style="color: #0000ff;">while</span> (x - <span style="color: #800080;">1</span> &gt;= <span style="color: #800080;">0</span> &amp;&amp; !a[x-<span style="color: #800080;">1</span>][y]) a[--x][y] = ++tot; <span style="color: #008000;">//</span><span style="color: #008000;"> 上 </span>
+        <span style="color: #0000ff;">while</span> (y + <span style="color: #800080;">1</span> &lt; n &amp;&amp; !a[x][y+<span style="color: #800080;">1</span>]) a[x][++y] = ++tot; <span style="color: #008000;">//</span><span style="color: #008000;"> 右
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 第一条件是保证不出方块 第二条件是保证不&ldquo;撞墙&rdquo;，属于赋值前的试探         </span>
+<span style="color: #000000;">    }    
+    
+    </span><span style="color: #0000ff;">for</span>    (x = <span style="color: #800080;">0</span>; x &lt; n; ++<span style="color: #000000;">x) {
+        </span><span style="color: #0000ff;">for</span> (y = <span style="color: #800080;">0</span>; y &lt; n; ++<span style="color: #000000;">y) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%3d</span><span style="color: #800000;">"</span><span style="color: #000000;">, a[x][y]);
+        }
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    } 
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例题3-4 竖式问题</p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> 字符串处理 - 竖式问题 </span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> count = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span> s[<span style="color: #800080;">20</span>], buf[<span style="color: #800080;">99</span><span style="color: #000000;">];
+        
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span>, s); <span style="color: #008000;">//</span><span style="color: #008000;"> 注意，&ldquo;scanf("%s", s)&rdquo;遇到空白字符会停下来。
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 空白字符是指 空格 回车 以及TAB 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 字符常量可以用单引号法表示。在语法上可以把字符当作int型使用。</span>
+    
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> abc = <span style="color: #800080;">111</span>; abc &lt;= <span style="color: #800080;">999</span>; ++<span style="color: #000000;">abc) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> de = <span style="color: #800080;">11</span>; de &lt;= <span style="color: #800080;">99</span>; ++<span style="color: #000000;">de) {
+            </span><span style="color: #0000ff;">int</span> x = abc * (de % <span style="color: #800080;">10</span><span style="color: #000000;">), 
+            y </span>= abc * (de / <span style="color: #800080;">10</span><span style="color: #000000;">), 
+            z </span>= abc *<span style="color: #000000;"> de;
+            
+            sprintf(buf, </span><span style="color: #800000;">"</span><span style="color: #800000;">%d%d%d%d%d</span><span style="color: #800000;">"</span><span style="color: #000000;">, abc, de, x, y, z); 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> sprintf函数定义在stdio.h。按指定格式输出到字符串。
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 可胜任&ldquo;花式&rdquo;的字符串拼接工作。
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 每次调用该函数，原有的内容会被清空。而非追加 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果成功，则返回写入的字符总数，不包括字符串追加在字符串末尾的空字符。
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果失败，则返回一个负数。 
+    
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 算法竞赛入门经典原话：由于字符串的本质是数组，它也不是&ldquo;一等公民&rdquo;，只能用strcpy(a, b),
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> strcmp(a, b), strcat(a, b)来执行&ldquo;赋值&rdquo;、&ldquo;比较&rdquo;和&ldquo;连接&rdquo;操作，而不能用&ldquo;=&rdquo;、&ldquo;==&rdquo;、
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> &ldquo;&lt;=&rdquo;、&ldquo;+&rdquo;等运算符。上述函数都在string.h中声明。        </span>
+            
+            <span style="color: #0000ff;">int</span> ok = <span style="color: #800080;">1</span><span style="color: #000000;">;            
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != strlen(buf); ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (strchr(s, buf[i]) ==<span style="color: #000000;"> NULL) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> strchr返回一个指向该字符串中第一次出现的字符的指针</span>
+                    ok = <span style="color: #800080;">0</span><span style="color: #000000;">;
+                }
+            }
+            
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(ok){
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;%d&gt;\n</span><span style="color: #800000;">"</span>, ++<span style="color: #000000;">count);
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%5d\nX%4d\n-----\n%5d\n%4d\n-----\n%5d\n\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, abc, de, x, y, z);
+            }
+        }
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">The number of solutions = %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, count);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>输入一个32位的二进制数X，输出X+1以及X+2（同样以二进制形式）<sup>[7]</sup></p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+ 
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> buf[<span style="color: #800080;">99</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+    
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> X + 1</span>
+        buf[<span style="color: #800080;">31</span>] += <span style="color: #800080;">1</span><span style="color: #000000;">;
+        
+        </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">31</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (k &gt; <span style="color: #800080;">0</span> &amp;&amp; buf[k] &gt; <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            buf[k] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            buf[k </span>- <span style="color: #800080;">1</span>] += <span style="color: #800080;">1</span><span style="color: #000000;">;
+            k</span>--<span style="color: #000000;">;
+        }
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> X + 3
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 原基础再 加 2 即加二进制数 10 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 直接跳过第一位就可以了 </span>
+        buf[<span style="color: #800080;">30</span>] += <span style="color: #800080;">1</span><span style="color: #000000;">;
+        
+        k </span>= <span style="color: #800080;">30</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span> (k &gt; <span style="color: #800080;">0</span> &amp;&amp; buf[k] &gt; <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+            buf[k] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            buf[k </span>- <span style="color: #800080;">1</span>] += <span style="color: #800080;">1</span><span style="color: #000000;">;
+            k</span>--<span style="color: #000000;">;
+        }
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf);
+    }    
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>调BUG</h2>
+<p>字符数组越界输入问题。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+ 
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> buf[<span style="color: #800080;">32</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+    
+    
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">i = %d , n = %d, %d\n</span><span style="color: #800000;">"</span>, i, n, i !=<span style="color: #000000;"> n);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 超出buf数组的范围进行输入，陷入死循环
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出 i 和 n 发现，其值被改变了。
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 说明 i 和 n 的内存地址恰好在 buf 数组之后 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 在范围内输入 一切正常。
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 所以，应该适当把 buf 搞大点。不要刚刚好。 </span>
+<span style="color: #000000;">        
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf);
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, buf); <span style="color: #008000;">//</span><span style="color: #008000;"> 原样输出，超出 32 部分也输出来 </span>
+<span style="color: #000000;">        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">strlen = %d\n</span><span style="color: #800000;">"</span>, strlen(buf)); <span style="color: #008000;">//</span><span style="color: #008000;"> 实际长度，不限制32  </span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != strlen(buf); ++<span style="color: #000000;">j) {
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c</span><span style="color: #800000;">"</span><span style="color: #000000;">, buf[j]);
+        }
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> end a loop .===================\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }    
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://blog.csdn.net/weixin_38184741/article/details/86010140">C语言： !(-1)_C/C++_Ken的博客-CSDN博客</a></p>
+<p>[2]&nbsp;<a href="https://zhidao.baidu.com/question/144464742.html">C++中%3d,%-3d,%03d是什么意思?_百度知道</a></p>
+<p>[3]&nbsp;<a href="https://www.runoob.com/cprogramming/c-function-sprintf.html">C 库函数 &ndash; sprintf() | 菜鸟教程</a></p>
+<p>[4]&nbsp;<a href="https://blog.csdn.net/weixin_43224243/article/details/82744577">sprintf的使用_Java_weixin_43224243的博客-CSDN博客</a></p>
+<p>[5]&nbsp;<a href="https://www.runoob.com/cprogramming/c-function-strchr.html">C 库函数 &ndash; strchr() | 菜鸟教程</a></p>
+<p>[6]&nbsp;<a href="https://baike.baidu.com/item/strchr/10985184?fr=aladdin">strchr_百度百科</a></p>
+<p>[7]&nbsp;<a href="https://blog.csdn.net/chaokudeztt/article/details/104824005">Problem A 二进制（2019计算机）_Closure-CSDN博客</a></p>
+<p>&nbsp;</p>

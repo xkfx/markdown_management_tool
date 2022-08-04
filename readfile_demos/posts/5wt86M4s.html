@@ -1,0 +1,182 @@
+<h2><span style="background-color: #00ff00;">直接从请求到JSP，不经过servlet</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        body </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;"> font-family</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">'comic sans ms',sans-serif</span><span style="background-color: #f5f5f5; color: #000000;">;</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #ff0000;"><strong>&lt;form action=<span style="background-color: #ffff99;">"TestBean.jsp"</span>&gt;
+    &lt;p&gt;Name:&lt;/p&gt;
+    &lt;p&gt;&lt;input type="text" name="userName"&gt;&lt;/p&gt;
+    &lt;p&gt;ID#:&lt;/p&gt;
+    &lt;p&gt;&lt;input type="text" name="userID"&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;input type="submit"&gt;&lt;/p&gt;
+&lt;/form&gt;</strong></span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>我们现在需要在JSP中设置person的属性，</p>
+<p>使用Java脚本可以很容易地做到这一点；</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+ <span style="color: #888888;">   &lt;%-- 这个时候相当创建了一个引用名为 person 新的对象 --%&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Employee"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%
+     <strong> person.setName</strong></span><span style="color: #ff0000;"><strong>(request.getParameter("userName"));</strong>
+    %</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>甚至可以在JSP标准动作标签中插入Java脚本；</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+   <span style="color: #888888;"> &lt;%-- 这个时候相当创建了一个引用名为 person 新的对象，由于这个bean以前不存在，所以不能省略class！ --%&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Employee"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span><strong><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="&lt;%= request.getParameter("</span></strong><span style="color: #ff0000;"><strong>userName")</strong> %</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">" /&gt;
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">jsp:useBean</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>不过，不管怎么改，只要用到Java脚本，代码都显得特别冗长~</p>
+<p>有没有办法让代码好看一点呢？（想办法除掉JSP中的Java脚本！）</p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+   <span style="color: #888888;"> &lt;%-- 这个时候相当创建了一个引用名为 person 新的对象，由于这个bean以前不存在，所以不能省略class！ --%&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Employee"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span><strong><span style="color: #ff0000;"> param</span><span style="color: #0000ff;">="userName"</span></strong> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">jsp:useBean</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>JSP标准动作标签的<strong>param属性</strong>可以很好的解决这个问题，如上所示。</p>
+<p>事实上，你甚至不需要手动设置，只需要保证【<strong>html中的name】与【JavaBean的property】一致</strong>，赋值将自动完成！</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="TestBean.jsp"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Name:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <strong><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="name"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></strong>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>ID#:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="userID"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #888888;">&lt;%-- 这个时候相当创建了一个引用名为 person 新的对象，由于这个bean以前不存在，所以不能省略class！ --%&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Employee"</span><span style="color: #0000ff;">&gt;</span>
+   <strong>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span> <span style="color: #0000ff;">/&gt;</span></strong>
+     <span style="color: #888888;"> &lt;%-- 如果请求的参数名与property的值相同，就不需要手动设置这个属性 --%&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">jsp:useBean</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>如果你乐意，还可以更简单~</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="TestBean.jsp"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Name:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><strong><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="name"</span></strong><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>ID#:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><strong><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="empID"</span></strong><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Employee"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><strong><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="*"</span></strong> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">jsp:useBean</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>ps：不用担心String与int类型不匹配，只要在【String、基本类型】的范畴内，类型转换将自动发生，不过万一得到一个类似于&ldquo;xds232&rdquo;的非法输入，那么程序很可能会挂掉，一种解决的办法是在客户端使用JavaScript检查后再发送。</p>
+<p>&nbsp;</p>
+<p>然而，JSP标准动作标记还不是尽善尽美！无脚本的故事还在继续。</p>
+<p>&nbsp;</p>
+<h2><span style="background-color: #00ff00;">获取Person的嵌套属性</span></h2>
+<p>创建一个狗类；</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Dog {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setName(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+}</span></pre>
+</div>
+<p>给Person类加上狗属性；</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Person <span style="color: #0000ff;">implements</span><span style="color: #000000;"> java.io.Serializable {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String name;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> Dog dog;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Dog getDog() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dog;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setDog(Dog dog) {
+        </span><span style="color: #0000ff;">this</span>.dog =<span style="color: #000000;"> dog;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Person() {
+
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getName() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> name;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setName(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+}</span></pre>
+</div>
+<p>我们通过一个Servlet把一个狗对象set到Person对象中；</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.demo;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> addDog <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span> doPost(HttpServletRequest req, HttpServletResponse resp) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        Person p </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Person();
+        p.setName(</span>"Jack"<span style="color: #000000;">);
+
+        Dog dog </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Dog();
+        dog.setName(</span>"Spike"<span style="color: #000000;">);
+        p.setDog(dog);
+
+        req.setAttribute(</span>"person"<span style="color: #000000;">, p);
+
+        RequestDispatcher view </span>= req.getRequestDispatcher("result.jsp"<span style="color: #000000;">);
+        view.forward(req, resp);
+    }
+}</span></pre>
+</div>
+<p>现在要在JSP页面中获得狗的名字，直接给出代码和运行结果：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">import</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>result<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Dog Name:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>scriptlet out-----&gt;&gt;&gt;&gt;<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=((Person</span><span style="color: #ff0000;">)request.getAttribute("person")).getDog().getName()%</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.demo.Person"</span><span style="color: #ff0000;"> scope</span><span style="color: #0000ff;">="request"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>std action out-----&gt;&gt;&gt;&gt;<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:getProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="person"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="dog"</span> <span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>EL out-----&gt;&gt;&gt;&gt;${person.dog.name}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170619212333741-1689728818.png" alt="" width="415" height="140" /></p>
+<p>看来不用脚本要取得狗的名字只能用EL了</p>
+<p>&nbsp;</p>

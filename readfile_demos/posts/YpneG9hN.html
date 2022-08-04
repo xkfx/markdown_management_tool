@@ -1,0 +1,162 @@
+<p>内容来自imooc.</p>
+<h2>1、什么是JSP动作元素</h2>
+<hr />
+<h2>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616155348509-1080947696.png" alt="" width="510" height="105" /></h2>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616155437868-2044795585.png" alt="" width="606" height="202" /></p>
+<h2>&nbsp;</h2>
+<h2>2、在JSP页面中如何使用Javabeans</h2>
+<hr />
+<h2>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616161348400-392203095.png" alt="" width="561" height="208" /></h2>
+<p><span style="color: #ff0000;"><strong>&lt;jsp:......&gt;表示这是一个JSP动作元素</strong></span></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616161420650-872548466.png" alt="" width="490" height="98" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170617160051134-909059566.png" alt="" width="530" height="178" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616161954118-223658402.png" alt="" width="515" height="203" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616174724696-1252692778.png" alt="" width="505" height="150" /></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616173857009-72273287.png" alt="" width="324" height="158" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616173915540-558703168.png" alt="" width="400" height="143" /></p>
+<h2>&nbsp;</h2>
+<h2>3、使用JSP动作元素创建JavaBean的实例</h2>
+<hr />
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">import</span><span style="color: #0000ff;">="com.po.User"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%
+      User </span><span style="color: #ff0000;">user </span><span style="color: #0000ff;">= new </span><span style="color: #ff0000;">User();
+      user.setUsername("jack");
+      user.setPassword("123456");
+    %</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>使用普通方式创建JavaBean的实例<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    用户名：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user.getUsername</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    密码：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user.getPassword</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<strong><span style="color: #ff0000;">&lt;jsp:useBean id="user1" class="com.po.User" scope="page"/&gt;</span></strong>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>使用JSP动作元素创建JavaBean的实例<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+用户名：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getUsername</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+密码：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getPassword</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h2>4、&lt;jsp:setProperty.....&gt;、&lt;jsp:getProperty.....&gt;</h2>
+<hr />
+<p>&nbsp;login.jsp：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>登陆系统<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="dologin.jsp"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="loginForm"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--</span><span style="color: #ff0000;">表格布局--%</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>用户名：<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="username"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>密码：<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--colspan</span><span style="color: #ff0000;">是列合并的意思--%</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td </span><span style="color: #ff0000;">colspan</span><span style="color: #0000ff;">="2"</span><span style="color: #ff0000;"> align</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="登陆"</span><span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>login2.jsp：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>登陆系统<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="<strong>dologin.jsp?mypass=9999</strong>"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="loginForm"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--</span><span style="color: #ff0000;">表格布局--%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>用户名：<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="username"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>密码：<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--colspan</span><span style="color: #ff0000;">是列合并的意思--%</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td </span><span style="color: #ff0000;">colspan</span><span style="color: #0000ff;">="2"</span><span style="color: #ff0000;"> align</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="登陆"</span><span style="color: #0000ff;">/&gt;&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>dologin.jsp：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:useBean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="com.po.User"</span><span style="color: #ff0000;"> scope</span><span style="color: #0000ff;">="page"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>setProperty动作元素的使用方法<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--1</span><span style="color: #ff0000;">、根据表单自动匹配所有属性（与表单相关联）--%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="*"</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+    用户名：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getUsername</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    密码：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getPassword</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--2</span><span style="color: #ff0000;">、根据表单匹配部分属性（与表单相关联）--%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="password"</span> <span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+    用户名：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getUsername</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    密码：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getPassword</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--3</span><span style="color: #ff0000;">、手动设置属性，与表单没有关系--%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="3333"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="username"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="lucy"</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+    用户名：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getUsername</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    密码：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getPassword</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--4</span><span style="color: #ff0000;">、通过URL参数给密码赋值，与login2.jsp相对应，username还是通过表单获得--%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="username"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:setProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> param</span><span style="color: #0000ff;">="mypass"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--</span><span style="color: #ff0000;">传统的表达式获取属性--%</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    用户名：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getUsername</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    密码：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%=user1.getPassword</span><span style="color: #ff0000;">()%</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--</span><span style="color: #ff0000;">换一种方式获取属性--%</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:getProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="username"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:getProperty </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="user1"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="password"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>注意：为了方便看代码我把对1.2.3底下的代码的注释取消了。</p>
+<h2>&nbsp;5、JSP配合JavaBeans是早期的一种开发模式&mdash;&mdash;Model1</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170617160951103-1318993224.png" alt="" width="504" height="206" /></p>
+<p>&nbsp;</p>

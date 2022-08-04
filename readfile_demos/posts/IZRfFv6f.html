@@ -1,0 +1,144 @@
+<p>译自：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application" target="_blank">https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application</a></p>
+<h2>1. SpringApplication</h2>
+<p>SpringApplication类提供了一种方便的方式来引导一个从main()方法启动的Spring应用程序。在很多情况下，你可以委托给静态的SpringApplication.run方法，如下例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication.run(MyApplication.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">, args);
+    }
+
+}</span></pre>
+</div>
+<p>当你的应用程序启动时，你应该会看到类似如下的输出：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@SpringBootApplication
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication.run(MyApplication.</span><span style="color: #0000ff;">class</span><span style="color: #000000;">, args);
+    }
+
+}
+
+When your application starts, you should see something similar to the following output:
+
+  .   ____          _            __ _ _
+ </span>/\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |<span style="color: #000000;">  ) ) ) )
+  </span>'  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/<span style="color: #000000;">
+ :: Spring Boot ::   v2.</span>6.4
+
+2021-02-03 10:33:25.224  INFO 17321 --- [           main] o.s.b.d.s.s.SpringApplicationExample    : Starting SpringApplicationExample using Java 1.8.0_232 on mycomputer with PID 17321 (/apps/<span style="color: #000000;">myjar.jar started by pwebb)
+</span>2021-02-03 10:33:25.226  INFO 17900 --- [           main] o.s.b.d.s.s.SpringApplicationExample    : No active profile set, falling back to <span style="color: #0000ff;">default</span> profiles: <span style="color: #0000ff;">default</span>
+2021-02-03 10:33:26.046  INFO 17321 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080<span style="color: #000000;"> (http)
+</span>2021-02-03 10:33:26.054  INFO 17900 ---<span style="color: #000000;"> [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+</span>2021-02-03 10:33:26.055  INFO 17900 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41<span style="color: #000000;">]
+</span>2021-02-03 10:33:26.097  INFO 17900 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/<span style="color: #000000;">]       : Initializing Spring embedded WebApplicationContext
+</span>2021-02-03 10:33:26.097  INFO 17900 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 821<span style="color: #000000;"> ms
+</span>2021-02-03 10:33:26.144  INFO 17900 ---<span style="color: #000000;"> [           main] s.tomcat.SampleTomcatApplication         : ServletContext initialized
+</span>2021-02-03 10:33:26.376  INFO 17900 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-02-03 10:33:26.384  INFO 17900 --- [           main] o.s.b.d.s.s.SpringApplicationExample    : Started SampleTomcatApplication in 1.514 seconds (JVM running <span style="color: #0000ff;">for</span> 1.823)</pre>
+</div>
+<p>默认情况下，会显示INFO日志消息，包括一些相关的启动细节，比如启动应用程序的用户。如果您需要设置除INFO之外的日志级别，请参见日志级别（<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.logging.log-levels" target="_blank">Log Levels</a>）进行设置。应用程序版本是使用来自主应用程序类包的实现版本来确定的。可以通过将spring.main.log-startup-info设置为false来关闭<strong>启动信息日志记录（Startup information logging）</strong>。这也将关闭<strong>应用程序的活动概要文件（the application&rsquo;s active profiles）</strong>的日志记录。</p>
+<p>要在启动时添加额外的日志记录，你可以在SpringApplication的子类中重写logStartupInfo(boolean)</p>
+<h3 id="features.spring-application.startup-failure">1.1. Startup Failure</h3>
+<p>显示完整的条件报告，以更好地理解出错的原因。</p>
+<p>例如，如果你使用java -jar运行你的应用程序，你可以启用debug属性，如下所示：</p>
+<div class="cnblogs_code">
+<pre>$ java -jar myproject-<span style="color: #800080;">0.0</span>.<span style="color: #800080;">1</span>-SNAPSHOT.jar --debug</pre>
+</div>
+<h3>1.3. Customizing the Banner</h3>
+<p>可以通过在类路径中添加一个<strong>banner.txt文件</strong>或将<strong>spring.banner.location属性</strong>设置为该文件的位置来更改启动时打印的横幅。如果文件的编码不是UTF-8，可以设置spring.banner.charset。除了文本文件外，还可以向<strong>类路径（</strong><span style="color: #ff00ff;">PS. 放在application.properties同一目录，也就是resources目录下，简单的黑白图片效果很不错，关于资源放在哪可以参考&ldquo;<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/xkxf/p/15846093.html" target="_blank"><span style="color: #ff00ff;">Maven入门_如何向JAR添加资源&amp;标准目录布局</span></a>&rdquo;，当然，springboot项目打包后的目录结构会不一样，详见<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/executable-jar.html#appendix.executable-jar" target="_blank"><span style="color: #ff00ff;">The Executable Jar Format</span></a></span><strong>）</strong>中添加banner.gif、banner.jpg或banner.png图像文件，或者设置spring.banner.image.location属性。图像被转换成ASCII艺术表示，并打印在任何文本横幅上方。</p>
+<p>在你的<strong>banner.txt</strong>文件中，你可以使用<span style="color: #3366ff;"><strong>Environment</strong></span>中可用的任何key以及以下任何占位符（参见<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.banner" target="_blank">Table 1. Banner variables</a>）</p>
+<p>如果您希望以编程方式生成横幅，可以使用<strong>SpringApplication.setBanner(&hellip;)</strong>方法。使用<strong>org.springframework.boot.Banner接口</strong>并实现您自己的<strong>printBanner()</strong>方法。</p>
+<p>你也可以使用<strong>spring.main.banner-mode</strong>属性来确定是否必须在<strong>System.out <span style="color: #ff0000;">(console)</span></strong>打印横幅，发送到配置的记录器<span style="color: #ff0000;">(log)</span>，或根本不产生<span style="color: #ff0000;">(off)</span>。</p>
+<p>打印出来的横幅被注册为一个<strong>单例bean</strong>，名字如下：<strong>springBootBanner</strong>。</p>
+<h3 id="features.spring-application.customizing-spring-application">1.4. Customizing SpringApplication</h3>
+<p>如果SpringApplication的默认值不合你的口味，你可以创建一个本地实例并对其进行定制。例如，要关闭横幅，你可以这样写：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.Banner;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication application </span>= <span style="color: #0000ff;">new</span> SpringApplication(MyApplication.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        application.setBannerMode(Banner.Mode.OFF);
+        application.run(args);
+    }
+
+}</span></pre>
+</div>
+<p>（传递给SpringApplication的构造函数参数是Spring bean的配置源。在大多数情况下，这些是对@Configuration类的引用，但它们也可以是对@Component类的直接引用）</p>
+<p>也可以通过使用一个<strong>application.properties文件</strong>来配置SpringApplication。有关详细信息，请参阅外部化配置（&nbsp;<em><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config" target="_blank">Externalized Configuration</a></em>）。</p>
+<p>有关配置选项的完整列表（a complete list of the configuration options），请参阅<a href="https://docs.spring.io/spring-boot/docs/2.6.4/api/org/springframework/boot/SpringApplication.html" target="_blank">SpringApplication Javadoc</a></p>
+<h3 id="features.spring-application.application-events-and-listeners">1.7. Application Events and Listeners</h3>
+<p>除了通常的Spring框架事件，比如<span style="color: #ff0000;"><strong>ContextRefreshedEvent</strong></span>, SpringApplication还会发送一些额外的应用事件。</p>
+<p>（有些事件实际上是在ApplicationContext创建之前被触发的，所以你不能在这些事件上注册一个listener作为<strong>@Bean</strong>。你可以用<strong>SpringApplication.addListeners(&hellip;)</strong>方法或<strong>SpringApplicationBuilder.listeners(&hellip;)</strong>方法注册它们。</p>
+<p>如果您希望自动注册这些侦听器，而不管应用程序是以何种方式创建的，那么您可以添加一个<strong>META-INF/spring.factories</strong>到你的项目，并通过使用<strong>org.springframework.context.ApplicationListener</strong>键引用你的listener(s)，如下所示：</p>
+<div class="cnblogs_code">
+<pre>org.springframework.context.ApplicationListener=com.example.project.MyListener</pre>
+</div>
+<p>）</p>
+<p>当你的应用程序运行时，应用程序事件按以下顺序发送：</p>
+<ul>
+<li>x</li>
+<li>x</li>
+<li>x</li>
+<li>x</li>
+<li>x</li>
+</ul>
+<p>（详见：<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.application-events-and-listeners" target="_blank">https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.application-events-and-listeners</a>）</p>
+<p>上面的列表只包括绑定到SpringApplication的<span style="color: #0000ff;"><strong>SpringApplicationEvent</strong></span>s。除此之外，以下事件也会在<strong><span style="color: #0000ff;">ApplicationPreparedEvent</span></strong>之后和<strong><span style="color: #0000ff;">ApplicationStartedEvent</span></strong>之前发布：</p>
+<ul>
+<li>一个<strong><span style="color: #0000ff;">WebServerInitializedEvent</span></strong>在WebServer准备好之后被发送。<span style="color: #0000ff;"><strong>ServletWebServerInitializedEvent</strong></span>和<strong><span style="color: #0000ff;">ReactiveWebServerInitializedEvent</span></strong>分别是servlet和响应式变量。</li>
+<li>当ApplicationContext刷新时，<strong><span style="color: #0000ff;">ContextRefreshedEvent</span></strong>被发送。</li>
+</ul>
+<p>（您通常不需要使用应用程序事件，但知道它们的存在会很方便。在内部，Spring Boot使用事件来处理各种任务）</p>
+<p>（默认情况下，Event listeners在同一线程中执行时，不应运行可能冗长的任务。考虑使用应用程序和命令行运行器。）</p>
+<p>应用程序事件（Application events）是通过使用Spring Framework的事件发布机制发送的。该机制的一部分确保在子上下文中（in a child context）发布到侦听器的事件也会发布到任何祖先上下文中（any ancestor contexts）的侦听器。因此，如果应用程序使用SpringApplication实例的层次结构，一个侦听器（a listener）可能会接收到相同类型的应用程序事件的多个实例。</p>
+<p>要让侦听器区分上下文的事件和后代上下文的事件，它应该请求注入其应用程序上下文，然后将注入的上下文与事件的上下文进行比较。context可以通过实现ApplicationContextAware注入，如果侦听器是一个bean，也可以通过使用@Autowired注入。</p>
+<h3 id="features.spring-application.web-environment">1.8. Web Environment</h3>
+<p>SpringApplication试图为您创建正确类型的ApplicationContext。用来确定<strong><span style="color: #0000ff;">WebApplicationType</span></strong>的算法如下：</p>
+<ul>
+<li>If Spring MVC is present, an <span style="color: #0000ff;"><strong>AnnotationConfigServletWebServerApplicationContext</strong> </span>is used</li>
+<li>If Spring MVC is not present and Spring WebFlux is present, an <span style="color: #0000ff;"><strong>AnnotationConfigReactiveWebServerApplicationContext</strong> </span>is used</li>
+<li>Otherwise, <span style="color: #0000ff;"><strong>AnnotationConfigApplicationContext</strong> </span>is used</li>
+</ul>
+<p>这意味着，如果你在同一个应用程序中使用Spring MVC和来自Spring WebFlux的新WebClient，那么默认情况下会使用Spring MVC。你可以通过调用<span style="color: #0000ff;"><strong>setWebApplicationType(WebApplicationType)</strong></span>轻松覆盖它。</p>
+<p>也可以通过调用<strong><span style="color: #0000ff;">setApplicationContextClass(&hellip;)</span></strong>来完全控制ApplicationContext类型。</p>
+<p>（当在JUnit测试中使用SpringApplication时，通常需要调用setWebApplicationType(WebApplicationType.NONE）</p>
+<h3 id="features.spring-application.startup-tracking">1.13. Application Startup tracking</h3>
+<p>在应用程序启动期间，<strong><span style="color: #3366ff;">SpringApplication</span></strong>和<span style="color: #3366ff;"><strong>ApplicationContext</strong></span>执行许多与应用程序生命周期、bean生命周期甚至处理应用程序事件相关的任务。使用<a href="https://docs.spring.io/spring-framework/docs/5.3.16/javadoc-api/org/springframework/core/metrics/ApplicationStartup.html" target="_blank">ApplicationStartup</a>, Spring框架<a href="https://docs.spring.io/spring-framework/docs/5.3.16/reference/html/core.html#context-functionality-startup" target="_blank">允许你使用StartupStep对象跟踪应用程序的启动顺序</a>。收集这些数据可以用于分析目的，或者只是为了更好地理解应用程序的启动过程。</p>
+<p>在设置<strong><span style="color: #3366ff;">SpringApplication</span></strong>实例时，您可以选择一个<span style="color: #3366ff;"><strong>ApplicationStartup</strong></span>实现。例如，要使用<strong><span style="color: #3366ff;">BufferingApplicationStartup</span></strong>，你可以这样写：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.SpringApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.autoconfigure.SpringBootApplication;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
+
+@SpringBootApplication
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> MyApplication {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        SpringApplication application </span>= <span style="color: #0000ff;">new</span> SpringApplication(MyApplication.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        application.setApplicationStartup(</span><span style="color: #0000ff;">new</span> BufferingApplicationStartup(2048<span style="color: #000000;">));
+        application.run(args);
+    }
+
+}</span></pre>
+</div>
+<p>第一个可用的实现<strong><span style="color: #3366ff;">FlightRecorderApplicationStartup</span></strong>是由Spring Framework提供的。它将Spring特定的启动事件添加到Java Flight Recorder会话中，用于分析应用程序，并将它们的Spring上下文生命周期与JVM事件（如分配、gc、类加载&hellip;&hellip;）关联起来。配置完成后，你可以通过启用Flight Recorder运行应用程序来记录数据：</p>
+<div class="cnblogs_code">
+<pre>$ java -XX:StartFlightRecording:filename=recording.jfr,duration=10s -jar demo.jar</pre>
+</div>
+<p>Spring Boot自带<strong><span style="color: #3366ff;">BufferingApplicationStartup</span></strong>变量；这个实现是为了buffering启动步骤，并将它们放入外部度量系统中（an external metrics system）。应用程序可以在任何组件中请求<strong><span style="color: #3366ff;">BufferingApplicationStartup</span></strong>类型的bean。</p>
+<p>Spring Boot还可以配置成暴露一个启动端点（<a href="https://docs.spring.io/spring-boot/docs/2.6.4/actuator-api/htmlsingle/#startup" target="_blank"><code>startup</code>&nbsp;endpoint</a>&nbsp;），该端点以JSON文档的形式提供该信息。</p>

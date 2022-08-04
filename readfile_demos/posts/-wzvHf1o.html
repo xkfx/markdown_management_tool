@@ -1,0 +1,84 @@
+<p>&nbsp;&nbsp;<code>文档地址：<a href="http://docs.scipy.org/doc/numpy-1.10.0/glossary.html#term-array" target="_blank">np.array()</a></code>&nbsp;&nbsp;</p>
+<p>&nbsp;</p>
+<h3>1、&lt;class 'numpy.ndarray'&gt;</h3>
+<p>ndarray 表示 n 维度（n D）数组 （= n 行数组）。</p>
+<h3>2、打印 array 结构 &mdash;&mdash; np_array.shape</h3>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180111210147019-779166308.png" alt="" /></p>
+<h3>3、Subsetting 2D Arrays 的两种方式</h3>
+<p>不管是 arr[1][2] 还是 arr[1,2] 都是可行的，不过教程推荐第二种方式。</p>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180111210420285-612944062.png" alt="" width="180" height="128" /></p>
+<h3>4、代码演示 &amp; 一个取子集的小技巧</h3>
+<p>创建：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Create baseball, a list of lists</span>
+baseball = [[180, 78.4<span style="color: #000000;">],
+            [</span>215, 102.7<span style="color: #000000;">],
+            [</span>210, 98.5<span style="color: #000000;">],
+            [</span>188, 75.2<span style="color: #000000;">]]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create a 2D numpy array from baseball: np_baseball</span>
+np_baseball =<span style="color: #000000;"> np.array(baseball)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the type of np_baseball</span>
+<span style="color: #0000ff;">print</span><span style="color: #000000;">(type(np_baseball))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the shape of np_baseball</span>
+<span style="color: #0000ff;">print</span>(np_baseball.shape)</pre>
+</div>
+<p>打印结构：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> baseball is available as a regular list of lists</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy package</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create a 2D numpy array from baseball: np_baseball</span>
+np_baseball =<span style="color: #000000;">  np.array(baseball)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the shape of np_baseball</span>
+<span style="color: #0000ff;">print</span>(np_baseball.shape)</pre>
+</div>
+<p>&nbsp;小技巧：</p>
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180111211034238-881733839.png" alt="" width="255" height="48" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> baseball is available as a regular list of lists</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy package</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create np_baseball (2 cols)</span>
+np_baseball =<span style="color: #000000;"> np.array(baseball)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out the 50th row of np_baseball</span>
+<span style="color: #0000ff;">print</span>(np_baseball[49<span style="color: #000000;">,:])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Select the entire second column of np_baseball: np_weight</span>
+np_weight = np_baseball[:,1<span style="color: #000000;">]
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out height of 124th player</span>
+<span style="color: #0000ff;">print</span>(np_baseball[123,0])</pre>
+</div>
+<h3>&nbsp;5、整体数学运算</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> baseball is available as a regular list of lists</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> updated is available as 2D numpy array</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> Import numpy package</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create np_baseball (3 cols)</span>
+np_baseball =<span style="color: #000000;"> np.array(baseball)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out addition of np_baseball and updated</span>
+<span style="color: #0000ff;">print</span>(np_baseball +<span style="color: #000000;"> updated)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Create numpy array: conversion</span>
+conversion = np.array([0.0254, 0.453592, 1<span style="color: #000000;">])
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> Print out product of np_baseball and conversion</span>
+<span style="color: #0000ff;">print</span>(conversion * np_baseball)</pre>
+</div>
+<p>&nbsp;</p>

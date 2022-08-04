@@ -1,0 +1,243 @@
+<p>辗转相除法</p>
+<p>求最小公倍数</p>
+<p>冒泡排序</p>
+<p>&nbsp;</p>
+<p>1、辗转相除法求最大公约数，简写为gcd。应用：化简分数，即分子分母同时除以最大公约数。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; gcd(<span style="color: #800080;">6</span>, <span style="color: #800080;">9</span>) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output=3</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">; 
+}
+
+</span><span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> r; (r=m%n) != <span style="color: #800080;">0</span>; m=n, n=<span style="color: #000000;">r);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、最小公倍数,least&nbsp;common&nbsp;multiple，简写为lcm。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;cstdio&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">int</span> lcm(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; gcd(<span style="color: #800080;">6</span>, <span style="color: #800080;">9</span>) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output=3</span>
+    cout &lt;&lt; lcm(<span style="color: #800080;">6</span>, <span style="color: #800080;">9</span>) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output=18</span>
+    
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">; 
+}
+
+</span><span style="color: #0000ff;">int</span> gcd(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> r; (r=m%n) != <span style="color: #800080;">0</span>; m=n, n=<span style="color: #000000;">r);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+}
+
+</span><span style="color: #0000ff;">int</span> lcm(<span style="color: #0000ff;">int</span> m, <span style="color: #0000ff;">int</span><span style="color: #000000;"> n) {
+    </span><span style="color: #0000ff;">return</span> m*n /<span style="color: #000000;"> gcd(m, n);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、排序之对数字</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;<span style="color: #000000;">
+#include </span>&lt;ctime&gt;
+<span style="color: #0000ff;">#define</span> N 1000
+
+<span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span>&amp; a, <span style="color: #0000ff;">int</span>&amp;<span style="color: #000000;"> b) {
+    a </span>= a +<span style="color: #000000;"> b;
+    b </span>= a -<span style="color: #000000;"> b;
+    a </span>= a -<span style="color: #000000;"> b;
+}
+
+</span><span style="color: #0000ff;">void</span> sort(<span style="color: #0000ff;">int</span> *arr, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != len-<span style="color: #800080;">1</span>; ++i) <span style="color: #008000;">//</span><span style="color: #008000;"> len个元素的数组需要排(len-1)趟</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != len-i-<span style="color: #800080;">1</span>; ++<span style="color: #000000;">j) 
+            </span><span style="color: #0000ff;">if</span> (arr[j] &gt; arr[j+<span style="color: #800080;">1</span>]) swap(arr[j], arr[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> arr[N];
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    srand(time(</span><span style="color: #800080;">0</span><span style="color: #000000;">));
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; N; i++<span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%4d</span><span style="color: #800000;">"</span>,arr[i]=rand()%<span style="color: #800080;">100</span>+<span style="color: #800080;">1</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 生成N个1-100的随机整数。</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    sort(arr, N);
+
+    </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; N; ++<span style="color: #000000;">i)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%4d</span><span style="color: #800000;">"</span><span style="color: #000000;">, arr[i]);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;<span style="color: #000000;">
+#include </span>&lt;ctime&gt;
+<span style="color: #0000ff;">#define</span> N 100
+
+<span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span> &amp;a, <span style="color: #0000ff;">int</span> &amp;<span style="color: #000000;">b) {
+    a </span>= a +<span style="color: #000000;"> b;
+    b </span>= a -<span style="color: #000000;"> b;
+    a </span>= a -<span style="color: #000000;"> b;
+}
+
+</span><span style="color: #0000ff;">void</span> sort(<span style="color: #0000ff;">int</span> *arr, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != len - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) 
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != len - i - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j)
+            </span><span style="color: #0000ff;">if</span> (arr[j] &gt; arr[j+<span style="color: #800080;">1</span>]) swap(arr[j], arr[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+    int a = 3, b = 4;
+    swap(a, b);
+    printf("%d %d\n", a, b);
+    </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+    srand((</span><span style="color: #0000ff;">int</span>)time(<span style="color: #800080;">0</span><span style="color: #000000;">));
+
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> arr[N];
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%4d</span><span style="color: #800000;">"</span>, arr[i] = rand()%<span style="color: #800080;">100</span> + <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    sort(arr, N);
+
+    </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%4d</span><span style="color: #800000;">"</span><span style="color: #000000;">, arr[i]);
+    }
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>排序对象， c++创建对象的方式：http://blog.csdn.net/azhexg/article/details/14225545</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;<span style="color: #000000;">
+#include </span>&lt;ctime&gt;<span style="color: #000000;">
+#include </span>&lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">#define</span> N 10
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">
+
+void swap(int &amp;a, int &amp;b) {
+    a = a + b;
+    b = a - b;
+    a = a - b;
+}
+
+void sort(int *arr, int len) {
+    for (int i = 0; i != len - 1; ++i) 
+        for (int j = 0; j != len - i - 1; ++j)
+            if (arr[j] &gt; arr[j+1]) swap(arr[j], arr[j+1]);
+}
+
+</span><span style="color: #008000;">*/</span>
+
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Student {
+friend ostream</span>&amp; print(ostream&amp;, <span style="color: #0000ff;">const</span> Student&amp;<span style="color: #000000;">);
+friend </span><span style="color: #0000ff;">void</span> sort(Student **arr, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len);
+
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    Student(</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp; name, <span style="color: #0000ff;">int</span><span style="color: #000000;"> score): name(name), score(score) {}
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">string</span><span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> score;
+};
+
+</span><span style="color: #0000ff;">void</span> swap(Student* &amp;left, Student* &amp;<span style="color: #000000;">right) {
+    Student </span>*<span style="color: #000000;">temp;
+    temp </span>=<span style="color: #000000;"> left;
+    left </span>=<span style="color: #000000;"> right;
+    right </span>=<span style="color: #000000;"> temp;
+}
+
+</span><span style="color: #0000ff;">void</span> sort(Student **arr, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != len - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) 
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != len - i - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j)
+            </span><span style="color: #0000ff;">if</span> (arr[j]-&gt;score &gt; arr[j+<span style="color: #800080;">1</span>]-&gt;score) swap(arr[j], arr[j+<span style="color: #800080;">1</span><span style="color: #000000;">]);
+}
+
+ostream</span>&amp; print(ostream&amp; os, <span style="color: #0000ff;">const</span> Student&amp;<span style="color: #000000;"> stu) {
+    os </span>&lt;&lt; stu.name &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> stu.score;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> os;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{    
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+    int a = 3, b = 4;
+    swap(a, b);
+    printf("%d %d\n", a, b);
+    </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+    srand((</span><span style="color: #0000ff;">int</span>)time(<span style="color: #800080;">0</span><span style="color: #000000;">));
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">
+
+    int arr[N];
+
+    for (int i = 0; i != N; ++i) {
+        printf("%4d", arr[i] = rand()%100 + 1);
+    }
+
+    printf("\n");
+
+    sort(arr, N);
+
+    for (i = 0; i != N; ++i) {
+        printf("%4d", arr[i]);
+    }
+
+    printf("\n");
+
+    </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+    Student </span>*<span style="color: #000000;">stu[N];
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        print(cout, </span>*(stu[i] = <span style="color: #0000ff;">new</span> Student(<span style="color: #800000;">"</span><span style="color: #800000;">jack</span><span style="color: #800000;">"</span>, rand()%<span style="color: #800080;">100</span> + <span style="color: #800080;">1</span>))) &lt;&lt;<span style="color: #000000;"> endl;
+    }
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">******************************************\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    sort(stu, N);
+
+    </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        print(cout, </span>*stu[i]) &lt;&lt;<span style="color: #000000;"> endl;
+    }
+
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

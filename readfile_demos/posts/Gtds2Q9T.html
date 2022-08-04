@@ -1,0 +1,141 @@
+<p>参考：</p>
+<p>1、corejavaI：使用解耦的try/catch与try/finally&nbsp;</p>
+<p>2、Java中try catch finally语句中含有return语句的执行情况（总结版）：http://blog.csdn.net/ns_code/article/details/17485221</p>
+<p>3、什么时候考虑使用静态方法？http://tonylian.iteye.com/blog/563457（*详细）</p>
+<p>4、<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/xkxf/p/6781864.html">流与文件（端口 &amp; 文件读写对象）</a></p>
+<p>思路：</p>
+<p>成功注册--&gt;客户端调用Register()方法---&gt;服务器调用save()方法，save用jdbc写。</p>
+<p>代码：</p>
+<p>1、服务器待命。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.server;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.xkfx.qq.tools.serverOnly.Database;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.xkfx.qq.tools.transmit.User;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.ObjectInputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.PrintWriter;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.net.ServerSocket;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.net.Socket;
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> RegisterServer {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> main(String[] args) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException {
+        ServerSocket server </span>= <span style="color: #0000ff;">new</span> ServerSocket(8000<span style="color: #000000;">);
+
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            Socket socket </span>=<span style="color: #000000;"> server.accept();
+            invoke(socket);
+        }
+    }
+
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> invoke(<span style="color: #0000ff;">final</span> Socket socket) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException {
+        </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Runnable() {
+            @Override
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                ObjectInputStream in </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+                PrintWriter out </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                    in </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ObjectInputStream(socket.getInputStream());
+                    out </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> PrintWriter(socket.getOutputStream());
+
+                    Object obj </span>=<span style="color: #000000;"> in.readObject();
+                    User user </span>=<span style="color: #000000;"> (User)obj;
+
+                    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (Database.find(user.getUsername())) {
+                        out.write(</span>"这个ID已经被注册了"<span style="color: #000000;">);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        Database.saveUser(user);
+                        out.write(</span>"注册成功"<span style="color: #000000;">);
+                    }
+                    out.flush();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                    e.printStackTrace();
+                } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                        in.close();
+                    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                        e.printStackTrace();
+                    }
+                    out.close();
+                    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                        socket.close();
+                    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+}</span></pre>
+</div>
+<p>2、客户端注册</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #008000;">//</span><span style="color: #008000;"> 用户点击了注册</span>
+        <span style="color: #0000ff;">if</span> (e.getActionCommand().equals("Sign up"<span style="color: #000000;">)) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 从JTextField获取用户名和密码</span>
+            String username =<span style="color: #000000;"> txtUsername.getText();
+            String password </span>=<span style="color: #000000;"> txtPassword.getText();
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 本地验证用户名、用户密码的合法性</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (Check.idAndPass(username, password)) {
+                User user </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> User(username, password);
+                JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">, Server.Register(user));
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 提示用户重新输入</span>
+                JOptionPane.showMessageDialog(<span style="color: #0000ff;">this</span>, "输入不合法，请重新输入！"<span style="color: #000000;">);
+            }
+        }</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.tools.transmit;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.BufferedReader;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.InputStreamReader;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.ObjectOutputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.net.Socket;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Server {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注册</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> String Register(User user){
+        Socket socket </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        ObjectOutputStream out </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        BufferedReader in </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            socket </span>= <span style="color: #0000ff;">new</span> Socket("localhost", 8000<span style="color: #000000;">);
+            out </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ObjectOutputStream(socket.getOutputStream());
+            in </span>= <span style="color: #0000ff;">new</span> BufferedReader(<span style="color: #0000ff;">new</span><span style="color: #000000;"> InputStreamReader(socket.getInputStream()));
+
+            out.writeObject(user);
+            out.flush();
+
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> in.readLine();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> "连接服务器失败"<span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+               socket.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                out.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                in.close();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;后续：</p>
+<p>1、发现一个bug，貌似是由于catch里面不能有return造成的。。。</p>

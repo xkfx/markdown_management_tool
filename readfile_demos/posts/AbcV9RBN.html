@@ -1,0 +1,30 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖雪峰的官方网站</a></p>
+<p>1、关键字参数</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span> person(**<span style="color: #000000;">kw):
+    </span><span style="color: #0000ff;">print</span>(kw)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; person(name=<span style="color: #800000;">'</span><span style="color: #800000;">migo</span><span style="color: #800000;">'</span>, city=<span style="color: #800000;">'</span><span style="color: #800000;">beijing</span><span style="color: #800000;">'</span>, age=<span style="color: #800000;">'</span><span style="color: #800000;">18</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+{</span><span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">migo</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">city</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">beijing</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">18</span><span style="color: #800000;">'</span>}</pre>
+</div>
+<p><span style="background-color: #ffff00;">关键字参数有什么用？</span>它可以扩展函数的功能。比如，在<code>person</code>函数里，我们保证能接收到<code>name</code>和<code>age</code>这两个参数，但是，如果调用者愿意提供更多的参数，我们也能收到。试想你正在做一个用户注册的功能，除了用户名和年龄是必填项外，其他都是可选项，利用关键字参数来定义这个函数就能满足注册的需求。</p>
+<p><span style="background-color: #ffff00;">实质 </span>传入一个dict</p>
+<pre><code class="python"><span class="prompt">&gt;&gt;&gt; extra = {<span class="string">'city': <span class="string">'Beijing', <span class="string">'job': <span class="string">'Engineer'}
+<span class="prompt">&gt;&gt;&gt; person(<span class="string">'Jack', <span class="number">24, **extra)
+name: Jack age: <span class="number">24 other: {<span class="string">'city': <span class="string">'Beijing', <span class="string">'job': <span class="string">'Engineer'}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p><code>**extra</code>表示把<code>extra</code>这个dict的所有key-value用关键字参数传入到函数的<code>**kw</code>参数，<code>kw</code>将获得一个dict，注意<code>kw</code>获得的dict是<code>extra</code>的一份拷贝，对<code>kw</code>的改动不会影响到函数外的<code>extra</code>。</p>
+<p>如果要<span style="background-color: #ffff00;">限制关键字参数的名字</span>，就可以用命名关键字参数，例如，只接收<code>city</code>和<code>job</code>作为关键字参数。这种方式定义的函数如下：</p>
+<pre><code class="python"><span class="function"><span class="keyword">def <span class="title">person<span class="params">(name, age, *, city, job):
+    print(name, age, city, job)
+</span></span></span></span></code></pre>
+<p>和关键字参数<code>**kw</code>不同，命名关键字参数需要一个特殊分隔符<code>*</code>，<code>*</code>后面的参数被视为命名关键字参数。</p>
+<p>使用命名关键字参数时，要特别注意，如果没有可变参数，就必须加一个<code>*</code>作为特殊分隔符。如果缺少<code>*</code>，Python解释器将无法识别<span style="background-color: #ffff00;">位置参数</span>和命名关键字参数：</p>
+<pre><code class="python"><span class="function"><span class="keyword">def <span class="title">person<span class="params">(name, age, city, job):
+    <span class="comment"># 缺少 *，city和job被视为位置参数
+    <span class="keyword">pass</span></span></span></span></span></span></code></pre>
+<p>2、参数组合</p>
+<p>在Python中定义函数，可以用必选参数、默认参数、可变参数、关键字参数和命名关键字参数，这5种参数都可以组合使用。但是请注意，<span style="background-color: #ffff00;">参数定义的顺序必须是</span>：必选参数、默认参数、可变参数、命名关键字参数和关键字参数</p>
+<p>&nbsp;</p>
+<p>3、python中的foreach：for x in ...</p>

@@ -1,0 +1,289 @@
+<p><a href="#a1">文件读写</a></p>
+<p><a href="#a2">StringIO和BytesIO</a></p>
+<p><a href="#a3">操作文件和目录</a></p>
+<p><a href="#a4">序列化</a></p>
+<p><strong>学习<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431928972981094a382e5584413fa040b46d46cce48e000" target="_blank">廖老师的py官网</a>的笔记</strong></p>
+<p>&nbsp;</p>
+<p>1、stream的概念。数据交换通常需要建立两根&ldquo;水管&rdquo;。</p>
+<p>&nbsp;</p>
+<p>2、同步IO和异步IO。异步性能高，但是编程模型复杂。</p>
+<p>&nbsp;</p>
+<p>3、操作IO的功能是操作系统提供的！不论是Java还是Pyton都只是将低级接口封装起来供开发者使用。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><a name="a1"></a>【文件读写】</span></p>
+<p><span style="color: #ff0000;"><strong><span style="text-decoration: underline;">读文件</span></strong></span></p>
+<p>1、简单的</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; f = open(<span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> f.read()
+</span><span style="color: #800000;">'</span><span style="color: #800000;">我想你最近一定很忙。</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt;</pre>
+</div>
+<p>但是要记得关掉（文件对象会占操作系统的资源）</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; f.close()</pre>
+</div>
+<p>但是有时候读文件可能会抛出错误，例如：文件不存在。为了保证最后一定会把文件关掉，必须使用一定会执行的finally语句。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">try</span><span style="color: #000000;">:
+    f </span>= open(<span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(f.read())
+</span><span style="color: #0000ff;">finally</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> f:
+        f.close()</span></pre>
+</div>
+<p>有一种等价写法：</p>
+<div class="cnblogs_code">
+<pre>with open(<span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+    </span><span style="color: #0000ff;">print</span>(f.read())</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、逐行读取。</p>
+<div class="cnblogs_code">
+<pre>with open(<span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+    </span><span style="color: #0000ff;">for</span> line <span style="color: #0000ff;">in</span><span style="color: #000000;"> f.readlines():
+        </span><span style="color: #0000ff;">print</span>(line.strip()) <span style="color: #008000;">#</span><span style="color: #008000;">print自带换行的效果，这里的strip把'\n'去掉。</span></pre>
+</div>
+<p>&nbsp;</p>
+<p id="file-like-object"><strong><span style="text-decoration: underline; color: #ff0000;">file-like Object</span></strong>：有read方法的对象。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong><span style="color: #ff0000; text-decoration: underline;">读取二进制：</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> read byte</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 默认情况下都是读取文本文件</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 如果要读取图片等文件</span>
+with open(<span style="color: #800000;">'</span><span style="color: #800000;">a.png</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rb</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+    </span><span style="color: #0000ff;">print</span>(f.read())</pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170409133349035-790414634.png" alt="" width="429" height="280" /></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong><span style="color: #ff0000; text-decoration: underline;">读取非UTF-8编码的文件：</span></strong></span></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170409133730332-1843518339.png" alt="" /></p>
+<p>errrors参数表示遇到编码错误直接忽略。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline; color: #ff0000;"><strong>写文件</strong></span></p>
+<p>类比读文件就可以了。</p>
+<p>简单的例子</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; with open(<span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">w</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+...     f.write(</span><span style="color: #800000;">'</span><span style="color: #800000;">所以你只要看前三个字就好</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+...
+</span>12
+&gt;&gt;&gt; with open(<span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">w</span><span style="color: #800000;">'</span>, errors=<span style="color: #800000;">'</span><span style="color: #800000;">ignore</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+...     f.write(</span><span style="color: #800000;">'</span><span style="color: #800000;">所以你只要看前三个字就好</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+...
+</span>12</pre>
+</div>
+<p>不知道为什么会有返回值。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;"><strong><a name="a2"></a>【StringIO和BytesIO】</strong></span></p>
+<p>在内存中读写。</p>
+<p><strong><span style="text-decoration: underline;">StringIO</span></strong></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> io <span style="color: #0000ff;">import</span><span style="color: #000000;"> StringIO
+</span>&gt;&gt;&gt; f =<span style="color: #000000;"> StringIO()
+</span>&gt;&gt;&gt; f.write(<span style="color: #800000;">'</span><span style="color: #800000;">床前明月光</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>5
+&gt;&gt;&gt; f.write(<span style="color: #800000;">'</span><span style="color: #800000;"> 疑是地上霜</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>6
+&gt;&gt;&gt;<span style="color: #000000;"> f.getvalue()
+</span><span style="color: #800000;">'</span><span style="color: #800000;">床前明月光 疑是地上霜</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>可以理解为在内存中的一个&ldquo;文件&rdquo;，因为操作StringIO和操作file没有太大区别：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; f = StringIO(<span style="color: #800000;">'</span><span style="color: #800000;">i\nmiss\nyou!</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt; <span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+...     s </span>= f.readline() <span style="color: #008000;">#</span><span style="color: #008000;"> 读取掉一行</span>
+...     <span style="color: #0000ff;">if</span> s == <span style="color: #800000;">''</span>: <span style="color: #008000;">#</span><span style="color: #008000;"> 如果已经读完</span>
+...             <span style="color: #0000ff;">break</span><span style="color: #000000;">
+...     </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(s.strip())
+...
+i
+miss
+you!</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong>BytesIO</strong></span></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> io <span style="color: #0000ff;">import</span><span style="color: #000000;"> BytesIO
+</span>&gt;&gt;&gt; f = BytesIO(<span style="color: #800000;">'</span><span style="color: #800000;">abc123</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+TypeError: a bytes</span>-like object <span style="color: #0000ff;">is</span> required, <span style="color: #0000ff;">not</span> <span style="color: #800000;">'</span><span style="color: #800000;">str</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; f = BytesIO(b<span style="color: #800000;">'</span><span style="color: #800000;">abc123</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> f.read()
+b</span><span style="color: #800000;">'</span><span style="color: #800000;">abc123</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;"><a name="a3"></a>【操作文件和目录】</span></strong></p>
+<p>os模板是操作系统相关的。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span>&gt;&gt;&gt;<span style="color: #000000;"> os.name
+</span><span style="color: #800000;">'</span><span style="color: #800000;">nt</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">环境变量</span></strong></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> os.environ
+environ({</span><span style="color: #800000;">'</span><span style="color: #800000;">SYSTEMDRIVE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">ALLUSERSPROFILE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\ProgramData</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PUBLIC</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\Public</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">LOCALAPPDATA</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz\\AppData\\Local</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">USERDOMAIN</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">LAPTOP-QGECNCGO</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">SYSTEMROOT</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\WINDOWS</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PSMODULEPATH</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">TMP</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz\\AppData\\Local\\Temp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">COMSPEC</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\WINDOWS\\system32\\cmd.exe</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">NUMBER_OF_PROCESSORS</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">4</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROCESSOR_IDENTIFIER</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">Intel64 Family 6 Model 94 Stepping 3, GenuineIntel</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PATH</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\ProgramData\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\Intel\\iCLS Client\\;C:\\Program Files\\Intel\\iCLS Client\\;C:\\windows\\system32;C:\\windows;C:\\windows\\System32\\Wbem;C:\\windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\Intel\\WiFi\\bin\\;C:\\Program Files\\Common Files\\Intel\\WirelessCommon\\;C:\\Program Files\\MySQL\\MySQL Server 5.5\\bin;C:\\maven\\apache-maven-3.3.9\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\MinGW\\bin;C:\\Program Files\\Java\\jdk1.8.0_101\\bin;C:\\Users\\mdzz\\AppData\\Local\\Programs\\Python\\Python35\\Scripts\\;C:\\Users\\mdzz\\AppData\\Local\\Programs\\Python\\Python35\\;C:\\Users\\mdzz\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\mdzz\\AppData\\Roaming\\npm;C:\\Users\\mdzz\\AppData\\Local\\atom\\bin</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">LOGONSERVER</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">\\\\LAPTOP-QGECNCGO</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">MOZ_PLUGIN_PATH</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files (x86)\\Foxit Software\\Foxit Reader\\plugins\\</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROGRAMFILES</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">ONLINESERVICES</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">Online Services</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">USERNAME</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">mdzz</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROCESSOR_LEVEL</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">6</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROMPT</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">$P$G</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">HOMEPATH</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">\\Users\\mdzz</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PATHEXT</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROGRAMFILES(X86)</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files (x86)</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">COMPUTERNAME</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">LAPTOP-QGECNCGO</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">WINDIR</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\WINDOWS</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">ONEDRIVE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz\\OneDrive</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">USERDOMAIN_ROAMINGPROFILE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">LAPTOP-QGECNCGO</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">COMMONPROGRAMFILES</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files\\Common Files</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">MAVEN_HOME</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\maven\\apache-maven-3.3.9</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROGRAMW6432</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">TEMP</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz\\AppData\\Local\\Temp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">VS140COMNTOOLS</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\Tools\\</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">JAVA_HOME</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files\\Java\\jdk1.8.0_101</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROGRAMDATA</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\ProgramData</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">COMMONPROGRAMW6432</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files\\Common Files</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">CLASSPATH</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">.;C:\\Program Files\\Java\\jdk1.8.0_101lib;C:\\Program Files\\Java\\jdk1.8.0_101lib\\tools.jar</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">USERPROFILE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">REGIONCODE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">APJ</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PLATFORMCODE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">KV</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">HOMEDRIVE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROCESSOR_REVISION</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">5e03</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">APPDATA</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Users\\mdzz\\AppData\\Roaming</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">OS</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">Windows_NT</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">PROCESSOR_ARCHITECTURE</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">AMD64</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">COMMONPROGRAMFILES(X86)</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">C:\\Program Files (x86)\\Common Files</span><span style="color: #800000;">'</span>})</pre>
+</div>
+<p>&nbsp;获取某个具体环境变量的值：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; os.environ.get(<span style="color: #800000;">'</span><span style="color: #800000;">PATH</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">操作文件和目录</span></strong></p>
+<p>操作文件和目录的函数一部分放在<code>os</code>模块中，一部分放在<code>os.path</code>模块中。</p>
+<p>操作文件和目录基本可以映射为在命令行下操作文件和目录：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span>&gt;&gt;&gt; os.path.abspath(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #800000;">'</span><span style="color: #800000;">D:\\labs</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>创建目录：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; os.path.join(<span style="color: #800000;">'</span><span style="color: #800000;">D:\\labs</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">TestDir</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 这个时候没有真的创建</span>
+<span style="color: #800000;">'</span><span style="color: #800000;">D:\\labs\\TestDir</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; os.mkdir(<span style="color: #800000;">'</span><span style="color: #800000;">D:\\labs\\TestDir</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 真的创建了</span>
+&gt;&gt;&gt; os.rmdir(<span style="color: #800000;">'</span><span style="color: #800000;">D:\\labs\\TestDir</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 删掉！</span></pre>
+</div>
+<p><code>之所以使用<span style="color: #ff0000;"><strong>os.path.join()</strong></span></code>函数，是因为在不同操作系统上文件分隔符是不同的，这样可以正确处理。</p>
+<p>同样，要拆分文件路径，也需要使用特殊的函数<strong><span style="color: #ff0000;">os.path.split(),os.path.splitext()</span></strong>可以直接获得文件拓展名。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 对文件重命名:</span>
+&gt;&gt;&gt; os.rename(<span style="color: #800000;">'</span><span style="color: #800000;">test.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">test.py</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 删掉文件:</span>
+&gt;&gt;&gt; os.remove(<span style="color: #800000;">'</span><span style="color: #800000;">test.py</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000;">列</span>出当前路径下的所有文件：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; [x <span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span> os.listdir(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">)]
+[</span><span style="color: #800000;">'</span><span style="color: #800000;">2.cpp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">4.cpp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">5.cpp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">a.exe</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">a.png</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">ask.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">c++task</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">cpppojects3月六日</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">cpppojects3月 六日.rar</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">Dada</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">Employee</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">input.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">javaDocTest</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">MyTest</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">MyTest.class</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">MyTest.java</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">output.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">pictest</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">picture1.jpg</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">prog1.cpp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">Sales_data.h</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">separatecp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">student.sql</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">sum_test.py</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">sum_test.py.bak</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">test.py</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">test.py.bak</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__pycache__</span><span style="color: #800000;">'</span>]</pre>
+</div>
+<p>筛选出文件夹：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; [x <span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span> os.listdir(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>) <span style="color: #0000ff;">if</span><span style="color: #000000;"> os.path.isdir(x)]
+[</span><span style="color: #800000;">'</span><span style="color: #800000;">c++task</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">cpppojects3月六日</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">Dada</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">Employee</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">javaDocTest</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">MyTest</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">pictest</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">separatecp</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">__pycache__</span><span style="color: #800000;">'</span>]</pre>
+</div>
+<p>筛选出所有py文件：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; [x <span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span> os.listdir(<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>) <strong><span style="color: #0000ff;">if</span> os.path.isfile(x) <span style="color: #0000ff;">and</span> os.path.splitext(x)[1]==<span style="color: #800000;">'</span><span style="color: #800000;">.py</span><span style="color: #800000;">'</span></strong><span style="color: #000000;">]
+[</span><span style="color: #800000;">'</span><span style="color: #800000;">sum_test.py</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">test.py</span><span style="color: #800000;">'</span>]</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="color: #ff00ff;"><a name="a4"></a>【序列化】</span></strong></p>
+<p><strong><span style="color: #ff0000;">序列化</span></strong>:变量从内存中变成可存储或传输的过程。</p>
+<p>被叫做pickling、serialization、marshalling、flattening等。</p>
+<p>把变量内容从序列化的对象重新读到内存里称之为<span style="color: #ff0000;"><strong>反序列化</strong></span>，即unpickling。</p>
+<p>&nbsp;Pickle的问题和所有其他编程语言特有的序列化问题一样，就是它只能用于Python，并且可能不同版本的Python彼此都不兼容，因此，只能用Pickle保存那些不重要的数据.</p>
+<p>尝试：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> import pickle
+</span>&gt;&gt;&gt; d = dict(name = <span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, age = <span style="color: #800080;">19</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> pickle.dumps(d)
+b</span><span style="color: #800000;">'</span><span style="color: #800000;">\x80\x03}q\x00(X\x04\x00\x00\x00nameq\x01X\x04\x00\x00\x00xkfxq\x02X\x03\x00\x00\x00ageq\x03K\x13u.</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt; f = open(<span style="color: #800000;">'</span><span style="color: #800000;">dump.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">wb</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> pickle.dump(d, f)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> f.close()
+</span>&gt;&gt;&gt; f= open(<span style="color: #800000;">'</span><span style="color: #800000;">dump.txt</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rb</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span>&gt;&gt;&gt; d =<span style="color: #000000;">  pickle.load(f)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> f.close()
+</span>&gt;&gt;&gt;<span style="color: #000000;"> d
+{</span><span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span>: <span style="color: #800080;">19</span>}</pre>
+</div>
+<p>&nbsp;</p>
+<p><a href="http://baike.baidu.com/link?url=L2w6QloYF-sTjlmw4SskrrJOq144u1sNLEZO3Xp298Vo2mVbI_s7QVS-wJ3-5mZZC3e6NVrMlZdJg8zTGz-t3K" target="_blank"><strong>JSON</strong></a></p>
+<p>JSON是什么？</p>
+<p><span style="color: #ff0000;"><strong>-----JSON 是 JS 对象的字符串表示法，它使用文本表示一个 JS 对象的信息，本质是一个字符串。</strong></span></p>
+<p>JSON是干嘛的？</p>
+<p>为什么是JSON？</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170411201941329-342019160.png" alt="" width="621" height="180" /></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;"><strong>JSON与Python</strong></span></p>
+<p>要在不同的语言中传递数据，就必须把数据序列化成标准格式。例如在Python和Java中交互数据。</p>
+<p>JSON比XML好一些。</p>
+<p>JSON表示的对象就是标准的JavaScript语言的对象.</p>
+<p>对应关系：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170411194642313-917689857.png" alt="" width="516" height="275" /></p>
+<p>Python内置的<code>json</code>模块提供了非常完善的Python对象到JSON格式的转换。JSON标准规定JSON编码是UTF-8。</p>
+<p>尝试：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">import</span><span style="color: #000000;"> json
+</span>&gt;&gt;&gt; i = dict(name = <span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, age = 19<span style="color: #000000;">)
+</span>&gt;&gt;&gt;<span style="color: #000000;"> json.dumps(d)
+</span><span style="color: #800000;">'</span><span style="color: #800000;">{"name": "xkfx", "age": 19}</span><span style="color: #800000;">'</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 这个str是标准的JSON</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; str = <span style="color: #800000;">'</span><span style="color: #800000;">{"name": "xkfx", "age": 19}</span><span style="color: #800000;">'</span>
+&gt;&gt;&gt;<span style="color: #000000;"> json.loads(str)
+{</span><span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span>: 19}</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="text-decoration: underline;">对象的dumps()和loads()。</span></strong></p>
+<p>&nbsp;1、尝试直接dumps()一个对象：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> json
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Student(object):
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, name, age, score):
+        self.name </span>=<span style="color: #000000;"> name
+        self.age </span>=<span style="color: #000000;"> age
+        self.score </span>=<span style="color: #000000;"> score
+
+
+s </span>= Student(<span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, 19, 20<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(json.dumps(s))</pre>
+</div>
+<p>抛出错误：</p>
+<div class="cnblogs_code">
+<pre>s = Student(<span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, 19, 20<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(json.dumps(s))</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、失败的原因是dumps()不懂得如何将s引用的对象序列化。这样的话，只需要告诉dumps如何将对象序列化就可以了。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> student2dict(std):
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+        </span><span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span><span style="color: #000000;"> : std.name,
+        </span><span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span><span style="color: #000000;"> : std.age,
+        </span><span style="color: #800000;">'</span><span style="color: #800000;">score</span><span style="color: #800000;">'</span><span style="color: #000000;"> : std.score
+    }
+
+s </span>= Student(<span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>, 19, 20<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(json.dumps(s, default=student2dict))</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$ python test.py
+{</span><span style="color: #800000;">"</span><span style="color: #800000;">age</span><span style="color: #800000;">"</span>: 19, <span style="color: #800000;">"</span><span style="color: #800000;">score</span><span style="color: #800000;">"</span>: 20, <span style="color: #800000;">"</span><span style="color: #800000;">name</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">"</span>}</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、但是，如果对于每个类都要写对应的序列化方法也未免太麻烦了。所以有一种偷懒的方法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">print</span>(json.dumps(s, default=<span style="color: #0000ff;">lambda</span> obj: obj.<span style="color: #800080;">__dict__</span>))</pre>
+</div>
+<p>每个对象自带有dict，通过.dict访问</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">print</span>(s.<span style="color: #800080;">__dict__</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(json.dumps(s, default=<span style="color: #0000ff;">lambda</span> obj: obj.<span style="color: #800080;">__dict__</span>))</pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">python test.py
+{</span><span style="color: #800000;">'</span><span style="color: #800000;">score</span><span style="color: #800000;">'</span>: 20, <span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span>: 19, <span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">'</span>} <span style="color: #008000;">#</span><span style="color: #008000;"> 原始dict</span>
+{<span style="color: #800000;">"</span><span style="color: #800000;">score</span><span style="color: #800000;">"</span>: 20, <span style="color: #800000;">"</span><span style="color: #800000;">age</span><span style="color: #800000;">"</span>: 19, <span style="color: #800000;">"</span><span style="color: #800000;">name</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">"</span>} <span style="color: #008000;">#</span><span style="color: #008000;"> 序列化成JSON</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、反序列化也是同样的道理，loads不知道如何反序列化，必须传入一个方法告诉它怎么做，不同的是反序列化无法偷懒！：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> dict2student(d):
+    </span><span style="color: #0000ff;">return</span> Student(d[<span style="color: #800000;">'</span><span style="color: #800000;">name</span><span style="color: #800000;">'</span>], d[<span style="color: #800000;">'</span><span style="color: #800000;">age</span><span style="color: #800000;">'</span>], d[<span style="color: #800000;">'</span><span style="color: #800000;">score</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+
+json_data </span>= <span style="color: #800000;">'</span><span style="color: #800000;">{"age": 19, "score": 20, "name": "xkfx"}</span><span style="color: #800000;">'</span>
+<span style="color: #0000ff;">print</span>(json.loads(json_data, object_hook=dict2student))</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&lt;<span style="color: #800080;">__main__</span>.Student object at 0x0000022226F0B630&gt;</pre>
+</div>
+<p>&nbsp;</p>

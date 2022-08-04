@@ -1,0 +1,78 @@
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201701/1042431-20170112222015447-73297203.png" alt="" /></p>
+<p>&nbsp;</p>
+<p class="unholdable">&nbsp;</p>
+<p class="unholdable">其实是试验一下markdown。。。</p>
+<p class="unholdable">原：</p>
+<p><span class="md-line md-end-block md-focus">只有一个抽象方法的接口称为<strong>函数式接口</strong>(<em>functional interface</em>)。</span></p>
+<p><span class="md-line md-end-block">当需要实现了这种接口的类的<strong>对象</strong>的时候，就可以提供一个<strong>lambda表达式</strong>。</span></p>
+<p><span class="md-line md-end-block"><strong>lambda表达式</strong>的两种简单<strong>运用形式</strong>：</span></p>
+<p><span class="md-line md-end-block">1、</span></p>
+<div class="CodeMirror cm-s-inner CodeMirror-wrap  " lang="java">
+<div>&nbsp;</div>
+<div class="CodeMirror-scroll">
+<div class="CodeMirror-sizer">
+<div class="CodeMirror-lines">
+<div class="CodeMirror-measure">&nbsp;</div>
+<div class="CodeMirror-measure">&nbsp;</div>
+<div>&nbsp;</div>
+<div class="CodeMirror-code">
+<div class="CodeMirror-activeline">
+<div class="CodeMirror-activeline-background CodeMirror-linebackground">&nbsp;</div>
+<pre><span class="cm-keyword">public <span class="cm-keyword">class <span class="cm-def">LambdaTest{</span></span></span></pre>
+</div>
+<pre> &nbsp;  <span class="cm-keyword">public <span class="cm-keyword">static <span class="cm-variable-3">void <span class="cm-variable">main(<span class="cm-variable-3">String[] <span class="cm-variable">args){</span></span></span></span></span></span></pre>
+<pre>​</pre>
+<div>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">Timer <span class="cm-variable">t <span class="cm-operator">= <span class="cm-keyword">new <span class="cm-variable">Timer(<span class="cm-number">1000 , <span class="cm-variable">event <span class="cm-operator">-&gt; <span class="cm-variable">System.<span class="cm-variable">out.<span class="cm-variable">println(<span class="cm-string">"The time is " <span class="cm-operator">+ <span class="cm-keyword">new <span class="cm-variable">Date()));</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">t.<span class="cm-variable">start();</span></span></pre>
+<pre>​</pre>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">JOptionPane.<span class="cm-variable">showMessageDialog(<span class="cm-atom">null , <span class="cm-string">"Quit program?");</span></span></span></span></pre>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">System.<span class="cm-variable">exit(<span class="cm-number">0);</span></span></span></pre>
+<pre> &nbsp;  }</pre>
+<div>
+<pre>}</pre>
+</div>
+</div>
+</div>
+</div>
+<div>&nbsp;</div>
+</div>
+</div>
+<p><span class="md-line md-end-block">2、</span></p>
+<div class="CodeMirror cm-s-inner CodeMirror-wrap     " lang="java">
+<div>&nbsp;</div>
+<div class="CodeMirror-scroll">
+<div class="CodeMirror-sizer">
+<div class="CodeMirror-lines">
+<div class="CodeMirror-measure">&nbsp;</div>
+<div class="CodeMirror-measure">&nbsp;</div>
+<div>&nbsp;</div>
+<div class="CodeMirror-code">
+<div class="CodeMirror-activeline">
+<div class="CodeMirror-activeline-background CodeMirror-linebackground">&nbsp;</div>
+<pre><span class="cm-keyword">public <span class="cm-keyword">class <span class="cm-def">LambdaTest{</span></span></span></pre>
+</div>
+<pre> &nbsp;  <span class="cm-keyword">public <span class="cm-keyword">static <span class="cm-variable-3">void <span class="cm-variable">main(<span class="cm-variable-3">String[] <span class="cm-variable">args){</span></span></span></span></span></span></pre>
+<pre>​</pre>
+<div>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">ActionListener <span class="cm-variable">listener <span class="cm-operator">= <span class="cm-variable">event <span class="cm-operator">-&gt; <span class="cm-variable">System.<span class="cm-variable">out.<span class="cm-variable">println(<span class="cm-string">"The time is " <span class="cm-operator">+ <span class="cm-keyword">new <span class="cm-variable">Date());</span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<pre>​</pre>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">Timer <span class="cm-variable">t <span class="cm-operator">= <span class="cm-keyword">new <span class="cm-variable">Timer(<span class="cm-number">1000 , <span class="cm-variable">listener);</span></span></span></span></span></span></span></pre>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">t.<span class="cm-variable">start();</span></span></pre>
+<pre>​</pre>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">JOptionPane.<span class="cm-variable">showMessageDialog(<span class="cm-atom">null , <span class="cm-string">"Quit program?");</span></span></span></span></pre>
+<div>
+<pre> &nbsp; &nbsp; &nbsp;  <span class="cm-variable">System.<span class="cm-variable">exit(<span class="cm-number">0);</span></span></span></pre>
+</div>
+<pre> &nbsp;  }</pre>
+<div>
+<pre>}</pre>
+</div>
+</div>
+</div>
+</div>
+<div>&nbsp;</div>
+</div>
+</div>

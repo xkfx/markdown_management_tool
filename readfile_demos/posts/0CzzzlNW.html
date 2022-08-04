@@ -1,0 +1,73 @@
+<h2><span class="fontstyle0">题</span></h2>
+<p><span class="fontstyle0">例题3-1 逆序输出</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> maxn 105
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> a[maxn];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> x, n = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;x) == <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        a[n</span>++] =<span style="color: #000000;"> x;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> n++是事后增加，所以这里a[n]里没东西</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = n - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">1</span>; --<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, a[i]);
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, a[<span style="color: #800080;">0</span><span style="color: #000000;">]);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例题3-2&nbsp;<span class="fontstyle0">开灯问题<br /></span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;<span style="color: #000000;">
+#include</span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #0000ff;">#define</span> maxn 1010
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> a[maxn];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> n, k, first = <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 为了避免输出
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 多余空格，设置了一个标志变量first，可
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 以表示当前要输出的变量是否为第一个。 第一个变
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 量前不应有空格，但其他变量都有。</span>
+<span style="color: #000000;">    
+    memset(a, </span><span style="color: #800080;">0</span>, <span style="color: #0000ff;">sizeof</span>(a)); <span style="color: #008000;">//</span><span style="color: #008000;"> 数组a清零，它也在string.h中定义</span>
+<span style="color: #000000;">    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d%d</span><span style="color: #800000;">"</span>, &amp;n, &amp;k); <span style="color: #008000;">//</span><span style="color: #008000;"> 有n盏灯，k个人 </span>
+    
+    <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= k; ++i) { <span style="color: #008000;">//</span><span style="color: #008000;"> 每个人轮流操作 </span>
+        <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">1</span>; j &lt;= n; ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">if</span>(j % i == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                a[j] </span>= !a[j]; <span style="color: #008000;">//</span><span style="color: #008000;"> 实测!1得0以及!0得1 </span>
+<span style="color: #000000;">            }
+        }
+    }
+    
+    
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i &lt;= n; i++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (a[i]) { 
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (first) {
+                first </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;                   
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                printf(</span><span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">);    
+            } 
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span><span style="color: #000000;">, i);
+        }
+    }
+    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="http://bbs.bccn.net/thread-445608-1-1.html">为什么大的数组要定义在main函数外？ - C语言论坛 - 编程论坛</a></p>
+<p>[2]&nbsp;<a href="https://baike.baidu.com/item/scanf/10773316?fr=aladdin">scanf（计算机语言函数）_百度百科</a></p>
+<p>[3]&nbsp;<a href="https://www.runoob.com/cprogramming/c-function-scanf.html">C 库函数 &ndash; scanf() | 菜鸟教程</a></p>
+<p><span class="fontstyle0">&nbsp;</span></p>
+<p>&nbsp;</p>

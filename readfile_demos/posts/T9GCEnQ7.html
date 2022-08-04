@@ -1,0 +1,207 @@
+<h3>【 @ComponentScan】</h3>
+<p>纠正：可以成功&nbsp;Autowired 的原因是我在另外一个 config 文件中扫描了根包，这会顺带扫描所有该包的子包</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170716155428066-804265292.png" alt="" /></p>
+<p>还有，，上面的写法容易出错，建议这样写，</p>
+<div class="cnblogs_code">
+<pre>@ComponentScan(basePackageClasses={Spittle.<span style="color: #0000ff;">class</span>},</pre>
+</div>
+<p>效果上是完全等价的，只不过不再需要自己写字符串了， Spittle 是根包下的类。</p>
+<p>&nbsp;----------------------------------------------------------------------------------------------------------------------------------------</p>
+<p>原文（错）：发现一件奇怪的事情，我明明没有指定扫描那个包，却能 Autowired 那个包中的类的对象不出现异常。</p>
+<p>按理来说，要自动装配某一个类的对象，<strong>首先，需要在那个类上标注&nbsp;@Component 或者是&nbsp;@Controller ；其次，需要扫描那个类所在的那个包</strong>。我的情况是条件二并不满足却获得了那个对象。我尝试给那个类去掉&nbsp;@Component 注释，结果报错了，所以并不是条件一有问题，明显是由于<span style="text-decoration: line-through;"> Spring 自主扫描了我没有显式指定的那个包，并为那个带有组件声明的类创建了对象。</span></p>
+<p>更加显式地指定要扫描的那个包：</p>
+<div class="cnblogs_code">
+<pre>@ComponentScan(basePackageClasses={HomeController.<span style="color: #0000ff;">class})</span></pre>
+</div>
+<p>结果仍然是不报错地获得了我没有显式指定扫描的那个包的类的对象，实验之后发现，成功自动装配的条件应该是：</p>
+<ol>
+<li><span style="text-decoration: line-through;">在类的上面有相应的组件声明，例如 @Component 或者是&nbsp;@Controller ，或者其它等价注释。</span></li>
+<li><span style="text-decoration: line-through;">类所在的包被直接显式指定扫描，或者该类被直接显示指定扫描的那个（些）包中的类所 import</span></li>
+</ol>
+<p>总之不管怎样，作为组件的声明都是必须的。</p>
+<h3>&nbsp;【 mock Spring MVC 】</h3>
+<p>基于使用概率导入大量的依赖包有个缺点就是一旦依赖包出现问题很难锁定问题到底出在哪里！！！</p>
+<p>这些问题通常是由于依赖包的版本造成的 ( ╯□╰ ) ， 因此对于依赖包的导入务必保证不必要不导入，并添加一些适当的注释<a href="#xxx" target="_blank">。</a></p>
+<p>最好是能够清楚地了解各个包的用途、来源，这样也方便查相应的文档：</p>
+<p><strong><a name="xxx"></a>【pom.xml 模板】</strong></p>
+<p>标记为红色的是进行 mock 测试可能用到的包</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">project </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0"</span><span style="color: #ff0000;"> xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;"> xsi:schemaLocation</span><span style="color: #0000ff;">="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>4.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">modelVersion</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>spittr<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spittr<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>0.0.1-SNAPSHOT<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">packaging</span><span style="color: #0000ff;">&gt;</span>war<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">packaging</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">build</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sourceDirectory</span><span style="color: #0000ff;">&gt;</span>src<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sourceDirectory</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugins</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>maven-compiler-plugin<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>3.5.1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">source</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">source</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">target</span><span style="color: #0000ff;">&gt;</span>1.8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">target</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>maven-war-plugin<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>3.0.0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">warSourceDirectory</span><span style="color: #0000ff;">&gt;</span>WebContent<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">warSourceDirectory</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">configuration</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugin</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">plugins</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">build</span><span style="color: #0000ff;">&gt;</span>
+  
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> spring-web 包括 web 、 bean 、aop 、 context 、 core 等 spring-webmvc 的子集</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">     &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+        &lt;version&gt;3.2.9.RELEASE&lt;/version&gt;
+    &lt;/dependency&gt; </span><span style="color: #008000;">--&gt;</span>
+    
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> jSTL taglibs</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.taglibs<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>taglibs-standard-spec<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.5<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.apache.taglibs<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>taglibs-standard-impl<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>1.2.5<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> spring-web 包括 web 、 bean 、aop 、 context 、 core、 webmvc 等 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.springframework<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>spring-webmvc<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>4.3.7.RELEASE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">version</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+    
+<span style="color: #ff0000;"><strong>    &lt;!-- spring-test 包括 test 等，含 mock  --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+        &lt;version&gt;4.3.2.RELEASE&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;    
+
+    &lt;!-- mock 相关的类库 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.mockito&lt;/groupId&gt;
+        &lt;artifactId&gt;mockito-all&lt;/artifactId&gt;
+        &lt;version&gt;1.9.5&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- hamcrest 相关的类库 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.hamcrest&lt;/groupId&gt;
+        &lt;artifactId&gt;hamcrest-all&lt;/artifactId&gt;
+        &lt;version&gt;1.3&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;</strong></span>
+    
+<strong><span style="color: #ff0000;">    &lt;!-- junit 包括  junit 、 hamcrest --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;version&gt;4.12&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;    
+   </span> </strong>
+<span style="color: #ff0000;"><strong>    &lt;!-- commons-lang 仅一个包，包括各种各样的工具，简化 hashCode 、 Equal 代码 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+        &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+        &lt;version&gt;3.4&lt;/version&gt;
+    &lt;/dependency&gt;</strong></span>
+        
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependencies</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>【 mock Mvc】</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> spittr.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.MockMvc;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.setup.MockMvcBuilders;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 附上 API 文档地址： </span><span style="color: #008000; text-decoration: underline;">http://docs.spring.io/spring/docs/current/javadoc-api/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HomeControllerTest {
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> testHomePage() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        HomeController controller </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HomeController();
+        MockMvc mockMvc </span>=<span style="color: #000000;"> MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc.perform(MockMvcRequestBuilders.get(</span>"/")).andExpect(MockMvcResultMatchers.view().name("home"<span style="color: #000000;">));
+    }
+}</span></pre>
+</div>
+<p>可以修改为静态导入：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> spittr.web;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.MockMvc;
+</span><strong><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+</span></strong><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.setup.MockMvcBuilders;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 附上 API 文档地址： </span><span style="color: #008000; text-decoration: underline;">http://docs.spring.io/spring/docs/current/javadoc-api/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HomeControllerTest {
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> testHomePage() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        HomeController controller </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> HomeController();
+        MockMvc mockMvc </span>=<span style="color: #000000;"> MockMvcBuilders.standaloneSetup(controller).build();
+<strong>        mockMvc.perform(get(</strong></span><strong>"/")).andExpect(view().name("home"</strong><span style="color: #000000;"><strong>));</strong>
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>&nbsp;【 mock 一个接口的实现类】</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> spittr.web;
+
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.mockito.Mockito.mock;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.mockito.Mockito.when;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+</span><span style="color: #0000ff;">import</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Date;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.junit.Test;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.test.web.servlet.MockMvc;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.springframework.web.servlet.view.InternalResourceView;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> spittr.Spittle;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> spittr.data.SpittleRepository;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> SpittleControllerTest {
+    @Test
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> shouldShowRecentSpittles() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> Exception {
+        List</span>&lt;Spittle&gt; expectedSpittles = createSpittleList(20<span style="color: #000000;">);
+        SpittleRepository mockRepository </span>= mock(SpittleRepository.<span style="color: #0000ff;">class</span><span style="color: #000000;">);
+        when(mockRepository.findSpittles(Long.MAX_VALUE, </span>20<span style="color: #000000;">)).thenReturn(expectedSpittles);
+        SpittleController controller </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> SpittleController(mockRepository);
+        MockMvc mockMvc </span>= standaloneSetup(controller).setSingleView(<span style="color: #0000ff;">new</span> InternalResourceView("/WEB-INF/views/spittles.jsp"<span style="color: #000000;">)).build();
+        mockMvc.perform(get(</span>"/spittles")).andExpect(view().name("spittles")).andExpect(model().attributeExists("spittleList"<span style="color: #000000;">));
+    }
+    
+    </span><span style="color: #0000ff;">public</span> List&lt;Spittle&gt; createSpittleList(<span style="color: #0000ff;">int</span><span style="color: #000000;"> count) {
+        List</span>&lt;Spittle&gt; spittles = <span style="color: #0000ff;">new</span> ArrayList&lt;&gt;<span style="color: #000000;">();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; count; ++<span style="color: #000000;">i) {
+            spittles.add(</span><span style="color: #0000ff;">new</span> Spittle("Spittle" + i, <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date()));
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> spittles;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,115 @@
+<p>p111~p114:</p>
+<p><span style="background-color: #ffff99;">与旧代码的接口</span></p>
+<p>1、C++程序中的<strong>C风格字符串</strong>：任何出现字符串字面值的地方都可以以空字符结束的字符数组来替代。&nbsp;</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> str[] = {<span style="color: #800000;">"</span><span style="color: #800000;">Hello, world</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">string</span> s(str);</pre>
+</div>
+<p><br />2、如果程序的某处需要一个<strong>C风格字符串</strong>：利用 s.c_str()返回。</p>
+<p>示例：</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span> s = <span style="color: #800000;">"</span><span style="color: #800000;">Hello, world</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="background-color: #ccffcc;"><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">char</span> *str = s.c_str();</span>    <span style="color: #008000;">//</span><span style="color: #008000;"> 结果指针的类型是const char*
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出1</span>
+    cout &lt;&lt; str &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 改变s的值之后，str可能会失去效用，如果想一直使用返回的数组，最好将该数组拷贝一份。</span>
+    s += <span style="color: #800000;">"</span><span style="color: #800000;">, my name is jack.</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输出2</span>
+    cout &lt;&lt; str &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>输出结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201702/1042431-20170221144949195-1786048536.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>3、<strong>使用数组初始化 vector对象。</strong></p>
+<p>（用于初始化 vector对象的值可能仅是数组的一部分，可以用arr+n来表示首尾元素的地址）</p>
+<div class="cnblogs_code">
+<pre>#include&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::end;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> int_arr[] = {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ivec(begin(int_arr), end(int_arr));
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="line-height: 1.5; background-color: #ffff99;">多维数组</span></p>
+<p><span style="color: #ff0000;">1、谨记：严格来说，<strong>C++语言中没有多维数组，通常所说的多维数组其实是数组的数组</strong>。这一点，对今后理解和使用多维数组大有益处。</span></p>
+<p><br />2、对于二维数组来说，常把第一个维度称为&ldquo;行&rdquo;，第二个维度称为&ldquo;列&rdquo;。</p>
+<p>&nbsp;</p>
+<p>3、多维数组的初始化。（两种方式）<span style="line-height: 1.5;">&nbsp;</span></p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">3</span>] =<span style="color: #000000;"> {
+        {</span><span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span><span style="color: #000000;">},
+        {</span><span style="color: #800080;">4</span>, <span style="color: #800080;">5</span><span style="color: #000000;">},　　// 初始化前第二行的前两个元素
+        {</span><span style="color: #800080;">7</span>, <span style="color: #800080;">8</span>, <span style="color: #800080;">9</span><span style="color: #000000;">}
+    }</span></pre>
+</div>
+<p>当然也可以：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> ia[<span style="color: #800080;">3</span>][<span style="color: #800080;">3</span>] = {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">6</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">8</span>, <span style="color: #800080;">9</span>};</pre>
+</div>
+<p>（通常，只想初始化个别元素时使用第一种方式，其余元素会被&ldquo;默认初始化&rdquo;）。</p>
+<p>&nbsp;</p>
+<p>4、<strong>多维数组的下标引用</strong>。以int arr[10][10][10];为例，</p>
+<p>&nbsp;1）如果含有的下标运算符和数组维度一样多，</p>
+<p>例如 arr[1][2][3];表示给定类型的元素，这里是 int型。</p>
+<p>&nbsp;2）<strong>如果表达式含有的下标运算符数量比数组的维度小，则表达式的结果将是<span style="text-decoration: underline;">给定索引处的内层数组</span>，</strong></p>
+<p>例如 arr[1][2];表示：通过索引1得到一个最外层数组，它含有10个数组，通过索引2获得其中一个含有10个int的数组。</p>
+<p>&nbsp;</p>
+<p>5、多维数组的两种遍历方式：<strong>嵌套的for循环</strong>和<strong>范围for语句</strong>。</p>
+<p>（<strong>注意</strong>，在使用range for遍历多维数组的时候， auto row : ia 中的row会转变为指针类型，导致内层循环不合法，</p>
+<p>因此，即使是不改变数组的值，也应当写成 const auto &amp;row : ia，也就是说，要使用范围for语句处理多维数组，除了最内层的循环外，都要用auto &amp;）</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.41</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::end;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> int_arr[] = {<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span><span style="color: #000000;">};
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> ivec(begin(int_arr), end(int_arr));
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 3.42</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;iterator&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::begin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::end;
+#include</span>&lt;iostream&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; vector{<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">4</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> x : vector) {
+        arr[i</span>++] =<span style="color: #000000;"> x;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 测试</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> x : arr) {
+        std::cout </span>&lt;&lt; x &lt;&lt;<span style="color: #000000;"> std::endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

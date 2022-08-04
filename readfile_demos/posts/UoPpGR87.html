@@ -1,0 +1,84 @@
+<p>原址排序，且时间复杂度是O(nlgn)的一种排序算法。</p>
+<p>js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">            class HeapSort {
+                static left(i) {
+                    </span><span style="color: #0000ff;">return</span> 2 *<span style="color: #000000;"> i;
+                }
+                
+                static right(i) {
+                    </span><span style="color: #0000ff;">return</span> 2 * i + 1<span style="color: #000000;">;
+                }
+                
+                static parent(i) {
+                    </span><span style="color: #0000ff;">return</span> Math.floor(i / 2<span style="color: #000000;">);
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 递归版本</span>
+<span style="color: #000000;">                static maxHeapify(arr, i) {
+                    let l </span>=<span style="color: #000000;"> HeapSort.left(i);
+                    let r </span>=<span style="color: #000000;"> HeapSort.right(i);
+                    let largest </span>=<span style="color: #000000;"> i;
+                    </span><span style="color: #0000ff;">if</span> (l &lt; arr.length &amp;&amp; arr[l] &gt;<span style="color: #000000;"> arr[largest]) {
+                        largest </span>=<span style="color: #000000;"> l;
+                    }
+                    </span><span style="color: #0000ff;">if</span> (r &lt; arr.length &amp;&amp; arr[r] &gt;<span style="color: #000000;"> arr[largest]) {
+                        largest </span>=<span style="color: #000000;"> r;
+                    }                
+                    </span><span style="color: #0000ff;">if</span> (largest !=<span style="color: #000000;"> i) {
+                        let temp </span>=<span style="color: #000000;"> arr[i];
+                        arr[i] </span>=<span style="color: #000000;"> arr[largest];
+                        arr[largest] </span>= temp; <span style="color: #008000;">//</span><span style="color: #008000;"> 此时arr[largest]已经被置换成更小的那个</span>
+<span style="color: #000000;">                        HeapSort.maxHeapify(arr, largest);
+                    }            
+                }
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 非递归修正版本，heapSize表示改动范围仅限于arr[1:heapSize+1]</span>
+<span style="color: #000000;">                static maxHeapify2(arr, i, heapSize) {
+                    let flag </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (flag) {
+                        let l </span>=<span style="color: #000000;"> HeapSort.left(i);
+                        let r </span>=<span style="color: #000000;"> HeapSort.right(i);
+                        let largest </span>=<span style="color: #000000;"> i;
+                        </span><span style="color: #0000ff;">if</span> (l &lt;= heapSize &amp;&amp; arr[l] &gt;<span style="color: #000000;"> arr[largest]) {
+                            largest </span>=<span style="color: #000000;"> l;
+                        }
+                        </span><span style="color: #0000ff;">if</span> (r &lt;= heapSize &amp;&amp; arr[r] &gt;<span style="color: #000000;"> arr[largest]) {
+                            largest </span>=<span style="color: #000000;"> r;
+                        }                
+                        </span><span style="color: #0000ff;">if</span> (largest !=<span style="color: #000000;"> i) {
+                            let temp </span>=<span style="color: #000000;"> arr[i];
+                            arr[i] </span>=<span style="color: #000000;"> arr[largest];
+                            arr[largest] </span>= temp; <span style="color: #008000;">//</span><span style="color: #008000;"> 此时arr[largest]已经被置换成更小的那个</span>
+                            i =<span style="color: #000000;"> largest;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            flag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                        }
+                    }            
+                }
+                
+                static buildMaxHeap(arr, heapSize) {
+                    </span><span style="color: #0000ff;">for</span> (let i = Math.floor(heapSize / 2); i &gt;= 1; --<span style="color: #000000;">i) {
+                        HeapSort.maxHeapify2(arr, i, heapSize);
+                    }
+                }
+                
+                static sort(arr) {
+                    let heapSize </span>= arr.length - 1<span style="color: #000000;">;
+                    HeapSort.buildMaxHeap(arr, heapSize);
+                    </span><span style="color: #0000ff;">for</span> (let i = arr.length - 1; i &gt;= 2; --<span style="color: #000000;">i) {
+                        let temp </span>=<span style="color: #000000;"> arr[i];
+                        arr[i] </span>= arr[1<span style="color: #000000;">];
+                        arr[</span>1] =<span style="color: #000000;"> temp;        
+                        HeapSort.maxHeapify2(arr, </span>1, --<span style="color: #000000;">heapSize);
+                    }
+                }
+                
+                static run(data) {
+                    let test1 </span>= [undefined, 16, 4, 10, 14, 7, 9, 3, 2, 8, 1<span style="color: #000000;">];
+                    HeapSort.sort(test1);
+                    console.log(test1);
+                }
+            }</span></pre>
+</div>
+<p>&nbsp;</p>

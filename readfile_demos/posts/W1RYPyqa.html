@@ -1,0 +1,176 @@
+<p>饮水思源：<a class="navbar-brand" href="http://jinxuliang.com/">金老师的自学网站</a></p>
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ol>
+<li><a href="#anchor0">委托（Delegate）</a></li>
+<li><a href="#anchor1">Click事件探究</a></li>
+</ol></div>
+<h2><a name="anchor0"></a>委托（Delegate）</h2>
+<p>&ldquo;不学会委托（Delegate），等于没学.NET编程！&rdquo;</p>
+<p>例程1-委托类型变量</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 定义一个委托类型</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">int</span> MathOptDelegate(<span style="color: #0000ff;">int</span> value1, <span style="color: #0000ff;">int</span><span style="color: #000000;"> value2);
+
+        </span></strong><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span> a, <span style="color: #0000ff;">int</span><span style="color: #000000;"> b)
+        {
+            </span><span style="color: #0000ff;">return</span> a +<span style="color: #000000;"> b;
+        }
+        
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+            </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 委托类型变量可以接收一个方法引用（实例方法、静态方法都可以）</span>
+            MathOptDelegate mathOpt =<span style="color: #000000;"> Program.add;
+
+            Console.WriteLine(mathOpt(</span><span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>)); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 3</span></strong>
+<span style="color: #000000;">
+            Console.ReadKey();
+        }
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>例程2-以委托变量作为参数的方法</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 定义一个委托类型</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> doSomething();
+
+        </span></strong><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 定义一个以委托类型变量作为参数的方法</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> sampleMethod(<strong>doSomething doSomething</strong>)
+        {
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">begin to do something.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        <strong>    doSomething();</strong>
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">stop doing something.</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 定义一个与委托类型匹配的方法</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> sayHello()
+        {
+            Console.WriteLine(</span><span style="color: #800000;">"</span><span style="color: #800000;">hello</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+           <strong> sampleMethod(sayHello);</strong>
+            Console.ReadKey();
+            </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; begin to do something.
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; hello
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; stop doing something.</span></strong>
+<span style="color: #000000;">        }
+    }
+}</span></pre>
+</div>
+<p>/</p>
+<p>例程3-委托调用列表（多路委托）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> ConsoleApp1
+{
+    </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Program
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 定义一个委托类型</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> doSomething();
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 定义2个与委托类型匹配的方法</span>
+        <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> SayHello() =&gt; Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">hello</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> SayGoodbye() =&gt; Console.WriteLine(<span style="color: #800000;">"</span><span style="color: #800000;">Goodbye</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+        </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> Main(<span style="color: #0000ff;">string</span><span style="color: #000000;">[] args)
+        {
+<strong>            doSomething doSomething </strong></span><strong>=<span style="color: #000000;"> SayHello;
+            doSomething </span>+=</strong><span style="color: #000000;"><strong> SayGoodbye;</strong>
+            doSomething();
+            </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; hello
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; Goodbye</span></strong>
+<span style="color: #000000;">            Console.WriteLine(doSomething.GetInvocationList().Length);
+            </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 2</span>
+            doSomething -=<span style="color: #000000;"> SayHello;
+            doSomething </span>-=<span style="color: #000000;"> SayHello;
+            doSomething </span>-=</strong><span style="color: #000000;"><strong> SayHello;</strong>
+            doSomething();
+            </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; Goodbye</span></strong>
+<span style="color: #000000;">            Console.ReadKey();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> PS. 若有返回值，则委托变量的返回值是最后调用方法的返回值</span>
+<span style="color: #000000;">        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2><a name="anchor1"></a>Click事件探究</h2>
+<p>.NET的事件响应机制也是用委托来实现的，以实现Click事件为例，大概分为如下几个步骤&darr;</p>
+<p>1、定义一个委托类型（该类型被定义在System命名空间中）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">delegate</span> <span style="color: #0000ff;">void</span> EventHandler(<span style="color: #0000ff;">object</span> sender, EventArgs e);</pre>
+</div>
+<p>2、声明一个委托类型变量（该变量被定义在相应组件中）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">event</span> EventHandler Click;</pre>
+</div>
+<p>加event和不加event的区别在于，加了event，事件只能由事件源对象激发，外界无法通过访问该变量激发。</p>
+<p>3、挂载事件</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">this</span>.button2.Click += <span style="color: #0000ff;">new</span> System.EventHandler(<span style="color: #0000ff;">this</span>.button2_Click);</pre>
+</div>
+<p>button2_Click满足EventHandler的规范，该方法在适当的时候会被调用：</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> button2_Click(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {</span><span style="color: #000000;">
+        }</span></pre>
+</div>
+<p>/</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201905/1042431-20190503151932623-1707079494.gif" alt="" width="521" height="294" /></p>
+<p>例程-动态挂载响应方法</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">using</span><span style="color: #000000;"> System;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> System.Windows.Forms;
+
+</span><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> WindowsFormsApp1
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">partial</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Form1 : Form
+    {
+        </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Form1()
+        {
+            InitializeComponent();
+        }
+
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> resp1(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+            MessageBox.Show(</span><span style="color: #800000;">"</span><span style="color: #800000;">响应1</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> resp2(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+            MessageBox.Show(</span><span style="color: #800000;">"</span><span style="color: #800000;">响应2</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        }
+
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> button1_Click(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+            button3.Click </span>-=<span style="color: #000000;"> resp2;
+            button3.Click </span>-= resp1; <span style="color: #008000;">//</span><span style="color: #008000;"> 防止累加</span>
+            button3.Click +=<span style="color: #000000;"> resp1;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 上面为简单写法，
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 等价写法：button3.Click += new EventHandler(resp1);</span>
+<span style="color: #000000;">        }
+
+        </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> button2_Click(<span style="color: #0000ff;">object</span><span style="color: #000000;"> sender, EventArgs e)
+        {
+            button3.Click </span>-=<span style="color: #000000;"> resp1;
+            button3.Click </span>-= resp2; <span style="color: #008000;">//</span><span style="color: #008000;"> 防止累加</span>
+            button3.Click +=<span style="color: #000000;"> resp2;
+        }
+    }
+}</span></pre>
+</div>

@@ -1,0 +1,91 @@
+<p><span style="line-height: 1.5;">p37:</span></p>
+<p><span style="line-height: 1.5; background-color: #ffff99;">练习1</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/22.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> DataOnly {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> anInt;
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> aChar;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        DataOnly dateOnly </span>= <span style="color: #0000ff;">new</span> DataOnly(); <span style="color: #008000;">//</span><span style="color: #008000;"> 静态方法中无法直接打印成员数据，需要先new一个对象</span>
+        System.out.println(dateOnly.anInt + " " +<span style="color: #000000;"> dateOnly.aChar);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习2</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/22.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> HelloWorld {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        System.out.println(</span>"Hello, World"); <span style="color: #008000;">//</span><span style="color: #008000;"> System类位于默认导入的java.lang包中，out是该类的静态成员，可以通过类名直接使用。</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习3</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/22.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ATypeName {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        ATypeName a </span>= <span style="color: #0000ff;">new</span> ATypeName();  <span style="color: #008000;">// </span><span style="color: #008000;">这个内容在书的第25页</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习4、</span><span style="background-color: #ffff99;">练习5</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> DataOnly {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> d;
+    </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> b;
+    DataOnly() {
+        </span><span style="color: #0000ff;">this</span>.i = 47<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.d = 1.1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.b = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        DataOnly dataOnly </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DataOnly();
+        System.out.println(dataOnly.i </span>+ " " + dataOnly.d + " " +<span style="color: #000000;"> dataOnly.b);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习6</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/22.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestStorage {
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> storage(String s) {
+        </span><span style="color: #0000ff;">return</span> s.length() * 2<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #0000ff;">int</span> length = TestStorage.storage("Not a hello world."<span style="color: #000000;">);
+        System.out.println(length);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习7</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Created by xkfx on 2017/2/22.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Incrementable {
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> increment() { StaticTest.i++<span style="color: #000000;">; }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> StaticTest {
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> i = 47<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Incrementable.increment();
+        System.out.println(i);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

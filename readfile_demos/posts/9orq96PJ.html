@@ -1,0 +1,170 @@
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ taglib </span><span style="color: #ff0000;">prefix</span><span style="color: #0000ff;">="c"</span><span style="color: #ff0000;"> uri</span><span style="color: #0000ff;">="http://java.sun.com/jsp/jstl/core"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ taglib </span><span style="color: #ff0000;">prefix</span><span style="color: #0000ff;">="json"</span><span style="color: #ff0000;"> uri</span><span style="color: #0000ff;">="http://www.atg.com/taglibs/json"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">errorPage要优先于DD配置 --%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">errorPage</span><span style="color: #0000ff;">="errorPage.jsp"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>$Title$<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:forEach</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:forEach </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="movie"</span><span style="color: #ff0000;"> items</span><span style="color: #0000ff;">="${movieList}"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>${movie}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:forEach</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:forEach</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> varStatus --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:forEach </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="movie"</span><span style="color: #ff0000;"> items</span><span style="color: #0000ff;">="${movieList}"</span><span style="color: #ff0000;"> varStatus</span><span style="color: #0000ff;">="movieLoopCount"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>${movieLoopCount.count}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>${movie}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:forEach</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">嵌套&lt;c:forEach</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> 一般用在嵌套的数据结构 --%&gt;
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:if</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> 这个页面一般人看不到--%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:if </span><span style="color: #ff0000;">test</span><span style="color: #0000ff;">="${param.userType eq 'member'}"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:include </span><span style="color: #ff0000;">page</span><span style="color: #0000ff;">="input.jsp"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:if</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:choose</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:choose</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:when </span><span style="color: #ff0000;">test</span><span style="color: #0000ff;">="${param.userType == 'visitor'}"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Hello, visitor<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:when</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:when </span><span style="color: #ff0000;">test</span><span style="color: #0000ff;">="${param.userType == 'member'}"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Good evening.<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:when</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:otherwise</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>unbelievable<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:otherwise</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:choose</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:set</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> 规则和jsp标准动作一样，没有就创建新的 --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="userLevel"</span><span style="color: #ff0000;"> scope</span><span style="color: #0000ff;">="session"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="Cowboy"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${userLevel}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="Fido"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="${person.dog}"</span> <span style="color: #0000ff;">/&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="userLevel_2"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+  Cowboy, Cowgirl
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:set</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${userLevel_2}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:set</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">只能用来设置bean和map --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">target</span><span style="color: #0000ff;">="${dog}"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="huang"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${dog.name}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">target</span><span style="color: #0000ff;">="${dog}"</span><span style="color: #ff0000;"> property</span><span style="color: #0000ff;">="name"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+  ${param.name}
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:set</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${dog.name}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">jsontag 尝试 --%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">json:object</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">json:property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="name"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="${dog.name}"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">json:object</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:remove</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> 删除变量 --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:remove </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="userLevel"</span><span style="color: #ff0000;"> scope</span><span style="color: #0000ff;">="session"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">不写作用域 或者书写正确的作用域 都可删除变量--%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>userLevel = ${userLevel}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">&lt;c:import</span><span style="color: #0000ff;">&gt;</span> 比<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">jsp:include</span><span style="color: #0000ff;">&gt;</span>、<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">include </span><span style="color: #ff0000;">file</span><span style="color: #0000ff;">="..."</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">更强大，可以包含容器之外的内容，原理与前者类似 --%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%--</span><span style="color: #ff0000;">&lt;c:import url</span><span style="color: #0000ff;">="某个URL"</span> <span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">--%&gt;
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">import简单的页面是可以的，复杂的页面会超时， 图片会乱码 --%</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">c:param --%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:import </span><span style="color: #ff0000;">url</span><span style="color: #0000ff;">="input.jsp"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:param </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="content"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="this is a param from index.jsp"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:import</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">jsp的URL重写 --%</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+这是一个URL重写可用的超链接
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="&lt;c:url value='/login.jsp' /&gt;"</span><span style="color: #0000ff;">&gt;</span> click here <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%-- </span><span style="color: #ff0000;">url编码 --%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="last"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="Hidden Cursor"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:set </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="first"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="Crouching Pixels"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:url </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="/showMovies"</span><span style="color: #ff0000;"> var</span><span style="color: #0000ff;">="inputURL"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:param </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="firstName"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="${first}"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:param </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="lastName"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="${last}"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:url</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>url using param is: ${inputURL}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="${inputURL}"</span><span style="color: #0000ff;">&gt;</span>URL_above<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>About to do a risky thing: <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:catch </span><span style="color: #ff0000;">var</span><span style="color: #0000ff;">="myException"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">% int </span><span style="color: #ff0000;">x </span><span style="color: #0000ff;">= 10/0; </span><span style="color: #ff0000;">%</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:catch</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>If you see this, we survived.<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:if </span><span style="color: #ff0000;">test</span><span style="color: #0000ff;">="${myException != null}"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>There was an exception: ${myException.message}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">c:if</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>错误页面建议使用 web.xml ：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@page </span><span style="color: #ff0000;">isErrorPage</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">%@ page </span><span style="color: #ff0000;">contentType</span><span style="color: #0000ff;">="text/html;charset=UTF-8"</span><span style="color: #ff0000;"> language</span><span style="color: #0000ff;">="java"</span><span style="color: #ff0000;"> %</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>同志，请先登陆<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="login.jsp"</span><span style="color: #0000ff;">&gt;</span>click here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>${pageContext.exception}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="3.1"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>showMovies<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>showMovies<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>showMovies<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/showMovies<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 普遍型错误页面 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">error-page</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">exception-type</span><span style="color: #0000ff;">&gt;</span>java.lang.Throwable<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">exception-type</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">location</span><span style="color: #0000ff;">&gt;</span>/errorPage.jsp<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">location</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">error-page</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 具体异常型 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> http状态码型 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">error-page</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">error-code</span><span style="color: #0000ff;">&gt;</span>404<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">error-code</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">location</span><span style="color: #0000ff;">&gt;</span>/errorPage.jsp<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">location</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">error-page</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;说是留着参考。。事实上要用的时候还是直接谷歌、查<a href="https://www.tutorialspoint.com/jsp/" target="_blank">文档</a>实在。。。</p>

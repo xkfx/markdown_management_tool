@@ -1,0 +1,94 @@
+<h2>结构变量的声明和初始化</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> age;
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> height;
+    } x, y </span>= {<span style="color: #800080;">29</span>, <span style="color: #800080;">180</span><span style="color: #000000;">};
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 结构的成员在内存中按照声明的顺序存储 </span>
+    x.age = <span style="color: #800080;">30</span><span style="color: #000000;">;
+    x.height </span>= <span style="color: #800080;">170</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<h2>结构类型&mdash;&mdash;结构标记</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> struct_name {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> age;
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> height;
+    } x; </span><span style="color: #008000;">//</span><span style="color: #008000;"> 同时声明了【结构标记struct_name】和【结构变量x】 </span>
+    
+    <span style="color: #0000ff;">struct</span> struct_name y; <span style="color: #008000;">//</span><span style="color: #008000;"> 纯C时必须加上struct </span>
+<span style="color: #000000;">    
+    struct_name z; </span><span style="color: #008000;">//</span><span style="color: #008000;"> C++编译器则不必加struct  </span>
+    
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<h2>结构类型&mdash;&mdash;typedef</h2>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    typedef </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> age;
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> height;
+    } struct_name; 
+    
+    struct_name x;
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<h2>C风格结构体</h2>
+<p>传递<span style="text-decoration: underline;">指向结构的指针</span>来代替传递<span style="text-decoration: underline;">结构</span>可以避免生成副本。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;<span style="color: #000000;">
+#include </span>&lt;cstring&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Student {
+    </span><span style="color: #0000ff;">char</span>*<span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> age;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> score;
+};
+typedef </span><span style="color: #0000ff;">struct</span> _Student*<span style="color: #000000;"> Student;
+
+Student newStudent(</span><span style="color: #0000ff;">char</span>* name, <span style="color: #0000ff;">int</span> age, <span style="color: #0000ff;">int</span><span style="color: #000000;"> score)
+{
+    Student result </span>= (Student) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _Student));
+    result</span>-&gt;name =<span style="color: #000000;"> name;
+    result</span>-&gt;age =<span style="color: #000000;"> age;
+    result</span>-&gt;score =<span style="color: #000000;"> score;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result; 
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> printStudent(Student x)
+{
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s %d %d\n</span><span style="color: #800000;">"</span>, x-&gt;name, x-&gt;age, x-&gt;<span style="color: #000000;">score);
+}
+
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    Student a, b;
+    a </span>= newStudent(<span style="color: #800000;">"</span><span style="color: #800000;">asd</span><span style="color: #800000;">"</span>, <span style="color: #800080;">19</span>, <span style="color: #800080;">100</span><span style="color: #000000;">);
+    b </span>= newStudent(<span style="color: #800000;">"</span><span style="color: #800000;">dad</span><span style="color: #800000;">"</span>, <span style="color: #800080;">12</span>, <span style="color: #800080;">110</span><span style="color: #000000;">);
+    printStudent(a);
+    printStudent(b);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>

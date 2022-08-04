@@ -1,0 +1,31 @@
+<p><span style="background-color: #ccffcc;">p126~p128:</span></p>
+<p>1、关系运算符作用于算数类型和指针类型。</p>
+<p>&nbsp;</p>
+<p>2、逻辑运算符作用于任意能转换成布尔类型值的类型。</p>
+<p>&nbsp;</p>
+<p>3、以上两种运算的<span style="text-decoration: underline;">运算对象</span>和<span style="text-decoration: underline;">运算结果</span>都是<strong>右值</strong>。</p>
+<p>&nbsp;</p>
+<p>4、逻辑与和逻辑或的运算策略：<span style="color: #ff0000;"><strong>短路求值</strong></span>。</p>
+<p>（左侧对象通常是为了确保右侧运算对象求值过程的正确性和<strong>安全性</strong>）</p>
+<p>&nbsp;</p>
+<p>5、补充的几点：</p>
+<p>1）用 <strong>&amp;s</strong>访问<strong>字符串</strong>可以避免对元素的拷贝。</p>
+<p>2）如果想测试一个算数对象或指针的真值，最好直接将其作为if 的条件。例如：if(!val)...</p>
+<p>3)布尔类型转换为其它类型结果为 0 或 1，而其它类型转换为布尔类型，凡是不是 0 的结果都为 true。</p>
+<p><br />6、<strong>优先级</strong>方面，暂时记住<strong>非</strong>运算符是关系运算符中优先级别最高的，<strong>关系运算符</strong>总比<strong>逻辑运算符</strong>优先级高，<strong>与</strong>运算符比<strong>或</strong>运算符优先级高，</p>
+<p><strong>赋值运算符</strong>优先级很低。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ccffcc;">练习 4.8</span><br /><em>p126 见表 4.2</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ccffcc;">练习 4.9</span><br /><em>先判断指针是否为空，如果为空则不再计算右侧对象，返回false，</em></p>
+<p><em>如果不为空则继续计算右侧字符串的值，若空则返回false否则返回true。</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ccffcc;">练习 4.11</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">if</span> (a &gt; b &amp;&amp; b &gt; c &amp;&amp; c &gt; d) </pre>
+</div>
+<p><span style="background-color: #ccffcc;">&nbsp;</span></p>
+<p><span style="background-color: #ccffcc;">练习 4.12</span></p>
+<p><em>!=的优先级要比&lt;的低，先计算j&lt;k返回一个布尔值后转化为整数0或者1，之后再与i比较。</em></p>
+<p><em>相当于 i != (j &lt; k)。</em></p>
+<p>&nbsp;</p>

@@ -1,0 +1,116 @@
+<p><span style="background-color: #ffff00;">《c++ primer, 5E》</span></p>
+<p><span style="background-color: #ffff00;">第94页到第99页，笔记:</span></p>
+<p>1、迭代器（iterator）：一种比<strong>下标访问</strong>更通用的访问容器中元素的<strong>机制</strong>。</p>
+<p>（并不是所有标准库容器都支持下标访问，&lt;运算符）</p>
+<p>我们认定某个类型是<strong>迭代器</strong>，当且仅当它支持一套操作，</p>
+<p>这套操作使得我们能访问容器的元素或者从某个元素移动到另外一个元素。</p>
+<p><br />2、有迭代器的类型都拥有<strong>名为begin和end成员</strong>。</p>
+<p>&nbsp;</p>
+<p>3、一般来说，我们不在意迭代器的准确类型到底是什么</p>
+<p>&nbsp;</p>
+<p>4、迭代器支持的一些运算。（与指针类似，例如iter-&gt;mem：解引用iter并获取该元素</p>
+<p>名为mem的成员，等价于(*iter).mem）</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong>5、养成使用迭代器和!=的习惯（而非&lt;运算符），就不用太在意用的到底是哪种容器类型。</strong></span></p>
+<p>&nbsp;</p>
+<p>6、如果对象只需读操作而无须写操作的话最好使用常量类型（比如<strong> const_iterator</strong>）。可以通过cbegin和cend返回该类型迭代器。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><em>7、vector对象的一个限制：任何一种可能改变vector对象容量的操作，比如push_back，都会使该vector对象的迭代器失效。</em></span></p>
+<p>&nbsp;</p>
+<p>8、小结：重点掌握利用迭代<strong>器遍历元素的方法，</strong>结合解引用和成员访问操作（*it以及it-&gt;）</p>
+<p><span style="background-color: #ffff00;">课后练习:</span></p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.21</span></p>
+<p>int：</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">// </span><span style="color: #008000;">定义一个vector对象</span>
+    vector&lt;<span style="color: #0000ff;">int</span>&gt; v5(<span style="color: #800080;">10</span> ,<span style="color: #800080;">42</span><span style="color: #000000;">);
+    </span><span style="color: #008000;">// </span><span style="color: #008000;">输出vector对象的容量和具体内容</span>
+    <span style="color: #0000ff;">int</span> size = v5.end() -<span style="color: #000000;"> v5.begin();
+    cout </span>&lt;&lt; size &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">// </span><span style="color: #008000;">使用迭代器和!=遍历元素</span>
+    <span style="color: #0000ff;">for</span>(auto it = v5.begin(); it != v5.end(); ++<span style="color: #000000;">it){
+        cout </span>&lt;&lt; *it &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;string:</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">// </span><span style="color: #008000;">定义一个vector对象</span>
+    vector&lt;<span style="color: #0000ff;">string</span>&gt; v5(<span style="color: #800080;">10</span> , <span style="color: #800000;">"</span><span style="color: #800000;">hi</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #008000;">// </span><span style="color: #008000;">输出vector对象的容量和具体内容</span>
+    <span style="color: #0000ff;">int</span> size = v5.end() -<span style="color: #000000;"> v5.begin();
+    cout </span>&lt;&lt; size &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">// </span><span style="color: #008000;">使用迭代器和!=遍历元素</span>
+    <span style="color: #0000ff;">for</span>(auto it = v5.begin(); it != v5.end(); ++<span style="color: #000000;">it){
+        cout </span>&lt;&lt; *it &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.22</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义一个字符串向量</span>
+    vector&lt;<span style="color: #0000ff;">string</span>&gt; text{<span style="color: #800000;">"</span><span style="color: #800000;">Hello</span><span style="color: #800000;">"</span>, <span style="color: #800000;">""</span>, <span style="color: #800000;">"</span><span style="color: #800000;">world!</span><span style="color: #800000;">"</span><span style="color: #000000;">};
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 把text的第一段全都改成大写形式，然后再输出它</span>
+    <span style="color: #0000ff;">for</span>(auto it =<span style="color: #000000;"> text.begin();
+    it </span>!= text.end() &amp;&amp; !(*it).empty(); ++<span style="color: #000000;">it){
+        </span><span style="color: #0000ff;">for</span>(auto &amp;ch: *<span style="color: #000000;">it){
+            ch </span>=<span style="color: #000000;"> toupper(ch);
+        }
+        cout </span>&lt;&lt; *it &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; background-color: #ffff00;">练习3.23</span></p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::vector;
+#include</span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> std::<span style="color: #0000ff;">string</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个含有10个整数的vector对象</span>
+    vector&lt;<span style="color: #0000ff;">int</span>&gt; ivec(<span style="color: #800080;">10</span> , <span style="color: #800080;">42</span><span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 使用迭代器将所有元素的值都变成原来的两倍。输出vector对象的内容</span>
+    <span style="color: #0000ff;">for</span>(auto it = ivec.begin(); it != ivec.end(); ++<span style="color: #000000;">it){
+        </span>*it *= <span style="color: #800080;">2</span><span style="color: #000000;">;
+        cout </span>&lt;&lt; *it &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p><span style="background-color: #ffff00;">&nbsp;</span></p>
+<p><span style="background-color: #ffff00;">遇到的问题：</span></p>
+<p>1、const_iterator哪里和常量指针差不多了？</p>

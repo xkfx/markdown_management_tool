@@ -1,0 +1,14 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖雪峰的官方网站</a></p>
+<p>1、关键字参数有什么用？它可以扩展函数的功能。</p>
+<p>&nbsp;</p>
+<p>2、参数定义的顺序必须是：<span style="color: #ff0000;">必选参数、默认参数、可变参数、命名关键字参数和关键字参数</span>。</p>
+<p>&nbsp;</p>
+<p>3、对于任意函数，都可以通过类似<code>func(*args, **kw)</code>的形式调用它，无论它的参数是如何定义的。</p>
+<p>&nbsp;</p>
+<p>4、默认参数一定要用不可变对象。例如<code class="python"><span class="function"><span class="keyword">def <span class="title">add_end<span class="params">(L=None)</span></span></span></span></code></p>
+<p>&nbsp;</p>
+<p>5、<code>*args</code>和<code>**kw</code>是Python的习惯写法，当然也可以用其他参数名，但最好使用习惯用法。</p>
+<p>&nbsp;</p>
+<p>6、<code>*args</code>是可变参数，args接收的是一个tuple。</p>
+<p><code>**kw</code>是关键字参数，kw接收的是一个dict。</p>
+<p>&nbsp;</p>

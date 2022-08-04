@@ -1,0 +1,60 @@
+<p>内容来自<a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00143167793538255adf33371774853a0ef943280573f4d000" target="_blank">廖</a>雪峰的官方网站。</p>
+<p>1、python的赋值语句：a, b, c = x, y, z 相当于 a = x, b = y, c = z。（事实上等式右边是一个tuple)</p>
+<p>&nbsp;</p>
+<p>2、获得genarator的第二种方式。</p>
+<p>示例一：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> fib(max):
+    n, a, b </span>= 0, 0, 1
+    <span style="color: #0000ff;">while</span> n &lt;<span style="color: #000000;"> max:
+        </span><span style="color: #0000ff;">yield</span><span style="color: #000000;"> b
+        a, b </span>= b, a +<span style="color: #000000;"> b
+        n </span>= n + 1
+    <span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span><span style="color: #800000;">done</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>示例二：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> odd():
+    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">step 1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">yield</span> 1
+    <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">step 2</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">yield</span> 3
+    <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">step 3</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">yield</span> 5</pre>
+</div>
+<p>&nbsp;generator在执行过程中，遇到<code>yield</code>就中断，下次又继续执行。</p>
+<p>&nbsp;</p>
+<p>3、调用该generator时，首先要生成一个generator对象，然后用<code>next()</code>函数不断获得下一个返回值。</p>
+<p>&nbsp;调用示例一：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; o =<span style="color: #000000;"> odd()
+</span>&gt;&gt;&gt;<span style="color: #000000;"> next(o)
+step </span>1
+1
+&gt;&gt;&gt;<span style="color: #000000;"> next(o)
+step </span>2
+3
+&gt;&gt;&gt;<span style="color: #000000;"> next(o)
+step </span>3
+5
+&gt;&gt;&gt;<span style="color: #000000;"> next(o)
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+StopIteration</span></pre>
+</div>
+<p>&nbsp;调用示例二：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; f = fib(6)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">for</span> n <span style="color: #0000ff;">in</span> fib(6<span style="color: #000000;">):
+...     </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(n)
+...
+</span>1
+1
+2
+3
+5
+8</pre>
+</div>
+<p>&nbsp;</p>

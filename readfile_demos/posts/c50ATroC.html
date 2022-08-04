@@ -1,0 +1,23 @@
+<p>续<a id="CategoryEntryList1_EntryStoryList_ctl00_Entries_TitleUrl_13" class="entrylistItemTitle" href="http://www.cnblogs.com/xkxf/p/6544974.html" target="_blank">《Java入门第三季》第一章 异常与异常处理</a>。</p>
+<h3>&nbsp;1、StackOverflowError</h3>
+<p>&nbsp;第一次碰到这个 Error 居然有点小激动，原因当然是因为它叫 StackOverflow</p>
+<p>Q：What is a&nbsp;<code>StackOverflowError</code>, what causes it, and how should I deal with them? （选择性 COPY）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">The common cause </span><span style="color: #0000ff;">for</span> a stack overflow <span style="color: #0000ff;">is</span> a bad recursive call. Typically, <span style="color: #0000ff;">this</span> <span style="color: #0000ff;">is</span> caused when your recursive functions doesn<span style="color: #800000;">'</span><span style="color: #800000;">t have the correct termination condition, so it ends up calling itself forever. However, with GUI programming, it</span><span style="color: #800000;">'</span>s possible to generate indirect recursion. For example, your app may be handling paint messages, and, whilst processing them, it may call a function that causes the system to send another paint message. Here you<span style="color: #800000;">'</span><span style="color: #800000;">ve not explicitly called yourself, but the OS/VM has done it for you.</span>
+<span style="color: #000000;">
+To deal with them you</span><span style="color: #800000;">'</span><span style="color: #800000;">ll need to examine your code. If you</span><span style="color: #800000;">'</span>ve got functions that call themselves then check that you<span style="color: #800000;">'</span><span style="color: #800000;">ve got a terminating condition. If you have then check than when calling the function you have at least modified one of the arguments, otherwise there</span><span style="color: #800000;">'</span>ll be no visible change <span style="color: #0000ff;">for</span> the recursively called function and the terminating condition <span style="color: #0000ff;">is</span><span style="color: #000000;"> useless.<br /></span></pre>
+</div>
+<p>--<a href="https://stackoverflow.com/users/26095/sean">Sean</a>&nbsp; 总而言之，出现这种错误一般是递归调用没处理好。个人是因为 DAO 层和 Service 层恰好有相同接口，然后一不小心把 Service 层代码无限递归调用了，（本意是调用 DAO.getFriends 然后写成 getFriends 。。。）</p>
+<p>&nbsp;</p>
+<h3>2、java.io.StreamCorruptedException: invalid type code: AC</h3>
+<p><a href="http://ask.csdn.net/questions/10152" target="_blank">http://ask.csdn.net/questions/10152</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">今天在用套接字编程是遇到java.io.StreamCorruptedException: invalid type code: AC
+遇到这个异常时候很茫然，最后在别人的google的帮助下，最后还是找出了错误所在，这是因为一个线程中定义了多个objectOutputStream，为什么不允许定义多个就不清楚了，其他outputStream是可以定义多个的。
+如果前面已经初始化了这objectOutputStream对象，以后在使用它时，最好使用参数引用</span></pre>
+</div>
+<p>一般而言，就是由于在一个或者多个线程里创建多个同源outputStream。</p>
+<p>&nbsp;</p>
+<h3>3、java.io.StreamCorruptedException: invalid stream header: 54657374</h3>
+<p>&nbsp;<img src="http://images2017.cnblogs.com/blog/1042431/201801/1042431-20180107203904596-749742155.png" alt="" width="623" height="116" /></p>
+<p>标题是网上找的，我遇到的是图上这个，网上的资料有点乱，反正我是这样解决的：起因（大概）是由于一个 socket 在多个线程开 inputStream ，可能偶尔有些线程自动被回收了，偶尔没有。（所以这个异常隐蔽性还是很高的？）</p>

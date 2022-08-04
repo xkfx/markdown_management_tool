@@ -1,0 +1,121 @@
+<div id="diy_right_menu">
+<p>索引：</p>
+<ul>
+<li><a href="#a1">let VS. var</a></li>
+<li><a href="#a2">定义函数的几种方式</a></li>
+<li><a href="#a3">more...</a></li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>1、作者反复用的side effect</p>
+<p>side effect就是对世界造成的改变，例如说打印某些东西到屏幕，或者以某种方式改变机器的内部状态从而影响到后面的语句。</p>
+<p>造成side effect的例子，例如下面的makeNoise 函数：</p>
+<div class="cnblogs_code">
+<pre>const makeNoise = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+  console.log(</span>"Pling!"<span style="color: #000000;">);
+};
+
+makeNoise();
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; Pling!</span></pre>
+</div>
+<p>没有造成side effect的语句：</p>
+<div class="cnblogs_code">
+<pre>1<span style="color: #000000;">;
+</span>!<span style="color: #0000ff;">false</span>;</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、关于return</p>
+<p>不论是不写还是 返回空return； 结果都是返回undefined</p>
+<p>&nbsp;</p>
+<p><a name="a1"></a>3、let VS. var</p>
+<p>如果用let和const，那么变量的作用域和java等语言没有什么不同（局部可见性、同名屏蔽全局变量）。</p>
+<p>但是倘若使用var ，那么在括号里定义的变量在括号外也可见：</p>
+<div class="cnblogs_code">
+<pre>        &lt;script type="text/javascript"&gt;<span style="color: #000000;">
+            let x </span>= 10<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+                let y </span>= 20<span style="color: #000000;">;
+                  </span><span style="color: #0000ff;">var</span> z = 30<span style="color: #000000;">;
+                  console.log(x </span>+ y +<span style="color: #000000;"> z);
+              </span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 60</span>
+<span style="color: #000000;">            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> y 在这里是不可见的 </span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 强行使用 ReferenceError: y is not defined</span>
+            console.log(x +<span style="color: #000000;"> z);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> &rarr; 40</span>
+        &lt;/script&gt;</pre>
+</div>
+<p>&nbsp;引用知乎<a class="UserLink-link" href="https://www.zhihu.com/people/zhang-zheng-cheng-92" target="_blank" data-za-detail-view-element_name="User">张正诚</a>：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">使用var声明的变量，其作用域为该语句所在的函数内，且存在变量提升现象；
+使用let声明的变量，其作用域为该语句所在的代码块内，不存在变量提升；
+使用const声明的是常量，在后面出现的代码中不能再修改该常量的值。</span></pre>
+</div>
+<p>PS. 在2015年之前的JavaScript中，只有函数创建了新的scope。</p>
+<p>&nbsp;</p>
+<p><a name="a2"></a>4、定义函数的几种方式</p>
+<p>① 传统方式&nbsp; ---- let/const f = function(xxxxx)&nbsp;</p>
+<p>函数本身也是一种值，具备其它值的特征：</p>
+<div class="cnblogs_code">
+<pre>const future = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+  </span><span style="color: #0000ff;">return</span> "You'll never have flying cars"<span style="color: #000000;">;
+};</span></pre>
+</div>
+<p>注意在 } 之后需要分号。</p>
+<p>&lsquo;② 自动变成当前scope（在某个{} 内或者全局）有效，无视定义函数的位置</p>
+<div class="cnblogs_code">
+<pre>console.log("The future says:"<span style="color: #000000;">, future());
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> future() {
+  </span><span style="color: #0000ff;">return</span> "You'll never have flying cars"<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>③ 省事的写法 ...</p>
+<div class="cnblogs_code">
+<pre>const power = (base, exponent) =&gt;<span style="color: #000000;"> {
+  let result </span>= 1<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">for</span> (let count = 0; count &lt; exponent; count++<span style="color: #000000;">) {
+    result </span>*=<span style="color: #000000;"> base;
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+};
+
+const square1 </span>= (x) =&gt; { <span style="color: #0000ff;">return</span> x *<span style="color: #000000;"> x; };
+const square2 </span>= x =&gt; x *<span style="color: #000000;"> x;
+
+const horn </span>= () =&gt;<span style="color: #000000;"> {
+  console.log(</span>"Toot"<span style="color: #000000;">);
+};
+
+let h </span>= a =&gt; a % 3;</pre>
+</div>
+<p>&nbsp;</p>
+<p><a name="a3"></a>5、more...</p>
+<p><a href="http://eloquentjavascript.net/03_functions.html" target="_blank">经典递归</a></p>
+<p><a href="http://eloquentjavascript.net/03_functions.html" target="_blank">返回函数的函数</a></p>
+<p><a href="http://eloquentjavascript.net/03_functions.html" target="_blank">调用函数缺少参数自动补为null</a></p>
+<p>&nbsp;</p>
+<p>6、Exercises</p>
+<p>计算字符数：</p>
+<div class="cnblogs_code">
+<pre>const countBs = <span style="color: #0000ff;">function</span><span style="color: #000000;">(x) {
+    let count </span>= 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != x.length; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (x[i] == 'B') count++<span style="color: #000000;">;        
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> count;
+};
+
+const countChar </span>= (a, b) =&gt;<span style="color: #000000;"> {
+    let count </span>= 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (let i = 0; i != a.length; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (a[i] == b) count++<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> count;
+}
+
+console.log(countBs(</span>"BBC"<span style="color: #000000;">));
+
+console.log(countChar(</span>"kakkerlak", "k"));</pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,46 @@
+<p><span style="color: #ff0000;">不完全翻译，结合谷歌，一定主观性，还可能有误，原始内容地址：https://www.tutorialspoint.com/jsp/jsp_overview.htm</span></p>
+<p>&nbsp;</p>
+<p>主要内容如下：</p>
+<ol>
+<li>什么是JSP？</li>
+<li>为什么使用JSP？</li>
+</ol>
+<h2>什么是JSP?</h2>
+<p>JavaServer Pages (JSP)是一种用于开发支持<strong><span style="color: #000000;">动态内容</span>的Web页面</strong>的技术.开发人员可以通过使用特殊的<strong>JSP标签</strong>在HTML页面中插入Java代码，这些标签大部分以&lt;％开头，以％&gt;结尾。</p>
+<p><span>JSP事实上是一种Java servlet，<strong><span style="color: #000000;">旨在方便实现Java Web应用程序的用户界面</span></strong>。</span><span>Web开发人员将JSP作为一种文本文件（.jsp），将HTML、XHTML代码、XML元素以及嵌入式JSP操作和命令（JSP actions and commands）相结合。</span></p>
+<p><span>使用JSP，您可以通过<strong>网页表单</strong>收集用户的输入，从<strong>数据库或其他来源</strong>呈现记录，并动态创建网页。</span></p>
+<p><span>JSP标签可以用于各种目的，例如从数据库检索信息或<strong>注册用户偏好</strong>，访问JavaBeans组件，在页面之间传递控制（control），以及在请求，页面之间共享信息。</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">【注释】registering user preferences？？？</span></p>
+<h2>Why Use JSP?</h2>
+<p><span><span>JavaServer Pages的用法通常和使用<strong>通用</strong></span></span><strong>网关接口（CGI）</strong><span><span>实现的程序类似</span><span>。</span><span>但与CGI相比，JSP提供了几个优点。</span></span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;">【注释】<a href="https://www.google.co.jp/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=4&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwjR5_Tc87DUAhWDLpQKHc3zCKMQFgg4MAM&amp;url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FCommon_Gateway_Interface&amp;usg=AFQjCNFpvDfgg3O1FPjcAvY3zEMuPVsI4g&amp;sig2=CyvphEjI3xzVy69TtU5tzw" data-href="https://en.wikipedia.org/wiki/Common_Gateway_Interface"><span style="background-color: #ffff99; color: #ff0000;">Common Gateway Interface - Wikipedia</span></a>&nbsp;通用网关接口为<strong>web服务器执行程序</strong>提供了一种标准的协议。什么是协议呢？&mdash;&mdash;协议就是一系列约定俗成的动作，那么web服务器执行程序有什么&ldquo;约定的动作&rdquo;呢？&mdash;&mdash;接收响应，动态生成页面。使用<strong>通用</strong><strong>网关接口（CGI）</strong>实现的程序通常被叫做CGI或者CGI脚本。</span></p>
+<p><span style="background-color: #ffff99; color: #ff0000;"><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170609220529450-1284911819.png" alt="" width="1061" height="334" /></span></p>
+<ul class="list">
+<li>
+<p>性能明显更好，因为JSP允许在HTML页面中嵌入动态元素，而不是具有独立的CGI文件。</p>
+</li>
+<li>
+<p>JSP始终在执行之前被编译，不像CGI/Perl需要服务器在<strong>每次请求页面时</strong>加载解释器和目标脚本。</p>
+</li>
+<li>
+<p><span><span>JavaServer Pages构建在Java Servlets API之上，所以像Servlets一样，JSP还可以访问所有强大的Enterprise Java API，包括</span></span><strong><span><span>JDBC，JNDI，EJB，JAXP</span></span></strong><span><span>等。</span></span></p>
+</li>
+<li>
+<p>JSP页面可以与处理业务逻辑的servlet，Java servlet模板引擎支持的模型结合使用。</p>
+</li>
+</ul>
+<p><span>最后，JSP是Java EE的一个组成部分，它是企业级应用程序的完整平台。</span><span>这意味着JSP不论在最简单的应用程序，还是在最复杂的应用程序中都有一席之地。</span></p>
+<h2>JSP的优点</h2>
+<p>下表列出了使用JSP优于其他技术的其他优势 -</p>
+<h3>vs. Active Server Pages (ASP)</h3>
+<p><span><span>JSP的优势是双重的。</span><span>首先，动态部分是用Java编写的，而不是Visual Basic或其他MS特定语言，所以它更强大，更易于使用。</span><span>其次，它可以移植到其他操作系统和非Microsoft Web服务器。</span></span></p>
+<h3><span style="font-size: 1.17em;">vs. Pure Servlets</span></h3>
+<p>编写（和修改！）常规HTML比编写HTML的println语句更方便。</p>
+<p><span style="background-color: #ffff99; color: #ff0000;">【注释】这一点应该是显然的。</span></p>
+<h3>vs. Server-Side Includes (SSI)</h3>
+<p>SSI仅仅用于简单的包含，而不是用于使用表单数据，数据库连接等的&ldquo;真实&rdquo;程序。</p>
+<h3>vs. JavaScript</h3>
+<p>JavaScript可以在客户端上动态生成HTML，但几乎不能与Web服务器进行交互，以执行复杂的任务，如数据库访问和图像处理等。</p>
+<p><span style="background-color: #ffff99; color: #ff0000;">【注释】Node.js的出现使JavaScript也能用于服务器端编程。<a class="js-title-link" href="https://www.zhihu.com/question/23021356" target="_blank">JSP&nbsp;在走向衰落吗？以后是 HTML5、JavaScript 和 CSS 的天下吗？</a></span></p>
+<h3>vs. Static HTML</h3>
+<p>常规HTML不能包含动态信息！</p>

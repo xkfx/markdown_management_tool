@@ -1,0 +1,37 @@
+<h3>Example</h3>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> ServerSocket createServerSocket(<span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> port) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException {
+        ServerSocket result </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ServerSocket(port);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> startup() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            ServerSocket serverSocket </span>=<span style="color: #000000;"> createServerSocket(PORT);
+            printServerPrompt(</span>"The server is listening on " + PORT + " port ..."<span style="color: #000000;">);
+            startWorking(serverSocket);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        }
+    }</span></pre>
+</div>
+<p>&nbsp;/</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> startup() {
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            <strong>ServerSocket serverSocket </strong></span><strong>= <span style="color: #0000ff;">new</span></strong><span style="color: #000000;"><strong> ServerSocket(PORT);</strong>
+            printServerPrompt(</span>"The server is listening on " + PORT + " port ..."<span style="color: #000000;">);
+            startWorking(serverSocket);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+        }
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>Note</h3>
+<p>为什么/何时要&nbsp;<code>Inline Method</code>？同样是考虑代码的&ldquo;代码复用&rdquo;和&ldquo;可读性&rdquo;：</p>
+<ol>
+<li>函数体本身已经有足够的表达能力、并且只被调用一次，就没必要绕多余的弯子（<strong>&ldquo;间接性可能带来帮助，但非必要的间接性总让人不舒服。&rdquo;</strong>）</li>
+<li>如果你手上有一群组织不合理的函数，那么先把它们集中起来再<strong>重新进行 <code>Extract Method</code> </strong>应该是个很不错的主意。</li>
+</ol>
+<p><code>Inline Method</code>&nbsp;的手段：和 <code>Extract Method</code> 恰好相反</p>

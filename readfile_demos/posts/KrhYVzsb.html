@@ -1,0 +1,120 @@
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201610/1042431-20161026213301640-22772354.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.net.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.event.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> QQReg <span style="color: #0000ff;">extends</span> JFrame <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ActionListener{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        QQReg w </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> QQReg();
+        w.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    }
+    
+    JTextField txtUser </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+    JPasswordField txtPass </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPasswordField();
+    JPasswordField txtPassRe </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPasswordField();
+    QQReg(){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">设置窗体的基本信息</span>
+        <span style="color: #0000ff;">this</span>.setSize(660 , 380<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.setLocationRelativeTo(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.setTitle("Talking.GHOUL.Reg"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.setResizable(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.setIconImage(<span style="color: #0000ff;">this</span>.getToolkit().getImage("D:/lab_2/psb (11).jpg"<span style="color: #000000;">));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">new组件&amp;设置组件</span>
+        JLabel labTitle = <span style="color: #0000ff;">new</span> JLabel("  SIGN UP  "<span style="color: #000000;">);
+        labTitle.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 36<span style="color: #000000;">));
+        
+        JLabel labUser </span>= <span style="color: #0000ff;">new</span> JLabel("  Username"<span style="color: #000000;">);
+        labUser.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 30<span style="color: #000000;">));
+        JLabel labPass </span>= <span style="color: #0000ff;">new</span> JLabel("  Password"<span style="color: #000000;">);
+        labPass.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 30<span style="color: #000000;">));
+        JLabel labPassRe </span>= <span style="color: #0000ff;">new</span> JLabel("  Confirm Password"<span style="color: #000000;">);
+        labPassRe.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 30<span style="color: #000000;">));
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">------update-----------------------
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">JComboBox cmbUsername = new JComboBox();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">cmbUsername.setFont(new Font("", 0, 30));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">cmbUsername.addItem("かねき けん");
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">cmbUsername.addItem("Kaneki Ken");
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">cmbUsername.addItem("金木 研");</span>
+        txtUser.setFont(<span style="color: #0000ff;">new</span> Font("", 0, 30<span style="color: #000000;">));
+        
+        txtPass.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 25<span style="color: #000000;">));
+        txtPassRe.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 25<span style="color: #000000;">));
+        
+        JButton btnReg </span>= <span style="color: #0000ff;">new</span> JButton(" CONFIRM "<span style="color: #000000;">);
+        btnReg.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 30<span style="color: #000000;">));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">注册事件监听</span>
+        btnReg.addActionListener(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">布置主面板</span>
+        JPanel panUser = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panUser.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(3 , 3<span style="color: #000000;">));
+        
+        panUser.add(labUser);
+        panUser.add(txtUser);
+        panUser.add(labPass);
+        panUser.add(txtPass);
+        panUser.add(labPassRe);
+        panUser.add(txtPassRe);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">布置按钮面板</span>
+        JPanel panButton = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panButton.setLayout(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> FlowLayout());
+        
+        panButton.add(btnReg);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">布置窗体</span>
+        <span style="color: #0000ff;">this</span>.setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+        
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.add(labTitle , BorderLayout.NORTH);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.add(panUser , BorderLayout.CENTER);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.add(panButton , BorderLayout.SOUTH);
+    }
+    
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent arg0){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">System.out.println(arg0);</span>
+        <span style="color: #0000ff;">if</span>(arg0.getActionCommand().equals(" CONFIRM "<span style="color: #000000;">)){
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+                String user </span>=<span style="color: #000000;"> txtUser.getText();
+                String pass </span>=<span style="color: #000000;"> txtPass.getText();
+                Socket s </span>= <span style="color: #0000ff;">new</span> Socket("127.0.0.1" , 8000<span style="color: #000000;">);
+            
+                OutputStream os </span>=<span style="color: #000000;"> s.getOutputStream();
+                OutputStreamWriter osw </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> OutputStreamWriter(os);
+                PrintWriter pw </span>= <span style="color: #0000ff;">new</span> PrintWriter(osw , <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+            
+                pw.println(user</span>+"%"+<span style="color: #000000;"> pass);
+            }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+        }
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.net.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> QQServer{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;">{
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">监听8000端口</span>
+            ServerSocket ss = <span style="color: #0000ff;">new</span> ServerSocket(8000<span style="color: #000000;">);
+            
+            System.out.println(</span>"等待客户端的消息..."<span style="color: #000000;">);
+            Socket s </span>=<span style="color: #000000;"> ss.accept();
+            
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">接受用户名和密码</span>
+            InputStream is =<span style="color: #000000;"> s.getInputStream();
+            InputStreamReader isr </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> InputStreamReader(is);
+            BufferedReader br </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BufferedReader(isr);
+            
+            String uandp </span>=<span style="color: #000000;"> br.readLine();
+            
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">检验点</span>
+<span style="color: #000000;">            System.out.println(uandp);
+        }</span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(Exception e){}
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,202 @@
+<p>// 实验存档</p>
+<p>运行截图：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201906/1042431-20190620153859012-90107371.png" alt="" /></p>
+<p>代码中的总体转化流程：中缀表达式字符串&rarr;tokens&rarr;逆波兰tokens（即后缀表达式）&rarr;四元式。</p>
+<p>由后缀表达式写出四元式非常容易，比较繁琐的地方在于中缀转逆波兰，这里采用的方法如下&darr;</p>
+<p>通过维护一个符号栈（或者说运算符栈）来处理运算符间的优先级关系。从左至右读入元素：</p>
+<ol>
+<li>该元素是数字，则直接输出该数字</li>
+<li>该元素是算数运算符：<ol>
+<li>直接压入符号栈的情况：符号栈为空，或者该运算符优先级大于栈顶运算符</li>
+<li>不断弹出（同时输出该运算符）再压入的情况：符号栈不为空，或者该运算符优先级小于等于栈顶运算符</li>
+</ol></li>
+<li>该元素是左括号，则直接将左括号压入符号栈，并赋予最小的优先级，避免被弹出。</li>
+<li>该元素是右括号，则不断弹出（同时输出该运算符）符号栈中的元素，直到找到左括号，将左括号弹出但不输出（后缀表达式中是没有括号的）。</li>
+<li>该元素是输入终止符号，则弹出（同时输出该运算符）符号栈中所有元素。</li>
+</ol>
+<p>代码：</p>
+<div class="cnblogs_code">
+<pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        let str </span>= '4*(28+81*6-75)/8'<span style="color: #000000;">;
+        let tokens </span>=<span style="color: #000000;"> tokenizer(str);
+        let inversePolishNotation </span>=<span style="color: #000000;"> getInversePolishNotation(tokens);
+        let threeAddressCode </span>=<span style="color: #000000;"> getThreeAddressCode(inversePolishNotation);
+
+        console.log(</span>"输入：" +<span style="color: #000000;"> str);
+        console.log(</span>"逆波兰式：" + inversePolishNotation.map(x =&gt;<span style="color: #000000;"> x.value));
+        console.log(</span>"四元式：" + threeAddressCode.map(x =&gt; x + '\n'<span style="color: #000000;">));
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取逆波兰式相应的四元式</span>
+        <span style="color: #0000ff;">function</span><span style="color: #000000;"> getThreeAddressCode(inversePolishNotation) {
+            let result </span>=<span style="color: #000000;"> [];
+            let stack </span>=<span style="color: #000000;"> [];
+            let index </span>= 0; <span style="color: #008000;">//</span><span style="color: #008000;"> 临时变量序号</span>
+            <span style="color: #0000ff;">for</span> (let i = 0; i != inversePolishNotation.length; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (inversePolishNotation[i].tag == '数字'<span style="color: #000000;">) {
+                    stack.push(inversePolishNotation[i]);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (inversePolishNotation[i].tag == '算数运算符'<span style="color: #000000;">) {
+                    let right </span>= stack.pop(); <span style="color: #008000;">//</span><span style="color: #008000;"> 右操作数应该是后入栈的那个</span>
+                    let left =<span style="color: #000000;"> stack.pop();
+                    let temp </span>=<span style="color: #000000;"> {
+                        tag: </span>'临时变量'<span style="color: #000000;">,
+                        value: </span>'t' + index++<span style="color: #000000;">,
+                    };
+                    stack.push(temp);
+                    </span><span style="color: #0000ff;">if</span> (left &amp;&amp; right) { <span style="color: #008000;">//</span><span style="color: #008000;"> 如果左右操作数都不为空</span>
+<span style="color: #000000;">                        result.push(`(${inversePolishNotation[i].value}, ${left.value}, ${right.value}, ${temp.value})`);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("缺少操作数，非法运算！"<span style="color: #000000;">);
+                    }
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("无法处理的token类型：" +<span style="color: #000000;"> tokens[i].tag);
+                }
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 输入中缀形式的tokens，输出逆波兰形式的tokens</span>
+        <span style="color: #0000ff;">function</span><span style="color: #000000;"> getInversePolishNotation(tokens) {
+            let result </span>=<span style="color: #000000;"> [];
+            let symbols </span>= []; <span style="color: #008000;">//</span><span style="color: #008000;"> 维护一个符号栈，以便处理运算符间的优先级关系</span>
+            <span style="color: #0000ff;">for</span> (let i = 0; i != tokens.length; ++<span style="color: #000000;">i) {
+                </span><span style="color: #0000ff;">if</span> (tokens[i].tag == '数字'<span style="color: #000000;">) {
+                    result.push(tokens[i]);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tokens[i].tag == '算数运算符'<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">if</span> (symbols.length == 0 || symbols[symbols.length - 1].priority &lt;<span style="color: #000000;"> tokens[i].priority) {
+                        symbols.push(tokens[i]);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">while</span> (symbols.length != 0 &amp;&amp; symbols[symbols.length - 1].priority &gt;=<span style="color: #000000;"> tokens[i].priority) {
+                            result.push(symbols.pop());
+                        }
+                        symbols.push(tokens[i]);
+                    }
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tokens[i].value == '('<span style="color: #000000;">) {
+                    symbols.push(tokens[i]);
+                } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tokens[i].value == ')'<span style="color: #000000;">) {
+                    let find </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span> (symbols.length != 0<span style="color: #000000;">) {
+                        let temp </span>=<span style="color: #000000;"> symbols.pop();
+                        </span><span style="color: #0000ff;">if</span> (temp.value == '('<span style="color: #000000;">) {
+                            find </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            result.push(temp);
+                        }
+                    }
+                    </span><span style="color: #0000ff;">if</span> (!find) <span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("左括号缺失"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("无法处理的token类型：" +<span style="color: #000000;"> tokens[i].tag);
+                }
+            }
+            </span><span style="color: #0000ff;">while</span> (symbols.length != 0<span style="color: #000000;">) {
+                let temp </span>=<span style="color: #000000;"> symbols.pop();
+                </span><span style="color: #0000ff;">if</span> (temp.value == '('<span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("右括号缺失"<span style="color: #000000;">);
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    result.push(temp);
+                }
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 重用之前的词法分析程序</span>
+        <span style="color: #0000ff;">function</span><span style="color: #000000;"> tokenizer(input) {
+            let s </span>=<span style="color: #000000;"> input;
+            let cur </span>= 0<span style="color: #000000;">;
+            let peek </span>= ' '<span style="color: #000000;">;
+            let line </span>= 1<span style="color: #000000;">;
+
+            let readChar </span>= () =&gt; s[cur++<span style="color: #000000;">];
+            let undo </span>= () =&gt; cur--<span style="color: #000000;">;
+            let scan </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 每次scan返回一个Token</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 略过空格,上次设置的peek值并不会被清空</span>
+                <span style="color: #0000ff;">for</span> (;; peek =<span style="color: #000000;"> readChar()) {
+                    </span><span style="color: #0000ff;">if</span> (peek ==<span style="color: #000000;"> undefined) {
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 读完了</span>
+                    } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (peek == ' ' || peek == '\t'<span style="color: #000000;">) {
+                        </span><span style="color: #0000ff;">continue</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 略过空格和Tab</span>
+                    } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (peek == '\n'<span style="color: #000000;">) {
+                        line</span>++; <span style="color: #008000;">//</span><span style="color: #008000;"> 记录当前行</span>
+                    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    }
+                }
+
+                </span><span style="color: #0000ff;">if</span> (/[0-9.]/<span style="color: #000000;">.test(peek)) {
+                    let temp </span>=<span style="color: #000000;"> peek;
+                    let hasPoint </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span> (peek == '.') hasPoint = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span> (/[0-9.]/.test(peek =<span style="color: #000000;"> readChar())) {
+                        </span><span style="color: #0000ff;">if</span> (peek == '.' &amp;&amp;<span style="color: #000000;"> hasPoint) {
+                            console.log(</span>"第" + line + "行存在语法错误，数字中包含多个小数点"<span style="color: #000000;">);
+                            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+                        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (peek == '.'<span style="color: #000000;">) {
+                            hasPoint </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                            temp </span>+=<span style="color: #000000;"> peek;
+                        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                            temp </span>+=<span style="color: #000000;"> peek;
+                        }
+                    }
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                        tag: </span>'数字'<span style="color: #000000;">,
+                        value: Number(temp),
+                    };
+                }
+
+                </span><span style="color: #0000ff;">if</span> (/[+*/-]/.test(peek)) {
+                    let result =<span style="color: #000000;"> {
+                        tag: </span>'算数运算符'<span style="color: #000000;">,
+                        value: peek,
+                    };
+                    </span><span style="color: #0000ff;">if</span> (peek == '+' || peek == '-'<span style="color: #000000;">) {
+                        result.priority </span>= 1; <span style="color: #008000;">//</span><span style="color: #008000;"> 加减号的优先级较低</span>
+                    } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (peek == '*' || peek == '/'<span style="color: #000000;">) {
+                        result.priority </span>= 2; <span style="color: #008000;">//</span><span style="color: #008000;"> 乘除号的优先级较高</span>
+<span style="color: #000000;">                    }
+                    peek </span>= ' '<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+                }
+
+                </span><span style="color: #0000ff;">if</span> (peek == '('<span style="color: #000000;">) {
+                    peek </span>= ' '<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                        tag: </span>'括号'<span style="color: #000000;">,
+                        value: </span>'('<span style="color: #000000;">,
+                        priority: </span>-99, <span style="color: #008000;">//</span><span style="color: #008000;"> 左括号的优先级设置为最小，</span>
+                        <span style="color: #008000;">//</span><span style="color: #008000;"> 不会因为除读到右括号外的情况而出栈</span>
+<span style="color: #000000;">                    };
+                }
+
+                </span><span style="color: #0000ff;">if</span> (peek == ')'<span style="color: #000000;">) {
+                    peek </span>= ' '<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                        tag: </span>'括号'<span style="color: #000000;">,
+                        value: </span>')'<span style="color: #000000;">,
+                    };
+                }
+
+                </span><span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> Error("读入非法字符: " +<span style="color: #000000;"> peek);
+            };
+
+            let tokens </span>=<span style="color: #000000;"> [];
+            let token;
+            </span><span style="color: #0000ff;">while</span> (token =<span style="color: #000000;"> scan()) {
+                tokens.push(token);
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> tokens;
+        }
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>

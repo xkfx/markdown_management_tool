@@ -1,0 +1,177 @@
+<p>SOM（自组织映射神经网络）是一种可以根据输入对象的特征自动进行分类（聚类）的神经网络。向该网络输入任意维度的向量都会得到一个二维图像，&nbsp;不同特征的输入会被映射到二维图像的不同地方（所以SOM也可以用来降维）。它有两种学习规则：Winner-Take-All和Kohonen学习算法，后者在前者的基础上改进得到。</p>
+<p>Som类最主要的三个方法：</p>
+<ol>
+<li>initialize方法，用于设定输出层节点数、输入向量维度</li>
+<li>mapping方法，方便用户应用模型做预测</li>
+<li>train方法，用来训练模型</li>
+</ol>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> math
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> csv
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 向量归一化，转化为对应单位向量，这样计算欧几里得距离就</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 可以转化为计算向量的点积（二维平面中，单位向量点积就是</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> cos theta），点积越大距离越近</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> normalize(vector):
+    </span><span style="color: #0000ff;">return</span> vector /<span style="color: #000000;"> np.linalg.norm(vector)
+    
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Som:
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> initialize(self, model, dimension):
+        self.nodes </span>=<span style="color: #000000;"> []
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 初始化节点</span>
+        <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(model[0]):
+            temp </span>=<span style="color: #000000;"> []
+            </span><span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span> range(model[1<span style="color: #000000;">]):
+                vector </span>= np.random.randn(dimension) <span style="color: #008000;">#</span><span style="color: #008000;"> 每个节点都包含一个维度和输入向量维度相同的向量</span>
+                vector = normalize(vector) <span style="color: #008000;">#</span><span style="color: #008000;"> 归一化</span>
+<span style="color: #000000;">                temp.append(vector)
+            self.nodes.append(temp)
+        self.model </span>= model <span style="color: #008000;">#</span><span style="color: #008000;"> 便于遍历节点</span>
+    
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> best_matching_unit(self, vector):
+        result </span>= [0, 0] <span style="color: #008000;">#</span><span style="color: #008000;"> 返回优胜节点坐标</span>
+        max = -10000
+        
+        <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(self.model[0]):
+            </span><span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span> range(self.model[1<span style="color: #000000;">]):
+                temp </span>=<span style="color: #000000;"> self.nodes[i][j].dot(vector)
+                </span><span style="color: #0000ff;">if</span> temp &gt;<span style="color: #000000;"> max:
+                    max </span>=<span style="color: #000000;"> temp
+                    result[0], result[</span>1] =<span style="color: #000000;"> i, j
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result
+    
+    </span><span style="color: #0000ff;">def</span> get_r_p(self, N): <span style="color: #008000;">#</span><span style="color: #008000;"> 根据距离优胜节点的距离变化的值</span>
+        <span style="color: #0000ff;">return</span> 1.0 /<span style="color: #000000;"> math.exp(N)
+    
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> neighbor(self, pos, table):
+        result </span>=<span style="color: #000000;"> []
+        x </span>=<span style="color: #000000;"> pos[0]
+        y </span>= pos[1<span style="color: #000000;">]
+        
+        </span><span style="color: #0000ff;">if</span> x - 1 &gt;=<span style="color: #000000;"> 0:
+            </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span> table[x - 1<span style="color: #000000;">][y]:
+                result.append([x </span>- 1<span style="color: #000000;">, y])
+                table[x </span>- 1][y] =<span style="color: #000000;"> True
+                
+        </span><span style="color: #0000ff;">if</span> x + 1 &lt;<span style="color: #000000;"> self.model[0]:
+            </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span> table[x + 1<span style="color: #000000;">][y]:
+                result.append([x </span>+ 1<span style="color: #000000;">, y])
+                table[x </span>+ 1][y] =<span style="color: #000000;"> True
+                
+        </span><span style="color: #0000ff;">if</span> y - 1 &gt;=<span style="color: #000000;"> 0:
+            </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span> table[x][y - 1<span style="color: #000000;">]:
+                result.append([x, y </span>- 1<span style="color: #000000;">])
+                table[x][y </span>- 1] =<span style="color: #000000;"> True
+                
+        </span><span style="color: #0000ff;">if</span> y + 1 &lt; self.model[1<span style="color: #000000;">]:
+            </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span> table[x][y + 1<span style="color: #000000;">]:
+                result.append([x, y </span>+ 1<span style="color: #000000;">])
+                table[x][y </span>+ 1] =<span style="color: #000000;"> True
+        
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result
+            
+    </span><span style="color: #0000ff;">def</span> get_neighbor(self, BMU, r): <span style="color: #008000;">#</span><span style="color: #008000;"> 获取邻居节点，返回值为[[距离为1坐标集合..], [距离为2坐标集合..], [...], ...]</span>
+        result =<span style="color: #000000;"> []
+        
+        </span><span style="color: #0000ff;">if</span> r &gt;<span style="color: #000000;"> 0:
+            table </span>= [] <span style="color: #008000;">#</span><span style="color: #008000;"> 记录已经存入的结点</span>
+            <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(self.model[0]):
+                table.append([False] </span>* self.model[1<span style="color: #000000;">]) 
+            table[BMU[0]][BMU[</span>1]] =<span style="color: #000000;"> True
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> print("table=", table)</span>
+<span style="color: #000000;">            
+            neighbors </span>= self.neighbor(BMU, table); <span style="color: #008000;">#</span><span style="color: #008000;"> 距离为1的节点</span>
+<span style="color: #000000;">            result.append(neighbors)
+            </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(r - 1<span style="color: #000000;">):
+                temp </span>=<span style="color: #000000;"> []
+                </span><span style="color: #0000ff;">for</span> x <span style="color: #0000ff;">in</span><span style="color: #000000;"> neighbors:
+                    temp </span>+=<span style="color: #000000;"> self.neighbor(x, table)
+                neighbors </span>= temp  <span style="color: #008000;">#</span><span style="color: #008000;"> 距离为2+i的结点</span>
+<span style="color: #000000;">                result.append(neighbors)
+        
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result
+            
+    </span><span style="color: #0000ff;">def</span> update_nodes(self, BMU, example, r, eta): <span style="color: #008000;">#</span><span style="color: #008000;"> 参数：优胜节点坐标，输入向量，优胜领域半径，学习率</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> print("r, eta=", r, eta)</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> print("before update=", self.nodes)</span>
+        w = self.nodes[BMU[0]][BMU[1<span style="color: #000000;">]]
+        w </span>+= eta * self.get_r_p(0) * (example - w) <span style="color: #008000;">#</span><span style="color: #008000;"> 更新优胜节点</span>
+        self.nodes[BMU[0]][BMU[1]] =<span style="color: #000000;"> normalize(w)
+        
+        neighbors </span>=<span style="color: #000000;"> self.get_neighbor(BMU, r);
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> print("neighbors=", neighbors)</span>
+        <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(len(neighbors)):
+            </span><span style="color: #0000ff;">for</span> pos <span style="color: #0000ff;">in</span> neighbors[i]: <span style="color: #008000;">#</span><span style="color: #008000;"> 更新距离为i+1的节点</span>
+                w = self.nodes[pos[0]][pos[1<span style="color: #000000;">]]
+                w </span>+= eta * self.get_r_p(i + 1) * (example -<span style="color: #000000;"> w)
+                self.nodes[pos[0]][pos[</span>1]] =<span style="color: #000000;"> normalize(w)
+        
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> print("after update=", self.nodes)</span>
+            
+    <span style="color: #0000ff;">def</span> eta(self, t): <span style="color: #008000;">#</span><span style="color: #008000;"> 参数：当前迭代次数，隐含参数：最大迭代次数，学习率初始值</span>
+        <span style="color: #0000ff;">if</span> t &lt;= self.MAX_ITERATION / 10: <span style="color: #008000;">#</span><span style="color: #008000;"> 前1/10次迭代学习率线性下降到1/20</span>
+            <span style="color: #0000ff;">return</span> self.init_eta - t *<span style="color: #000000;"> self.k1
+        </span><span style="color: #0000ff;">else</span>: <span style="color: #008000;">#</span><span style="color: #008000;"> 后9/10次迭代学习率线性下降到0</span>
+            <span style="color: #0000ff;">return</span> self.init_eta / 20 - (t - self.MAX_ITERATION / 10) *<span style="color: #000000;"> self.k2
+    
+    </span><span style="color: #0000ff;">def</span> get_r(self, t): <span style="color: #008000;">#</span><span style="color: #008000;"> 优胜邻域随着迭代次数变小</span>
+        <span style="color: #0000ff;">return</span> int(self.init_r * (1 - t / self.MAX_ITERATION)) <span style="color: #008000;">#</span><span style="color: #008000;"> 向下取整</span>
+        
+    <span style="color: #0000ff;">def</span> train(self, get_batch, MAX_ITERATION, init_eta, MIN_ETA, init_r): <span style="color: #008000;">#</span><span style="color: #008000;"> 参数：获取每次迭代所需样本的函数，最大迭代次数，学习率初始值，最小学习率，优胜领域初始值        </span>
+        self.MAX_ITERATION =<span style="color: #000000;"> MAX_ITERATION
+        self.init_eta </span>= init_eta <span style="color: #008000;">#</span><span style="color: #008000;"> 学习率初始值</span>
+        self.k1 = (19/20 * self.init_eta) / (1/10 * self.MAX_ITERATION) <span style="color: #008000;">#</span><span style="color: #008000;"> 学习率线性下降斜率1</span>
+        self.k2 = (1/20 * self.init_eta) / (9/10 * self.MAX_ITERATION) <span style="color: #008000;">#</span><span style="color: #008000;"> 学习率线性下降斜率2</span>
+        self.init_r =<span style="color: #000000;"> init_r
+        count </span>=<span style="color: #000000;"> 0
+        </span><span style="color: #0000ff;">while</span> count &lt; MAX_ITERATION <span style="color: #0000ff;">and</span> self.eta(count) &gt;<span style="color: #000000;"> MIN_ETA:
+            batch </span>=<span style="color: #000000;"> get_batch()
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> print("&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;count=", count)</span>
+            <span style="color: #008000;">#</span><span style="color: #008000;"> print("batch=", batch)</span>
+            <span style="color: #0000ff;">for</span> example <span style="color: #0000ff;">in</span><span style="color: #000000;"> batch:
+                </span><span style="color: #008000;">#</span><span style="color: #008000;"> print("example=", example)</span>
+                BMU =<span style="color: #000000;"> self.best_matching_unit(example)
+                </span><span style="color: #008000;">#</span><span style="color: #008000;"> print("BMU=",BMU)</span>
+<span style="color: #000000;">                self.update_nodes(BMU, example, self.get_r(count), self.eta(count))
+            count </span>= count + 1
+        <span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">迭代次数：</span><span style="color: #800000;">"</span><span style="color: #000000;">, count)
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">最终学习率：</span><span style="color: #800000;">"</span><span style="color: #000000;">, self.eta(count))
+        
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> mapping(self, vector):
+        vector </span>=<span style="color: #000000;"> normalize(vector)
+        </span><span style="color: #0000ff;">return</span> self.best_matching_unit(vector) <span style="color: #008000;">#</span><span style="color: #008000;"> 返回优胜节点坐标</span>
+<span style="color: #000000;">
+data </span>= [[1, 0, 0, 0], [1, 1, 0, 0], [1, 1, 1, 0], [0, 1, 0, 0], [1, 1, 1, 1<span style="color: #000000;">]]
+features </span>= np.array(list(map(normalize, data))) <span style="color: #008000;">#</span><span style="color: #008000;"> 归一化</span>
+    
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> full_batch():
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> features
+    
+som </span>=<span style="color: #000000;"> Som()
+som.initialize([</span>3, 2], 4<span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> testModel():
+    result </span>=<span style="color: #000000;"> list(map(som.mapping, features))
+    
+    count_pos </span>=<span style="color: #000000;"> {}
+    </span><span style="color: #0000ff;">for</span> pos <span style="color: #0000ff;">in</span><span style="color: #000000;"> result:
+        </span><span style="color: #0000ff;">if</span> result.count(pos) &gt;= 1<span style="color: #000000;">:
+            count_pos[str(pos[0]) </span>+ <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span> + str(pos[1])] =<span style="color: #000000;"> result.count(pos)
+
+    x </span>= np.array(list(map(<span style="color: #0000ff;">lambda</span><span style="color: #000000;"> x: x[0], result)));
+    y </span>= np.array(list(map(<span style="color: #0000ff;">lambda</span> x: x[1<span style="color: #000000;">], result)));
+    size </span>= np.array(list(map(<span style="color: #0000ff;">lambda</span> x: count_pos[str(x[0]) + <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span> + str(x[1<span style="color: #000000;">])], result)));
+    color </span>=<span style="color: #000000;"> np.arctan2(y, x)
+    
+    plt.scatter(x, y, s</span>=size * 300, c=color,alpha=0.6, marker=<span style="color: #800000;">'</span><span style="color: #800000;">*</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(len(x)): <span style="color: #008000;">#</span><span style="color: #008000;"> 打上标签</span>
+        plt.annotate(str(data[i]), xy = (x[i], y[i]), xytext = (x[i]+0.1, y[i]+0.1<span style="color: #000000;">))
+    plt.show() 
+
+som.train(full_batch, </span>10000, 0.6, 0.2, 3<span style="color: #000000;">)    
+testModel()</span></pre>
+</div>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201809/1042431-20180926173909291-1861019983.png" alt="" width="471" height="312" /></p>
+<p>&nbsp;</p>

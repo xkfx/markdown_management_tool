@@ -1,0 +1,207 @@
+<p>1、用filter求素数。</p>
+<p><a href="http://baike.baidu.com/link?url=_dbgib9G5UohidOJo_Psa7hHoLT9ROfxh360TaCubOeYlYHyY9nWqrUpE36Ff_5gADNQum2KyF580n2_bHIn2YIRW3gtzBWZDWRYQ4S18APOEPpnGqYPPm7PUVpqPcA1JIFMV1HON9hWOa7OFBoJ-ruG7MNGRcDxG74SWq_N1_UApOrf8rSVjQXF4Eh69uH-" target="_blank">埃拉托色尼筛选法。</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #ff0000;">#!/usr/bin/env python3
+# -*- coding: utf-8 -*-</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> _odd_iter():
+    n </span>= 1
+    <span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+        n </span>= n + 2
+        <span style="color: #0000ff;">yield</span><span style="color: #000000;"> n
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 这是一个从3开始的无限奇数序列</span>
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> _not_divisible(n):
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">lambda</span> x: x % n &gt;<span style="color: #000000;"> 0
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 动态的筛选函数，如果不能被n整除就返回True</span>
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> primes():
+    </span><span style="color: #0000ff;">yield</span> 2<span style="color: #000000;">
+    it </span>=<span style="color: #000000;"> _odd_iter()
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+        n </span>=<span style="color: #000000;"> next(it)
+        </span><span style="color: #0000ff;">yield</span><span style="color: #000000;"> n
+        it </span>= filter(_not_divisible(n), it) <span style="color: #008000;">#</span><span style="color: #008000;">不是n的倍数的留下！</span>
+
+<span style="color: #0000ff;">for</span> n <span style="color: #0000ff;">in</span><span style="color: #000000;"> primes():
+    </span><span style="color: #0000ff;">if</span> n &lt; 1000<span style="color: #000000;">:
+        </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(n)
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+        </span><span style="color: #0000ff;">break</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>D:\labs&gt;<span style="color: #000000;">python test.py
+</span>2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+101
+103
+107
+109
+113
+127
+131
+137
+139
+149
+151
+157
+163
+167
+173
+179
+181
+191
+193
+197
+199
+211
+223
+227
+229
+233
+239
+241
+251
+257
+263
+269
+271
+277
+281
+283
+293
+307
+311
+313
+317
+331
+337
+347
+349
+353
+359
+367
+373
+379
+383
+389
+397
+401
+409
+419
+421
+431
+433
+439
+443
+449
+457
+461
+463
+467
+479
+487
+491
+499
+503
+509
+521
+523
+541
+547
+557
+563
+569
+571
+577
+587
+593
+599
+601
+607
+613
+617
+619
+631
+641
+643
+647
+653
+659
+661
+673
+677
+683
+691
+701
+709
+719
+727
+733
+739
+743
+751
+757
+761
+769
+773
+787
+797
+809
+811
+821
+823
+827
+829
+839
+853
+857
+859
+863
+877
+881
+883
+887
+907
+911
+919
+929
+937
+941
+947
+953
+967
+971
+977
+983
+991
+997</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、python中的lambda函数</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">lambda</span> x:x%n&gt;0</pre>
+</div>
+<p>lambda语句中，冒号前的是参数，可以有多个，用逗号隔开，冒号右边的是返回值。</p>

@@ -1,0 +1,43 @@
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">#define</span> ALLOCSIZE 10000
+
+<span style="color: #0000ff;">static</span> <span style="color: #0000ff;">char</span><span style="color: #000000;"> allocbuf[ALLOCSIZE];
+</span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">char</span> *allocp =<span style="color: #000000;"> allocbuf;
+
+</span><span style="color: #0000ff;">char</span> *alloc(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+{
+    </span><span style="color: #0000ff;">if</span>(allocbuf + ALLOCSIZE - allocp &gt;=<span style="color: #000000;"> n){
+        allocp </span>+=<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">return</span> allocp -<span style="color: #000000;"> n;
+    }</span><span style="color: #0000ff;">else</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> afree(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">p)
+{
+    </span><span style="color: #0000ff;">if</span>(p &gt;= allocbuf &amp;&amp; p &lt; allocbuf +<span style="color: #000000;"> ALLOCSIZE)
+        allocp </span>=<span style="color: #000000;"> p;
+}
+
+
+</span><span style="color: #0000ff;">#define</span> ALLOCSIZE
+
+<span style="color: #0000ff;">static</span> <span style="color: #0000ff;">char</span><span style="color: #000000;"> allocbuf[ALLOCSIZE];
+</span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">char</span> *allocp =<span style="color: #000000;"> allocbuf;
+
+</span><span style="color: #0000ff;">char</span> *alloc(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+{
+    </span><span style="color: #0000ff;">if</span>(allocbuf + ALLOCSIZE - allocp &gt;=<span style="color: #000000;"> n){
+        allocp </span>+=<span style="color: #000000;"> n;
+        </span><span style="color: #0000ff;">return</span> allocp -<span style="color: #000000;"> n;
+    }</span><span style="color: #0000ff;">else</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> afree(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">p)
+{
+    </span><span style="color: #0000ff;">if</span>(p &gt;= allocbuf &amp;&amp; p &lt; allocbuf +<span style="color: #000000;"> ALLOCSIZE)
+        allocp </span>=<span style="color: #000000;"> p;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

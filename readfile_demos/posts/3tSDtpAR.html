@@ -1,0 +1,128 @@
+<h2>【JSP与Servlet之前台页面自动回复之实现】</h2>
+<p>该内容 来自于imooc的一个视屏教程。<a href="http://www.imooc.com/video/4562" target="_blank">http://www.imooc.com/video/4562</a></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709150828618-1843667758.png" alt="" /></p>
+<p>就是当点击 <strong>发送</strong> 的时候把这个<strong>对话框内容</strong>添加上去，然后由Servlet接收<strong>对话框内容参数</strong>&nbsp;并调Service把取得&nbsp;<strong>自动回复</strong> 的内容再添加到对话框去。</p>
+<p>&nbsp;至于具体的Service实现暂时不关心。</p>
+<p>&nbsp;</p>
+<p>1、首先打开JSP页面找到发送对应的button，添加事件，取名为 <strong>send()</strong></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709151851525-356218674.png" alt="" /></p>
+<p>2、下一步就是实现这个 send() 方法，这需要用到 AJAX 参考 <a href="http://htmldog.com/guides/javascript/intermediate/jqueryajax/" target="_blank">--&gt;</a></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709154142712-1736852583.png" alt="" width="304" height="165" /></p>
+<p>参考上面的就可以轻易看懂下面的代码了</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span><span style="color: #000000;"> send() {
+    </span><span style="color: #0000ff;">var</span> content = $("#content"<span style="color: #000000;">).val();
+    </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">content) {
+        alert(</span>"请输入内容！"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+    $.ajax({
+        url : <span style="color: #ff0000;"><strong>$(</strong></span></span><span style="color: #ff0000;"><strong>"#basePath").val() + "AutoReplyServlet.action"</strong></span><span style="color: #000000;">,
+        type : </span>"POST"<span style="color: #000000;">,
+        dataType : </span>"text"<span style="color: #000000;">,
+        timeout : </span>10000<span style="color: #000000;">,
+        success : </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (data) {
+            appendDialog(</span>"talk_recordboxme","My账号"<span style="color: #000000;">,content);
+            appendDialog(</span>"talk_recordbox","公众号"<span style="color: #000000;">,data);
+            $(</span>"#content").val(""<span style="color: #000000;">);
+            render();
+        },
+        data : {</span>"content"<span style="color: #000000;">:content}
+    });
+}</span>&nbsp;</pre>
+</div>
+<p>很典型的&nbsp;$("#content").val() 既充当了 getter 也充当了 setter&nbsp;</p>
+<p>完整的代码贴在底部 --&gt;&nbsp;</p>
+<p>&nbsp;</p>
+<p>3、把这个 .js 文件包含进JSP页面</p>
+<div class="cnblogs_code">
+<pre>    &lt;script type="text/javascript" src="&lt;%= basePath %&gt;resources/js/front/talk.js"&gt;&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、随便写个 Servlet 测试一下</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.imooc.servlet;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.PrintWriter;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.ServletException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServlet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> import com.imooc.service.QueryService;</span>
+
+<span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 自动回复功能控制层，
+ * 针对AJAX的
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+@SuppressWarnings(</span>"serial"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> AutoReplyServlet <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> doGet(HttpServletRequest req, HttpServletResponse resp)
+            </span><span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        resp.setContentType(</span>"text/html;charset=utf-8"<span style="color: #000000;">);
+        PrintWriter out </span>=<span style="color: #000000;"> resp.getWriter();
+        out.write(</span>"我听不懂你在说啥"); <span style="color: #008000;">//</span><span style="color: #008000;"> 本来这里是需要调Service的</span>
+<span style="color: #000000;">        out.close();
+    }
+    
+    @Override
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> doPost(HttpServletRequest req, HttpServletResponse resp)
+            </span><span style="color: #0000ff;">throws</span><span style="color: #000000;"> ServletException, IOException {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.doGet(req, resp);
+    }
+}</span></pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201707/1042431-20170709153043212-522046531.png" alt="" width="539" height="295" /></p>
+<p>&nbsp;完善 Service 之后就大功告成了。。。</p>
+<p>&nbsp;</p>
+<p><em>JSP页面</em></p>
+<div class="cnblogs_code">
+<pre><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ taglib prefix</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">c</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> uri</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">http://java.sun.com/jsp/jstl/core</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> path </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getContextPath();
+</span><span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> basePath </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getScheme()</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">://</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">request.getServerName()</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">:</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">request.getServerPort()</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">path</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">/</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.w3.org/1999/xhtml"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>微信公众号<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">讨论区滚动条begin</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="&lt;%= basePath %&gt;resources/css/jscrollpane1.css"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="&lt;%= basePath %&gt;resources/js/common/jquery-1.8.0.min.js"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> the mousewheel plugin </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="&lt;%= basePath %&gt;resources/js/common/jquery.mousewheel.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> the jScrollPane script </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="&lt;%= basePath %&gt;resources/js/common/jquery.jscrollpane.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="&lt;%= basePath %&gt;resources/js/common/scroll-startstop.events.jquery.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">讨论区滚动条end</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="&lt;%= basePath %&gt;resources/js/front/talk.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+       <span style="color: #ff0000;"><strong> &lt;input type="hidden" value="&lt;%= basePath %&gt;" id="basePath"/&gt;</strong></span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="talk"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="talk_title"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>正在与公众号对话<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="talk_record"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="jp-container"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="jp-container"</span><span style="color: #0000ff;">&gt;</span>
+                    
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="talk_word"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #ff0000;">&amp;nbsp;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="add_face"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="facial"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="添加表情"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span> <span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;"><strong>id="content"</strong></span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="messages emotion"</span>   <span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="talk_send"</span><span style="color: #ff0000;"> onclick</span><span style="color: #0000ff;">="send();"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="发送"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="发送"</span> <span style="color: #0000ff;">/&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><em>JS函数（太长。。。不贴了</em></p>
+<p>&nbsp;</p>

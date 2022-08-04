@@ -1,0 +1,223 @@
+<p>饮水思源：<a href="https://www.bilibili.com/video/BV1Zy4y1K7SH?p=134" target="_blank">https://www.bilibili.com/video/BV1Zy4y1K7SH?p=134</a></p>
+<p>一些组件库：</p>
+<p><a href="https://nutui.jd.com/#/" target="_blank">https://nutui.jd.com/#/</a></p>
+<p><a href="https://element.eleme.cn/#/zh-CN" target="_blank">https://element.eleme.cn/#/zh-CN</a></p>
+<p><a href="https://www.antdv.com/docs/vue/introduce-cn/" target="_blank">https://www.antdv.com/docs/vue/introduce-cn/</a></p>
+<p>完整引入会导致网络传输数据体积庞大（所有的、不管用不用得到都被注册成组件），可以在开发者工具中的Network中查看传输数据大小。</p>
+<p>因此比较建议&ldquo;按需引入&rdquo;</p>
+<p>①安装配置</p>
+<div class="cnblogs_code">
+<pre>npm i element-ui -<span style="color: #000000;">S
+npm </span><span style="color: #0000ff;">install</span> babel-plugin-component -D</pre>
+</div>
+<p>按官方教程的写法会报<strong><span style="color: #ff0000;">Error: Cannot find module 'babel-preset-es2015'</span></strong></p>
+<p>略作修改babel.config.js：</p>
+<div class="cnblogs_code">
+<pre>module.exports =<span style="color: #000000;"> {
+  presets: [
+    </span>'@vue/cli-plugin-babel/preset'<span style="color: #000000;">,
+    [</span>"@babel/preset-env", { "modules": <span style="color: #0000ff;">false</span><span style="color: #000000;"> }],
+  ],
+  </span>"plugins"<span style="color: #000000;">: [
+    [
+      </span>"component"<span style="color: #000000;">,
+      {
+        </span>"libraryName": "element-ui"<span style="color: #000000;">,
+        </span>"styleLibraryName": "theme-chalk"<span style="color: #000000;">
+      }
+    ]
+  ],  
+}</span></pre>
+</div>
+<p>②用Element改造<a class="postTitle2 vertical-middle" href="https://www.cnblogs.com/xkxf/p/15880324.html" target="_blank">Vue.js的github案例</a></p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220216121344060-2852713.gif" alt="" width="584" height="302" loading="lazy" /></p>
+<p>main.js：</p>
+<div class="cnblogs_code">
+<pre>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<span style="color: #000000;">
+import { 
+  Container, 
+  Header,
+  Main,
+  Button,
+  Row,
+  Col,
+  Input,
+  Avatar,
+  Skeleton,
+  Message,
+  Empty,
+} from </span>'element-ui'<span style="color: #000000;">;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 写法一Vue.component(Button.name, Button);</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> Vue.component('94玩', Button); 可以但不推荐</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 采用如下写法二from 'element-ui';</span>
+<span style="color: #000000;">Vue.use(Container)
+Vue.use(Header)
+Vue.use(Main)
+Vue.use(Button)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Input)
+Vue.use(Avatar)
+Vue.use(Skeleton)
+Vue.use(Empty)
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span>
+
+<span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  render: h </span>=&gt;<span style="color: #000000;"> h(App),
+  beforeCreate() {
+    Vue.prototype.$bus </span>= <span style="color: #0000ff;">this</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 这个$bus可以换其它名字</span>
+    Vue.prototype.$message = Message; <span style="color: #008000;">//</span><span style="color: #008000;"> 这个$bus可以换其它名字</span>
+<span style="color: #000000;">  },
+}).$mount(</span>'#app')</pre>
+</div>
+<p>App.vue：</p>
+<div class="cnblogs_code">
+<pre>&lt;template&gt;
+  &lt;el-container&gt;
+    &lt;el-header&gt;
+      &lt;h1&gt;Search Github Users&lt;/h1&gt;  
+    &lt;/el-header&gt;
+    &lt;el-main&gt;
+      &lt;Search /&gt;
+      &lt;MyList /&gt;
+    &lt;/el-main&gt;    
+  &lt;/el-container&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+import Search from </span>'./components/Search.vue'<span style="color: #000000;">
+import MyList from </span>'./components/MyList.vue'<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span>'App'<span style="color: #000000;">,
+  components: { 
+    Search,  
+    MyList, 
+  }
+}
+</span>&lt;/script&gt;</pre>
+</div>
+<p>MyList.vue：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span> 
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 展示欢迎界面 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="stateCode === 0"</span><span style="color: #0000ff;">&gt;</span>welcome!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 展示加载信息 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="stateCode === 1"</span><span style="color: #0000ff;">&gt;</span>Loading<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 展示用户列表 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="my-list"</span><span style="color: #ff0000;"> v-show</span><span style="color: #0000ff;">="users.length"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="card"</span><span style="color: #ff0000;"> v-for</span><span style="color: #0000ff;">="user in users"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="user.login"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">:href</span><span style="color: #0000ff;">="user.html_url"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="_blank"</span><span style="color: #0000ff;">&gt;</span>     
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-avatar </span><span style="color: #ff0000;">shape</span><span style="color: #0000ff;">="circle"</span><span style="color: #ff0000;"> :size</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> :src</span><span style="color: #0000ff;">="user.avatar_url"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">el-avatar</span><span style="color: #0000ff;">&gt;</span>   
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{user.login}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 展示错误信息 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="stateCode === 3"</span><span style="color: #0000ff;">&gt;</span>错误信息：{{errorMsg}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 展示无数据信息 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-empty </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="stateCode === 4"</span><span style="color: #ff0000;"> :image-size</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">el-empty</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+  name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">MyList</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+  components: {    
+  },
+  data() {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+      stateCode: </span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">,
+      users: [],
+      errorMsg: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,
+    }
+  },
+  methods: {
+    handleUpdateUsers(stateOfRequest) { 
+      </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.stateCode </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> stateOfRequest.code
+      </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (stateOfRequest.code </span><span style="background-color: #f5f5f5; color: #000000;">===</span> <span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">) {
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.errorMsg </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> stateOfRequest.data
+      } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.users </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> stateOfRequest.data
+      }      
+    },
+  },
+  mounted() {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$bus.$on(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updateUsers</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.handleUpdateUsers);    
+  },
+  beforeDestroy() {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$bus.$off(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updateUsers</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+  },
+}
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+  #my-list </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> flex</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    flex-wrap</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> wrap</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+  <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+  .card </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+  <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>MyHeader.vue：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-row </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="flex"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="row-bg"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-col </span><span style="color: #ff0000;">:span</span><span style="color: #0000ff;">="6"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">el-input </span><span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="keyWord"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="enter the name u search"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">el-input</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">el-col</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-button </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="primary"</span><span style="color: #ff0000;"> icon</span><span style="color: #0000ff;">="el-icon-search"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="getUsers"</span><span style="color: #0000ff;">&gt;</span>search<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="clear"</span><span style="color: #0000ff;">&gt;</span>clear<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-button</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-row</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+import axios from </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">axios</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">
+
+export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+  name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Search</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+  data() {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+      keyWord: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,
+    }
+  },
+  methods: {
+    getUsers() {
+      </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.keyWord.trim() </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">) {
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$message(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">输入不能为空</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;">
+      }
+      let stateOfRequest </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {
+        code: </span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 0 从未更新的初态 1 加载中 2 请求成功 3 请求失败</span>
+<span style="background-color: #f5f5f5; color: #000000;">        data: [],
+      }
+      </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$bus.$emit(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updateUsers</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, stateOfRequest)
+      axios.get(`https:</span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">api.github.com/search/users?q=${this.keyWord}`)</span>
+<span style="background-color: #f5f5f5; color: #000000;">        .then(resp </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+          stateOfRequest.code </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">
+          stateOfRequest.data </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> resp.data.items
+          </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$bus.$emit(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updateUsers</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, stateOfRequest)
+        })
+        .</span><span style="background-color: #f5f5f5; color: #0000ff;">catch</span><span style="background-color: #f5f5f5; color: #000000;">(error </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+          stateOfRequest.code </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">
+          stateOfRequest.data </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> error.message
+          </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$bus.$emit(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updateUsers</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, stateOfRequest)
+        })  
+    },
+    clear() {
+      let stateOfRequest </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {
+        code: </span><span style="background-color: #f5f5f5; color: #000000;">4</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 0 从未更新的初态 1 加载中 2 请求成功 3 请求失败</span>
+<span style="background-color: #f5f5f5; color: #000000;">        data: [],
+      }
+      </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$bus.$emit(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updateUsers</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, stateOfRequest)
+    }
+  },
+}
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>

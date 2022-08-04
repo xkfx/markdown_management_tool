@@ -1,0 +1,299 @@
+<p>1、撕页问题：撕去一页，剩余页码和16023，问原书总共多少页，撕去的是第几页。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> recent_page;
+    </span><span style="color: #0000ff;">int</span> total_pages = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> REST_PAGES = <span style="color: #800080;">16023</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> posible_page = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 枚举页数</span>
+    <span style="color: #0000ff;">int</span> k = -<span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (recent_page = <span style="color: #800080;">1</span>; k != <span style="color: #800080;">0</span>; ++<span style="color: #000000;">recent_page) {
+        total_pages </span>+=<span style="color: #000000;"> recent_page;
+        </span><span style="color: #0000ff;">if</span> (total_pages - REST_PAGES &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            k </span>= (total_pages - REST_PAGES - <span style="color: #800080;">1</span>) % <span style="color: #800080;">2</span><span style="color: #000000;">;
+            posible_page </span>= (total_pages - REST_PAGES - <span style="color: #800080;">1</span>) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        }
+    } 
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Total page is </span><span style="color: #800000;">"</span> &lt;&lt; recent_page - <span style="color: #800080;">1</span> &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Posible page is </span><span style="color: #800000;">"</span> &lt;&lt; posible_page &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、计算标准差。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;cmath&gt;
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> n;    <span style="color: #008000;">//</span><span style="color: #008000;"> 浮点数个数</span>
+    cin &gt;&gt;<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> MAXLINE = <span style="color: #800080;">1000</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> x[MAXLINE];
+    </span><span style="color: #0000ff;">double</span> sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        cin </span>&gt;&gt;<span style="color: #000000;"> x[i];
+        sum </span>+=<span style="color: #000000;"> x[i];
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算平均值</span>
+    <span style="color: #0000ff;">double</span> ave = sum /<span style="color: #000000;"> n;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算标准差</span>
+    sum = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        sum </span>+= (x[i] - ave) * (x[i] -<span style="color: #000000;"> ave);
+    }
+    </span><span style="color: #0000ff;">double</span> vari = sum /<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">double</span> std =<span style="color: #000000;"> sqrt(vari);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Standard Deviation is </span><span style="color: #800000;">"</span> &lt;&lt; std &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、题目：函数process()用于分解字符串mainstr中的各单词并存入结构体数组。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+#include</span>&lt;cstring&gt;
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> WORDS {
+    </span><span style="color: #0000ff;">char</span> w[<span style="color: #800080;">30</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">short</span><span style="color: #000000;"> w_len;
+} word[</span><span style="color: #800080;">100</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span> process(<span style="color: #0000ff;">char</span> *mainstr, <span style="color: #0000ff;">struct</span> WORDS *<span style="color: #000000;">p);
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> str[] = <span style="color: #800000;">"</span><span style="color: #800000;">  Hello world</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> words =<span style="color: #000000;"> process(str , word);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">words : </span><span style="color: #800000;">"</span> &lt;&lt; words &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != words; ++<span style="color: #000000;">i) {
+        cout </span>&lt;&lt; word[i].w &lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span> process(<span style="color: #0000ff;">char</span> *mainstr, <span style="color: #0000ff;">struct</span> WORDS *<span style="color: #000000;">p)
+{
+    </span><span style="color: #0000ff;">int</span> str_index = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> word_index = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> words = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 跳过开头空格</span>
+    <span style="color: #0000ff;">while</span> (isspace(*(mainstr +<span style="color: #000000;"> str_index))) {
+        </span>++<span style="color: #000000;">str_index;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 处理单词</span>
+    <strong><span style="color: #0000ff;">while</span> (str_index &lt; strlen(mainstr) - <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        </span></strong><span style="color: #0000ff;">while</span> (!isspace(*(mainstr +<span style="color: #000000;"> str_index))) {
+            (p </span>+ words)-&gt;w[word_index++] = *(mainstr +<span style="color: #000000;"> str_index);
+            </span>++<span style="color: #000000;">str_index;
+        }
+        </span>++str_index;    <span style="color: #008000;">//</span><span style="color: #008000;"> 跳过空格
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 准备记录下一个单词</span>
+        (p + words) -&gt; w[word_index] = <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        </span>++<span style="color: #000000;">words;    
+        word_index </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> words;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;4、重载abs。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 版本1</span>
+<span style="color: #0000ff;">int</span> abs(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Use int abs(int x):</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">if</span> (x &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+    }
+    </span><span style="color: #0000ff;">return</span> -<span style="color: #000000;">x;
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 版本2</span>
+<span style="color: #0000ff;">double</span> abs(<span style="color: #0000ff;">double</span><span style="color: #000000;"> x)
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Use double abs(double x):</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">if</span> (x &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+    }
+    </span><span style="color: #0000ff;">return</span> -<span style="color: #000000;">x;
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 函数测试</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; abs(-<span style="color: #800080;">1.7</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; abs(-<span style="color: #800080;">1</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、约瑟夫问题</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> MAXNUM = <span style="color: #800080;">100</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Person {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+    Person </span>*<span style="color: #000000;">next;
+    Person </span>*<span style="color: #000000;">last;
+} person[MAXNUM];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, m;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+    cin &gt;&gt; n &gt;&gt;<span style="color: #000000;"> m;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">2</span>; i &lt;= n; ++<span style="color: #000000;">i) {
+        person[i].num </span>=<span style="color: #000000;"> i;
+        person[i].last </span>= &amp;person[i-<span style="color: #800080;">1</span><span style="color: #000000;">];
+        person[i].next </span>= &amp;person[i+<span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+    person[n].next </span>= &amp;person[<span style="color: #800080;">1</span><span style="color: #000000;">];
+    person[</span><span style="color: #800080;">1</span>].num = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    person[</span><span style="color: #800080;">1</span>].last = &amp;<span style="color: #000000;">person[n];
+    person[</span><span style="color: #800080;">1</span>].next = &amp;person[<span style="color: #800080;">2</span><span style="color: #000000;">];
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 报数</span>
+    <span style="color: #0000ff;">int</span> rest_person =<span style="color: #000000;"> n;
+    </span><span style="color: #0000ff;">struct</span> Person recent_person = person[<span style="color: #800080;">1</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (rest_person &gt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span> (k ==<span style="color: #000000;"> m) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 出局</span>
+            --<span style="color: #000000;">rest_person;
+            cout </span>&lt;&lt; recent_person.num &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+            recent_person.last</span>-&gt;next =<span style="color: #000000;"> recent_person.next;
+            k </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        }
+        recent_person </span>= *<span style="color: #000000;">(recent_person.next);
+        </span>++<span style="color: #000000;">k;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>把 k==m 写成 k=m。。。</p>
+<p>&nbsp;</p>
+<p>6、狼找兔子。。。</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">#define</span> MAX 100
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Cave {
+    </span><span style="color: #0000ff;">int</span> beFoundTimes = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    Cave </span>*<span style="color: #000000;">nextCave;
+} cave[MAX];
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 洞穴个数</span>
+    <span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+    cin </span>&gt;&gt;<span style="color: #000000;"> n;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        cave[i].nextCave </span>= &amp;cave[i+<span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+    cave[n</span>-<span style="color: #800080;">1</span>].nextCave = &amp;cave[<span style="color: #800080;">0</span><span style="color: #000000;">];
+    
+    </span><span style="color: #0000ff;">int</span> foundTimes = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> distance = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    Cave recentCave;
+    recentCave.nextCave </span>= &amp;cave[<span style="color: #800080;">0</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">while</span> (foundTimes &lt; <span style="color: #800080;">1000</span><span style="color: #000000;">) {
+        </span>++<span style="color: #000000;">foundTimes;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 找到的洞穴</span>
+        ++(recentCave.nextCave-&gt;<span style="color: #000000;">beFoundTimes);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 决定下一次要找的洞穴</span>
+        ++<span style="color: #000000;">distance;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt;= distance; ++<span style="color: #000000;">j) {
+            recentCave </span>= *<span style="color: #000000;">(recentCave.nextCave);
+        }
+    }
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (cave[i].beFoundTimes == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+            cout </span>&lt;&lt; i &lt;&lt;<span style="color: #000000;"> endl;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>7、冒泡排序</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> arr[<span style="color: #800080;">10</span>] = {<span style="color: #800080;">2</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">19</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">8</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">13</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">23</span><span style="color: #000000;">};
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Origin array:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> x : arr) {
+        cout </span>&lt;&lt; x &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    cout </span>&lt;&lt; std::endl &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">After sort:</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">10</span> - i - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">j) {
+            </span><span style="color: #0000ff;">if</span> (arr[j] &gt; arr[j+<span style="color: #800080;">1</span><span style="color: #000000;">]) {
+                temp </span>=<span style="color: #000000;"> arr[j];
+                arr[j] </span>= arr[j+<span style="color: #800080;">1</span><span style="color: #000000;">];
+                arr[j</span>+<span style="color: #800080;">1</span>] =<span style="color: #000000;"> temp;
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span><span style="color: #000000;"> x : arr) {
+        cout </span>&lt;&lt; x &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>8、插入排序insertsort</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+<span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cout;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::cin;
+</span><span style="color: #0000ff;">using</span><span style="color: #000000;"> std::endl;
+</span><span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> *p, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len);
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> MAX = <span style="color: #800080;">100</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> arr[MAX] = {<span style="color: #800080;">0</span><span style="color: #000000;">};
+    </span><span style="color: #0000ff;">int</span> len = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> temp = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt;<span style="color: #000000;"> temp) {
+        </span>++<span style="color: #000000;">len;
+        insert(temp, arr, len);
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">arr: </span><span style="color: #800000;">"</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; len; ++<span style="color: #000000;">i) {
+            cout </span>&lt;&lt; arr[i] &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span><span style="color: #000000;">;
+        }
+        cout </span>&lt;&lt;<span style="color: #000000;"> endl;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> *p, <span style="color: #0000ff;">int</span><span style="color: #000000;"> len)
+{
+    </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取插入数据的位置</span>
+    <span style="color: #0000ff;">while</span> (*(p+k) != <span style="color: #800080;">0</span> &amp;&amp; x &gt; *(p+<span style="color: #000000;">k)) {
+        </span>++<span style="color: #000000;">k;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 下标指向需要改变位置的元素</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = len - <span style="color: #800080;">1</span>; i &gt;= k; --<span style="color: #000000;">i) {
+        </span>*(p+i+<span style="color: #800080;">1</span>) = *(p+<span style="color: #000000;">i);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 插入数据</span>
+    *(p+k) =<span style="color: #000000;"> x;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,31 @@
+<p>原文链接：<a href="https://maven.apache.org/what-is-maven.html#" target="_blank">https://maven.apache.org/what-is-maven.html#</a></p>
+<h2>Maven是什么，以及它核心思想</h2>
+<p>Maven的本质是一个项目管理工具，</p>
+<p>它同样应用了面向对象的思想，它把项目开发和管理的过程抽象成一个项目对象模型（POM，Project Object Model）。具体而言，应用maven相当于下载了一个类似于git的命令行工具&mdash;&mdash;mvn</p>
+<p>根据它的官方介绍，Maven的主要目标是允许开发人员在最短的时间内理解一个开发工作的完整生命周期（&nbsp;the complete state of a development effort）。为了达到这个目标，Maven处理了几个需要关注的领域：①简化构建过程；②提供统一的构建系统；③提供优质的项目信息（<a href="https://mvnrepository.com/" target="_blank">https://mvnrepository.com/</a>）；④鼓励更好的发展实践</p>
+<h3>简化构建过程</h3>
+<p>虽然使用Maven并不能消除了解底层机制的需要，但Maven确实让开发人员避开了许多细节。</p>
+<h3>提供统一的构建系统</h3>
+<p>Maven使用它的项目对象模型（(POM)）和一组插件构建一个项目。一旦熟悉了一个Maven项目，就知道了所有Maven项目是如何构建的。这节省了在许多项目中探索的时间。</p>
+<h3>提供优质的项目信息</h3>
+<p>Maven提供有用的项目信息，这些信息部分来自POM，部分来自项目的源代码。例如，Maven可以提供:</p>
+<ul>
+<li>从源代码控制中直接创建的更改日志（Change log created directly from source control）</li>
+<li>Cross referenced sources</li>
+<li>由项目管理的邮件列表</li>
+<li>项目使用的依赖项</li>
+<li>包含覆盖率的单元测试报告</li>
+</ul>
+<p>第三方代码分析产品还提供Maven插件，可以将它们的报告添加到Maven提供的标准信息中。</p>
+<h3>为最佳实践开发提供指导方针</h3>
+<p>Maven的目标是收集最佳实践开发的当前原则，并使项目朝着最佳实践的方向演变变得容易。</p>
+<p>例如，规范、执行和报告单元测试是使用Maven的正常构建周期的一部分。目前的单元测试最佳实践被用作指导方针：</p>
+<ul>
+<li>将测试源代码保存在独立但并行的源代码树中</li>
+<li>使用测试用例命名约定来定位和执行测试</li>
+<li>让测试用例设置他们的环境，而不是为测试准备定制构建</li>
+</ul>
+<p>Maven还协助项目工作流程，如发布和问题管理。</p>
+<p>Maven还就如何布局项目的目录结构提供了一些指导原则。学习了布局之后，就可以轻松地浏览其他使用Maven的项目了。</p>
+<p>虽然对项目布局采取了一种固执的方法，但由于历史原因，一些项目可能不适合这种结构。虽然Maven被设计成可以灵活地满足不同项目的需求，但它不能在不牺牲其目标的情况下满足每种情况。</p>
+<p>如果您的项目有一个不寻常的、无法重新组织的构建结构，那么您可能不得不放弃一些特性，或者干脆不使用Maven。</p>

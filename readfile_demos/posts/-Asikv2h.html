@@ -1,0 +1,139 @@
+<p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-controller" target="_blank">https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-controller</a></p>
+<h2 id="mvc-ann-controller">1.3.1. Declaration</h2>
+<p>您可以通过在Servlet的WebApplicationContext中使用标准Spring bean定义来定义controller&nbsp;bean</p>
+<p><span style="color: #ff0000;">@Controller</span>原型允许自动检测，与Spring的通用支持一致，它可以检测类路径中的@Component类，并为它们自动注册bean定义。它还充当带注释类的原型，指示其作为web组件的角色。</p>
+<p>要启用自动检测此类<span style="color: #ff0000;">@Controller bean</span>，可以将组件扫描添加到Java配置中，如下例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Configuration
+@ComponentScan(</span>"org.example.web"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> WebConfig {
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<h3>AOP Proxies</h3>
+<p>在某些情况下，您可能需要在运行时使用AOP代理来装饰控制器。一个例子是，如果您选择在控制器上直接使用<span style="color: #ff0000;">@Transactional注释</span>。在这种情况下，特别是对于控制器，我们建议使用基于类的代理。这通常是控制器的默认选择。</p>
+<h2>1.3.2. Request Mapping</h2>
+<p>您可以使用<span style="color: #ff0000;">@RequestMapping注释</span>将请求映射到控制器方法。它有各种属性可以通过<strong><span style="color: #ff0000;">URL、HTTP方法、请求参数、头和媒体类型</span></strong>进行匹配。可以在类级别使用它来表示<span style="color: #ff0000;">共享映射</span>，也可以在方法级别使用它来缩小到特定的端点映射。</p>
+<p><span style="color: #ff0000;">@RequestMapping</span>还有一些特定于HTTP方法的快捷方式变体：</p>
+<ul>
+<li>@GetMapping</li>
+<li>@PostMapping</li>
+<li>@PutMapping</li>
+<li>@DeleteMapping</li>
+<li>@PatchMapping</li>
+</ul>
+<h3 id="mvc-ann-requestmapping-uri-templates">URI patterns</h3>
+<p>@RequestMapping方法可以使用URL模式进行映射。有两种选择：</p>
+<ul>
+<li><span style="color: #ff0000;">PathPattern&thinsp;</span>&mdash;&thinsp;与URL路径匹配的预解析模式也预解析为PathContainer。该解决方案专为web使用而设计，可以有效地处理编码和路径参数，并进行高效匹配。</li>
+<li><span style="color: #ff0000;">AntPathMatcher&thinsp;</span>&mdash;&thinsp;根据字符串路径匹配字符串模式。这是Spring配置中用于选择类路径、文件系统和其他位置上的资源的原始解决方案。它的效率较低，而且字符串路径输入对于有效处理URL的编码和其他问题是一个挑战。</li>
+</ul>
+<p>&nbsp;一些示例模式（patterns）：</p>
+<ul>
+<li><code>"/resources/ima?e.png"</code>&nbsp;- match <span style="color: #ff0000;">one character</span> in a path segment</li>
+<li><code>"/resources/*.png"</code>&nbsp;- match <span style="color: #ff0000;">zero or more</span> characters in a path segment</li>
+<li><code>"/resources/**"</code>&nbsp;- match<span style="color: #ff0000;"> multiple path</span> segments</li>
+<li><code>"/projects/{project}/versions"</code>&nbsp;- match a path segment and <span style="color: #ff0000;">capture it as a variable</span></li>
+<li><code>"/projects/{project:[a-z]+}/versions"</code>&nbsp;- <span style="color: #ff0000;">match and capture a variable with <strong>a regex</strong></span></li>
+</ul>
+<p>捕获的URI变量可以通过<strong>@PathVariable</strong>访问。例如：</p>
+<div class="cnblogs_code">
+<pre><strong>@GetMapping("/owners/{ownerId}/pets/{petId}"<span style="color: #000000;">)
+</span></strong><span style="color: #0000ff;">public</span><span style="color: #000000;"> Pet findPet(<span style="color: #ff0000;">@PathVariable</span> Long ownerId, <span style="color: #ff0000;">@PathVariable</span> Long petId) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<p>您可以在类和方法级别声明URI变量，如下例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Controller
+@RequestMapping(</span>"/owners/<span style="color: #ff0000;">{ownerId}</span>"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> OwnerController {
+
+    @GetMapping(</span>"/pets/<span style="color: #ff0000;">{petId}</span>"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Pet findPet(@PathVariable Long ownerId, @PathVariable Long petId) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p><span style="color: #0000ff;">URI变量会<strong>自动转换为适当的类型，</strong></span>或者引发TypeMissatchException。默认情况下支持简单类型（int、long、Date等），<strong><span style="color: #0000ff;">您可以注册对任何其他数据类型的支持</span></strong>。请参阅类型转换和DataBinder（<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-typeconversion" target="_blank">Type Conversion</a>&nbsp;and&nbsp;<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-initbinder" target="_blank"><code>DataBinder</code></a>）</p>
+<p>您可以显式地命名URI变量（例如<span style="color: #ff0000; background-color: #ffff99;">@PathVariable("customId")</span>），但<span style="color: #ff0000;">如果名称相同</span>，并且您的代码是使用调试信息或Java 8上的-parameters编译器标志编译的，则可以省略该细节。</p>
+<h3 id="mvc-ann-requestmapping-params-and-headers">Parameters, headers</h3>
+<p>可以根据请求参数条件缩小请求映射范围。您可以测试是否存在请求参数（myParam）、是否没有（！myParam）或是否存在特定值（myParam=myValue）。以下示例显示了如何测试特定值：</p>
+<div class="cnblogs_code">
+<pre>@GetMapping(path = "/pets/{petId}", params = "myParam=myValue"<span style="color: #000000;">) 
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> findPet(@PathVariable String petId) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<p>您也可以将其用于请求头条件，如下例所示：</p>
+<div class="cnblogs_code">
+<pre>@GetMapping(path = "/pets", headers = "myHeader=myValue"<span style="color: #000000;">) 
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> findPet(@PathVariable String petId) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<h2 id="mvc-ann-methods">1.3.3. Handler Methods</h2>
+<p>@RequestMapping处理程序方法具有灵活的签名，可以从一系列受支持的<strong><span style="color: #ff0000;">控制器方法参数和返回值</span></strong>中进行选择。</p>
+<h3 id="mvc-ann-arguments">Method Arguments</h3>
+<p>下表描述了受支持的控制器方法参数。</p>
+<h3>Type Conversion</h3>
+<p>一些表示基于字符串的请求输入<span style="color: #ff0000;">的带注释控制器方法参数</span>（例如@RequestParam、@RequestHeader、@PathVariable、@MatrixVariable和@CookieValue）如果被声明为字符串以外的内容，则可能需要进行类型转换。</p>
+<p>在这种情况下，类型转换会根据配置的转换器自动应用。默认情况下，支持简单类型（int、long、Date等）。<span style="background-color: #ffff99; color: #ff0000;">您可以通过<strong>WebDataBinder（请参阅<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-initbinder" target="_blank"><span style="background-color: #ffff99; color: #ff0000;"><code>DataBinder</code></span></a>）</strong>或通过向FormattingConversionService注册格式化程序来自定义类型转换。请参见<strong><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#format" target="_blank"><span style="background-color: #ffff99; color: #ff0000;">Spring字段格式</span></a>。</strong></span></p>
+<p>类型转换中的一个实际问题是空字符串源值的处理。如果由于类型转换而变为null，则此类值将被视为缺失。对于Long、UUID和其他目标类型，情况可能就是这样。如果希望允许注入null，可以在参数注释上使用required标志，或者将参数声明为<span style="color: #ff0000;">@Nullable</span>。</p>
+<h3 id="mvc-ann-matrix-variables">Matrix Variables</h3>
+<p>RFC 3986讨论了路径段中的<span style="color: #ff0000;">名称-值对（name-value pairs）</span>。在Spring MVC中，我们根据Tim Berners Lee的&ldquo;旧帖子&rdquo;将它们称为&ldquo;矩阵变量&rdquo;，但它们也可以称为URI路径参数。</p>
+<h3 id="mvc-ann-requestparam">@RequestParam</h3>
+<p>可以使用@RequestParam注释将Servlet请求参数（即<span style="color: #ff0000;">查询参数</span>或表单数据）绑定到<span style="color: #ff0000;">控制器中的方法参数</span>。</p>
+<p><span style="color: #ff0000;">默认情况下，使用此注释的方法参数是必需的</span>，但您可以通过将@RequestParam注释的<span style="color: #ff0000;">required标志设置为false</span>或或使用<strong><span style="color: #ff0000;">java.util.Optional</span></strong>声明参数来指定方法参数是可选的。</p>
+<p>如果目标方法参数类型不是字符串，则会自动应用类型转换。参见<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-typeconversion" target="_blank">类型转换</a>。</p>
+<p>将参数类型声明为数组或列表可以解析同一参数名的多个参数值。</p>
+<p>如果@RequestParam注释被声明为<span style="color: #ff0000;">Map&lt;String，String&gt;</span>或<span style="color: #ff0000;">MultiValueMap&lt;String，String&gt;</span>，且注释中未指定参数名称，则会<span style="color: #ff0000; background-color: #ffff99;">使用每个给定参数名称的请求参数值填充该映射</span>。</p>
+<p>注意@RequestParam的使用是可选的（例如，设置其属性）。默认情况下，任何<strong><span style="color: #0000ff;">简单值类型</span></strong>（由<a href="https://docs.spring.io/spring-framework/docs/5.3.17/javadoc-api/org/springframework/beans/BeanUtils.html#isSimpleProperty-java.lang.Class-" target="_blank">BeanUtils#isSimpleProperty</a>确定）且<span style="color: #0000ff;">未由任何其他参数解析程序解析的参数都会被视为使用@RequestParam注释</span>。</p>
+<h3>@ModelAttribute</h3>
+<p>您可以在方法参数上使用<span style="color: #0000ff;">@ModelAttribute</span>注释来访问<span style="color: #ff0000;">模型中的属性</span>，如果<span style="color: #ff0000;">不存在属性，也可以将其实例化</span>。<span style="color: #0000ff;">model属性还覆盖了<span style="color: #ff0000;">HTTP Servlet请求参数</span>的值，这些参数的名称与<span style="color: #ff0000;">字段名称</span>匹配</span>。这被称为<span style="color: #ff0000;">数据绑定</span>，它使您<span style="color: #ff0000;">不必解析和转换单个查询参数和表单字段</span>。以下示例显示了如何执行此操作：</p>
+<div class="cnblogs_code">
+<pre>@PostMapping("/owners/{ownerId}/pets/{petId}/edit"<span style="color: #000000;">)
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String processSubmit(@ModelAttribute Pet pet) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> method logic...</span>
+}</pre>
+</div>
+<p>上述Pet实例的来源如下：<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-modelattrib-method-args" target="_blank">详见原文</a></p>
+<p><strong><span style="color: #ff00ff;">请注意，使用@ModelAttribute是可选的（例如，设置其属性）。<span style="background-color: #ffff99;">默认情况下，任何不是简单值类型（由BeanUtils#isSimpleProperty确定）且未由任何其他参数解析程序解析的参数都将被视为使用<span style="color: #ff0000;">@ModelAttribute注释</span></span>。</span></strong></p>
+<h2 id="mvc-ann-initbinder">1.3.5. DataBinder</h2>
+<p>@Controller或@ControllerAdvice类可以使用<span style="color: #ff0000;">@InitBinder</span>方法初始化<span style="color: #ff0000;">WebDataBinder实例</span>，而这些方法反过来可以：</p>
+<ul>
+<li>Bind request parameters (that is, form or query data) to a model object.</li>
+<li>Convert <strong><span style="color: #ff0000;">String-based request values</span></strong> (such as request parameters, path variables, headers, cookies, and others) to the<span style="color: #ff0000;"> target type of controller method arguments.</span></li>
+<li>在呈现HTML表单时，将模型对象值格式化为字符串值。</li>
+</ul>
+<p><strong><span style="color: #ff0000;">@InitBinder方法</span></strong>可以注册特定于控制器的<span style="color: #ff0000;">java.beans.PropertyEditor</span>或<span style="color: #ff0000;">Spring转换器</span>和<span style="color: #ff0000;">格式化组件</span>。此外，可以<strong><span style="color: #ff0000;">使用<a href="https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-config-conversion" target="_blank"><span style="color: #ff0000;">MVC config</span></a></span></strong>在全局共享的<span style="color: #ff0000;">FormattingConversionService</span>中注册转换器和格式化程序类型。</p>
+<p>@InitBinder方法支持许多与@RequestMapping方法相同的参数，但@ModelAttribute（命令对象）参数除外。通常，它们是用WebDataBinder参数（用于注册）和void返回值声明的。下面的列表显示了一个示例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Controller
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> FormController {
+
+    @InitBinder 
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat </span>= <span style="color: #0000ff;">new</span> SimpleDateFormat("yyyy-MM-dd"<span style="color: #000000;">);
+        dateFormat.setLenient(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        binder.registerCustomEditor(Date.</span><span style="color: #0000ff;">class</span>, <span style="color: #0000ff;">new</span> CustomDateEditor(dateFormat, <span style="color: #0000ff;">false</span><span style="color: #000000;">));
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<p>或者，当您通过共享FormattingConversionService使用基于格式化程序的设置时，您可以重复使用相同的方法并注册特定于控制器的格式化程序实现，如下例所示：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">@Controller
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> FormController {
+
+    @InitBinder 
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> initBinder(WebDataBinder binder) {
+        binder.addCustomFormatter(</span><span style="color: #0000ff;">new</span> DateFormatter("yyyy-MM-dd"<span style="color: #000000;">));
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ...</span>
+}</pre>
+</div>
+<p>&nbsp;</p>

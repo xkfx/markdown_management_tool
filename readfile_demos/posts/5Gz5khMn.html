@@ -1,0 +1,103 @@
+<h2>题&amp;例子</h2>
+<p>例题5-1 大理石在哪儿</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> maxn = <span style="color: #800080;">10000</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> n, q, x, a[maxn], kase = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">while</span> (scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;n, &amp;q) == <span style="color: #800080;">2</span> &amp;&amp;<span style="color: #000000;"> n) {
+        
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">CASE# %d:\n</span><span style="color: #800000;">"</span>, ++<span style="color: #000000;">kase);
+        
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">a[i]);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 读入 n 个大理石上的数字 </span>
+<span style="color: #000000;">        }
+        
+        sort(a, a </span>+ n); <span style="color: #008000;">//</span><span style="color: #008000;"> 排序</span>
+        
+        <span style="color: #0000ff;">while</span> (q--<span style="color: #000000;">) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 查找</span>
+            scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">x);
+            </span><span style="color: #0000ff;">int</span> p = lower_bound(a, a + n, x) - a; <span style="color: #008000;">//</span><span style="color: #008000;"> 在已排序数组 a 中寻找 x </span>
+            <span style="color: #0000ff;">if</span> (a[p] ==<span style="color: #000000;"> x) {
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d found at %d\n</span><span style="color: #800000;">"</span>, x, p + <span style="color: #800080;">1</span><span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d not found\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, x);    
+            }
+        } 
+    }
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>关于&ldquo;随机数，数组与指针&rdquo;的例子。</p>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;algorithm&gt;<strong><span style="color: #000000;">
+
+#include </span>&lt;cstdlib&gt;<span style="color: #000000;">
+#include </span>&lt;ctime&gt;</strong>
+
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> maxn = <span style="color: #800080;">10000</span><span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a[maxn];
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> printArray()
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span><span style="color: #000000;">, a[i]);
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{    
+    srand((</span><span style="color: #0000ff;">int</span>) time(<span style="color: #800080;">0</span>)); <span style="color: #008000;">//</span><span style="color: #008000;"> 随机数种子 </span>
+
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">10</span>; ++<span style="color: #000000;">i) {
+        a[i] </span>= rand() % <span style="color: #800080;">100</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 产生 [0,100) 之间的随机数 </span>
+<span style="color: #000000;">    }
+    
+    printArray();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 68 34 94 28 88 91 82 28 16 2</span>
+<span style="color: #000000;">    
+    sort(a, a </span>+ <span style="color: #800080;">10</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> 对下标为[0, 10)的元素进行排序 </span>
+<span style="color: #000000;">    
+    printArray();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 2 16 28 28 34 68 82 88 91 94</span>
+<span style="color: #000000;">        
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d\n</span><span style="color: #800000;">"</span>, a, &amp;a[<span style="color: #800080;">0</span>]); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 4415552 4415552</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, lower_bound(a, a + <span style="color: #800080;">10</span>, a[<span style="color: #800080;">2</span>])); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 4415560</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, &amp;a[<span style="color: #800080;">2</span>]); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 4415560</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span>, &amp;a[<span style="color: #800080;">2</span>] - a); <span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 2</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != <span style="color: #800080;">3</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d </span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">a[i]);
+    } </span><span style="color: #008000;">//</span><span style="color: #008000;"> =&gt; 4415552 4415556 4415560</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, *(a + <span style="color: #800080;">2</span>), a[<span style="color: #800080;">2</span>]); <span style="color: #008000;">//</span><span style="color: #008000;"> 28 28</span>
+    
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>参考</h2>
+<p>[1]&nbsp;<a href="https://www.baidu.com/link?url=XHZz2QN0ntEIXjjlvIpYhZ_gIjrfLT9RSXG7mKaAu-FcB73ZYxKHbBUsyxFpA_O5v5hrET5y3joDc8IAYRm9a_&amp;wd=&amp;eqid=f6bd556e00107e64000000055e8b20e9" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5243F',
+			'T':'1586176233',
+						'y':'BFCFEF73'
+												}">C++产生随机数&nbsp;- Lucky&amp; - 博客园</a></p>
+<p>&nbsp;</p>

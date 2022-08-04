@@ -1,0 +1,211 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul><ol>
+<li><a href="#anchor0">思路1：基本加法规则</a></li>
+<li><a href="#anchor1">思路2：移花接木法。。。</a></li>
+</ol></ul>
+</div>
+<p>问题描述：https://leetcode.com/problems/add-two-numbers/</p>
+<h2><a name="anchor0"></a>思路1：基本加法规则</h2>
+<p>根据小学学的基本加法规则。。。。。我们需要将两个数以最低位为基准对齐，然后逐个加，需要进位的给进位就行了。。。。恰好这个链表是逆序的！！！已经为我们对齐了。用两个指针分别指向两个链表头，开始同步往后移动，边移动边计算结果，直到两个指针都到了尽头/没有进位。时间复杂度是O(max(m, n))，空间复杂度和时间复杂度一样。js代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> Runtime: 116 ms</span>
+<span style="color: #0000ff;">var</span> addTwoNumbers = <span style="color: #0000ff;">function</span><span style="color: #000000;">(l1, l2) {
+    let dummy </span>= { next: <span style="color: #0000ff;">null</span> }, <span style="color: #008000;">//</span><span style="color: #008000;"> 结果链表的head指针</span>
+        tail = dummy, <span style="color: #008000;">//</span><span style="color: #008000;"> tail总是指向dummy的末尾元素,以便在链表尾插入新元素</span>
+        flag = <span style="color: #0000ff;">false</span>, <span style="color: #008000;">//</span><span style="color: #008000;"> flag标示是否需要进位</span>
+<span style="color: #000000;">        sum;
+
+    let init </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化,因为保证非空,所以首位总是存在的(可能为0)</span>
+        sum = l1.val +<span style="color: #000000;"> l2.val;
+        tail.next </span>= <span style="color: #0000ff;">new</span> ListNode(sum % 10<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为下一位的计算做准备</span>
+        flag = sum &gt;= 10<span style="color: #000000;">;
+        l1 </span>=<span style="color: #000000;"> l1.next;
+        l2 </span>=<span style="color: #000000;"> l2.next;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持tail性质不变</span>
+        tail =<span style="color: #000000;"> tail.next;
+    };
+
+    let work </span>= () =&gt;<span style="color: #000000;"> {
+        let v1, v2;
+        </span><span style="color: #0000ff;">while</span> (l1 || l2 ||<span style="color: #000000;"> flag) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 统一化处理,不用判断谁空谁不空</span>
+            v1 = l1 ? l1.val : 0<span style="color: #000000;">;
+            v2 </span>= l2 ? l2.val : 0<span style="color: #000000;">;
+            sum </span>= v1 + v2 + (flag ? 1 : 0<span style="color: #000000;">);
+            tail.next </span>= <span style="color: #0000ff;">new</span> ListNode(sum % 10<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为下一位的计算做准备</span>
+            flag = sum &gt;= 10<span style="color: #000000;">;
+            l1 </span>= l1 ? l1.next : <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            l2 </span>= l2 ? l2.next : <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持tail性质不变</span>
+            tail =<span style="color: #000000;"> tail.next;
+        }
+    };
+
+    init();
+    work();
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dummy.next;
+};</span></pre>
+</div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('067d9b96-1707-4136-9d72-7cee6710b8ab')"><img id="code_img_closed_067d9b96-1707-4136-9d72-7cee6710b8ab" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_067d9b96-1707-4136-9d72-7cee6710b8ab" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('067d9b96-1707-4136-9d72-7cee6710b8ab',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_067d9b96-1707-4136-9d72-7cee6710b8ab" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">struct</span> ListNode* addTwoNumbers(<span style="color: #0000ff;">struct</span> ListNode* l1, <span style="color: #0000ff;">struct</span> ListNode*<span style="color: #000000;"> l2) {
+    </span><span style="color: #0000ff;">struct</span> ListNode *l3 = <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> ListNode));
+    </span><span style="color: #0000ff;">struct</span> ListNode *tail =<span style="color: #000000;"> l3; 
+
+    </span><span style="color: #0000ff;">int</span> sum = l1-&gt;val + l2-&gt;<span style="color: #000000;">val; 
+    tail</span>-&gt;val = sum % <span style="color: #800080;">10</span><span style="color: #000000;">; 
+    </span><span style="color: #0000ff;">int</span> flag = sum &gt;= <span style="color: #800080;">10</span><span style="color: #000000;">;    
+    l1 </span>= l1-&gt;<span style="color: #000000;">next;
+    l2 </span>= l2-&gt;<span style="color: #000000;">next;
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> v1, v2;
+    </span><span style="color: #0000ff;">while</span> (l1 || l2 ||<span style="color: #000000;"> flag) {
+        v1 </span>= l1 ? l1-&gt;val : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        v2 </span>= l2 ? l2-&gt;val : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        sum </span>= v1 + v2 + (flag ? <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">);
+        
+        tail</span>-&gt;next = <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> ListNode));
+        tail </span>= tail-&gt;<span style="color: #000000;">next;
+        tail</span>-&gt;val = sum % <span style="color: #800080;">10</span><span style="color: #000000;">;
+        
+        flag </span>= sum &gt;= <span style="color: #800080;">10</span><span style="color: #000000;">;
+        l1 </span>= l1 ? l1-&gt;<span style="color: #000000;">next : NULL;
+        l2 </span>= l2 ? l2-&gt;<span style="color: #000000;">next : NULL;            
+    }
+    
+    tail</span>-&gt;next = NULL; <span style="color: #008000;">//</span><span style="color: #008000;"> 这句话是必要的！否则提交后会有运行时错误。</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> l3;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">C语言版本</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('529339d6-77c9-4f4c-9a0a-16ae676c1a0c')"><img id="code_img_closed_529339d6-77c9-4f4c-9a0a-16ae676c1a0c" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_529339d6-77c9-4f4c-9a0a-16ae676c1a0c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('529339d6-77c9-4f4c-9a0a-16ae676c1a0c',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_529339d6-77c9-4f4c-9a0a-16ae676c1a0c" class="cnblogs_code_hide">
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> Solution {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode ans </span>= <span style="color: #0000ff;">new</span> ListNode(0), tail =<span style="color: #000000;"> ans;
+        </span><span style="color: #0000ff;">boolean</span> flag = <span style="color: #0000ff;">false</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 当前位是否需要进位
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持一个循环不变式：
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> ans的前面n位为l1与l2前n位相加的正确结果
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> l1与l2要么为空要么指向当前/即将计算位
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化</span>
+        <span style="color: #0000ff;">int</span> sum = l1.val + l2.val + (flag ? 1 : 0<span style="color: #000000;">);
+        tail.val </span>= sum % 10<span style="color: #000000;">;
+        
+        flag </span>= sum &gt;= 10<span style="color: #000000;">;
+        l1 </span>=<span style="color: #000000;"> l1.next;
+        l2 </span>=<span style="color: #000000;"> l2.next;
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持</span>
+        <span style="color: #0000ff;">int</span> v1, v2; <span style="color: #008000;">//</span><span style="color: #008000;"> l1.val与l2.val不能再直接用，可能为空</span>
+        <span style="color: #0000ff;">while</span> (flag || l1 != <span style="color: #0000ff;">null</span> || l2 != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (l1 == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                v1 </span>= 0<span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                v1 </span>=<span style="color: #000000;"> l1.val;
+                l1 </span>=<span style="color: #000000;"> l1.next;
+            }
+            
+            </span><span style="color: #0000ff;">if</span> (l2 == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                v2 </span>= 0<span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                v2 </span>=<span style="color: #000000;"> l2.val;
+                l2 </span>=<span style="color: #000000;"> l2.next;
+            }
+        
+            sum </span>= v1 + v2 + (flag ? 1 : 0<span style="color: #000000;">);
+            tail.next </span>= <span style="color: #0000ff;">new</span> ListNode(sum % 10<span style="color: #000000;">);
+            
+            flag </span>= sum &gt;= 10<span style="color: #000000;">;
+            tail </span>=<span style="color: #000000;"> tail.next;
+        }
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 终止</span>
+        
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> ans;        
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">Java版本</span></div>
+<h2><a name="anchor1"></a>思路2：移花接木法。。。</h2>
+<p>基本上和思路1没区别，并不能改善时间复杂度的渐进性，只是省了点空间。js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 不创建新链表,直接把结果存到l1上,并对多出来的部分做"嫁接"处理</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> Runtime: 112 ms, faster than 99.52% of JavaScript online submissions for Add Two Numbers.</span>
+<span style="color: #0000ff;">var</span> addTwoNumbers2 = <span style="color: #0000ff;">function</span><span style="color: #000000;">(l1, l2) {
+    let dummy </span>= { next: l1 }, <span style="color: #008000;">//</span><span style="color: #008000;"> 结果链表的head指针</span>
+        tail = dummy, <span style="color: #008000;">//</span><span style="color: #008000;"> tail总是指向l1的前继元素(也就是dummy的尾元素)，以便在链尾插入链表/新元素</span>
+        flag = <span style="color: #0000ff;">false</span>, <span style="color: #008000;">//</span><span style="color: #008000;"> flag标示下一位的计算是否需要进位</span>
+<span style="color: #000000;">        sum;
+
+    let init </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化,因为保证非空,所以首位总是存在的</span>
+        sum = l1.val +<span style="color: #000000;"> l2.val;
+        l1.val </span>= sum % 10<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为下一位的计算做准备</span>
+        flag = sum &gt;= 10<span style="color: #000000;">;
+        l1 </span>=<span style="color: #000000;"> l1.next;
+        l2 </span>=<span style="color: #000000;"> l2.next;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持tail性质不变</span>
+        tail =<span style="color: #000000;"> tail.next;
+    };
+
+    let status1 </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 处理等长的那部分</span>
+        <span style="color: #0000ff;">while</span> (l1 &amp;&amp;<span style="color: #000000;"> l2) {
+            sum </span>= l1.val + l2.val + (flag ? 1 : 0<span style="color: #000000;">);
+            l1.val </span>= sum % 10<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为下一位的计算做准备</span>
+            flag = sum &gt;= 10<span style="color: #000000;">;
+            l1 </span>=<span style="color: #000000;"> l1.next;
+            l2 </span>=<span style="color: #000000;"> l2.next;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持tail性质不变</span>
+            tail =<span style="color: #000000;"> tail.next;
+        }
+    };
+
+    let status2 </span>= () =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;"> 处理多出来的部分</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> 如果l2更长,直接移植到l1</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (l2) {
+            l1 </span>= tail.next =<span style="color: #000000;"> l2;
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 处理进位</span>
+        <span style="color: #0000ff;">while</span> (l1 &amp;&amp;<span style="color: #000000;"> flag) {
+            sum </span>= l1.val + 1<span style="color: #000000;">;
+            l1.val </span>= sum % 10<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 为下一位的计算做准备</span>
+            flag = sum &gt;= 10<span style="color: #000000;">;
+            l1 </span>=<span style="color: #000000;"> l1.next;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保持tail性质不变</span>
+            tail =<span style="color: #000000;"> tail.next;
+        }
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (flag) {
+            tail.next </span>= <span style="color: #0000ff;">new</span> ListNode(1<span style="color: #000000;">);
+        }
+    };
+
+    init();
+    status1();
+    status2();
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> dummy.next;
+};</span></pre>
+</div>
+<p>&nbsp;</p>

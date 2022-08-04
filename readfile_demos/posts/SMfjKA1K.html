@@ -1,0 +1,110 @@
+<p>背景：采用若干种办法无法在原环境安装Jupyter Notebook，寻求更简便的安装办法，于是尝试Anaconda</p>
+<p>按默认步骤安装Anaconda后各指令状况如下所示：</p>
+<div class="cnblogs_code">
+<pre>D:\2022_2_22_py&gt;py --<span style="color: #000000;">version
+Python </span><span style="color: #800080;">3.9</span>.<span style="color: #800080;">7</span><span style="color: #0000ff;">
+
+D:\2022_2_22_py&gt;python --version
+Python 3.8.0
+
+D:\2022_2_22_py&gt;pip --version
+pip 22.0.3 from c:\users\mdzz\appdata\local\programs\python\python38\lib\site-packages\pip (python 3.8)
+
+D:\2022_2_22_py&gt;pip3 --version
+pip 22.0.3 from c:\users\mdzz\appdata\local\programs\python\python38\lib\site-packages\pip (python 3.8)</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>D:\2022_2_22_py&gt;<span style="color: #000000;">where py
+C:\Windows\py.exe
+
+D:\2022_2_22_py</span>&gt;<span style="color: #000000;">where python
+C:\Users\mdzz\AppData\Local\Programs\Python\Python38\python.exe</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>D:\2022_2_22_py&gt;<span style="color: #000000;">where pip
+C:\Users\mdzz\AppData\Local\Programs\Python\Python38\Scripts\pip.exe</span></pre>
+</div>
+<p>python指令还是运行在原来的环境，py指令则更新。pip指令不再和py指令配套，而是仅和python指令配套。</p>
+<h2>Anaconda是啥</h2>
+<p>暂时的理解，anaconda就类似一个组装好电脑（预装了很多第三方包），且运行在一个独立的环境，还可以创建很多的子环境。</p>
+<p>而原始环境的python则类似一个待组装的电脑，啥都要自己装。</p>
+<h2>目前的问题</h2>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220223105620500-1353362095.png" alt="" width="317" height="128" loading="lazy" /></p>
+<p>不管是命令行工具，还是jupyter notebook都是在默认的根目录下运行</p>
+<p>怎样方便地在指定目录应用anaconda提供的python环境？</p>
+<h2>解决办法</h2>
+<p>最原始的办法，启动anaconda prompt后，手动cd到目标目录：</p>
+<div class="cnblogs_code">
+<pre>(<span style="color: #0000ff;">base</span>) D:\2022_2_22_py&gt;<strong>py --</strong><span style="color: #000000;"><strong>version</strong>
+Python </span><span style="color: #800080;">3.9</span>.<span style="color: #800080;">7</span><span style="color: #000000;">
+
+(</span><span style="color: #0000ff;">base</span>) D:\2022_2_22_py&gt;<span style="color: #000000;"><strong>py hello.py</strong>
+Original image size: 40</span><span style="color: #800080;">0x400</span><span style="color: #000000;">
+Resize image to: 20</span><span style="color: #800080;">0x200</span><span style="color: #000000;">
+
+(</span><span style="color: #0000ff;">base</span>) D:\2022_2_22_py&gt;<span style="color: #000000;"><strong>pip list</strong>
+Package                            Version
+</span>---------------------------------- --------------------<span style="color: #000000;">
+alabaster                          </span><span style="color: #800080;">0.7</span>.<span style="color: #800080;">12</span><span style="color: #000000;">
+anaconda</span>-client                    <span style="color: #800080;">1.9</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+anaconda</span>-navigator                 <span style="color: #800080;">2.1</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+anaconda</span>-project                   <span style="color: #800080;">0.10</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+anyio                              </span><span style="color: #800080;">2.2</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+appdirs                            </span><span style="color: #800080;">1.4</span>.<span style="color: #800080;">4</span><span style="color: #000000;">
+argh                               </span><span style="color: #800080;">0.26</span>.<span style="color: #800080;">2</span><span style="color: #000000;">
+argon2</span>-cffi                        <span style="color: #800080;">20.1</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+arrow                              </span><span style="color: #800080;">0.13</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+（............省略很多包.............）</span></pre>
+</div>
+<p>配置环境变量？该办法在安装时是官方不推荐的，等于是弃用了本地环境，</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220223114439124-489998211.png" alt="" width="536" height="332" loading="lazy" /></p>
+<p>想象到后续因为环境问题导致的混乱状况，索性把本地的python给卸载了</p>
+<p>anaconda也重新安装，且安装时勾选&ldquo;add anaconda to my path...&rdquo;（因为，网上看到环境变量的添加也各式各样，有仅添加根目录的和/scripts，也有额外添加其它的，索性重来一遍，遵循官方配置..）</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220223120047292-2082124616.png" alt="" width="391" height="246" loading="lazy" /></p>
+<p>检查了一下，貌似原python相关环境变量也在卸载本地python的过程中自动删除了。且所有指令都已经失效：</p>
+<div class="cnblogs_code">
+<pre>D:\2022_2_22_py&gt;<span style="color: #000000;">py
+</span><span style="color: #800000;">'</span><span style="color: #800000;">py</span><span style="color: #800000;">'</span><span style="color: #000000;"> 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+D:\2022_2_22_py</span>&gt;<span style="color: #000000;">python
+</span><span style="color: #800000;">'</span><span style="color: #800000;">python</span><span style="color: #800000;">'</span><span style="color: #000000;"> 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+D:\2022_2_22_py</span>&gt;<span style="color: #000000;">pip
+</span><span style="color: #800000;">'</span><span style="color: #800000;">pip</span><span style="color: #800000;">'</span><span style="color: #000000;"> 不是内部或外部命令，也不是可运行的程序
+或批处理文件。</span></pre>
+</div>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220223120746996-171914306.png" alt="" width="377" height="290" loading="lazy" /></p>
+<p>重新安装，</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220223121037818-762084627.png" alt="" width="414" height="299" loading="lazy" /></p>
+<p>安装完成后，检查指令状况：</p>
+<div class="cnblogs_code">
+<pre>D:\2022_2_22_py&gt;py --<span style="color: #000000;">version
+</span><span style="color: #800000;">'</span><span style="color: #800000;">py</span><span style="color: #800000;">'</span><span style="color: #000000;"> 不是内部或外部命令，也不是可运行的程序
+或批处理文件。
+
+D:\2022_2_22_py</span>&gt;python --<span style="color: #000000;">version
+Python </span><span style="color: #800080;">3.9</span>.<span style="color: #800080;">7</span><span style="color: #000000;">
+
+D:\2022_2_22_py</span>&gt;<span style="color: #000000;">where python
+D:\anaconda3\python.exe
+
+D:\2022_2_22_py</span>&gt;pip --<span style="color: #000000;">version
+pip </span><span style="color: #800080;">21.2</span>.<span style="color: #800080;">4</span> from D:\anaconda3\lib\site-packages\pip (python <span style="color: #800080;">3.9</span><span style="color: #000000;">)
+
+D:\2022_2_22_py</span>&gt;<span style="color: #000000;">pip list
+Package                            Version
+</span>---------------------------------- --------------------<span style="color: #000000;">
+alabaster                          </span><span style="color: #800080;">0.7</span>.<span style="color: #800080;">12</span><span style="color: #000000;">
+anaconda</span>-client                    <span style="color: #800080;">1.9</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+anaconda</span>-navigator                 <span style="color: #800080;">2.1</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+anaconda</span>-project                   <span style="color: #800080;">0.10</span>.<span style="color: #800080;">1</span><span style="color: #000000;">
+anyio                              </span><span style="color: #800080;">2.2</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+appdirs                            </span><span style="color: #800080;">1.4</span>.<span style="color: #800080;">4</span><span style="color: #000000;">
+argh                               </span><span style="color: #800080;">0.26</span>.<span style="color: #800080;">2</span><span style="color: #000000;">
+（...........省略很多包.............）</span></pre>
+</div>
+<p>检查环境变量状况：</p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220223130752998-370337595.png" alt="" width="416" height="106" loading="lazy" /></p>
+<p>大功告成。</p>

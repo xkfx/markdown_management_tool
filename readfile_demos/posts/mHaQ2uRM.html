@@ -1,0 +1,296 @@
+<p>实验存档//。。&nbsp;</p>
+<p>以生产者消费者问题作为背景。</p>
+<p>进程同步方式接口：</p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> method;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ *  P表示通过，V表示释放
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> Method {
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> p();
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> v();
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">模拟 Swap 指令实现该接口：</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> method;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Swap <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Method {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span> lock = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 创建一个特殊的instance变量（它得是一个对象）来充当锁
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">byte</span>[] objectLock = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span>[0<span style="color: #000000;">];
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> p() {
+        </span><span style="color: #0000ff;">boolean</span> key = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> temp;
+        </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">synchronized</span><span style="color: #000000;">(objectLock) {
+                temp </span>=<span style="color: #000000;"> key;
+                key </span>=<span style="color: #000000;"> lock;
+                lock </span>=<span style="color: #000000;"> temp;
+            }
+        } </span><span style="color: #0000ff;">while</span> (key != <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> v(){
+        </span><span style="color: #0000ff;">synchronized</span><span style="color: #000000;"> (objectLock) {
+            </span><span style="color: #0000ff;">this</span>.lock = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }
+    }
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">生产者 &amp; 消费者：</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> entity.producerconsumer;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> method.Method;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 生产者实体类
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Producer <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 统计生产者数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 生产者个体的 id
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 模拟缓冲区
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Buffer buffer;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 允许动态更改同步机制
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Method method;
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 传入缓冲区地址，同步机制
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> buffer
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> method
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Producer(Buffer buffer, Method method) {
+        </span><span style="color: #0000ff;">this</span>.id = ++<span style="color: #000000;">total;
+        </span><span style="color: #0000ff;">this</span>.buffer =<span style="color: #000000;"> buffer;
+        </span><span style="color: #0000ff;">this</span>.method =<span style="color: #000000;"> method;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 打印生产者信息
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span><span style="color: #000000;">
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> id + " 号生产者"<span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            method.p();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 临界区代码</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (buffer.notFull()) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 生产产品</span>
+<span style="color: #000000;">                buffer.putItem();
+                System.out.println(</span><span style="color: #0000ff;">this</span>  + ": " +<span style="color: #000000;"> buffer);
+            }
+
+            method.v();
+        }
+    }
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;">/</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> entity.producerconsumer;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> method.Method;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 消费者实体类
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Consumer <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 统计消费者数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> total = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 消费者个体的 id
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> id;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 模拟缓冲区
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Buffer buffer;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 允许动态更改同步机制
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> Method method;
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 传入缓冲区地址，同步机制
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> buffer
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> method
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Consumer(Buffer buffer, Method method) {
+        </span><span style="color: #0000ff;">this</span>.id = ++<span style="color: #000000;">total;
+        </span><span style="color: #0000ff;">this</span>.buffer =<span style="color: #000000;"> buffer;
+        </span><span style="color: #0000ff;">this</span>.method =<span style="color: #000000;"> method;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 打印消费者信息
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span><span style="color: #000000;">
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> id + " 号消费者"<span style="color: #000000;">;
+    }
+
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+        </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+            method.p();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 临界区代码</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (buffer.notEmpty()) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 消费产品</span>
+<span style="color: #000000;">                buffer.getItem();
+                System.out.println(</span><span style="color: #0000ff;">this</span>  + ": " +<span style="color: #000000;"> buffer);
+            }
+
+            method.v();
+        }
+    }
+}</span></span></pre>
+</div>
+<p><span style="font-family: 楷体;"><a name="x"></a>/</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> entity.producerconsumer;
+
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 缓冲区实体，用于模拟缓冲区
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Buffer {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 当前产品数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 最大允许数量
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> max;
+
+    </span><span style="color: #0000ff;">public</span> Buffer(<span style="color: #0000ff;">int</span><span style="color: #000000;"> max) {
+        </span><span style="color: #0000ff;">this</span>.max =<span style="color: #000000;"> max;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 判断缓冲区是否为满
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> notFull() {
+        </span><span style="color: #0000ff;">return</span> (count &lt;<span style="color: #000000;"> max);
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 判断缓冲区是否为空
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> notEmpty() {
+        </span><span style="color: #0000ff;">return</span> (count &gt; 0<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 生产产品
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> putItem() {
+        count</span>++<span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 消费产品
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> getItem() {
+        count</span>--<span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 打印缓冲区信息
+     * </span><span style="color: #808080;">@return</span>
+     <span style="color: #008000;">*/</span><span style="color: #000000;">
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString() {
+        </span><span style="color: #0000ff;">return</span> "缓冲区内有 " + count + " 件产品"<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 楷体;">用于测试 Swap 指令的主函数：</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 楷体;"><span style="color: #0000ff;">package</span><span style="color: #000000;"> test;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> entity.producerconsumer.Buffer;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> entity.producerconsumer.Consumer;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> entity.producerconsumer.Producer;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> method.Method;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> method.Swap;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Main {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 缓冲区大小为 10</span>
+        Buffer buffer = <span style="color: #0000ff;">new</span> Buffer(10<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 允许动态更改同步机制</span>
+        Method SynchronizationMechanism = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Swap();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建 5 个生产者和 5 个消费者</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i != 5; ++<span style="color: #000000;">i) {
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Producer(buffer, SynchronizationMechanism)).start();
+            </span><span style="color: #0000ff;">new</span> Thread(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Consumer(buffer, SynchronizationMechanism)).start();
+        }
+    }
+}</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 楷体;"><a name="x2"></a>用记录型信号量重新实现接口（此段代码来自课件）：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> method;
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+    该类用于模拟信号量及其P,V操作
+    使用方法如下：
+
+    method.Semaphore mutex = new method.Semaphore(1);            //信号量的初值赋为1
+    mutex.p();
+    //临界区代码
+    mutex.v();
+</span><span style="color: #008000;">*/</span>
+
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Semaphore <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Method {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> semValue;
+    </span><span style="color: #0000ff;">public</span> Semaphore(<span style="color: #0000ff;">int</span><span style="color: #000000;"> semValue) {
+        </span><span style="color: #0000ff;">this</span>.semValue =<span style="color: #000000;"> semValue;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> p() {
+        semValue</span>--<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (semValue &lt; 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.wait();
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">synchronized</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> v(){
+        semValue</span>++<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (semValue &lt;= 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.notify();
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

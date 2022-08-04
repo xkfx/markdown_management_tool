@@ -1,0 +1,17 @@
+<h2>问题描述</h2>
+<p>操作环境win10，pthon以及pip版本如下</p>
+<div class="cnblogs_code">
+<pre>D:&gt;py --<span style="color: #000000;">version
+Python </span><span style="color: #800080;">3.8</span>.<span style="color: #800080;">0</span><span style="color: #000000;">
+D:</span>&gt;py -m pip --<span style="color: #000000;">version
+pip </span><span style="color: #800080;">22.0</span>.<span style="color: #800080;">3</span> <span style="color: #0000ff;">from</span> ... (python <span style="color: #800080;">3.8</span>)</pre>
+</div>
+<p>升级pip之后（变成了如上版本）尝试pip install notebook以及pip install pillow都报如下错误</p>
+<p><span style="color: #ff0000;">ERROR: Could not find a version that satisfies the requirement &lt;包名&gt; (from versions: none)</span><br /><span style="color: #ff0000;">ERROR: No matching distribution found for&nbsp;&lt;包名&gt;</span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1042431/202202/1042431-20220222212807702-1083600286.png" alt="" width="806" height="209" loading="lazy" /></p>
+<h2>解决办法</h2>
+<p>参考：<a href="https://zhuanlan.zhihu.com/p/361790784" target="_blank">https://zhuanlan.zhihu.com/p/361790784</a></p>
+<div class="cnblogs_code">
+<pre>pip install 包名 -i http:<span style="color: #008000;">//</span><span style="color: #008000;">pypi.douban.com/simple/ --trusted-host pypi.douban.com</span></pre>
+</div>
+<p>&nbsp;</p>

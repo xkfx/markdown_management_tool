@@ -1,0 +1,112 @@
+<p>代码参考：《K&amp;R》</p>
+<p>&nbsp;</p>
+<p>1、单词计数</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">#define</span> IN 1
+<span style="color: #0000ff;">#define</span> OUT 0<span style="color: #000000;">
+
+main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> c, state;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> nword;
+
+    nword </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    state </span>=<span style="color: #000000;"> OUT;
+    </span><span style="color: #0000ff;">while</span>((c = getchar()) !=<span style="color: #000000;"> EOF){
+        </span><span style="color: #0000ff;">if</span>(c == <span style="color: #800000;">'</span> <span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> || c == <span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            state </span>=<span style="color: #000000;"> OUT;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(state ==<span style="color: #000000;"> OUT){
+            state </span>=<span style="color: #000000;"> IN;
+            </span>++<span style="color: #000000;"> nword;
+        }
+    }    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 可以用集合里的Vn图理解, 每次循环都有三种情况。</span>
+    printf(<span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, nword);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、统计数字、空白符及其他字符</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;<span style="color: #000000;">
+
+main()
+{
+    </span><span style="color: #0000ff;">int</span> c, i, nwhite, nother, ndigit[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    
+    nwhite </span>=<span style="color: #000000;"> nother;
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; i ++<span style="color: #000000;">)
+        ndigit[i] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>((c = getchar()) !=<span style="color: #000000;"> EOF){
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;">(c){
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">1</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">2</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">3</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">4</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">5</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">6</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">7</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">8</span><span style="color: #800000;">'</span>: <span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">: 
+                ndigit[c</span>-<span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span>] ++<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                nwhite </span>++<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+                nother </span>++<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">digits =</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">10</span>; i ++<span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> %d</span><span style="color: #800000;">"</span><span style="color: #000000;">, ndigit[i]);
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">, white space = %d, other = %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, nwhite, nother);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、找指定具有指定模式的行</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> MAXLINE 1000
+
+<span style="color: #0000ff;">int</span> getline(<span style="color: #0000ff;">char</span> line[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> max);
+</span><span style="color: #0000ff;">int</span> strindex(<span style="color: #0000ff;">char</span> source[], <span style="color: #0000ff;">char</span><span style="color: #000000;"> searchfor[]);
+
+</span><span style="color: #0000ff;">char</span> pattern[] = <span style="color: #800000;">"</span><span style="color: #800000;">ould</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+main()
+{
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> line[MAXLINE];
+    </span><span style="color: #0000ff;">int</span> found = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">while</span>(getline(line , MAXLINE) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">if</span>(strindex(line , pattern) &gt;= <span style="color: #800080;">0</span><span style="color: #000000;">){
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, line);
+            found</span>++<span style="color: #000000;">;
+        }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> found;
+}
+
+</span><span style="color: #0000ff;">int</span> getline(<span style="color: #0000ff;">char</span> s[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> lim)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> c, i;
+    
+    i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(--lim &gt; <span style="color: #800080;">0</span> &amp;&amp; (c=getchar()) != EOF &amp;&amp; c != <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        s[i</span>++] =<span style="color: #000000;"> c;
+    </span><span style="color: #0000ff;">if</span>(c == <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        s[i</span>++] =<span style="color: #000000;"> c;
+    s[i] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+}
+
+</span><span style="color: #0000ff;">int</span> strindex(<span style="color: #0000ff;">char</span> s[], <span style="color: #0000ff;">char</span><span style="color: #000000;"> t[])
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, j, k;
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; s[i] != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>; i ++<span style="color: #000000;">){
+        </span><span style="color: #0000ff;">for</span>(j=i, k=<span style="color: #800080;">0</span>; t[k]!=<span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span> &amp;&amp; s[j]==t[k]; j++, k++<span style="color: #000000;">)
+            ;
+        </span><span style="color: #0000ff;">if</span>(k &gt; <span style="color: #800080;">0</span> &amp;&amp; t[k] == <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+    }
+    </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>实际在控制台界面运行时，是输入一行判断一行的，最后用Ctrl+Z结束。</p>

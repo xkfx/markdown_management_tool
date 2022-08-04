@@ -1,0 +1,19 @@
+<p>通过工具（hexo-deployer-git）自动部署博客到github时遇到</p>
+<div class="cnblogs_code">
+<pre>fatal: unable to access <span style="color: #800000;">'</span><span style="color: #008000;">https://github.com/xkfx/xkfx.github.io/</span><span style="color: #800000;">'</span>: <strong>Unknown SSL protocol error in connection to github.com:<span style="color: #800080;">443</span></strong><span style="color: #000000;"><strong>
+FATAL</strong> {
+  err: Error: Spawn failed
+      at ChildProcess.</span>&lt;anonymous&gt; (D:\github\my_blog_src\node_modules\_hexo-util@<span style="color: #800080;">2.5</span>.<span style="color: #800080;">0</span>@hexo-util\lib\spawn.js:<span style="color: #800080;">51</span>:<span style="color: #800080;">21</span><span style="color: #000000;">)
+      at ChildProcess.emit (node:events:</span><span style="color: #800080;">390</span>:<span style="color: #800080;">28</span><span style="color: #000000;">)
+      at ChildProcess.cp.emit (D:</span>\github\my_blog_src\node_modules\_cross-spawn@<span style="color: #800080;">7.0</span>.<span style="color: #800080;">3</span>@cross-spawn\lib\enoent.js:<span style="color: #800080;">34</span>:<span style="color: #800080;">29</span><span style="color: #000000;">)
+      at Process.ChildProcess._handle.onexit (node:internal</span>/child_process:<span style="color: #800080;">290</span>:<span style="color: #800080;">12</span><span style="color: #000000;">) {
+    code: </span><span style="color: #800080;">128</span><span style="color: #000000;">
+  }
+} Something</span><span style="color: #800000;">'</span><span style="color: #008000;">s wrong. Maybe you can find the solution here: %s https://hexo.io/docs/troubleshooting.html</span></pre>
+</div>
+<p>经测试，github网站访问正常，其它项目正常push，考虑手动部署。</p>
+<p>通过git clone下载xxxx.github.io到本地，测试push正常</p>
+<p>一，通过hexo clean &amp; hexo g更新静态文件；</p>
+<p>二，将xxxx.github.io中除.git文件夹外的文件删除；</p>
+<p>三，把"hexo项目根目录"\public文件夹下的内容复制粘贴到xxxx.github.io中</p>
+<p>通过git add --all &amp; git commit -m "xxx" &amp; git push origin xxx完成部署。</p>

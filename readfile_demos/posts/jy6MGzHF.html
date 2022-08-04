@@ -1,0 +1,110 @@
+<h4>索引</h4>
+<ol>
+<li><a href="#a1">普通的 try.java</a></li>
+<li><a href="#a2">带资源的 try.java</a></li>
+<li><a href="#a3">当资源为 null 的情况</a></li>
+<li><a href="#a4">可以参考的文档与资料</a></li>
+</ol>
+<p>&nbsp;</p>
+<p>/</p>
+<p>test.txt</p>
+<p>待读取的内容</p>
+<div class="cnblogs_code">
+<pre>hello.</pre>
+</div>
+<p>/</p>
+<p><a name="a1"></a>普通的 try.java</p>
+<p>读取 test.txt 内容</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> example;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.FileInputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.FileNotFoundException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> GeneralTry {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        FileInputStream inputStream </span>=  <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            inputStream </span>= <span style="color: #0000ff;">new</span> FileInputStream("d:/labs/test.txt"<span style="color: #000000;">);
+            System.out.println((</span><span style="color: #0000ff;">char</span>) inputStream.read()); <span style="color: #008000;">//</span><span style="color: #008000;"> 输出读到第一个字符，至于会不会与txt文本内容对应还与txt本身的字符编码相关。</span>
+        } <span style="color: #0000ff;">catch</span> (FileNotFoundException e) { <span style="color: #008000;">//</span><span style="color: #008000;"> 捕获异常是强制性的，对应 new FileInputStream...</span>
+<span style="color: #000000;">            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span> (IOException e) { <span style="color: #008000;">//</span><span style="color: #008000;"> 捕获异常是强制性的，对应 inputStream.read ..</span>
+<span style="color: #000000;">            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> 关闭资源是非强制性的，但是我们应该总是这么做</span>
+            <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                inputStream.close();
+                </span><span style="color: #0000ff;">if</span> (inputStream != <span style="color: #0000ff;">null</span>) { <strong><span style="color: #008000;">//</span><span style="color: #008000;"> inputStream 有可能为空，为了防止出现空指针而导致程序gg ..</span></strong>
+<span style="color: #000000;">                    inputStream.close();
+                }
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(</span>"如果在输出窗看到这句话，说明程序没有gg"<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+output=
+h
+如果在输出窗看到这句话，说明程序没有gg
+ </span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;/</p>
+<p><a name="a2"></a>带资源的 try.java</p>
+<p>同样是读取 test.txt 内容</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> example;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.FileInputStream;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.FileNotFoundException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ResourceTry {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #0000ff;">try</span> (FileInputStream inputStream = <span style="color: #0000ff;">new</span> FileInputStream("d:/labs/test.txt"<span style="color: #000000;">)) {
+            System.out.println((</span><span style="color: #0000ff;">char</span>) inputStream.read()); <span style="color: #008000;">//</span><span style="color: #008000;"> 输出读到第一个字符，至于会不会与txt文本内容对应还与txt本身的字符编码相关。</span>
+        } <span style="color: #0000ff;">catch</span> (FileNotFoundException e) { <span style="color: #008000;">//</span><span style="color: #008000;"> 捕获异常仍然是强制的</span>
+<span style="color: #000000;">            e.printStackTrace();
+        } </span><span style="color: #0000ff;">catch</span> (IOException e) { <span style="color: #008000;">//</span><span style="color: #008000;"> 捕获异常仍然是强制的</span>
+<span style="color: #000000;">            e.printStackTrace();
+        } </span><strong><span style="color: #008000;">//</span><span style="color: #008000;"> try 块退出时，会自动调用 inputStream.close()</span></strong>
+        System.out.println("如果在输出窗看到这句话，说明程序没有gg"<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">
+output=
+h
+如果在输出窗看到这句话，说明程序没有gg
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>&nbsp;/</p>
+<p><a name="a3"></a>上述程序（带资源的 try程序）是在正常情况下（test.txt 文件存在）运行的，那么倘若 test.txt 不存在呢？尝试把 test.txt 改成一个不存在的 test2.txt 运行带资源的 try 测试程序输出结果如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+output=
+如果在输出窗看到这句话，说明程序没有gg
+java.io.FileNotFoundException: d:\labs\test2.txt (系统找不到指定的文件。)
+    at java.io.FileInputStream.open0(Native Method)
+    at java.io.FileInputStream.open(FileInputStream.java:195)
+    at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:138)
+    at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:93)
+    at example.ResourceTry.main(ResourceTry.java:10)
+</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>如果第一个程序（普通 try）没有在 inputStream.close() 之前进行非空检查，程序将会因为&nbsp;java.lang.NullPointerException 而中止（也就是gg）。</p>
+<p>就像上面看到的，带资源的 try 测试程序同样可以正常向下执行，所以，带资源的 try 在调用 close() 前是有进行非空判断的，这样就确保了程序正常执行而不抛出 NullPointerException，需要注意的是，除了空指针异常不会发生， close() 抛出的其它异常需要另当别论！</p>
+<p>&nbsp;/</p>
+<p><a name="a4"></a>可以参考的文档与资料：</p>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/35372148/try-with-resource-when-autocloseable-is-null" target="_blank">Try-With Resource when AutoCloseable is null</a></p>
+<p><a class="question-hyperlink" href="https://stackoverflow.com/questions/33692548/possible-null-pointer-exception-on-autocloseable-idiom" target="_blank">Possible null pointer exception on autocloseable idiom</a></p>
+<p><a href="https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html" target="_blank">The try-with-resources Statement - java tutorials - oracle</a></p>
+<p><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-14.html#jls-14.20.3" target="_blank">Java language specification - 14.20.3</a></p>
+<p><a href="https://blogs.oracle.com/darcy/project-coin%3atry-with-resources-on-a-null-resource" target="_blank">oracle blog -&nbsp;Project Coin:try-with-resources on a null resource</a></p>
+<p>再补充几个：</p>
+<p class="grid--cell fs-headline1 fl1"><a class="question-hyperlink" href="https://stackoverflow.com/questions/20657737/exception-coming-out-of-close-in-try-with-resource" target="_blank">Exception coming out of close() in try-with-resource</a></p>
+<p class="grid--cell fs-headline1 fl1"><a class="question-hyperlink" href="https://stackoverflow.com/questions/38108010/is-it-important-to-add-autocloseable-in-java">Is it important to add AutoCloseable in java?</a></p>
+<p class="grid--cell fs-headline1 fl1"><a class="question-hyperlink" href="https://stackoverflow.com/questions/8066501/how-should-i-use-try-with-resources-with-jdbc">How should I use try-with-resources with JDBC?</a></p>

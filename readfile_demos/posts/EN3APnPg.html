@@ -1,0 +1,383 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor1">1、两个有序链表序列的合并</a></li>
+<li><a href="#anchor2">2、一元多项式的乘法与加法运算</a></li>
+<li><a href="#anchor3">3、Reversing Linked List</a></li>
+<li><a href="#anchor4">4、Pop Sequence</a></li>
+</ul>
+</div>
+<h2><a name="anchor0"></a>第二周编程作业</h2>
+<h3><a name="anchor1"></a>1、两个有序链表序列的合并</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">List Merge( List L1, List L2 ) {
+    
+    List temp, cur, result;
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 0. 初始化</span>
+    result = (List) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node));
+    cur </span>=<span style="color: #000000;"> result;
+    
+    </span><span style="color: #0000ff;">while</span> (L1-&gt;Next &amp;&amp; L2-&gt;<span style="color: #000000;">Next) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 比较 </span>
+        <span style="color: #0000ff;">if</span> (L1-&gt;Next-&gt;Data &lt;= L2-&gt;Next-&gt;<span style="color: #000000;">Data) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 取小的那个</span>
+            temp = L1-&gt;<span style="color: #000000;">Next;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 改造原链表 </span>
+            L1-&gt;Next = temp-&gt;<span style="color: #000000;">Next;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {             
+            temp </span>= L2-&gt;<span style="color: #000000;">Next;            
+            L2</span>-&gt;Next = temp-&gt;<span style="color: #000000;">Next;            
+        }
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 4. 插到结果链表尾部</span>
+        cur-&gt;Next =<span style="color: #000000;"> temp;
+        cur </span>= cur-&gt;<span style="color: #000000;">Next;
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 5. 破坏条件</span>
+    cur-&gt;Next = L1-&gt;Next ? L1-&gt;Next : L2-&gt;<span style="color: #000000;">Next;
+    </span><span style="color: #0000ff;">if</span> (L1-&gt;<span style="color: #000000;">Next) {
+        L1</span>-&gt;Next =<span style="color: #000000;"> NULL;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        L2</span>-&gt;Next =<span style="color: #000000;"> NULL;
+    }    
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor2"></a>2、一元多项式的乘法与加法运算</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;cstdio&gt;<span style="color: #000000;">
+#include </span>&lt;cstdlib&gt;<span style="color: #000000;">
+
+typedef </span><span style="color: #0000ff;">struct</span> polynomial_node*<span style="color: #000000;"> polynomial;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node {
+    </span><span style="color: #0000ff;">int</span> xs; <span style="color: #008000;">//</span><span style="color: #008000;"> 系数 </span>
+    <span style="color: #0000ff;">int</span> zs; <span style="color: #008000;">//</span><span style="color: #008000;"> 指数 </span>
+<span style="color: #000000;">    polynomial next;    
+};
+typedef </span><span style="color: #0000ff;">struct</span> polynomial_node*<span style="color: #000000;"> Node;
+
+polynomial readPoly() 
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n, xs, zs; 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 先读有多少位</span>
+    scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">n);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 创建多项式的头结点 </span>
+<span style="color: #000000;">    polynomial result, temp, rear;
+    rear </span>= result = (polynomial) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node));    
+    </span><span style="color: #0000ff;">while</span> (n--<span style="color: #000000;">) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 逐个添加多项式的项 </span>
+        scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;xs, &amp;<span style="color: #000000;">zs);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建项 </span>
+        temp = (polynomial) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node));
+        temp</span>-&gt;xs =<span style="color: #000000;"> xs;
+        temp</span>-&gt;zs =<span style="color: #000000;"> zs;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 添加项 </span>
+        rear-&gt;next =<span style="color: #000000;"> temp;
+        rear </span>= rear-&gt;<span style="color: #000000;">next;
+    }
+    rear</span>-&gt;next = NULL; 
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> result;    
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> printPoly(polynomial poly)
+{
+    </span><span style="color: #0000ff;">if</span> (poly-&gt;next ==<span style="color: #000000;"> NULL) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">0 0\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, poly-&gt;next-&gt;xs, poly-&gt;next-&gt;<span style="color: #000000;">zs);
+    poly </span>= poly-&gt;<span style="color: #000000;">next;
+    </span><span style="color: #0000ff;">while</span> (poly-&gt;<span style="color: #000000;">next) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> %d %d</span><span style="color: #800000;">"</span>, poly-&gt;next-&gt;xs, poly-&gt;next-&gt;<span style="color: #000000;">zs);
+        poly </span>= poly-&gt;<span style="color: #000000;">next;
+    }    
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}
+
+Node buildNode(</span><span style="color: #0000ff;">int</span> xs, <span style="color: #0000ff;">int</span><span style="color: #000000;"> zs)
+{
+    Node node </span>= (Node) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node));
+    node</span>-&gt;xs =<span style="color: #000000;"> xs;
+    node</span>-&gt;zs =<span style="color: #000000;"> zs;
+    node</span>-&gt;next =<span style="color: #000000;"> NULL;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> node;    
+};
+
+Node copyNode(Node node)
+{
+    </span><span style="color: #0000ff;">return</span> buildNode(node-&gt;xs, node-&gt;<span style="color: #000000;">zs);
+};
+
+polynomial add(polynomial p1, polynomial p2)
+{
+    polynomial result, rear;
+    rear </span>= result = (polynomial) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node));
+    result</span>-&gt;next = NULL; 
+<span style="color: #000000;">    
+    p1 </span>= p1-&gt;<span style="color: #000000;">next;
+    p2 </span>= p2-&gt;next; <span style="color: #008000;">//</span><span style="color: #008000;"> p1 和 p2 都有头结点 </span>
+        
+    <span style="color: #0000ff;">while</span> (p1 &amp;&amp;<span style="color: #000000;"> p2) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 比较</span>
+        <span style="color: #0000ff;">if</span> (p1-&gt;zs &gt; p2-&gt;<span style="color: #000000;">zs) { 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 取大的那一项添加到结果链表</span>
+            rear-&gt;next =<span style="color: #000000;"> copyNode(p1);
+            rear </span>= rear-&gt;<span style="color: #000000;">next; 
+            
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. p1指向下一位 </span>
+            p1 = p1-&gt;<span style="color: #000000;">next;
+            
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (p1-&gt;zs &lt; p2-&gt;<span style="color: #000000;">zs) {
+            rear</span>-&gt;next =<span style="color: #000000;"> copyNode(p2);
+            rear </span>= rear-&gt;<span style="color: #000000;">next; 
+            
+            p2 </span>= p2-&gt;<span style="color: #000000;">next;        
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 相等的情况，指数不变系数相加</span>
+            <span style="color: #0000ff;">if</span> (p1-&gt;xs + p2-&gt;xs != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                rear</span>-&gt;next = buildNode(p1-&gt;xs + p2-&gt;xs, p1-&gt;<span style="color: #000000;">zs);
+                rear </span>= rear-&gt;<span style="color: #000000;">next;                
+            }           
+            
+            p1 </span>= p1-&gt;<span style="color: #000000;">next;
+            p2 </span>= p2-&gt;<span style="color: #000000;">next;            
+        }
+    } 
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 4. 破坏条件</span>
+    <span style="color: #0000ff;">while</span><span style="color: #000000;"> (p1) {
+        rear</span>-&gt;next =<span style="color: #000000;"> copyNode(p1);
+        rear </span>= rear-&gt;<span style="color: #000000;">next;
+        
+        p1 </span>= p1-&gt;<span style="color: #000000;">next;    
+    }
+    
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (p2) {
+        rear</span>-&gt;next =<span style="color: #000000;"> copyNode(p2);
+        rear </span>= rear-&gt;<span style="color: #000000;">next;
+        
+        p2 </span>= p2-&gt;<span style="color: #000000;">next;            
+    }
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 多项式乘以一项 </span>
+<span style="color: #000000;">polynomial multi0(polynomial p, Node node)
+{
+    polynomial result, rear;
+    rear </span>= result = (polynomial) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node));
+    result</span>-&gt;next = NULL; 
+<span style="color: #000000;">    
+    p </span>= p-&gt;next; <span style="color: #008000;">//</span><span style="color: #008000;"> p有头结点 </span>
+    <span style="color: #0000ff;">while</span><span style="color: #000000;"> (p) {
+        rear</span>-&gt;next = buildNode(p-&gt;xs * node-&gt;xs, p-&gt;zs + node-&gt;<span style="color: #000000;">zs);
+        rear </span>= rear-&gt;<span style="color: #000000;">next;
+                
+        p </span>= p-&gt;<span style="color: #000000;">next;
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;        
+}
+
+polynomial multi(polynomial p1, polynomial p2)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将乘法运算转化为加法运算 </span>
+    polynomial result = (polynomial) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> polynomial_node)), temp;
+    result</span>-&gt;next = NULL; 
+<span style="color: #000000;">        
+    Node node </span>= p2-&gt;<span style="color: #000000;">next;    
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (node) {
+        temp </span>=<span style="color: #000000;"> multi0(p1, node);
+        result </span>=<span style="color: #000000;"> add(result, temp);
+        node </span>= node-&gt;<span style="color: #000000;">next;
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 读 2 个 多项式</span>
+    polynomial p1 =<span style="color: #000000;"> readPoly();
+    polynomial p2 </span>=<span style="color: #000000;"> readPoly();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 相乘与相加</span>
+    polynomial pa =<span style="color: #000000;"> multi(p1, p2);
+    polynomial pb </span>=<span style="color: #000000;"> add(p1, p2);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 输出结果 </span>
+<span style="color: #000000;">    printPoly(pa);
+    printPoly(pb);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor3"></a>3、Reversing Linked List</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> next;
+};
+typedef </span><span style="color: #0000ff;">struct</span> Node*<span style="color: #000000;"> MyNode;
+
+MyNode buildNode(</span><span style="color: #0000ff;">int</span> val, <span style="color: #0000ff;">int</span><span style="color: #000000;"> next)
+{
+    MyNode result </span>= (MyNode) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node));
+    result</span>-&gt;val =<span style="color: #000000;"> val;
+    result</span>-&gt;next =<span style="color: #000000;"> next;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+MyNode nodes[(</span><span style="color: #0000ff;">int</span>) 1e5 + <span style="color: #800080;">1</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">int</span> order[(<span style="color: #0000ff;">int</span>) 1e5 + <span style="color: #800080;">1</span><span style="color: #000000;">];
+
+</span><span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">int</span> a[], <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> tmp;
+    </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> j) {
+        tmp </span>=<span style="color: #000000;"> a[i];
+        a[i] </span>=<span style="color: #000000;"> a[j];
+        a[j] </span>=<span style="color: #000000;"> tmp;
+        
+        i</span>++<span style="color: #000000;">;
+        j</span>--<span style="color: #000000;">;
+    }
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> firstAddress, n, k, address, val, next;
+    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d %d</span><span style="color: #800000;">"</span>, &amp;firstAddress, &amp;n, &amp;<span style="color: #000000;">k);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 读入数据 </span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != n; ++<span style="color: #000000;">i) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d %d</span><span style="color: #800000;">"</span>, &amp;address, &amp;val, &amp;<span style="color: #000000;">next);
+        nodes[address] </span>=<span style="color: #000000;"> buildNode(val, next);
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 将数据按原逻辑顺序存储到order数组 </span>
+    <span style="color: #0000ff;">int</span> realN = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> realN用于统计真正在链表上的结点数（有的结点不在链表上） </span>
+    address =<span style="color: #000000;"> firstAddress;
+    </span><span style="color: #0000ff;">while</span> (address != -<span style="color: #800080;">1</span><span style="color: #000000;">) {
+        order[realN</span>++] =<span style="color: #000000;"> address;             
+        address </span>= nodes[address]-&gt;<span style="color: #000000;">next;        
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 重排序 </span>
+    <span style="color: #0000ff;">int</span> batch = realN /<span style="color: #000000;"> k;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != batch; ++<span style="color: #000000;">i) {
+        reverse(order, i </span>* k, (i + <span style="color: #800080;">1</span>) * k - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 4. 输出结果</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != realN - <span style="color: #800080;">1</span>; ++<span style="color: #000000;">i) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%5.5d %d %5.5d\n</span><span style="color: #800000;">"</span>, order[i], nodes[order[i]]-&gt;val, order[i + <span style="color: #800080;">1</span><span style="color: #000000;">]);
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%5.5d %d -1\n</span><span style="color: #800000;">"</span>, order[realN - <span style="color: #800080;">1</span>], nodes[order[realN - <span style="color: #800080;">1</span>]]-&gt;<span style="color: #000000;">val);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+ </span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor4"></a>4、Pop Sequence</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt; <span style="color: #008000;">//</span><span style="color: #008000;"> bool true false</span>
+<span style="color: #0000ff;">#define</span> MAX 1000 + 1
+<span style="color: #0000ff;">#define</span> STACK_EMPTY -1
+
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Stack {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> a[MAX];
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> maxSize;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> top;    
+};
+typedef </span><span style="color: #0000ff;">struct</span> Stack*<span style="color: #000000;"> MyStack;
+
+MyStack buildStack(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> maxSize)
+{
+    MyStack result </span>= (MyStack) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> Stack));
+    result</span>-&gt;maxSize =<span style="color: #000000;"> maxSize;
+    result</span>-&gt;top =<span style="color: #000000;"> STACK_EMPTY;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> clearStack(MyStack s)
+{
+    s</span>-&gt;top =<span style="color: #000000;"> STACK_EMPTY;
+}
+
+</span><span style="color: #0000ff;">bool</span> push(MyStack s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    </span><span style="color: #0000ff;">if</span> (s-&gt;top == s-&gt;maxSize - <span style="color: #800080;">1</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    s</span>-&gt;a[++(s-&gt;top)] =<span style="color: #000000;"> val;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> pop(MyStack s)
+{
+    </span><span style="color: #0000ff;">if</span> (s-&gt;top !=<span style="color: #000000;"> STACK_EMPTY) {
+        s</span>-&gt;top = s-&gt;top - <span style="color: #800080;">1</span><span style="color: #000000;">;
+    }    
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> topVal(MyStack s)
+{
+    </span><span style="color: #0000ff;">if</span> (s-&gt;top == STACK_EMPTY) <span style="color: #0000ff;">return</span><span style="color: #000000;"> STACK_EMPTY;
+    </span><span style="color: #0000ff;">return</span> s-&gt;a[s-&gt;<span style="color: #000000;">top];
+}
+
+</span><span style="color: #0000ff;">bool</span> check(MyStack s, <span style="color: #0000ff;">int</span> N, <span style="color: #0000ff;">int</span><span style="color: #000000;"> checkSeq[])
+{
+    </span><span style="color: #0000ff;">int</span> cur = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> curPushVal = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">bool</span> ok = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N + N; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (topVal(s) ==<span style="color: #000000;"> checkSeq[cur]) {
+            pop(s);
+            cur</span>++<span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (curPushVal &gt; N) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            ok </span>= push(s, curPushVal++<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (!ok) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }        
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> checkSeq[MAX];
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> M, N, K;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> M (the maximum capacity of the stack), 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> N (the length of push sequence), 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> K (the number of pop sequences to be checked). </span>
+<span style="color: #000000;">    
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d %d %d</span><span style="color: #800000;">"</span>, &amp;M, &amp;N, &amp;<span style="color: #000000;">K);
+    
+    MyStack s </span>=<span style="color: #000000;"> buildStack(M);
+    
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != K; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j != N; ++<span style="color: #000000;">j) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">checkSeq[j]);
+        }
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, check(s, N, checkSeq) ? <span style="color: #800000;">"</span><span style="color: #800000;">YES</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">NO</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        clearStack(s);
+    }
+        
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

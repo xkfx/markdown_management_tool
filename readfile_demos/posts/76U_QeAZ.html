@@ -1,0 +1,164 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor0">Tomcat怎样多开。。</a>
+<ul>
+<li><a href="#anchor1"><span style="color: #ff0000;">1、添加环境变量</span></a></li>
+<li><a href="#anchor2">2、改catalina.sh</a></li>
+<li><a href="#anchor3">3、改相关端口</a></li>
+</ul>
+</li>
+<li><a href="#anchor4">Nginx负载均衡简单例子</a></li>
+</ul>
+</div>
+<h2><a name="anchor0"></a>Tomcat怎样多开。。</h2>
+<p>演示一下如何开两个（开n个也差不了多少）：</p>
+<h3><a name="anchor1"></a><span style="color: #ff0000;">1、添加环境变量</span></h3>
+<p>首先通过复制弄几个tomcat出来：</p>
+<p>&nbsp;<img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190127152027578-560158782.png" alt="" width="594" height="40" /></p>
+<p>（尽量不影响原有的配置，毕竟实际生产环境并不需要多开）</p>
+<p>编辑<strong>etc/profile</strong>，添加如下几行，名字可以随便取，不过之后要对应：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;"><strong># cat1</strong>
+CAT1_BASE</span>=/opt/tomcat/<span style="color: #000000;">cat_7070
+CAT1_HOME</span>=/opt/tomcat/<span style="color: #000000;">cat_7070
+TOMCAT1_HOME</span>=/opt/tomcat/<span style="color: #000000;">cat_7070
+export CAT1_BASE CAT1_HOME TOMCAT1_HOME
+<strong># cat2</strong>
+CAT2_BASE</span>=/opt/tomcat/<span style="color: #000000;">cat_9090
+CAT2_HOME</span>=/opt/tomcat/<span style="color: #000000;">cat_9090
+TOMCAT2_HOME</span>=/opt/tomcat/<span style="color: #000000;">cat_9090
+export CAT2_BASE CAT2_HOME TOMCAT2_HOME</span></pre>
+</div>
+<p>编辑好后保存并退出，<strong><span style="color: #ff0000;">通过source /etc/profile命令让配置立即生效</span></strong>。</p>
+<h3><a name="anchor2"></a>2、改catalina.sh</h3>
+<p>catalina.sh在bin目录下，startup.sh等操作都会调用这个脚本。在起始位置添加类似下面的东西（覆盖全局环境变量）：</p>
+<div class="cnblogs_code">
+<pre>export CATALINA_BASE=<span style="color: #000000;">$CAT1_BASE
+export CATALINA_HOME</span>=$CAT1_HOME</pre>
+</div>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190127152528059-96898558.png" alt="" width="653" height="158" /></p>
+<h3><a name="anchor3"></a>3、改相关端口</h3>
+<p>编辑<span style="color: #ff0000;"><strong>conf/server.xml</strong></span>，反正我是一股脑把里面的8xxx全改成7xxx（除了8080改成7070外）。。改好后保存退出就可以启动了。</p>
+<p>另外一个cat2也是一样操作。于是就可以同时开好几个tomcat啦。。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190127160017711-699588587.png" alt="" width="538" height="297" /></p>
+<h2><a name="anchor4"></a>Nginx负载均衡简单例子</h2>
+<p>超级简单。。</p>
+<p>开好多个tomcat后，只需修改一下<strong>nginx.conf</strong>就行了，如下所示：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190127163750252-1447019812.png" alt="" width="448" height="216" /></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('175348bd-9c5a-4274-92be-bb05d30f2054')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_175348bd-9c5a-4274-92be-bb05d30f2054" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_175348bd-9c5a-4274-92be-bb05d30f2054" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_175348bd-9c5a-4274-92be-bb05d30f2054" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">user root;
+worker_processes 4;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 768;
+    # multi_accept on;
+}
+
+http {
+
+    ##
+    # Basic Settings
+    ##
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    # server_tokens off;
+
+    # server_names_hash_bucket_size 64;
+    # server_name_in_redirect off;
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    ##
+    # SSL Settings
+    ##
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+    ssl_prefer_server_ciphers on;
+
+    ##
+    # Logging Settings
+    ##
+
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    ##
+    # Gzip Settings
+    ##
+
+    gzip on;
+    gzip_disable "msie6";
+
+    # gzip_vary on;
+    # gzip_proxied any;
+    # gzip_comp_level 6;
+    # gzip_buffers 16 8k;
+    # gzip_http_version 1.1;
+    # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+    ##
+    # Virtual Host Configs
+    ##
+
+    # include /etc/nginx/conf.d/*.conf;
+    # include /etc/nginx/sites-enabled/*;    
+
+        upstream tomcat {
+            server ***.**.**.**:7070 weight=1;
+            server ***.**.**.**:9090 weight=1;
+        }
+    
+    server {
+        location / {
+            proxy_pass http://tomcat;
+        }
+    }
+}
+
+
+#mail {
+#    # See sample authentication script at:
+#    # http://wiki.nginx.org/ImapAuthenticateWithApachePhpScript
+# 
+#    # auth_http localhost/auth.php;
+#    # pop3_capabilities "TOP" "USER";
+#    # imap_capabilities "IMAP4rev1" "UIDPLUS";
+# 
+#    server {
+#        listen     localhost:110;
+#        protocol   pop3;
+#        proxy      on;
+#    }
+# 
+#    server {
+#        listen     localhost:143;
+#        protocol   imap;
+#        proxy      on;
+#    }
+#}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">nginx.conf</span></div>
+<p>再下一步是reload、测试并观察请求分发情况。</p>
+<p>一种方式是直接看tomcat的日志，但是有n个的话就很麻烦了。。。</p>
+<p>另一种方式是修改<strong>nginx</strong>的默认日志输出（同样是编辑<strong>nginx.conf</strong>然后reload）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">        ##
+        # Logging Settings
+        ##
+
+<strong>        log_format<span style="color: #ff0000;"> myformat</span> '$upstream_addr - ....';
+
+        access_log /var/log/nginx/access.log <span style="color: #ff0000;">myformat</span>;</strong>
+        error_log /var/log/nginx/error.log;</span></pre>
+</div>
+<p>观察access日志：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201901/1042431-20190127171337672-1619202770.png" alt="" width="394" height="211" /></p>
+<p>&nbsp;</p>

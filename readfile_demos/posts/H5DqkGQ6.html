@@ -1,0 +1,85 @@
+<p>1、谈到服务器的时候，可能是指物理主机（硬件），也可能是指Web服务应用（软件）。</p>
+<p>&nbsp;</p>
+<p>2、谈到客户的时候，通常指人类用户，或者是浏览器应用，或者两者都包括，浏览器应用做些什么？发送请求、解释HTML和呈现内容。</p>
+<p>&nbsp;</p>
+<p>3、HTTP是TCP/IP的上层协议。HTML仅仅是HTTP响应的一部分。</p>
+<p>&nbsp;</p>
+<p>4、HTTP协议包括许多方法，最常用的是GET和POST。HTTP GET用于请求数据，HTTP POST用于提交表单。</p>
+<p>&nbsp;</p>
+<p>5、发送给服务器的数据称为&ldquo;消息体&rdquo;或者&ldquo;负载&rdquo;。</p>
+<p>&nbsp;</p>
+<p>6、服务器不做的两件事：动态页面、在服务器上保存数据。</p>
+<p>&nbsp;</p>
+<p>7、如果不按Java的术语来说，Web服务器的辅助应用就是&ldquo;CGI&rdquo;程序。</p>
+<p>&nbsp;</p>
+<p>8、Servlet和CGI在Web服务器中都扮演着辅助应用的角色。</p>
+<p>&nbsp;</p>
+<p>9、Servlet的编写、部署、运行。</p>
+<p><a id="cb_post_title_url" href="http://www.cnblogs.com/happyframework/p/3344169.html">Tomcat：基础安装和使用教程</a></p>
+<p class="postTitle"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/bluepoint2009/p/Eclipse-without-javax-servlet.html">Eclipse中没有javax.servlet和javax.servlet.http包的处理办法</a></p>
+<p class="postTitle"><strong>第一步：添加tomcat的jar包</strong></p>
+<p class="postTitle">&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512155203926-1696190202.png" alt="" width="327" height="335" /></p>
+<p>方式 2</p>
+<p>- 到这里 http://mvnrepository.com/search?q=javax.servlet 手动下载</p>
+<p>方式 3&nbsp;</p>
+<p>- 通过 maven ，编辑 pom.xml 导入</p>
+<p>&nbsp;</p>
+<p><strong>&nbsp;第二步：编写Servlet</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.io.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Date;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> Ch1Servlet <span style="color: #0000ff;">extends</span><span style="color: #000000;"> HttpServlet {
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> doGet(HttpServletRequest request, HttpServletResponse response) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> IOException {
+        PrintWriter out </span>=<span style="color: #000000;"> response.getWriter();
+        Date today </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date();
+        out.println(</span>"&lt;html&gt;" +
+                "&lt;body&gt;" +
+                "&lt;h1 align=center&gt;Hello Servlet&lt;/h1&gt;"
+                + "&lt;/br&gt;" + today + "&lt;/body&gt;" + "&lt;/html&gt;"<span style="color: #000000;">
+        );
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>第三步：创建部署描述文件（DD，deployment descriptor），名为web.xml，放在同一目录下的etc文件夹中。</strong></p>
+<p class="postTitle"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/hxsyl/p/3435412.html">JavaWeb工程中web.xml基本配置</a></p>
+<p class="r"><a href="https://pubs.vmware.com/vfabric52/topic/com.vmware.vfabric.tc-server.2.8/getting-started/tutwebapp-web-xml-file.html">Sample web.xml File</a></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="ISO-8859-1" </span><span style="color: #0000ff;">?&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="2.4"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">display-name</span><span style="color: #0000ff;">&gt;</span>HelloWorld Application<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">display-name</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+        This is a simple web application with a source code organization
+        based on the recommendations of the Application Developer's Guide.
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">description</span><span style="color: #0000ff;">&gt;</span>
+
+<strong><span style="color: #3366ff;">    &lt;servlet&gt;
+        &lt;servlet-name&gt;Chapter1 Servlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;Ch1Servlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Chapter1 Servlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;</span></strong>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong>&nbsp;第四步：在tomcat下建立目录树，把文件放入相应目录中</strong></p>
+<p>D:\apache-tomcat-7.0.77\webapps\ch1\WEB-INF\classes</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512163712535-774359901.png" alt="" width="373" height="265" /></p>
+<p><strong>第五步：启动Tomcat</strong></p>
+<p><strong>第六步：打开浏览器访问网页</strong></p>
+<p><strong><img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512184004644-1213117270.png" alt="" width="596" height="246" /></strong></p>
+<p>&nbsp;ch1是Web应用的名字，hello是servlet的名字。</p>
+<p><strong>第七步：关闭Tomcat</strong></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201705/1042431-20170512184647785-473021423.png" alt="" width="531" height="263" /></p>
+<p>&nbsp;</p>

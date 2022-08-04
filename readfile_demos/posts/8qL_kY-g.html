@@ -1,0 +1,47 @@
+<p>p120~p124：</p>
+<p><strong><span style="background-color: #ffff99;">表达式</span></strong></p>
+<p>1、表达式由一个或者多个<strong>运算对象</strong>组成。</p>
+<p>&nbsp;</p>
+<p>2、最简单的表达式是字面值和变量。</p>
+<p>&nbsp;</p>
+<p>3、<strong>一元运算符</strong>作用于一个运算对象，二元则作用于两个。一个运算符到底是几元由上下文决定。</p>
+<p>&nbsp;</p>
+<p>4、<strong>重载运算符</strong>。仅改变运算对象和返回值的类型，运算对象的个数，运算符的优先级、结合律无法被改变。</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ccffff;">5、<strong>左值与右值</strong>。暂且理解为：左值就是<span style="text-decoration: underline;"><strong>Location</strong></span>，可以放在赋值号的两边，右值就是<span style="text-decoration: underline;"><strong>Read</strong></span>，只能放在赋值号的右边。（例如&amp;a返回一个右值，a[2]的求值结果为左值）</span></p>
+<p>&nbsp;</p>
+<p>6、左值是可以存放东西的，而右值是只能Read的。</p>
+<p>&nbsp;</p>
+<p>7、在运算时，高优先级的运算符与运算对象更为紧密地组合在一起，如果运算符的<strong>优先级</strong>相同，则由<strong>结合律</strong>决定组合运算对象的顺序。</p>
+<p>例如：算数运算符满足左结合律，则按照从左向右的顺序组合运算对象。</p>
+<p>（但是运算对象的求值顺序与优先级和结合律无关，例如：f() + g() + h()并不知道哪个函数会先计算）</p>
+<p>&nbsp;</p>
+<p>8、<strong>括号无视优先级与结合律。</strong></p>
+<p>&nbsp;</p>
+<p>9、求值顺序。对于表达式 f1() * f2()并不知道优先计算f1()还是f2()，</p>
+<p>对于表达式 cout &lt;&lt; i &lt;&lt; " " &lt;&lt; ++i &lt;&lt; endl 输出是未定义的，可能是 1 1 也可能是 0 1。</p>
+<p><strong>明确规定运算顺序</strong>的<strong>运算符</strong>只有四个： &amp;&amp; || ?: ,</p>
+<p>&nbsp;</p>
+<p>10、<a href="https://www.zhihu.com/question/23520802" target="_blank">c++左值与右值</a>。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> *p;    <span style="color: #008000;">//</span><span style="color: #008000;"> p是一个指向整型的指针</span>
+    <span style="color: #0000ff;">int</span> a = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    decltype(</span>*p) q = a;    <span style="color: #008000;">//</span><span style="color: #008000;"> decltype(<em>返回结果为左值的表达式</em>)的结果是引用类型。这里的q类型为 int&amp;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 类似的例子还有 decltype((<em>变量</em>))
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 补充一点：引用从来都作为所指对象别名出现，只有出现在decltype(里面)是一个例外。</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;补充：decltype(&amp;p)结果类型为 int**</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.1</span></p>
+<p><em>105</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.2</span></p>
+<p><em>（a）(*vec).begin()</em></p>
+<p><em>（b）((*vec).begin()) + 1</em></p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffff99;">练习 4.3</span></p>
+<p><em>略&nbsp;</em></p>

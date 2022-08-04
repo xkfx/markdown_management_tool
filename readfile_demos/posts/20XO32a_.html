@@ -1,0 +1,60 @@
+<p><span style="line-height: 1.5;">1、算数类型。（整型和浮点型）</span></p>
+<p>类型决定了数据所占的比特数以及该如何解释这些比特的内容。</p>
+<p>练习2.1。。。 各种类型在计算机中所占的比特数不同，解释方法不同。有符号要花费一个比特存储符号，最大正值要比无符号的小。</p>
+<p>float和double就在计算机内所占比特数量而言通常分别为32位和64位，就解释后的精度而言分别有7个和16个有效位，ps:通常，执行浮点数运算选用double,整数运算选int 或者 long long</p>
+<p>练习2.2 全部无符号的double？</p>
+<p>2、类型转换。关于-1%256=255，一个负数B对一个正数A取模，在B上加A，直到B变成正数，然后再对A取模。</p>
+<p>参考:http://bbs.csdn.net/topics/390837091</p>
+<p>&nbsp;</p>
+<p>练习2.3 32 42949672** 32 -32 0 0</p>
+<p>练习2.4</p>
+<p> D:\lab_&gt;prog1<br />	32<br />	4294967264<br />	32<br />	-32<br />	0<br />	0</p>
+<p>3、字面常量</p>
+<p>&nbsp;</p>
+<p>练习 2.6 十进制和八进制的区别。 09作为八进制是不合法的，无法编译。</p>
+<p>练习 2.7</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> std::cout &lt;&lt; "2\115" &lt;&lt; '\n';</span>
+    std::cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">2\t\115</span><span style="color: #800000;">"</span> &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、变量定义</p>
+<p>比较关键的地方：变量的概念。 区分初始化与赋值。</p>
+<p>值得关注的地方： 列表初始化。(用花括号来初始化变量， 若初始值存在丢失信息的风险， 则编译器将报错)</p>
+<p>以及： 未被显式初始化的情况</p>
+<p>&mdash;&mdash;&gt; 默认初始化：内置类型变量分两重情况(由位置决定)分别为 0 或 未定义，类由自己决定。</p>
+<p>练习 2.9</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    std::cin </span>&gt;&gt; <span style="color: #0000ff;">int</span> input_value;      <span style="color: #008000;">//</span><span style="color: #008000;"> 不可编译。</span>
+    <span style="color: #0000ff;">int</span> i = { <span style="color: #800080;">3.14</span> };                 <span style="color: #008000;">//</span><span style="color: #008000;"> 可编译。编译器不报warning。精度丢失。 ps：相当于 i = 3.14?</span>
+    <span style="color: #0000ff;">int</span> i{<span style="color: #800080;">3.14</span>}                       <span style="color: #008000;">//</span><span style="color: #ff0000; background-color: #ffff00;"> 可编译。编译器报warning。精度丢失。</span>
+    <span style="color: #0000ff;">double</span> salary = wage = <span style="color: #800080;">9999.99</span>;   <span style="color: #008000;">//</span><span style="color: #008000;"> 不可编译。</span>
+    <span style="color: #0000ff;">int</span> i = <span style="color: #800080;">3.14</span> ;                    <span style="color: #008000;">//</span><span style="color: #008000;"> 可编译。编译器不报warning。精度丢失。</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>练习 2.10</p>
+<div class="cnblogs_code">
+<pre>#include&lt;iostream&gt;<span style="color: #000000;">
+
+std::</span><span style="color: #0000ff;">string</span> global_str;     <span style="color: #008000;">//</span><span style="color: #008000;"> 类的默认初始化由自己决定：空字符串</span>
+<span style="color: #0000ff;">int</span> global_int;                <span style="color: #008000;">//</span><span style="color: #008000;"> 内置类型的初始化由位置决定： 0</span>
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> local_int;            <span style="color: #008000;">//</span><span style="color: #008000;">内置类型的初始化由位置决定： 不被初始化， 尝试输出是4201131</span>
+    std::<span style="color: #0000ff;">string</span> local_str;     <span style="color: #008000;">//</span><span style="color: #008000;"> 类的默认初始化由自己决定：空字符串</span>
+}</pre>
+</div>
+<p>&nbsp;为什么不是&ldquo;但凡没有初始化的变量都进行默认初始化&rdquo;呢？</p>

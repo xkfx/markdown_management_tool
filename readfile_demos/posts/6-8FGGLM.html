@@ -1,0 +1,59 @@
+<p>1、EL的英文是Expression Language，译成中文就是&ldquo;表达式语言&rdquo;。这是一种给前端程序员使用的脚本语言，EL与Java表达式相比并没有什么&ldquo;天壤之别&rdquo;，在后端程序员看来多少有点&ldquo;多此一举&rdquo;。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618201402900-1998596854.png" alt="" width="510" height="176" /></p>
+<p>2、然而，我们不能强求每一个前端程序员都去学习JAVA，EL相对于JAVA来说学习成本更低，更容易理解。</p>
+<p>&nbsp;</p>
+<p>3、在以前写的代码上实践测试一下，首先把Scriptlet给禁了，（El也是可以禁的）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="3.1"</span><span style="color: #0000ff;">&gt;</span>
+<strong><span style="color: #ff0000;">    &lt;jsp-config&gt;
+        &lt;jsp-property-group&gt;
+            &lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;
+            &lt;scripting-invalid&gt;true&lt;/scripting-invalid&gt;
+        &lt;/jsp-property-group&gt;
+    &lt;/jsp-config&gt;
+</span></strong>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>hi<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>Sample.AddFriends<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-class</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>hi<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/HobbyPage.do<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-mapping</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;这个时候再去访问含有Scriptlet的JSP页面，</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170616153235696-883773373.png" alt="" width="553" height="213" /></p>
+<p>&nbsp;</p>
+<p>4、本质上来说，EL和Scriptlet是类似的，最后都要转换为.java--&gt;.class</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618202328071-891678126.png" alt="" width="625" height="433" /></p>
+<p>&nbsp;</p>
+<p>5、。。。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618204232790-1964698745.png" alt="" width="454" height="369" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618205653556-328729834.png" alt="" width="709" height="213" /></p>
+<p><span style="color: #ff0000;">&nbsp;&lt;jsp:useBean ....&gt;既可以用来创建对象，也可以用来取得对象。</span></p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618211145478-724537608.png" alt="" width="731" height="428" /></p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618212517900-1452541166.png" alt="" width="686" height="224" /></p>
+<p>&nbsp;</p>
+<p>6、&lt;jsp:useBean ....&gt;可以有体</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170618212943525-264397262.png" alt="" width="666" height="353" /></p>
+<p>&nbsp;</p>
+<p>7、总之，归根结底最后都转化为servlet。</p>
+<p>&nbsp;</p>
+<h3>推荐阅读</h3>
+<p class="t">1、<a href="http://www.360doc.com/content/14/0622/17/13883922_388868541.shtml" target="_blank" data-click="{
+			'F':'778317EA',
+			'F1':'9D73F1E4',
+			'F2':'4CA6DE6B',
+			'F3':'54E5343F',
+			'T':'1497596401',
+						'y':'BF2BF5FB'
+			 
+									}">JSP中的Scriptlet&nbsp;-- 经典</a>&nbsp;书上没解释什么是Scriptlet</p>
+<p class="t">2&nbsp;、<a href="https://www.tutorialspoint.com/jsp/jsp_syntax.htm" target="_blank">Syntax in JSP</a>&nbsp;</p>
+<p>&nbsp;</p>

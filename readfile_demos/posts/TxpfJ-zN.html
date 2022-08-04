@@ -1,0 +1,152 @@
+<p><span style="line-height: 1.5; color: #ff00ff;">【默认实参】</span></p>
+<p>1、注意点：函数的默认实参可以在函数的声明中添加，但是后续声明只能添加默认参数而不能改变先前声明的默认参数。（函数的声明通常是定义在头文件上的，多次声明同一个函数是合法的）</p>
+<p>&nbsp;</p>
+<p>2、默认实参必须为全局变量，但是允许在局部改变这些变量的值，如果在局部重新声明将作为默认实参的变量，将不会有任何影响。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span><br /><span style="text-decoration: underline;">6.40</span><br />b 顺序错误，默认参数应该在位置参数的右边。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.41</span><br />a 非法，没有给第一个位置参数赋值。<br />c 合法但是背离初衷，原因是'*'会作为整型数赋值给参数wd而不是参数bckgrnd。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.42</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">string</span> make_plural(size_t ctr, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;word, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;ending = <span style="color: #800000;">"</span><span style="color: #800000;">s</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+{
+    </span><span style="color: #0000ff;">return</span> (ctr &gt; <span style="color: #800080;">1</span>) ? word +<span style="color: #000000;"> ending : word;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span> word1 = <span style="color: #800000;">"</span><span style="color: #800000;">success</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">string</span> word2 = <span style="color: #800000;">"</span><span style="color: #800000;">failure</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; make_plural(<span style="color: #800080;">1</span>, word1) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> &lt;&lt; make_plural(<span style="color: #800080;">2</span>, word1, <span style="color: #800000;">"</span><span style="color: #800000;">es</span><span style="color: #800000;">"</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; make_plural(<span style="color: #800080;">1</span>, word2) &lt;&lt; <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> &lt;&lt; make_plural(<span style="color: #800080;">2</span>, word2) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【内联函数和constexpr函数】</span><br />1、为什么使用内联函数？避免函数调用的开销,在编译时在调用点内联的展开。</p>
+<p>2、注意点：内联函数通常声明连同定义在头文件内！</p>
+<p>&nbsp;</p>
+<p>3、为什么使用constexpr函数?用作常量表达式。（常量表达式可以用于数组的初始化、常量初始化等）</p>
+<p>4、constexpr函数的特点：被隐式声明为内联函数,在编译时其调用就被替换为对应结果值。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">6.43</span><br />a 放在.h文件中<br />b.放在.cpp文件中</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.44</span></p>
+<div class="cnblogs_code">
+<pre>inline <span style="color: #0000ff;">bool</span><span style="color: #000000;"> 
+isShorter(</span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;s1, <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> &amp;<span style="color: #000000;">s2)
+{
+    </span><span style="color: #0000ff;">return</span> s1.size() &lt;<span style="color: #000000;"> s2.size();
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.45</span><br />略</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.46</span><br />不能。不能保证isShorter的实参是常量表达式。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">【调试帮助】</span></p>
+<p><span style="line-height: 1.5;">1、预处理器定义的5个很有用的名字。p216</span></p>
+<p>2、NDEBUG的用法。</p>
+<p>假如有一段这样的代码：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;cassert&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    #ifndef NDEBUG
+        cout </span>&lt;&lt; __func__ &lt;&lt;<span style="color: #000000;"> endl;
+        cout </span>&lt;&lt; __FILE__ &lt;&lt;<span style="color: #000000;"> endl;
+        cout </span>&lt;&lt; __LINE__ &lt;&lt;<span style="color: #000000;"> endl;
+        cout </span>&lt;&lt; __TIME__ &lt;&lt;<span style="color: #000000;"> endl;
+        cout </span>&lt;&lt; __DATE__ &lt;&lt;<span style="color: #000000;"> endl;</span><span style="color: #0000ff;">#endif</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>默认状态下编译运行：</p>
+<div class="cnblogs_code">
+<pre>$ g++ prog1.cpp -std=c++<span style="color: #800080;">11</span> -<span style="color: #000000;">o prog1
+
+$ prog1
+main
+prog1.cpp
+</span><span style="color: #800080;">10</span>
+<span style="color: #800080;">9</span>:<span style="color: #800080;">3</span>:<span style="color: #800080;">23</span><span style="color: #000000;">
+Apr </span><span style="color: #800080;">1</span> <span style="color: #800080;">2017</span></pre>
+</div>
+<p>关闭DEBUG模式编译运行：</p>
+<div class="cnblogs_code">
+<pre>$ g++ <span style="color: #0000ff;">-D NDEBUG</span> prog1.cpp -std=c++<span style="color: #800080;">11</span> -<span style="color: #000000;">o prog1
+
+$ prog1
+# 输出为空！</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、assert。</p>
+<p>assert 英[əˈsɜ:t]<br />美[əˈsɜ:rt]<br />vt.	声称，断言</p>
+<p>例如：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;<span style="color: #000000;">
+#include </span>&lt;cassert&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">hi</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    assert(</span><span style="color: #800080;">1</span><span style="color: #000000;">);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">my name is</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    assert(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">xkfx</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>输出：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">$
+hi
+my name </span><span style="color: #0000ff;">is</span><span style="color: #000000;">
+Assertion failed: </span><span style="color: #800080;">0</span>, file prog1.cpp, line <span style="color: #800080;">10</span><span style="color: #000000;">
+
+This application has requested the Runtime to terminate it </span><span style="color: #0000ff;">in</span><span style="color: #000000;"> an unusual way.
+Please contact the application</span><span style="color: #800000;">'</span><span style="color: #800000;">s support team for more information.</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff;">练习</span></p>
+<p><span style="text-decoration: underline;">6.47</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;vector&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> vectorPrinter(vector&lt;<span style="color: #0000ff;">int</span>&gt;::iterator beg, vector&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;">::iterator end)
+{
+    </span><span style="color: #0000ff;">if</span> (beg !=<span style="color: #000000;"> end) {
+        cout </span>&lt;&lt; *beg &lt;&lt;<span style="color: #000000;"> endl;
+        vectorPrinter(beg</span>+<span style="color: #800080;">1</span><span style="color: #000000;">, end);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span>
+        <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt; ivec = {<span style="color: #800080;">1</span>, <span style="color: #800080;">2</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">4</span>, <span style="color: #800080;">5</span><span style="color: #000000;">};
+    #ifndef NDEBUG
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">size=</span><span style="color: #800000;">"</span> &lt;&lt; ivec.size() &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">#endif</span><span style="color: #000000;">
+    vectorPrinter(begin(ivec), end(ivec));
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>关闭调试模式只需要在编译时加上-D NDEBUG就可以了。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.48</span></p>
+<div class="cnblogs_code">
+<pre>  <span style="color: #0000ff;">string</span><span style="color: #000000;"> s;
+    </span><span style="color: #0000ff;">while</span> (cin &gt;&gt; s &amp;&amp; s != <span style="color: #800000;">"</span><span style="color: #800000;">.</span><span style="color: #800000;">"</span>) {} <span style="color: #008000;">//</span><span style="color: #008000;"> 不断读入字符串，直到碰到一个要找的字符串就终止（这里用"."替代）。</span>
+    assert(cin); <span style="color: #008000;">//</span><span style="color: #008000;"> cin是一个对象，单独出现在条件语句的时候结果值为1。所以assert什么也不做。</span></pre>
+</div>
+<p>&nbsp;</p>

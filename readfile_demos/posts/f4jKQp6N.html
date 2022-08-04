@@ -1,0 +1,110 @@
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">p186~p188：</span></p>
+<p><span style="text-decoration: underline;">函数声明</span><br />1、函数只能定义一次，但是可以声明多次。</p>
+<p>&nbsp;</p>
+<p>2、<span style="background-color: #ffff99;">函数的接口</span>：返回类型 + 函数名 + 形参类型</p>
+<p>&nbsp;</p>
+<p>3、为什么要在头文件中进行函数声明？？？在源文件中定义？暂时理解到，这么做可以增强可读性。</p>
+<p>&nbsp;</p>
+<p>4、含有函数声明的头文件应该被包含到<span style="background-color: #ffff99;">定义函数的源文件</span>中。（例如：#include "diy.h"）</p>
+<p><br /><span style="text-decoration: underline;">分离式编译 &amp; 6.8 &amp; 6.9</span></p>
+<p><br />1、<span style="background-color: #ffff99;">分离式编译</span>：把源文件割成好几块放在不同的文件夹下。最终要生成可执行文件，就必须告诉编译器源文件在哪里。<br />具体操作如下：</p>
+<p>&gt;源文件内容（三个文件放在同一个文件夹下面。）</p>
+<p>fact.h</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> fact(<span style="color: #0000ff;">int</span> val);</pre>
+</div>
+<p>fact.cpp</p>
+<div class="cnblogs_code">
+<pre>#include <span style="color: #800000;">"</span><span style="color: #800000;">fact.h</span><span style="color: #800000;">"</span>
+<span style="color: #0000ff;">int</span> fact(<span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    </span><span style="color: #0000ff;">if</span> (val == <span style="color: #800080;">1</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> val * fact(val - <span style="color: #800080;">1</span><span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>factMain.cpp</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;<span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">fact.h</span><span style="color: #800000;">"</span>
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    cout </span>&lt;&lt; fact(<span style="color: #800080;">3</span>) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> output=6</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p><span style="text-decoration: underline;">&gt;开始编译 ！</span></p>
+<p>1）一起编译的方法</p>
+<div class="cnblogs_code">
+<pre>$ g++ factMain.cpp fact.cpp -o lovecpp -std=c++<span style="color: #800080;">11</span><span style="color: #000000;">
+
+$ lovecpp
+</span><span style="color: #800080;">6</span></pre>
+</div>
+<p>&nbsp;2）真*分离式编译</p>
+<p>第一步</p>
+<div class="cnblogs_code">
+<pre>$ g++ -<span style="color: #000000;">c factMain.cpp
+
+$ g</span>++ -c fact.cpp</pre>
+</div>
+<p>执行这两个操作后会生成fact.o、factMain.o，接下来要把<span style="background-color: #ffff99;">object code</span>（*就是.o文件）链接成可执行文件。</p>
+<div class="cnblogs_code">
+<pre>$ g++ factMain.o fact.o -o lovecpp</pre>
+</div>
+<p>执行后生成lovecpp.exe。这样分几步的好处是：如果修改了其中一个源文件，就重新编译改动的就好了。</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1042431/201703/1042431-20170319100546354-1303720563.png" alt="" width="268" height="197" /></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">6.10</span></p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span> *p, <span style="color: #0000ff;">int</span> *<span style="color: #000000;">q)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    temp </span>= *<span style="color: #000000;">p;
+    </span>*p = *<span style="color: #000000;">q;
+    </span>*q =<span style="color: #000000;"> temp;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> a = <span style="color: #800080;">3</span>, b = <span style="color: #800080;">4</span><span style="color: #000000;">;
+    cout </span>&lt;&lt;    a &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; b &lt;&lt;<span style="color: #000000;"> endl;
+    swap(a , b);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 交换之后</span>
+    cout &lt;&lt;    a &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; b &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+     3 4
+     4 3
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;修正：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">void</span> swap(<span style="color: #0000ff;">int</span> *p, <span style="color: #0000ff;">int</span> *<span style="color: #000000;">q)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> temp;
+    temp </span>= *<span style="color: #000000;">p;
+    </span>*p = *<span style="color: #000000;">q;
+    </span>*q =<span style="color: #000000;"> temp;
+}
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span> a = <span style="color: #800080;">3</span>, b = <span style="color: #800080;">4</span><span style="color: #000000;">;
+    cout </span>&lt;&lt; a &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; b &lt;&lt;<span style="color: #000000;"> endl;
+   <span style="color: #ff0000;"> swap(</span></span><span style="color: #ff0000;">&amp;a , &amp;b);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 交换之后</span>
+    cout &lt;&lt; a &lt;&lt; <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> &lt;&lt; b &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> output:
+4
+3
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>但是上一个程序也有正确输出？？</p>

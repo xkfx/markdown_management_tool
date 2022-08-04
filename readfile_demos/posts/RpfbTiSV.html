@@ -1,0 +1,227 @@
+<p>1、这是一个非常简单的程序，它看起来是这个样子的：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170614141215478-611187099.png" alt="" width="233" height="131" /></p>
+<p>实际功能就是，每访问该页面一次count数加1，在服务器重启前（JVM重启前），这个次数将持续累加。</p>
+<p>&nbsp;</p>
+<p>2、因为这个程序过于简单，所以我希望可以通过HTML内置Java来完成。</p>
+<p>这样做的好处就是：可以把写servlet的事情交给web容器来做。</p>
+<p>&nbsp;</p>
+<p>3、代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> Sample;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Counter {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> count;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getCount() {
+        </span>++<span style="color: #000000;">count;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">  count;
+    }
+}</span></pre>
+</div>
+<p>BasicCounter.jsp</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page <span style="color: #0000ff;">import</span>="Sample.Counter" %&gt;
+&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Basic Counter&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;The page count is: &lt;/p&gt;
+    &lt;%<span style="color: #000000;">
+        out.println(Counter.getCount());
+    </span>%&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>web.xml使用默认的即可</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">web-app </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee"</span><span style="color: #ff0000;">
+         xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+         xsi:schemaLocation</span><span style="color: #0000ff;">="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span><span style="color: #ff0000;">
+         version</span><span style="color: #0000ff;">="3.1"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">web-app</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、启动服务器后，输入BasicCounter.jsp的绝对路径即可访问。</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201706/1042431-20170614153222212-1538117482.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>5、println是servlet才用的语句！在JSP中还可以改进代码，如下</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page <span style="color: #0000ff;">import</span>="Sample.Counter" %&gt;
+&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Basic Counter&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;p&gt;The page count is: &lt;/p&gt;
+<span style="color: #ff0000;"><strong>    &lt;%=Counter.getCount()%&gt;</strong></span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;这是一种等价写法，事实上web容器在把JSP转换成.java时，还是会把它改写为out.println...</p>
+<p>还可以这么玩 &darr;</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page <span style="color: #0000ff;">import</span>="Sample.HelloWorld" %&gt;
+&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Simple jsp page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h3 <span style="color: #0000ff;">class</span>="message"&gt;&lt;%=HelloWorld.getMessage()%&gt;&lt;/h3&gt;
+  <strong><span style="color: #ff0000;">  &lt;%=Math.random()%&gt;</span></strong>
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>每次访问这个JSP都会获得一个新的随机数。</p>
+<p>&nbsp;</p>
+<p>6、目前为止，我们已经看到了三种不同形态的JSP元素：</p>
+<pre><strong>&lt;%=Counter.getCount()%&gt;</strong></pre>
+<pre>&lt;%@ page import="Sample.Counter" %&gt;</pre>
+<pre> &lt;%<span>
+        out.println(Counter.getCount());
+    %&gt;<br /><br /></span></pre>
+<p>7、实际上，我们甚至不需要创建额外的cOUNTER类，我们尝试一下这段代码</p>
+<div class="cnblogs_code">
+<pre>&lt;%@ page <span style="color: #0000ff;">import</span>="Sample.Counter" %&gt;
+&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Basic Counter&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+<strong><span style="color: #ff0000;">    &lt;%
+        int count = 0;
+    %&gt;</span></strong>
+    &lt;p&gt;The page count is: &lt;/p&gt;
+<strong><span style="color: #ff0000;">    &lt;%= ++count %&gt;</span></strong>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>这段代码是错的。结果很容易猜到：count的结果永远是1，因为每调用一次页面count都会被重新初始化一次。</p>
+<p>要想知道容器到底对你的JSP做了什么，</p>
+<p>唯一的办法就是去产看源码。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">
+ * Generated by the Jasper component of Apache Tomcat
+ * Version: Apache Tomcat/7.0.77
+ * Generated at: 2017-06-14 08:18:57 UTC
+ * Note: The last modified time of this file was set to
+ *       the last modified time of the source file after
+ *       generation to assist with modification tracking.
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">package</span><span style="color: #000000;"> org.apache.jsp;
+
+</span><span style="color: #0000ff;">import</span> javax.servlet.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.http.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.servlet.jsp.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> Sample.Counter;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">class</span> BasicCounter_jsp <span style="color: #0000ff;">extends</span><span style="color: #000000;"> org.apache.jasper.runtime.HttpJspBase
+    </span><span style="color: #0000ff;">implements</span><span style="color: #000000;"> org.apache.jasper.runtime.JspSourceDependent {
+
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> javax.servlet.jsp.JspFactory _jspxFactory =<span style="color: #000000;">
+          javax.servlet.jsp.JspFactory.getDefaultFactory();
+
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> java.util.Map&lt;java.lang.String,java.lang.Long&gt;<span style="color: #000000;"> _jspx_dependants;
+
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">volatile</span><span style="color: #000000;"> javax.el.ExpressionFactory _el_expressionfactory;
+  </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">volatile</span><span style="color: #000000;"> org.apache.tomcat.InstanceManager _jsp_instancemanager;
+
+  </span><span style="color: #0000ff;">public</span> java.util.Map&lt;java.lang.String,java.lang.Long&gt;<span style="color: #000000;"> getDependants() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _jspx_dependants;
+  }
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> javax.el.ExpressionFactory _jsp_getExpressionFactory() {
+    </span><span style="color: #0000ff;">if</span> (_el_expressionfactory == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">synchronized</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span> (_el_expressionfactory == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+          _el_expressionfactory </span>=<span style="color: #000000;"> _jspxFactory.getJspApplicationContext(getServletConfig().getServletContext()).getExpressionFactory();
+        }
+      }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _el_expressionfactory;
+  }
+
+  </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> org.apache.tomcat.InstanceManager _jsp_getInstanceManager() {
+    </span><span style="color: #0000ff;">if</span> (_jsp_instancemanager == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">synchronized</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span> (_jsp_instancemanager == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+          _jsp_instancemanager </span>=<span style="color: #000000;"> org.apache.jasper.runtime.InstanceManagerFactory.getInstanceManager(getServletConfig());
+        }
+      }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _jsp_instancemanager;
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> _jspInit() {
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> _jspDestroy() {
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> _jspService(<span style="color: #0000ff;">final</span> javax.servlet.http.HttpServletRequest request, <span style="color: #0000ff;">final</span><span style="color: #000000;"> javax.servlet.http.HttpServletResponse response)
+        </span><span style="color: #0000ff;">throws</span><span style="color: #000000;"> java.io.IOException, javax.servlet.ServletException {
+
+    </span><span style="color: #0000ff;">final</span><span style="color: #000000;"> javax.servlet.jsp.PageContext pageContext;
+    javax.servlet.http.HttpSession session </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">final</span><span style="color: #000000;"> javax.servlet.ServletContext application;
+    </span><span style="color: #0000ff;">final</span><span style="color: #000000;"> javax.servlet.ServletConfig config;
+    javax.servlet.jsp.JspWriter out </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">final</span> java.lang.Object page = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    javax.servlet.jsp.JspWriter _jspx_out </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    javax.servlet.jsp.PageContext _jspx_page_context </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+
+    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+      response.setContentType(</span>"text/html;charset=UTF-8"<span style="color: #000000;">);
+      pageContext </span>= _jspxFactory.getPageContext(<span style="color: #0000ff;">this</span><span style="color: #000000;">, request, response,
+                  </span><span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">true</span>, 8192, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+      _jspx_page_context </span>=<span style="color: #000000;"> pageContext;
+      application </span>=<span style="color: #000000;"> pageContext.getServletContext();
+      config </span>=<span style="color: #000000;"> pageContext.getServletConfig();
+      session </span>=<span style="color: #000000;"> pageContext.getSession();
+      out </span>=<span style="color: #000000;"> pageContext.getOut();
+      _jspx_out </span>=<span style="color: #000000;"> out;
+
+      out.write(</span>"\r\n"<span style="color: #000000;">);
+      out.write(</span>"\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;html&gt;\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;head&gt;\r\n"<span style="color: #000000;">);
+      out.write(</span>"    &lt;title&gt;Basic Counter&lt;/title&gt;\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;/head&gt;\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;body&gt;\r\n"<span style="color: #000000;">);
+
+    </span><span style="color: #ff0000;"><strong>int count = 0</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>;</strong></span>
+
+      out.write(</span>"\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;p&gt;The page count is: &lt;/p&gt;\r\n"<span style="color: #000000;">);
+<span style="color: #ff0000;"><strong>      out.print( </strong></span></span><span style="color: #ff0000;"><strong>++</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>count );</strong></span>
+      out.write(</span>"\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;/body&gt;\r\n"<span style="color: #000000;">);
+      out.write(</span>"&lt;/html&gt;\r\n"<span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (java.lang.Throwable t) {
+      </span><span style="color: #0000ff;">if</span> (!(t <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> javax.servlet.jsp.SkipPageException)){
+        out </span>=<span style="color: #000000;"> _jspx_out;
+        </span><span style="color: #0000ff;">if</span> (out != <span style="color: #0000ff;">null</span> &amp;&amp; out.getBufferSize() != 0<span style="color: #000000;">)
+          </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (response.isCommitted()) {
+              out.flush();
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+              out.clearBuffer();
+            }
+          } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (java.io.IOException e) {}
+        </span><span style="color: #0000ff;">if</span> (_jspx_page_context != <span style="color: #0000ff;">null</span><span style="color: #000000;">) _jspx_page_context.handlePageException(t);
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> ServletException(t);
+      }
+    } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+      _jspxFactory.releasePageContext(_jspx_page_context);
+    }
+  }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;8、在实际应用中，统计自身被调用多少次并不是 servlet 的职责，可以通过过滤器或者 AOP 切面实现。</p>
+<pre><span>&nbsp;</span></pre>

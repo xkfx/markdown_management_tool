@@ -1,0 +1,77 @@
+<p>存档留用&nbsp;</p>
+<p>（= 存档留着备用）</p>
+<p>&nbsp;</p>
+<p>爬的是一个开放的自动回复机器人 API 网站 http://i.itpk.cn/。 结构 大致如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1042431/201806/1042431-20180605103357846-1276373548.png" alt="" width="429" height="215" /></p>
+<p>我做的事情就是【输入文字，点击按钮，爬取内容】，如上图所示。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> org.sample.service.impl;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.gargoylesoftware.htmlunit.WebClient;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.gargoylesoftware.htmlunit.html.HtmlElement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.gargoylesoftware.htmlunit.html.HtmlInput;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> com.gargoylesoftware.htmlunit.html.HtmlPage;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> org.sample.service.ThirdPartyRobot;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.io.IOException;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ThirdPartyRobotImpl <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ThirdPartyRobot {
+
+    @Override
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getReplyByWords(String words) {
+        String result </span>=<span style="color: #000000;"> getReplyByWordsThroughMoLiRobot(words);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }
+
+    </span><span style="color: #0000ff;">private</span> String getReplyByWordsThroughMoLiRobot(<span style="color: #0000ff;">final</span><span style="color: #000000;"> String words) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打开浏览器 进入页面</span>
+        WebClient webClient = <span style="color: #0000ff;">new</span><span style="color: #000000;"> WebClient();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        webClient.getOptions().setJavaScriptEnabled(false);</span>
+        webClient.getOptions().setCssEnabled(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        webClient.getOptions().setUseInsecureSSL(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        HtmlPage page </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            page </span>= webClient.getPage("http://i.itpk.cn/"<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取文本框 输入内容</span>
+        HtmlInput question = (HtmlInput) page.getElementById("question"<span style="color: #000000;">);
+        question.setValueAttribute(words);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        System.out.println(question.asText());
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取按钮 点击按钮</span>
+        HtmlAnchor getAnswer = page.getAnchorByText("普通提问"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            getAnswer.click();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (IOException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        List&lt;HtmlAnchor&gt; Anchors = page.getAnchors();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        for (HtmlAnchor x : getAnswer) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">            System.out.println(x.getHrefAttribute());
+</span><span style="color: #008000;">//</span><span style="color: #008000;">            System.out.println(x.asText());
+</span><span style="color: #008000;">//</span><span style="color: #008000;">        }</span>
+
+        <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Thread.sleep(</span>300<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (InterruptedException e) {
+            e.printStackTrace();
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取结果文本</span>
+        HtmlElement reply = (HtmlElement) page.getElementById("reply"<span style="color: #000000;">);
+        String replyText </span>=<span style="color: #000000;"> reply.asText();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 关闭浏览器</span>
+<span style="color: #000000;">        webClient.close();
+
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> replyText;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

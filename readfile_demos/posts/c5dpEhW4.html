@@ -1,0 +1,85 @@
+<h4>索引</h4>
+<ul>
+<li><a href="#a1">AND. OR 运算顺序</a></li>
+<li><a href="#a2">IN Operator VS. OR</a></li>
+<li><a href="#a3">NOT&nbsp;在 MySQL 中的表现</a></li>
+<li><a href="#a4">LIKE 之注意事项</a></li>
+<li><a href="#a7">运用通配符的技巧</a></li>
+</ul>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a1"></a>Understanding Order of Evaluation</span></h4>
+<p>与大多数编程语言一样， AND 比 OR 有更高的优先级。</p>
+<p class="docText"><span class="docEmphStrong">Using Parentheses in <tt>WHERE</tt> Clauses Whenever you write <tt>WHERE</tt> clauses that use both <tt>AND</tt> and <tt>OR</tt> operators, use parentheses to explicitly group operators. Don't ever rely on the default evaluation order, even if it is exactly what you want. <span style="color: #ff0000;">There is <strong>no downside</strong> to using parentheses</span>, and you are always better off eliminating any ambiguity.</span></p>
+<p class="docText">&nbsp;</p>
+<h4 class="docSection1Title"><span style="text-decoration: underline;"><a name="a2"></a>Using the <tt>IN</tt> Operator</span></h4>
+<p class="docText"><a href="https://dev.mysql.com/doc/refman/5.7/en/non-typed-operators.html" target="_blank"><span class="docEmphStrong">MySQL 5.7 Reference Manual&nbsp;&nbsp;/&nbsp;&nbsp;Functions and Operators&nbsp;&nbsp;/&nbsp; Operators</span></a></p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> manga_id <span style="color: #808080;">IN</span> (<span style="color: #800000; font-weight: bold;">1005</span>,<span style="color: #800000; font-weight: bold;">1007</span><span style="color: #000000;">);
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span> 2asdasds   <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1007</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">4444444444</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>/ 等效代码 &darr;</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> manga_id<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">OR</span> manga_id<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">1007</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1005</span> <span style="color: #808080;">|</span> 2asdasds   <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1007</span> <span style="color: #808080;">|</span> <span style="color: #800000; font-weight: bold;">4444444444</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+------------+</span>
+<span style="color: #800000; font-weight: bold;">2</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>那么为什么 还需要 IN 呢？ 或者说 IN 操作符有什么好处呢？有如下几个理由：</p>
+<ol>
+<li>显然，IN 比 OR 更短更干净</li>
+<li>用 IN 就不用考虑运算顺序了</li>
+<li>执行 IN 操作符几乎总是要<strong>快</strong>过执行一连串的 OR ...&nbsp;</li>
+<li>最大的好处是 IN 操作符里可以包含另一个 SELECT 语句（<strong>嵌套查询.</strong>）</li>
+</ol>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a3"></a>Using the NOT Operator</span></h4>
+<p class="docText">So why use <tt>NOT</tt>? Well, for simple <tt>WHERE</tt> clauses, there really is no advantage to using <tt>NOT</tt>. <tt>NOT</tt> is useful in more complex clauses. For example, using <tt>NOT</tt> in conjunction with an <tt>IN</tt> operator makes it simple to find all rows that do not match a list of criteria.</p>
+<div class="docNote">
+<p class="docText"><strong>MySQL supports the use of <tt>NOT</tt><span style="color: #ff0000;"> to negate <tt>IN</tt>, <tt>BETWEEN</tt>, and <tt>EXISTS</tt> clauses</span>.</strong> This is quite different from most other DBMSs that allow <tt>NOT</tt> to be used to negate any conditions.</p>
+<p class="docText">&nbsp;</p>
+<h4 class="docSection1Title"><a name="a4"></a>Using the <tt>LIKE</tt> Operator</h4>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> manga_id, manga_name
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> manga
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">WHERE</span> manga_id <span style="color: #808080;">LIKE</span> <span style="color: #ff0000;">'</span><span style="color: #ff0000;">%100%</span><span style="color: #ff0000;">'</span><span style="color: #000000;">;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+</span>
+<span style="color: #808080;">|</span> manga_id <span style="color: #808080;">|</span> manga_name            <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">--------+-----------------------+</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1000</span> <span style="color: #808080;">|</span> 至不死的你            <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span> 烙印勇士              <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>     <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span> 幸福（happiness）     <span style="color: #808080;">|</span></pre>
+</div>
+<p>1. 通配符 % 可以配 空 （也就是不配字符）</p>
+<p class="docText"><span class="docEmphStrong">2. Watch for Trailing Spaces&nbsp;Trailing spaces can interfere with wildcard matching. For example, if any of the anvils had been saved with one or more spaces after the word <span class="docEmphasis">anvil, the clause <tt>WHERE prod_name LIKE '%anvil'</tt> would not have matched them as there would have been additional characters after the final <tt>l</tt>. One simple solution to this problem is to always append a final <tt>%</tt> to the search pattern.<strong> A better solution is to <span style="color: #ff0000;">trim the spaces using functions</span>,</strong> as is discussed in <a class="docLink">Chapter 11</a>, "Using Data Manipulation Functions."</span></span></p>
+<p class="docText"><span class="docEmphStrong"><span class="docEmphasis">3. '%' 可以通配<span style="color: #ff0000;"><strong>除了 NULL 外</strong></span>的所有值。</span></span></p>
+</div>
+<p>&nbsp;</p>
+<h4><span style="text-decoration: underline;"><a name="a7"></a>Tips for Using Wildcards</span></h4>
+<p class="docText">As&nbsp;you can see, MySQL's wildcards are extremely powerful. But that power comes with a price: Wildcard searches<span style="color: #ff0000;"> typically take<strong> far longer</strong> to process than any other search types discussed previously.</span> Here are some tips to keep in mind when using wildcards:</p>
+<ul>
+<li>
+<p class="docList">Don't overuse wildcards. If another search operator will do, use it instead.</p>
+</li>
+<li>
+<p class="docList">When you do use wildcards, try to <span style="color: #ff0000;"><strong>not</strong> use them at the beginning of the search pattern</span> unless absolutely necessary. Search patterns that begin with wildcards are the slowest to process.</p>
+</li>
+<li>
+<p class="docList">Pay careful attention to the placement of the wildcard symbols. If they are misplaced, you might not return the data you intended.</p>
+</li>
+</ul>
+<p class="docText">Having said that, wildcards are an important and useful search tool, and one that you will use frequently.</p>
+<p class="docText">&nbsp;</p>

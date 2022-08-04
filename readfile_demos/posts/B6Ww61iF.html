@@ -1,0 +1,30 @@
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+
+<span style="color: #0000ff;">void</span> print_string(<span style="color: #0000ff;">char</span><span style="color: #000000;"> s[])
+{
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">, s);
+}
+
+</span><span style="color: #0000ff;">int</span> strlen(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">s)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+
+    </span><span style="color: #0000ff;">for</span>(n = <span style="color: #800080;">0</span>; *s != <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>; s ++<span style="color: #000000;">)
+        n </span>++<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">char</span> s[] = <span style="color: #800000;">"</span><span style="color: #800000;">hello world!</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt;= strlen(s); i ++<span style="color: #000000;">){
+        print_string(s </span>+<span style="color: #000000;"> i);
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>运行结果：</p>
+<p>hello world!<br />ello world!<br />llo world!<br />lo world!<br />o world!<br /> world!<br />world!<br />orld!<br />rld!<br />ld!</p>

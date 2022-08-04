@@ -1,0 +1,565 @@
+<div id="diy_right_menu">
+<h2>索引</h2>
+<ul>
+<li><a href="#anchor1">是否同一棵二叉搜索树</a></li>
+<li><a href="#anchor2">Root of AVL Tree</a></li>
+<li><a href="#anchor3">Complete Binary Search Tree</a></li>
+<li><a href="#anchor4">二叉搜索树的操作集</a></li>
+</ul>
+</div>
+<h2><a name="anchor0"></a>第四周编程作业</h2>
+<h3><a name="anchor1"></a>是否同一棵二叉搜索树</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #0000ff;">#define</span> MAX 10 + 1<span style="color: #000000;">
+
+typedef </span><span style="color: #0000ff;">struct</span> _BinTree*<span style="color: #000000;"> BinTree; 
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+    BinTree left;
+    BinTree right;    
+};
+typedef BinTree Node; 
+
+BinTree insert(BinTree bst, </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    </span><span style="color: #0000ff;">if</span> (bst ==<span style="color: #000000;"> NULL) {
+        bst </span>= (BinTree) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree));
+        bst</span>-&gt;left = bst-&gt;right =<span style="color: #000000;"> NULL;
+        bst</span>-&gt;val =<span style="color: #000000;"> val;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (val &lt; bst-&gt;<span style="color: #000000;">val) {
+            bst</span>-&gt;left = insert(bst-&gt;<span style="color: #000000;">left, val);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 只有栈顶的调用用到了返回值
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 其余调用则是把自己赋给自己             </span>
+        } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            bst</span>-&gt;right = insert(bst-&gt;<span style="color: #000000;">right, val);
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> bst;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 保存初始插入序列的先序遍历 </span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> preOrder[MAX];
+</span><span style="color: #0000ff;">int</span> index = <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> preOrderTraversal(BinTree root)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (root) {
+        preOrder[index</span>++] = root-&gt;<span style="color: #000000;">val;
+        preOrderTraversal(root</span>-&gt;<span style="color: #000000;">left);
+        preOrderTraversal(root</span>-&gt;<span style="color: #000000;">right);        
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 保存需要检查的先序遍历</span>
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> preOrder2[MAX];
+</span><span style="color: #0000ff;">int</span> index2 = <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> preOrderTraversalTwo(BinTree root)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (root) {
+        preOrder2[index2</span>++] = root-&gt;<span style="color: #000000;">val;
+        preOrderTraversalTwo(root</span>-&gt;<span style="color: #000000;">left);
+        preOrderTraversalTwo(root</span>-&gt;<span style="color: #000000;">right);        
+    }
+}
+
+</span><span style="color: #0000ff;">bool</span> check(<span style="color: #0000ff;">int</span><span style="color: #000000;"> N)
+{
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        </span><span style="color: #0000ff;">if</span> (preOrder[i] != preOrder2[i]) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> freeTree(BinTree root)
+{
+    </span><span style="color: #0000ff;">if</span> (root-&gt;left) freeTree(root-&gt;<span style="color: #000000;">left);
+    </span><span style="color: #0000ff;">if</span> (root-&gt;right) freeTree(root-&gt;<span style="color: #000000;">right);
+    </span><span style="color: #0000ff;">free</span><span style="color: #000000;">(root);
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    BinTree root;
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N, L, temp;
+    
+    </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">N);
+        </span><span style="color: #0000ff;">if</span> (N == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">L);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 读入初始插入序列 </span>
+        root =<span style="color: #000000;"> NULL;
+        index </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+            scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">temp);
+            root </span>=<span style="color: #000000;"> insert(root, temp);
+        }
+        preOrderTraversal(root);
+        freeTree(root);
+        
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != L; ++<span style="color: #000000;">i) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 读入需检查的序列 </span>
+            root =<span style="color: #000000;"> NULL;
+            index2 </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+                scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">temp);
+                root </span>=<span style="color: #000000;"> insert(root, temp);
+            }        
+            preOrderTraversalTwo(root);
+            freeTree(root);
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s\n</span><span style="color: #800000;">"</span>, check(N) ? <span style="color: #800000;">"</span><span style="color: #800000;">Yes</span><span style="color: #800000;">"</span> : <span style="color: #800000;">"</span><span style="color: #800000;">No</span><span style="color: #800000;">"</span><span style="color: #000000;">);                
+        }
+    }
+        
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor2"></a>Root of AVL Tree</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;<span style="color: #000000;">
+
+typedef </span><span style="color: #0000ff;">struct</span> _BinTree*<span style="color: #000000;"> BinTree; 
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+    BinTree left;
+    BinTree right;   
+    
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> height; 
+};
+typedef BinTree Node; 
+
+Node createAVLNode(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    Node result </span>= (Node) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BinTree));
+    result</span>-&gt;val =<span style="color: #000000;"> val;
+    result</span>-&gt;left = result-&gt;right =<span style="color: #000000;"> NULL;
+    
+    result</span>-&gt;height = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> getH(BinTree bst)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (bst) {
+        </span><span style="color: #0000ff;">return</span> bst-&gt;<span style="color: #000000;">height;
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> maxH(BinTree bst1, BinTree bst2)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> h1, h2;
+    h1 </span>=<span style="color: #000000;"> getH(bst1);
+    h2 </span>=<span style="color: #000000;"> getH(bst2);
+    </span><span style="color: #0000ff;">return</span> h1 &gt; h2 ?<span style="color: #000000;"> h1 : h2;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> getBF(BinTree bst)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> get balance factor</span>
+    <span style="color: #0000ff;">return</span> getH(bst-&gt;left) - getH(bst-&gt;<span style="color: #000000;">right);
+}
+
+BinTree solveLL(BinTree oldRoot)
+{
+    BinTree newRoot </span>= oldRoot-&gt;<span style="color: #000000;">left;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 中序不变，改变结构</span>
+    oldRoot-&gt;left = newRoot-&gt;<span style="color: #000000;">right;
+    newRoot</span>-&gt;right =<span style="color: #000000;"> oldRoot;
+    
+    oldRoot</span>-&gt;height = maxH(oldRoot-&gt;left, oldRoot-&gt;right) + <span style="color: #800080;">1</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> oldRoot变为儿子需要先更新     </span>
+    newRoot-&gt;height = maxH(newRoot-&gt;left, newRoot-&gt;right) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> newRoot;
+}
+
+BinTree solveRR(BinTree oldRoot)
+{
+    BinTree newRoot </span>= oldRoot-&gt;<span style="color: #000000;">right;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 中序不变，改变结构</span>
+    oldRoot-&gt;right = newRoot-&gt;<span style="color: #000000;">left;
+    newRoot</span>-&gt;left =<span style="color: #000000;"> oldRoot;
+    
+    oldRoot</span>-&gt;height = maxH(oldRoot-&gt;left, oldRoot-&gt;right) + <span style="color: #800080;">1</span><span style="color: #000000;">;      
+    newRoot</span>-&gt;height = maxH(newRoot-&gt;left, newRoot-&gt;right) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> newRoot;
+}
+
+BinTree solveLR(BinTree oldRoot)
+{
+    oldRoot</span>-&gt;left = solveRR(oldRoot-&gt;<span style="color: #000000;">left);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> solveLL(oldRoot);
+}
+
+BinTree solveRL(BinTree oldRoot)
+{
+    oldRoot</span>-&gt;right = solveLL(oldRoot-&gt;<span style="color: #000000;">right);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> solveRR(oldRoot);
+}
+
+BinTree AVLInsert(BinTree bst, </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">bst) {
+        bst </span>=<span style="color: #000000;"> createAVLNode(val);
+    }
+    
+    </span><span style="color: #0000ff;">if</span> (val &lt; bst-&gt;<span style="color: #000000;">val) {
+        bst</span>-&gt;left = AVLInsert(bst-&gt;<span style="color: #000000;">left, val);
+        </span><span style="color: #0000ff;">if</span> (getBF(bst) == <span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前结点即是&ldquo;问题的发现者&rdquo; </span>
+            <span style="color: #0000ff;">if</span> (val &lt; bst-&gt;left-&gt;<span style="color: #000000;">val) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> LL型不平衡 </span>
+                bst =<span style="color: #000000;"> solveLL(bst);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> LR型不平衡 </span>
+                bst =<span style="color: #000000;"> solveLR(bst);
+            }
+        }
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (val &gt; bst-&gt;<span style="color: #000000;">val) {
+        bst</span>-&gt;right = AVLInsert(bst-&gt;<span style="color: #000000;">right, val);
+        </span><span style="color: #0000ff;">if</span> (getBF(bst) == -<span style="color: #800080;">2</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">if</span> (val &gt; bst-&gt;right-&gt;<span style="color: #000000;">val) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> RR型不平衡 </span>
+                bst =<span style="color: #000000;"> solveRR(bst);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> RL型不平衡 </span>
+                bst =<span style="color: #000000;"> solveRL(bst);
+            }            
+        }
+    }
+    
+    bst</span>-&gt;height = maxH(bst-&gt;left, bst-&gt;right) + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 无需再递归计算，在递归插入元素的同时计算即可。 </span>
+    
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> bst;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N, temp;    
+    
+    BinTree root </span>=<span style="color: #000000;"> NULL;
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">N);
+    </span><span style="color: #0000ff;">while</span> (N--<span style="color: #000000;">) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">temp);
+        root </span>=<span style="color: #000000;"> AVLInsert(root, temp);
+    }
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, root-&gt;<span style="color: #000000;">val);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor3"></a>Complete Binary Search Tree</h3>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdlib.h&gt;<span style="color: #000000;">
+#include </span>&lt;stdbool.h&gt;<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #0000ff;">#define</span> MAXN 1000 + 1
+
+<span style="color: #0000ff;">int</span><span style="color: #000000;"> keys[MAXN];
+
+</span><span style="color: #0000ff;">int</span> partition(<span style="color: #0000ff;">int</span> arr[], <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j);
+</span><span style="color: #0000ff;">void</span> myQsort(<span style="color: #0000ff;">int</span> arr[], <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j);
+
+typedef </span><span style="color: #0000ff;">struct</span> _BSTNode*<span style="color: #000000;"> BSTNode;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BSTNode {
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val;
+    BSTNode left;
+    BSTNode right;    
+};
+
+BSTNode createBSTNode(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val);
+BSTNode createCBT(</span><span style="color: #0000ff;">int</span> N); <span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个具有N个空结点的完全二叉树 </span>
+<span style="color: #000000;">
+typedef </span><span style="color: #0000ff;">struct</span> _QNode*<span style="color: #000000;"> QNode;
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> _QNode {
+    BSTNode bstNode;
+    QNode next;
+};
+
+QNode createQNode(BSTNode bstNode);
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty(QNode head);
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> addQ(QNode head, BSTNode bstNode);
+BSTNode deleteQ(QNode head);
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> freeQ(QNode node);
+
+QNode inorderQueue;
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> inorderTraversal(BSTNode root)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (root) {
+        inorderTraversal(root</span>-&gt;<span style="color: #000000;">left);
+        addQ(inorderQueue, root);
+        inorderTraversal(root</span>-&gt;<span style="color: #000000;">right);
+    }    
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> levelorderTraversal(BSTNode root)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (root) {    
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, root-&gt;<span style="color: #000000;">val);        
+        
+        QNode head </span>=<span style="color: #000000;"> createQNode(NULL);    
+        </span><span style="color: #0000ff;">if</span> (root-&gt;<span style="color: #000000;">left) {
+            addQ(head, root</span>-&gt;<span style="color: #000000;">left);
+        }
+        </span><span style="color: #0000ff;">if</span> (root-&gt;<span style="color: #000000;">right) {
+            addQ(head, root</span>-&gt;<span style="color: #000000;">right);
+        }    
+            
+        BSTNode temp;
+        </span><span style="color: #0000ff;">while</span> (!<span style="color: #000000;">isEmpty(head)) {
+            temp </span>=<span style="color: #000000;"> deleteQ(head);
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;"> %d</span><span style="color: #800000;">"</span>, temp-&gt;<span style="color: #000000;">val);
+            </span><span style="color: #0000ff;">if</span> (temp-&gt;<span style="color: #000000;">left) {
+                addQ(head, temp</span>-&gt;<span style="color: #000000;">left);
+            }
+            </span><span style="color: #0000ff;">if</span> (temp-&gt;<span style="color: #000000;">right) {
+                addQ(head, temp</span>-&gt;<span style="color: #000000;">right);
+            }            
+        }
+    }    
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N;
+
+    scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">N);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        scanf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>, &amp;<span style="color: #000000;">keys[i]);
+    }
+    
+    myQsort(keys, </span><span style="color: #800080;">0</span>, N - <span style="color: #800080;">1</span><span style="color: #000000;">);
+    
+    BSTNode root </span>=<span style="color: #000000;"> createCBT(N);
+    
+    inorderQueue </span>=<span style="color: #000000;"> createQNode(NULL);
+    inorderTraversal(root); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 结果保存到inorderQueue </span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != N; ++<span style="color: #000000;">i) {
+        deleteQ(inorderQueue)</span>-&gt;val =<span style="color: #000000;"> keys[i];
+    }
+    
+    levelorderTraversal(root);
+    
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span> partition(<span style="color: #0000ff;">int</span> arr[], <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j)
+{
+    </span><span style="color: #0000ff;">int</span> x =<span style="color: #000000;"> arr[i];
+    
+    </span><span style="color: #0000ff;">while</span> (i &lt;<span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">while</span> (arr[j] &gt;= x &amp;&amp; i &lt; j) j--<span style="color: #000000;">;
+        arr[i] </span>=<span style="color: #000000;"> arr[j];
+        </span><span style="color: #0000ff;">while</span> (arr[i] &lt;= x &amp;&amp; i &lt; j) i++<span style="color: #000000;">;
+        arr[j] </span>=<span style="color: #000000;"> arr[i];        
+    }
+    
+    arr[i] </span>=<span style="color: #000000;"> x;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+}
+
+</span><span style="color: #0000ff;">void</span> myQsort(<span style="color: #0000ff;">int</span> arr[], <span style="color: #0000ff;">int</span> i, <span style="color: #0000ff;">int</span><span style="color: #000000;"> j)
+{
+    </span><span style="color: #0000ff;">if</span> (i &gt;=<span style="color: #000000;"> j) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">int</span> mid =<span style="color: #000000;"> partition(arr, i, j);
+        myQsort(arr, i, mid);
+        myQsort(arr, mid </span>+ <span style="color: #800080;">1</span><span style="color: #000000;">, j);
+    }
+}
+
+BSTNode createBSTNode(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> val)
+{
+    BSTNode result </span>= (BSTNode) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _BSTNode));
+    result</span>-&gt;val =<span style="color: #000000;"> val;
+    result</span>-&gt;left = result-&gt;right =<span style="color: #000000;"> NULL;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+
+BSTNode createCBT(</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> N)
+{
+    BSTNode root, newNode, parent;
+    QNode head </span>=<span style="color: #000000;"> createQNode(NULL);
+    
+    parent </span>= root = createBSTNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+    
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i != N; ++<span style="color: #000000;">i) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. 创建新结点 </span>
+        newNode = createBSTNode(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. 更新parent </span>
+        <span style="color: #0000ff;">if</span> (parent-&gt;left &amp;&amp; parent-&gt;<span style="color: #000000;">right) {
+            parent </span>=<span style="color: #000000;"> deleteQ(head);
+        }
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3. 放新结点 </span>
+        <span style="color: #0000ff;">if</span> (parent-&gt;<span style="color: #000000;">left) {
+            parent</span>-&gt;right =<span style="color: #000000;"> newNode;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            parent</span>-&gt;left =<span style="color: #000000;"> newNode;
+        }    
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 4. 新结点入队 </span>
+<span style="color: #000000;">        addQ(head, newNode);
+    }
+    
+    freeQ(head);
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+}
+
+QNode createQNode(BSTNode bstNode)
+{
+    QNode result </span>= (QNode) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> _QNode));
+    result</span>-&gt;bstNode =<span style="color: #000000;"> bstNode;
+    result</span>-&gt;next =<span style="color: #000000;"> NULL;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;    
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> isEmpty(QNode head)
+{
+    </span><span style="color: #0000ff;">return</span> head-&gt;next ==<span style="color: #000000;"> NULL;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> addQ(QNode head, BSTNode bstNode)
+{
+    QNode temp </span>=<span style="color: #000000;"> head;
+    </span><span style="color: #0000ff;">while</span> (temp-&gt;<span style="color: #000000;">next) {
+        temp </span>= temp-&gt;<span style="color: #000000;">next;
+    }
+    temp</span>-&gt;next =<span style="color: #000000;"> createQNode(bstNode);
+}
+
+BSTNode deleteQ(QNode head)
+{
+    </span><span style="color: #0000ff;">if</span> (isEmpty(head)) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NULL;
+    
+    QNode temp </span>= head-&gt;<span style="color: #000000;">next;
+    head</span>-&gt;next = temp-&gt;<span style="color: #000000;">next;
+    BSTNode bstNode </span>= temp-&gt;<span style="color: #000000;">bstNode;
+    </span><span style="color: #0000ff;">free</span><span style="color: #000000;">(temp);
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> bstNode;
+}
+
+</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> freeQ(QNode node)
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (node) {
+        freeQ(node</span>-&gt;<span style="color: #000000;">next);
+        </span><span style="color: #0000ff;">free</span><span style="color: #000000;">(node);
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3><a name="anchor4"></a>二叉搜索树的操作集</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">BinTree createNode(ElementType x)
+{
+    BinTree bt </span>= (BinTree) <span style="color: #0000ff;">malloc</span>(<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">struct</span><span style="color: #000000;"> TNode));
+    bt</span>-&gt;Left = bt-&gt;Right =<span style="color: #000000;"> NULL;
+    bt</span>-&gt;Data =<span style="color: #000000;"> x;
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> bt;
+}
+
+BinTree Insert( BinTree BST, ElementType X )
+{
+    </span><span style="color: #0000ff;">if</span> (BST ==<span style="color: #000000;"> NULL) {
+        BST </span>=<span style="color: #000000;"> createNode(X);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (X &lt; BST-&gt;<span style="color: #000000;">Data) {
+            BST</span>-&gt;Left = Insert(BST-&gt;<span style="color: #000000;">Left, X);
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (X &gt; BST-&gt;<span style="color: #000000;">Data) {
+            BST</span>-&gt;Right = Insert(BST-&gt;<span style="color: #000000;">Right, X);
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> BST;
+}
+
+Position Find( BinTree BST, ElementType X )
+{
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (BST) {
+        </span><span style="color: #0000ff;">if</span> (X &gt; BST-&gt;<span style="color: #000000;">Data) {
+            BST </span>= BST-&gt;<span style="color: #000000;">Right;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (X &lt; BST-&gt;<span style="color: #000000;">Data) {
+            BST </span>= BST-&gt;<span style="color: #000000;">Left;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> BST;
+}
+
+Position FindMin( BinTree BST )
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (BST) {
+        </span><span style="color: #0000ff;">while</span> (BST-&gt;<span style="color: #000000;">Left) {
+            BST </span>= BST-&gt;<span style="color: #000000;">Left;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> BST;    
+}
+
+Position FindMax( BinTree BST )
+{
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (BST) {
+        </span><span style="color: #0000ff;">while</span> (BST-&gt;<span style="color: #000000;">Right) {
+            BST </span>= BST-&gt;<span style="color: #000000;">Right;
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> BST;
+}
+
+
+BinTree Delete( BinTree BST, ElementType X )
+{
+    Position temp;
+    </span><span style="color: #0000ff;">if</span> (BST ==<span style="color: #000000;"> NULL) {
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Not Found\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (X &lt; BST-&gt;<span style="color: #000000;">Data) {
+            BST</span>-&gt;Left = Delete(BST-&gt;<span style="color: #000000;">Left, X);
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (X &gt; BST-&gt;<span style="color: #000000;">Data) {
+            BST</span>-&gt;Right = Delete(BST-&gt;<span style="color: #000000;">Right, X);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (BST-&gt;Left &amp;&amp; BST-&gt;<span style="color: #000000;">Right) {
+                temp </span>= FindMin(BST-&gt;<span style="color: #000000;">Right);
+                BST</span>-&gt;Data = temp-&gt;<span style="color: #000000;">Data;
+                BST</span>-&gt;Right = Delete(BST-&gt;Right, BST-&gt;<span style="color: #000000;">Data);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                temp </span>=<span style="color: #000000;"> BST;
+                </span><span style="color: #0000ff;">if</span> (BST-&gt;<span style="color: #000000;">Left) {
+                    BST </span>= BST-&gt;<span style="color: #000000;">Left;
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    BST </span>= BST-&gt;<span style="color: #000000;">Right;
+                }
+                </span><span style="color: #0000ff;">free</span><span style="color: #000000;">(temp);
+            }
+        }
+    }
+    
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> BST;
+}</span></pre>
+</div>
+<p>&nbsp;</p>

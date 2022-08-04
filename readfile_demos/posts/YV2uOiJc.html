@@ -1,0 +1,141 @@
+<p><span style="text-decoration: underline;">2.3-1</span></p>
+<p>【31,41】,52,26,38,57,9,49<br />31,41,【26,52】,38,57,9,49<br />【26,31,41,52】,38,57,9,49<br />26,31,41,52,【38,57】,9,49<br />26,31,41,52,38,57,【9,49】<br />26,31,41,52,【9,38,49,57】<br />【9,26,31,38,41,49,52,57】</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">2.3-2</span></p>
+<p>js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">                static merge2(arr, start, mid, end)     {
+                    let left </span>= arr.slice(start, mid); <span style="color: #008000;">//</span><span style="color: #008000;"> arr[mid] is excluded</span>
+                    let right =<span style="color: #000000;"> arr.slice(mid, end);
+                    
+                    let i </span>= 0, j = 0; <span style="color: #008000;">//</span><span style="color: #008000;"> index of left and right</span>
+                    let k =  start; <span style="color: #008000;">//</span><span style="color: #008000;"> index of arr</span>
+                    <span style="color: #0000ff;">while</span>(i &lt; left.length &amp;&amp; j &lt;<span style="color: #000000;"> right.length) {
+                        arr[k</span>++] = left[i] &lt; right[j] ? left[i++] : right[j++<span style="color: #000000;">];                        
+                    }
+                    
+                    </span><span style="color: #0000ff;">if</span> (i ==<span style="color: #000000;"> left.length) {
+                        left </span>=<span style="color: #000000;"> right;
+                        i </span>=<span style="color: #000000;"> j;
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        i </span>=<span style="color: #000000;"> i;
+                    }
+
+                    </span><span style="color: #0000ff;">while</span> (k &lt;<span style="color: #000000;"> end) {
+                        arr[k</span>++] = left[i++<span style="color: #000000;">];
+                    }
+                }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">2.3-3</span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201809/1042431-20180923211517641-1677363047.png" alt="" width="756" height="129" /></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('a6a89762-6180-4f65-8141-21fb6f418008')"><img id="code_img_closed_a6a89762-6180-4f65-8141-21fb6f418008" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_a6a89762-6180-4f65-8141-21fb6f418008" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('a6a89762-6180-4f65-8141-21fb6f418008',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_a6a89762-6180-4f65-8141-21fb6f418008" class="cnblogs_code_hide">
+<pre>证明 T(n) =<span style="color: #000000;"> nlgn &darr;
+当 n </span>= 2^1时，T(2) = 2 = 2 *<span style="color: #000000;"> lg2 成立，
+假设当 n </span>= 2^k 时，T(2^k) = 2^k * lg(2^k) = 2^k *<span style="color: #000000;"> k 成立，
+当 n </span>= 2^(k+1)时，T(2^(k+1)) = 2 * (2^k * k) + 2^(k+1) = 2^(k+1) * (k+1<span style="color: #000000;">) 
+因此 T(n) </span>= nlgn 成立。</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">2.3-4</span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201809/1042431-20180923211413175-327990118.png" alt="" width="370" height="82" /></p>
+<p>&nbsp;js代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('c8784bc9-2faf-445e-82bc-c1f3b61caae5')"><img id="code_img_closed_c8784bc9-2faf-445e-82bc-c1f3b61caae5" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_c8784bc9-2faf-445e-82bc-c1f3b61caae5" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('c8784bc9-2faf-445e-82bc-c1f3b61caae5',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_c8784bc9-2faf-445e-82bc-c1f3b61caae5" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">            class InsertSort {
+                static sort(arr, start, end) {
+                    </span><span style="color: #0000ff;">if</span> (end - start &gt; 1<span style="color: #000000;">) {                
+                        InsertSort.sort(arr, start, end </span>- 1<span style="color: #000000;">);                    
+                        let key </span>= arr[end - 1<span style="color: #000000;">];
+                        let i </span>= end - 2; <span style="color: #008000;">//</span><span style="color: #008000;"> point to the number which 'key' prepare to compare</span>
+                        <span style="color: #0000ff;">while</span> (i &gt;= start &amp;&amp; arr[i] &gt;<span style="color: #000000;"> key) {
+                            arr[i </span>+ 1] =<span style="color: #000000;"> arr[i];
+                            i</span>--<span style="color: #000000;">;
+                        }
+                        arr[i </span>+ 1] =<span style="color: #000000;"> key;
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                    }
+                }
+                
+                static run(data) {
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> convert a string to a numeric array</span>
+                    data =<span style="color: #000000;"> CommonUtil.handleData(data); 
+                    
+                    InsertSort.sort(data, </span>0<span style="color: #000000;">, data.length);
+                    console.log(data);
+                }
+            }</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">2.3-5</span></p>
+<p>js代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">                static find(x, arr, start, end) {
+                    </span><span style="color: #0000ff;">if</span> (start &gt; end) <span style="color: #0000ff;">return</span> { success: <span style="color: #0000ff;">false</span><span style="color: #000000;">};
+                    let mid </span>= Math.floor((start + end) / 2<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">if</span> (arr[mid] ==<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> { success: <span style="color: #0000ff;">true</span><span style="color: #000000;">, index: mid};
+                    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (arr[mid] &lt;<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> BinarySearch.find(x, arr, mid + 1<span style="color: #000000;">, end);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">return</span> BinarySearch.find(x, arr, start, mid - 1<span style="color: #000000;">);
+                    }
+                }</span></pre>
+</div>
+<p>最坏情况就是找不到，二分查找的递归式：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201809/1042431-20180923213152588-1976726601.png" alt="" width="337" height="85" /></p>
+<p>根据书上的递归树得到总代价为clgn + c，因此最坏情况运行时间是theta lgn</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">2.3-6</span></p>
+<p>换一种数据结构也许可以，采用数组做不到（查找位置lgn插入时间n，总时间还是n^2）。</p>
+<p>附加：二叉搜索树(平均情况nlgn，最坏n^2) VS. 插入排序（n^2），两万数据实测&darr;</p>
+<p>重复排序100次：</p>
+<p><img src="https://img2018.cnblogs.com/blog/1042431/201809/1042431-20180924002343138-1606508401.png" alt="" width="241" height="221" /></p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">2.3-7</span></p>
+<p>js代码描述：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">            class IntegerSum {
+                static searchSum(arr, start, end, x) {
+                    </span><span style="color: #0000ff;">if</span> (end - start &lt;= 1) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                    
+                    let sum </span>= arr[start] + arr[end - 1<span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">if</span> (sum &lt;<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> IntegerSum.searchSum(arr, start + 1<span style="color: #000000;">, end, x);
+                    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (sum &gt;<span style="color: #000000;"> x) {
+                        </span><span style="color: #0000ff;">return</span> IntegerSum.searchSum(arr, start, end - 1<span style="color: #000000;">, x);
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        console.log(arr[start], arr[end </span>- 1<span style="color: #000000;">]);
+                        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    }
+                }
+                
+                static run(data) {
+                    data </span>= CommonUtil.handleData(data); <span style="color: #008000;">//</span><span style="color: #008000;"> cn</span>
+                    MergeSort.sort(data, 0, data.length); <span style="color: #008000;">//</span><span style="color: #008000;"> cnlgn</span>
+                    <span style="color: #008000;">//</span><span style="color: #008000;"> let x = Number(prompt("please enter the value of x :"));</span>
+                    let x = Math.floor(Math.random() * 40<span style="color: #000000;">);
+                    console.log(</span>"data=" +<span style="color: #000000;"> data);
+                    console.log(</span>"x=" +<span style="color: #000000;"> x);
+                    
+                    let end </span>= -1<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">while</span> (data[++end] &lt;= x); <span style="color: #008000;">//</span><span style="color: #008000;"> cn</span>
+<span style="color: #000000;">                    
+                    let result;
+                    let max </span>= data[end - 1] + data[end - 2<span style="color: #000000;">];
+                    let min </span>= data[0] + data[1<span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">if</span> (max &lt; x || min &gt; x) { <span style="color: #008000;">//</span><span style="color: #008000;"> deal with special situations </span>
+                        result = <span style="color: #0000ff;">false</span><span style="color: #000000;">; 
+                    }  </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (max == x || min ==<span style="color: #000000;"> x) {
+                        result </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;        
+                    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                        result </span>= IntegerSum.searchSum(data, 0, end, x); <span style="color: #008000;">//</span><span style="color: #008000;"> cn</span>
+<span style="color: #000000;">                    }
+                    console.log(result);
+                }
+            }</span></pre>
+</div>

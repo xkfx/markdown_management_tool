@@ -1,0 +1,176 @@
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>1、getline(char s[], int lim)</p>
+<p>调用结果：往参数数组中读入字符直到换行（即：读取一行）</p>
+<p>返回值：参数数组所读入的字符串长度</p>
+<p>在《c程序设计语言中》里使用频率特别高。</p>
+<p>version 1:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> getline(<span style="color: #0000ff;">char</span> s[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> lim)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> c, i;
+
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; i &lt; lim - <span style="color: #800080;">1</span> &amp;&amp; (c = getchar()) != EOF &amp;&amp; c != <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;"> i)
+        s[i] </span>=<span style="color: #000000;"> c;
+    </span><span style="color: #0000ff;">if</span>(c == <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+        s[i] </span>=<span style="color: #000000;"> c;
+        </span>++<span style="color: #000000;"> i;
+    }
+    s[i] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+}</span></pre>
+</div>
+<p>&nbsp;version 2:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> getline(<span style="color: #0000ff;">char</span> s[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> lim)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> c, i;
+    
+    i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(--lim &gt; <span style="color: #800080;">0</span> &amp;&amp; (c=getchar()) != EOF &amp;&amp; c != <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        s[i</span>++] =<span style="color: #000000;"> c;
+    </span><span style="color: #0000ff;">if</span>(c == <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)　　// 这里非常重要！
+        s[i</span>++] =<span style="color: #000000;"> c;
+    s[i] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> i;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>2、atoi(char s[])</p>
+<p>返回值：整型数</p>
+<p>将字符串s转换为相应的整数类型</p>
+<p>version 1:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> atoi(<span style="color: #0000ff;">char</span><span style="color: #000000;"> s[])
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, n;
+
+    n </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; s[i] &gt;= <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; s[i] &lt;= <span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span>; ++<span style="color: #000000;"> i)
+        n </span>= <span style="color: #800080;">10</span> * n + (s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> n;
+}</span></pre>
+</div>
+<p>&nbsp;version 2:</p>
+<div class="cnblogs_code">
+<pre>#include&lt;ctype.h&gt;
+
+<span style="color: #0000ff;">int</span> atoi(<span style="color: #0000ff;">char</span><span style="color: #000000;"> s[])
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, n, sign;
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; isspace(s[i]); i ++<span style="color: #000000;">)
+        ;
+    sign </span>= (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>)? -<span style="color: #800080;">1</span> : <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span>(s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        i </span>++<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(n = <span style="color: #800080;">0</span>; isdigit(s[i]); i ++<span style="color: #000000;">)
+        n </span>= <span style="color: #800080;">10</span> * n + (s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> sign *<span style="color: #000000;"> n;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、binsearch(int x, int v[], &nbsp;int n)</p>
+<p>返回值：元素x在数组v[]中的下标（v[]数组内元素是升序的）</p>
+<div class="cnblogs_code">
+<pre>#include&lt;stdio.h&gt;
+<span style="color: #0000ff;">#define</span> MAXLINE 7
+
+<span style="color: #0000ff;">int</span> binsearch(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> v[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> n);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> unit test</span>
+<span style="color: #000000;">main()
+{
+    </span><span style="color: #0000ff;">int</span> a[MAXLINE] = {<span style="color: #800080;">1</span>, <span style="color: #800080;">3</span>, <span style="color: #800080;">5</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">8</span>, <span style="color: #800080;">10</span>, <span style="color: #800080;">19</span><span style="color: #000000;">};
+    
+    </span><span style="color: #0000ff;">if</span>(binsearch(<span style="color: #800080;">5</span>, a, MAXLINE) == <span style="color: #800080;">2</span> &amp;&amp; binsearch(<span style="color: #800080;">8</span>, a, MAXLINE) == <span style="color: #800080;">4</span><span style="color: #000000;">)
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">binsearch: pass\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">binsearch: error\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+}
+
+</span><span style="color: #0000ff;">int</span> binsearch(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span> v[], <span style="color: #0000ff;">int</span><span style="color: #000000;"> n)
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> low, high, mid;
+    
+    low </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    high </span>= n - <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span>(low &lt;=<span style="color: #000000;"> high){
+        mid </span>= (low + high) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span>(x &lt;<span style="color: #000000;"> v[mid])
+            high </span>= mid - <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(x &gt;<span style="color: #000000;"> v[mid])
+            low </span>= mid + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> 
+            <span style="color: #0000ff;">return</span> mid; <span style="color: #008000;">//</span><span style="color: #008000;"> found match</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span> -<span style="color: #800080;">1</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> no match</span>
+}</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、reverse(char s[])</p>
+<p>倒置字符中s中各个字符的位置</p>
+<div class="cnblogs_code">
+<pre>#include&lt;<span style="color: #0000ff;">string</span>.h&gt;
+
+<span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">char</span><span style="color: #000000;"> s[])
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> c, i, j;
+
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>, j = strlen(s)-<span style="color: #800080;">1</span>; i &lt; j; i++, j--<span style="color: #000000;">){
+        c </span>=<span style="color: #000000;"> s[i];
+        s[i] </span>=<span style="color: #000000;"> s[j];
+        s[j] </span>=<span style="color: #000000;"> c;
+    }
+}</span></pre>
+</div>
+<p>这段代码只是比较典型。</p>
+<p>&nbsp;</p>
+<p>5、itoa(int n, char s[])</p>
+<p>将数字n转换为字符串并保存到s中</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">void</span> itoa(<span style="color: #0000ff;">int</span> n, <span style="color: #0000ff;">char</span><span style="color: #000000;"> s[])
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, sign;
+    
+    </span><span style="color: #0000ff;">if</span>((sign = n) &lt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+        n </span>= -<span style="color: #000000;">n;
+    i </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;">{
+        s[i</span>++] = n % <span style="color: #800080;">10</span> + <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    }</span><span style="color: #0000ff;">while</span>((n /= <span style="color: #800080;">10</span>) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span>(sign &lt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+        s[i</span>++] = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    s[i] </span>= <span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+    reverse(s);
+}</span></pre>
+</div>
+<p>代码简洁，逻辑清晰。</p>
+<p>&nbsp;</p>
+<p>6、atof(char s[])</p>
+<p>把字符串s转换为相对应的双精度浮点数</p>
+<div class="cnblogs_code">
+<pre>#include&lt;ctype.h&gt;
+
+<span style="color: #0000ff;">double</span> atof(<span style="color: #0000ff;">char</span><span style="color: #000000;"> s[])
+{
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> val, power;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, sign;
+    
+    </span><span style="color: #0000ff;">for</span>(i = <span style="color: #800080;">0</span>; isspace(s[i]); i++<span style="color: #000000;">)
+        ;
+    sign </span>= (s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>)? -<span style="color: #800080;">1</span> : <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span>(s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">+</span><span style="color: #800000;">'</span> || s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        i</span>++<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(val = <span style="color: #800080;">0.0</span>; isdigit(s[i]); i++<span style="color: #000000;">)
+        val </span>= <span style="color: #800080;">10.0</span> * val + (s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span>(s[i] == <span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        i</span>++<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span>(power = <span style="color: #800080;">1.0</span>; isdigit(s[i]); i++<span style="color: #000000;">){
+        val </span>= <span style="color: #800080;">10.0</span> * val + (s[i] - <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+        power </span>*= <span style="color: #800080;">10.0</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> sign * val /<span style="color: #000000;"> power;
+}</span></pre>
+</div>
+<p>和atoi不同的是小数部分的处理</p>

@@ -1,0 +1,23 @@
+<div class="cnblogs_code">
+<pre><span style="color: #888888;">root@iZwz:~/</span><span style="color: #000000;"><span style="color: #888888;">labs#</span> vim myfirst 
+<span style="color: #888888;">root@iZwz:</span></span><span style="color: #888888;">~/labs#</span> <span style="color: #0000ff;">cat</span><span style="color: #000000;"> myfirst 
+<span style="color: #ff0000;">#</span></span><span style="color: #ff0000;">!/bin/</span><span style="color: #000000;"><span style="color: #ff0000;">bash</span>
+</span><span style="color: #0000ff;">clear</span>
+<span style="color: #0000ff;">echo</span> <span style="color: #800000;">"</span><span style="color: #800000;">this is my first script.</span><span style="color: #800000;">"</span></pre>
+</div>
+<p>上面的代码应该非常&ldquo;顾名思义&rdquo;了，试着执行一下这个脚本：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #888888;">root@iZwz:~/labs#</span> <span style="color: #0000ff;">sh</span><span style="color: #000000;"> myfirst
+this is my first script.</span></pre>
+</div>
+<h3>2、<span style="color: #ccffff;">#!/bin/bash </span>是必须的吗？</h3>
+<p>这个在大多数 Linux 系统下不是问题，因为一般linux用户的默认 shell 都是 bash，脚本运行时候会用用户的默认 shell 来解释脚本（如果 #!/bin/bash 不写的话），但很多 unix 系统可能会用 bourne shell 、 csh 或者 ksh 等来作为用户默认 shell，如果脚本中包含的有符合 bash 语法却又让其他shell无法解释的代码存在，那么就必须在第一行写上这个（当然还要这个系统上安装了 bash），以保证脚本的正常运行。 &mdash;&mdash; by minsic (2009)</p>
+<h3>3、为了确保脚本能够顺利运行！&mdash;&mdash;<span style="color: #ccffff;">&nbsp;chmod 755 your-script-name</span></h3>
+<p>Linux 里的各类文件是非常讲究权限的，这个权限有点繁杂，并且更改权限的方法也特别多，但是，就目前而言，我认为掌握标题上的那一条就好了：（反正扯开来讲很快就会忘掉，别问我为甚么。）</p>
+<div class="cnblogs_code">
+<pre><span style="color: #888888;">root@iZwz:~/labs#</span> <span style="color: #0000ff;">chmod</span> <span style="color: #ffffff; background-color: #000000;">755</span><span style="color: #000000;"> myfirst 
+<span style="color: #888888;">root@iZwz:</span></span><span style="color: #888888;">~/labs#</span> <span style="color: #0000ff;">ls</span> -<span style="color: #000000;">l
+total </span><span style="color: #800080;">16</span>
+<span style="background-color: #000000; color: #ffffff;">-rwxr-xr-x</span> <span style="color: #800080;">1</span> root root   <span style="color: #800080;">75</span> Oct  <span style="color: #800080;">7</span> <span style="color: #800080;">09</span>:<span style="color: #800080;">52</span> myfirst</pre>
+</div>
+<p>这个命令能够让计算机将 myfirst 的权限更改为：除我之外不可写！（可以看、可以执行，就是不能写！）</p>

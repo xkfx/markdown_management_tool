@@ -1,0 +1,132 @@
+<p>InnoDB 支持&nbsp;transaction ，MyISAM 不支持。</p>
+<p>索引：</p>
+<ol>
+<li class="docSection2Title"><a href="#a1">Changing the Default Commit Behavior</a></li>
+<li><a href="#a2">SAVEPOINT 与 ROLLBACK TO</a></li>
+<li><a href="#a3">&nbsp;COMMIT 与 ROLLBACK</a></li>
+</ol>
+<p class="docText">When working with transactions and transaction processing, there are a few keywords that'll keep reappearing. Here are the terms you need to know:</p>
+<ul>
+<li>
+<p class="docText"><span class="docEmphStrong"><strong>Transaction</strong> A block of SQL statements</span></p>
+</li>
+<li>
+<p class="docText"><span class="docEmphStrong"><strong>Rollback</strong> The process of undoing specified SQL statements</span></p>
+</li>
+<li>
+<p class="docText"><span class="docEmphStrong"><strong>Commit</strong> Writing unsaved SQL statements to the database tables</span></p>
+</li>
+<li>
+<p class="docText"><span class="docEmphStrong"><strong>Savepoint</strong> A temporary placeholder in a transaction set to which you can issue a rollback (as opposed to rolling back an entire transaction)<a name="iddle10871"></a></span></p>
+</li>
+</ul>
+<p>有点类似于游戏里的存档，我们在什么时候需要存档呢？</p>
+<p>一般是在挑战 BOSS 之前、或者结束游戏的时候，总之是很重要的事情、而且失败之后代价很巨大。我们可以把 挑战 BOSS 这件事情叫做&ldquo;事务transaction&rdquo;。在挑战前的那个存档时间点叫做&ldquo;保存点savepoint&rdquo;，如果你 GG 了重新去读档就是&ldquo;回滚rollback&rdquo;了。</p>
+<p>再比如说，实际生活中给人转账，在我确认转账之后，银行系统首先会检查我的账户上有没有足够的钱，然后减去我要转出的金额，如果在这个时候银行系统突然宕机了（假设），那转出去的钱是不是不翼而飞了呢？。。。显然不会，银行系统在做这一系列事情之前肯定会预先存档，万一有意外直接读档回归到什么都没有做的时候就好了。</p>
+<p>下面是一个简单的例子：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> pet;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name  <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 楗?《     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 灏忕櫧    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 鑰侀粍    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+<strong>mysql</strong></span><strong><span style="color: #808080;">&gt;</span> START <span style="color: #0000ff;">TRANSACTION</span>; <span style="color: #008080;">--</span><span style="color: #008080;"> 存档，下面要开始做重要的事情了</span></strong>
+Query OK, <span style="color: #800000; font-weight: bold;">0</span> rows affected (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">DELETE</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> pet;
+Query OK, </span><span style="color: #800000; font-weight: bold;">3</span> rows affected (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> pet;
+Empty </span><span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+<strong>mysql</strong></span><strong><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">ROLLBACK</span>; <span style="color: #008080;">--</span><span style="color: #008080;"> 读档</span></strong>
+Query OK, <span style="color: #800000; font-weight: bold;">0</span> rows affected (<span style="color: #800000; font-weight: bold;">0.01</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> pet;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name  <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 楗?《     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 灏忕櫧    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 鑰侀粍    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>&nbsp;记住ROLLBACK只能用于回滚 UPDATE、DELETE、INSERT ，而不能回滚 DROP 和 CREATE 。</p>
+<h2 class="docSection2Title"><a name="a1"></a>Changing the Default Commit Behavior</h2>
+<p class="docText">As&nbsp;already explained, the default MySQL behavior is to automatically commit any and all changes. In other words, any time you execute a MySQL statement, that statement is actually being performed against the tables, and the changes made occur immediately. To instruct MySQL to not automatically commit changes, you need to use the following statement:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">SET</span> autocommit<span style="color: #808080;">=</span><span style="color: #800000; font-weight: bold;">0</span>;</pre>
+</div>
+<p>PS. 这个设置仅对当前连接有效，不是全局、持久的。</p>
+<p><strong>默认状态下除非用了&nbsp;</strong></p>
+<pre><strong>START TRANSACTION;</strong></pre>
+<p><strong>否则每一条 SQL；都是直接被提交的。</strong></p>
+<p>看下面的例子：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <strong><span style="color: #0000ff;">SET</span> autocommit<span style="color: #808080;">=</span><span style="color: #800000;">0</span></strong><span style="color: #000000;"><strong>;</strong>
+Query OK, </span><span style="color: #800000; font-weight: bold;">0</span> rows affected (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <strong>SHOW VARIABLES <span style="color: #808080;">LIKE</span><span style="color: #000000;"> "autocommit";
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------------+-------+</span>
+<span style="color: #808080;">|</span> Variable_name <span style="color: #808080;">|</span> Value <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------------+-------+</span>
+<span style="color: #808080;">|</span> autocommit    <span style="color: #808080;">|</span> <span style="color: #0000ff;">OFF</span>   <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">-------------+-------+</span>
+<span style="color: #800000;">1</span> row <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000;">0.00</span></strong><span style="color: #000000;"><strong> sec)
+</strong>
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> pet;
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name  <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 楗?《     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 灏忕櫧    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 鑰侀粍    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> pet(pet_name, master_id)
+    </span><span style="color: #808080;">-&gt;</span> <span style="color: #0000ff;">VALUES</span> (<span style="color: #ff0000;">'</span><span style="color: #ff0000;">老黄</span><span style="color: #ff0000;">'</span>, <span style="color: #800000; font-weight: bold;">234</span><span style="color: #000000;">);
+Query OK, </span><span style="color: #800000; font-weight: bold;">1</span> row affected (<span style="color: #800000; font-weight: bold;">0.00</span><span style="color: #000000;"> sec)
+
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span> pet; <strong><span style="color: #008080;">--</span><span style="color: #008080;"> 说好不自动提交呢？。。。</span></strong>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name  <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 楗?《     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 灏忕櫧    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 鑰侀粍    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span> <strong>  <span style="color: #0000ff;">NULL</span> <span style="color: #808080;">|</span> animal   <span style="color: #808080;">|</span> 老黄      <span style="color: #808080;">|</span>       <span style="color: #800000;">234</span> <span style="color: #808080;">|</span></strong>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">4</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<p>就像上面所看到的，我们虽然没有 commit ，但改变还是发生了不是吗？。。但是实际上并没有&ldquo;真正&rdquo;提交，断开重连（或者同时再开启一个并行连接也行，可以用这个方法测试一下mysql的并发机制：当某个连接拿到某个表的锁之后，另外一个连接操作这张表就需要等待）：</p>
+<div class="cnblogs_code">
+<pre>mysql<span style="color: #808080;">&gt;</span> <span style="color: #808080;">^</span>CCtrl<span style="color: #808080;">-</span>C <span style="color: #008080;">--</span><span style="color: #008080;"> exit!</span>
+<span style="color: #000000;">Aborted
+root</span><span style="color: #008000;">@xkfx</span>:<span style="color: #808080;">~</span># mysql <span style="color: #808080;">-</span>uroot <span style="color: #808080;">-</span><span style="color: #000000;">p
+mysql</span><span style="color: #808080;">&gt;</span> <span style="color: #0000ff;">USE</span> mysqlCrash; <span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span><span style="color: #000000;"> pet;
+</span><span style="color: #0000ff;">Database</span><span style="color: #000000;"> changed
+</span><span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span> pet_id <span style="color: #808080;">|</span> pet_type <span style="color: #808080;">|</span> pet_name  <span style="color: #808080;">|</span> master_id <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8881</span> <span style="color: #808080;">|</span> <span style="color: #0000ff;">NULL</span>     <span style="color: #808080;">|</span> 楗?《     <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1001</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8882</span> <span style="color: #808080;">|</span> dog      <span style="color: #808080;">|</span> 灏忕櫧    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1002</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">|</span>   <span style="color: #800000; font-weight: bold;">8883</span> <span style="color: #808080;">|</span> cat      <span style="color: #808080;">|</span> 鑰侀粍    <span style="color: #808080;">|</span>      <span style="color: #800000; font-weight: bold;">1003</span> <span style="color: #808080;">|</span>
+<span style="color: #808080;">+</span><span style="color: #008080;">--</span><span style="color: #008080;">------+----------+-----------+-----------+</span>
+<span style="color: #800000; font-weight: bold;">3</span> rows <span style="color: #808080;">in</span> <span style="color: #0000ff;">set</span> (<span style="color: #800000; font-weight: bold;">0.00</span> sec)</pre>
+</div>
+<h2>&nbsp;<a name="a2"></a>SAVEPOINT 与 ROLLBACK TO</h2>
+<div class="cnblogs_code">
+<pre>SAVEPOINT delete1; <span style="color: #008080;">--</span><span style="color: #008080;"> 必须在事务内哦</span>
+<span style="color: #0000ff;">ROLLBACK</span> <span style="color: #0000ff;">TO</span> delete1;  <span style="color: #008080;">--</span><span style="color: #008080;"> 在事务结束（ ROLLBACK / ROLLBACK TO / COMMIT ）之后，保存点会被自动释放，当然也可以通过  RELEASE SAVEPOINT 手动释放。</span></pre>
+</div>
+<h2><a name="a3"></a>COMMIT 与 ROLLBACK</h2>
+<p>1、commit：整个事务的所有更改永久保存</p>
+<p>&nbsp; 2、rollback：撤销事务所做的更改</p>
+<p>commit后不能回滚，但是如果你是9i或以上版本可以使用flashback来找回原来的数据。<br />在一个事务中，rollback和commit都代表结束一个事务。要么回滚，要么提交。他们是在一个等级上的命令。rollback可以写在commit之前，但是commit的数据就不能rollback了。 ---&nbsp;<a class="user-name" href="https://zhidao.baidu.com/usercenter?uid=abb04069236f25705e79df03" rel="nofollow" target="_blank">radioxhk&nbsp;</a></p>

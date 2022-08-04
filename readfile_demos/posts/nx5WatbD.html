@@ -1,0 +1,135 @@
+<p>&nbsp;<a href="https://www.zhihu.com/question/55231277" target="_blank">存储过程有什么优缺点？为什么要用存储过程？或者在什么情况下才用存储过程？</a></p>
+<p>&nbsp;最直白的好处是存储过程比较快。</p>
+<p>&nbsp;</p>
+<p>1、利用存储过程，给Employee表添加一条业务部门员工的信息。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> insert_business_employee;
+DELIMITER </span><span style="color: #808080;">//</span>
+
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> insert_business_employee(
+    </span><span style="color: #808080;">IN</span> employee_no_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">8</span><span style="color: #000000;">),
+    </span><span style="color: #808080;">IN</span> employee_name_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">),
+    </span><span style="color: #808080;">IN</span> sex_in <span style="color: #0000ff;">char</span>(<span style="color: #800000; font-weight: bold;">1</span><span style="color: #000000;">),
+    </span><span style="color: #808080;">IN</span><span style="color: #000000;"> birthday_in date,
+    </span><span style="color: #808080;">IN</span> address_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">),
+    </span><span style="color: #808080;">IN</span> telephone_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">20</span><span style="color: #000000;">),
+    </span><span style="color: #808080;">IN</span><span style="color: #000000;"> hiredate_in date,
+    </span><span style="color: #008080;">--</span><span style="color: #008080;"> IN department_in varchar(30),</span>
+    <span style="color: #808080;">IN</span> headship_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">),
+    </span><span style="color: #808080;">IN</span> salary_in <span style="color: #0000ff;">decimal</span>(<span style="color: #800000; font-weight: bold;">8</span>,<span style="color: #800000; font-weight: bold;">2</span><span style="color: #000000;">)
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> employee
+    (employee_no,
+    employee_name,
+    sex,
+    birthday,
+    address,
+    telephone,
+    hiredate,
+    department,
+    headship,
+    salary)
+    </span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+    (employee_no_in,
+    employee_name_in,
+    sex_in,
+    birthday_in,
+    address_in,
+    telephone_in,
+    hiredate_in,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">业务部</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    headship_in,
+    salary_in);
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+
+DELIMITER ;
+
+CALL insert_business_employee(
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">2222</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">无极</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">F</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">2001-10-22</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">北海道</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1231232</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">2001-10-22</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">老板</span><span style="color: #ff0000;">'</span><span style="color: #000000;">,
+    </span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">1333232</span><span style="color: #ff0000;">'</span><span style="color: #000000;">
+);</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>2、利用存储过程输出所有客户姓名、客户订购金额及其相应业务员的姓名。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> print_transaction;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> print_transaction()
+</span><span style="color: #0000ff;">BEGIN</span>    
+    <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> 
+     customer_name, 
+     order_sum, 
+     employee_name
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;"> 
+     customer x 
+     </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master y <span style="color: #0000ff;">ON</span> x.customer_no <span style="color: #808080;">=</span><span style="color: #000000;"> y.customer_no
+     </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> employee z <span style="color: #0000ff;">ON</span> y.saler_no <span style="color: #808080;">=</span><span style="color: #000000;"> z.employee_no;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;
+CALL print_transaction();</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>3、利用存储过程查找某员工的员工编号、订单编号、销售金额。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> select_employee_performance;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> select_employee_performance(
+    </span><span style="color: #808080;">IN</span> employee_name_in <span style="color: #0000ff;">varchar</span>(<span style="color: #800000; font-weight: bold;">10</span><span style="color: #000000;">)
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">SELECT</span><span style="color: #000000;">
+     saler_no,
+     order_no,
+     order_sum
+    </span><span style="color: #0000ff;">FROM</span><span style="color: #000000;">
+     employee
+    </span><span style="color: #808080;">LEFT</span> <span style="color: #808080;">JOIN</span> order_master <span style="color: #0000ff;">ON</span> employee_no <span style="color: #808080;">=</span><span style="color: #000000;"> saler_no
+    </span><span style="color: #0000ff;">WHERE</span><span style="color: #000000;">
+     employee_name </span><span style="color: #808080;">=</span><span style="color: #000000;"> employee_name_in
+    </span><span style="color: #0000ff;">ORDER</span> <span style="color: #0000ff;">BY</span><span style="color: #000000;"> 
+     saler_no;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;
+CALL select_employee_performance(</span><span style="color: #ff0000;">'</span><span style="color: #ff0000;">张小梅</span><span style="color: #ff0000;">'</span>);</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、相关</p>
+<p><a id="cb_post_title_url" href="https://www.cnblogs.com/xkxf/p/9125695.html">WEB 开发相关笔记 #05# BUG 日志 持续更新</a></p>
+<p>&nbsp;</p>
+<p>5、插入一条学生记录，判断学号是否存在。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">DROP</span> <span style="color: #0000ff;">PROCEDURE</span> <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span><span style="color: #000000;"> inserStu;
+DELIMITER </span><span style="color: #808080;">//</span>
+<span style="color: #0000ff;">CREATE</span> <span style="color: #0000ff;">PROCEDURE</span><span style="color: #000000;"> inserStu(
+    </span><span style="color: #808080;">IN</span> id_in <span style="color: #0000ff;">INT</span><span style="color: #000000;">,
+    </span><span style="color: #808080;">IN</span> name_in <span style="color: #0000ff;">VARCHAR</span>(<span style="color: #800000; font-weight: bold;">50</span><span style="color: #000000;">)
+)
+</span><span style="color: #0000ff;">BEGIN</span>
+    <span style="color: #0000ff;">IF</span> <span style="color: #808080;">EXISTS</span> (<span style="color: #0000ff;">SELECT</span> <span style="color: #808080;">*</span> <span style="color: #0000ff;">FROM</span> stu <span style="color: #0000ff;">WHERE</span> id <span style="color: #808080;">=</span> id_in) <span style="color: #0000ff;">THEN</span>
+     <span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> "学号已存在";
+    </span><span style="color: #0000ff;">ELSE</span>
+     <span style="color: #0000ff;">INSERT</span> <span style="color: #0000ff;">INTO</span><span style="color: #000000;"> stu
+     (id,
+     name)
+     </span><span style="color: #0000ff;">VALUES</span><span style="color: #000000;">
+     (id_in,
+     name_in);
+     </span><span style="color: #0000ff;">SELECT</span><span style="color: #000000;"> "插入成功";    
+    </span><span style="color: #0000ff;">END</span> <span style="color: #0000ff;">IF</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">END</span> <span style="color: #808080;">//</span><span style="color: #000000;"> 
+DELIMITER ;
+
+</span><span style="color: #008080;">--</span><span style="color: #008080;"> 测试</span><span style="color: #008080;">
+--</span><span style="color: #008080;"> CALL inserStu(1, 'wang');</span><span style="color: #008080;">
+--</span><span style="color: #008080;"> CALL inserStu(1, 'wang');</span><span style="color: #008080;">
+--</span><span style="color: #008080;"> CALL inserStu(333, 'wang');</span></pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,118 @@
+<p>【懒惰即是美德】</p>
+<p>抽象意味着良好的可读性：<span style="color: #ff00ff;"><span style="background-color: #ffff99;">说明你在努力做什么，而不是给出你正在如何做的细节。</span></span></p>
+<p>&nbsp;</p>
+<p>【抽象和结构】</p>
+<p>程序应该是非常抽象的，就像&ldquo;下载网页、计算频率、打印每个单词的频率&rdquo;一样易懂。翻译成程序就是：</p>
+<div class="cnblogs_code">
+<pre>page =<span style="color: #000000;"> download_page()
+freqs </span>=<span style="color: #000000;"> compute_frequencies(page)
+</span><span style="color: #0000ff;">for</span> word.freq <span style="color: #0000ff;">in</span><span style="color: #000000;"> freqs:
+    </span><span style="color: #0000ff;">print</span> word.freq</pre>
+</div>
+<p>&nbsp;</p>
+<p>【创建函数】</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> hello(name):
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span><span style="color: #800000;">Hello,</span><span style="color: #800000;">'</span> + name + <span style="color: #800000;">'</span><span style="color: #800000;">!</span><span style="color: #800000;">'</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">print</span> (hello(<span style="color: #800000;">'</span><span style="color: #800000;">world</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+Hello,world!</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">记录函数</span></p>
+<p>1、实例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> hello(name):
+    </span><span style="color: #800000;">'</span><span style="color: #800000;">This is a hello world program!</span><span style="color: #800000;">'</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span><span style="color: #800000;">Hello,</span><span style="color: #800000;">'</span> + name + <span style="color: #800000;">'</span><span style="color: #800000;">!</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>访问方式1：内建的help函数。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> help(hello)
+Help on function hello </span><span style="color: #0000ff;">in</span><span style="color: #000000;"> module test:
+
+hello(name)
+    This </span><span style="color: #0000ff;">is</span> a hello world program!</pre>
+</div>
+<p>访问方式2：用hello._doc_访问失败。</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt;<span style="color: #000000;"> hello._doc_
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;stdin&gt;</span><span style="color: #800000;">"</span>, line 1, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+AttributeError: </span><span style="color: #800000;">'</span><span style="color: #800000;">function</span><span style="color: #800000;">'</span> object has no attribute <span style="color: #800000;">'</span><span style="color: #800000;">_doc_</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>&nbsp;已解决：doc两边的下划线有两个！！！即__doc__</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">并非真正函数的函数</span>=返回None的函数</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff00ff; background-color: #ffff99;">【Parameter magic（参数魔法）】</span></p>
+<p><span style="text-decoration: underline;">值从哪里来？</span></p>
+<p><span style="text-decoration: underline;">我能改变参数吗（指改变实参）？</span> - 在函数内为参数赋予新值不会改变任何外部变量的值，将可变的数据结构比如列表作为参数时实际是传递引用！</p>
+<p>1、为什么要改变参数？- 抽象化程序的好方式。</p>
+<p>可以利用这个特点编写函数来改变数据结构。</p>
+<p>一个简单的例子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span><span style="color: #000000;"> init(data):
+    data[</span><span style="color: #800000;">'</span><span style="color: #800000;">first</span><span style="color: #800000;">'</span>] =<span style="color: #000000;"> {}
+    data[</span><span style="color: #800000;">'</span><span style="color: #800000;">middle</span><span style="color: #800000;">'</span>] =<span style="color: #000000;"> {}
+    data[</span><span style="color: #800000;">'</span><span style="color: #800000;">last</span><span style="color: #800000;">'</span>] = {}</pre>
+</div>
+<p>之后可以利用这个函数来初始化变量的数据结构。如下：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; <span style="color: #0000ff;">from</span> test <span style="color: #0000ff;">import</span><span style="color: #000000;"> init
+</span>&gt;&gt;&gt; lovepython =<span style="color: #000000;"> {}
+</span>&gt;&gt;&gt; lovepython <span style="color: #008000;">#</span><span style="color: #008000;"> 变量原始结构</span>
+<span style="color: #000000;">{}
+</span>&gt;&gt;&gt;<span style="color: #000000;"> init(lovepython)
+</span>&gt;&gt;&gt; lovepython <span style="color: #008000;">#</span><span style="color: #008000;"> 通过函数改变后的结构</span>
+{<span style="color: #800000;">'</span><span style="color: #800000;">first</span><span style="color: #800000;">'</span>: {}, <span style="color: #800000;">'</span><span style="color: #800000;">last</span><span style="color: #800000;">'</span>: {}, <span style="color: #800000;">'</span><span style="color: #800000;">middle</span><span style="color: #800000;">'</span>: {}}</pre>
+</div>
+<p>&nbsp;</p>
+<p>2、如果我的参数不可变呢？- 考虑传入数组。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">关键字参数和默认参数</span></p>
+<p>1、之前所用的参数都叫做&ldquo;位置参数&rdquo;，因为它们的位置很重要&mdash;&mdash;甚至比它们的名字还要重要！</p>
+<p>&nbsp;</p>
+<p>2、程序规模越大，关键字参数和默认参数的作用越大！</p>
+<p>&nbsp;</p>
+<p>3、例如在下面的程序中，能辨别出谁是谁吗？</p>
+<div class="cnblogs_code">
+<pre>hi(1, 2, 4, 5)</pre>
+</div>
+<p>但是如果使用关键字参数，就一目了然。（当然只是举例）</p>
+<div class="cnblogs_code">
+<pre>hi(name=1, age=2, city=4, born=5)</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、关键字参数更厉害地方在于可以给函数提供默认值。</p>
+<p>&nbsp;</p>
+<p>5、混用位置参数和关键字参数的注意点：位置参数一定要放在前面！（尽量避免出现混用的情况）</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">收集参数</span></p>
+<p>def f(k, *params);星号的意思就是&ldquo;收集其余的位置参数，放进一个元组中（在这里这个元组叫做params）&rdquo;。</p>
+<p>但是有个问题是*params并不能收集关键字参数，那么如何收集关键字参数呢？答案是使用**params将关键字参数收集成字典：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">def</span> f(*collec_pospar, **<span style="color: #000000;">collec_keypar):
+    </span><span style="color: #0000ff;">print</span><span style="color: #000000;">(collec_pospar)
+    </span><span style="color: #0000ff;">print</span>(collec_keypar)</pre>
+</div>
+<div class="cnblogs_code">
+<pre>&gt;&gt;&gt; f(1, 2, 3, a=1, b=2, c=3<span style="color: #000000;">)
+(</span>1, 2, 3<span style="color: #000000;">)
+{</span><span style="color: #800000;">'</span><span style="color: #800000;">b</span><span style="color: #800000;">'</span>: 2, <span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span>: 1, <span style="color: #800000;">'</span><span style="color: #800000;">c</span><span style="color: #800000;">'</span>: 3}</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">反转过程</span></p>
+<p>&nbsp;这个标题指的是&ldquo;<strong>将参数收集为tuple和dict</strong>&rdquo;的逆过程，也就是将dict和tuple分解成关键字参数和单个的参数。</p>
+<p>例如，假设params = (1, 2, 4)：</p>
+<div class="cnblogs_code">
+<pre>在作为函数参数的时候<strong>*params</strong>的结果是 <strong>1, 2, 4</strong></pre>
+</div>
+<p>对于dict也是同样的道理，只不过前置符号改为**罢了。</p>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline;">练习使用参数</span></p>
+<p>&nbsp;</p>
+<p>【作用域】</p>
+<p>【递归】</p>
+<p>【小结】</p>

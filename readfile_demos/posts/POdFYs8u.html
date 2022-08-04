@@ -1,0 +1,38 @@
+<h2 class="md-end-block md-heading">DAO层</h2>
+<p><span class="md-line md-end-block"><span>负责与数据库打交道的一系列代码。</span></span></p>
+<p><span class="md-line md-end-block"><span>数据库就是拿来存数据的，通常数据库中的一个数据表对应一个DAO层的对象，该对象的类的命名规则为XxxDAO或者XxxMapper等。DAO对象向上提供对数据表项的增删查改接口，例如（持久化）保存一个对象、删除一个对象、查找一个对象、查找一组对象、更新一个对象等。方便起见，又有一系列的entity类，放在entity包中（DAO类对象放在dao包中），entity对象活在内存里，通常和数据表项一一对应。</span></span></p>
+<p>&nbsp;</p>
+<h2 class="md-end-block md-heading"><span>DDD</span></h2>
+<p><span class="md-line md-end-block"><span>Domain-Driven Design领域驱动设计，简称DDD。从头到尾就没懂。。。。。</span></span></p>
+<p><span class="md-line md-end-block"><span>暂时的理解：</span></span></p>
+<p><span class="md-line md-end-block"><span>DDD就是真&middot;面向对象设计。所谓设计领域模型就是进行面向对象设计。</span></span></p>
+<p><span class="md-line md-end-block"><span>think in java里面有两句话&ldquo;问题的复杂度取决于抽象的质量&rdquo;、&rdquo;面向对象设计的技巧在于&mdash;&mdash;将对象视为服务的提供者&ldquo;。基于上述不知对错的理解，我认为DDD的缺点在于，一个系统在每个人脑子里抽象出来可能是不一样的，并且，每个人对业务的熟悉程度不同，抽象质量也不同。所以一个人的抽象另外一个人未必能看懂，不利于分工合作（每个人脑子里的系统不容易一致）。而且针对特定业务可能有很多不同的抽象，往往是没有定论的，斟酌来斟酌去可能还是贫血模型简单（几乎是一套固定的模板）。</span></span></p>
+<p><span class="md-line md-end-block"><span>贫血模型里面可以有单纯的没有任何业务的数据对象、也有不带数据的单纯的业务对象。例如User这样子的纯数据对象，就是有name、age等字段，然后只有set和get方法。着手写代码的顺序通常是：设计数据表&gt;然后实现DAO层&gt;测试DAO层。</span></span></p>
+<p><span class="md-line md-end-block"><span>而DDD步骤则是：先设计好领域模型&gt;再设计数据库。一个领域模型可能对应N张表，例如说商品模型的销量</span></span><span class="md-line md-end-block">可能分散在交易成功记录里未必是商品表计数。</span></p>
+<p>&nbsp;</p>
+<h2 class="md-end-block md-heading"><span>贫血设计 VS. 充血设计</span></h2>
+<p><span class="md-line md-end-block"><span>摘自：<span><a href="https://www.zhihu.com/question/20360521/answer/14891150">https://www.zhihu.com/question/20360521/answer/14891150</a></span></span></span></p>
+<p><span class="md-line md-end-block"><span>举个简单的J2EE的例子，设计一个与用户（User）相关的功能，传统的设计一般是：</span></span></p>
+<div class="cnblogs_code">
+<pre>类：User+<span style="color: #000000;">UserManager
+
+保存用户调用：userManager.save(User user);</span></pre>
+</div>
+<p><span class="md-line md-end-block">充血的设计则可能会是：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">类：User
+
+保存用户调用：user.save();
+
+&mdash;&mdash;User有一个行为是：保存它自己</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2 class="md-end-block md-heading"><span>RESTful API</span></h2>
+<p>一句话概括就是：URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作</p>
+<p><span class="md-line md-end-block">参考资料：</span></p>
+<ul>
+<li><a href="https://www.zhihu.com/topic/19579308/top-answers" target="_blank" data-za-detail-view-element_name="Title">怎样用通俗的语言解释REST，以及RESTful？</a></li>
+<li id="page-title" class="asset-name entry-title"><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank">RESTful API 设计指南</a></li>
+<li id="page-title" class="asset-name entry-title"><a href="http://www.ruanyifeng.com/blog/2018/10/restful-api-best-practices.html" target="_blank">RESTful API 最佳实践</a></li>
+<li class="asset-name entry-title"><a href="https://www.zhihu.com/question/33959971/answer/57593571" target="_blank" data-za-detail-view-element_name="Title">REST风格的优势是什么？</a></li>
+</ul>

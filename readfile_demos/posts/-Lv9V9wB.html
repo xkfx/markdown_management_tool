@@ -1,0 +1,82 @@
+<p>需求：</p>
+<p>1、流程分析：客户端程序拿到用户名和密码，将用户名和密码发送到服务端（在客户端验证合法性），服务端接收并存储用户名和密码，返回给客户端一个信息（可能是成功也可能是失败。）</p>
+<p>2、数据怎么存？服务端的用户数据为什么存入数据库而不是通过IO存入一个文件？数据库就是封装了CRUD的&ldquo;专业化&rdquo;存数据的软件，相比自己写的&ldquo;非专业&rdquo;存储方式更安全（不是任何人都可以访问、不易丢失）性能更好（CRUD更快）。。</p>
+<p>3、应对多用户注册。</p>
+<p>参考：</p>
+<p>1、java正则表达式Pattern和Matcher：http://www.cnblogs.com/lzq198754/p/5780340.html</p>
+<p>2、java单元测试：http://blog.csdn.net/liushuijinger/article/details/32140843、http://blog.csdn.net/andycpp/article/details/1327147</p>
+<p>3、socket传输对象：http://blog.csdn.net/kongxx/article/details/7259827（关于socket的内容很全、代码质量高。。，有时间可以通看。。。）</p>
+<p>4、swing消息提示框：http://hnulanwei.iteye.com/blog/2218639</p>
+<p>思路：</p>
+<p>代码：</p>
+<p>1、创建一个User类。封装对象传输显然比拆分字符串传输要好。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.tools;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> User <span style="color: #0000ff;">implements</span><span style="color: #000000;"> java.io.Serializable {
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String username;
+    </span><span style="color: #0000ff;">private</span><span style="color: #000000;"> String password;
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> User() {
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> User(String username, String password) {
+        </span><span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+        </span><span style="color: #0000ff;">this</span>.password =<span style="color: #000000;"> password;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getUsername() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setUsername(String username) {
+        </span><span style="color: #0000ff;">this</span>.username =<span style="color: #000000;"> username;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getPassword() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> password;
+    }
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setPassword(String password) {
+        </span><span style="color: #0000ff;">this</span>.password =<span style="color: #000000;"> password;
+    }
+}</span></pre>
+</div>
+<p>2、检查用户名和密码的合法性</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> com.xkfx.qq.tools.check;
+
+</span><span style="color: #0000ff;">import</span> java.util.regex.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Check {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> String regEx = "^[A-Za-z][A-Za-z1-9_-]+$"<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">final</span> Pattern pattern =<span style="color: #000000;"> Pattern.compile(regEx);
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> idAndPass(String username, String password) {
+        Matcher userMatcher </span>=<span style="color: #000000;"> pattern.matcher(username);
+        Matcher passMatcher </span>=<span style="color: #000000;"> pattern.matcher(password);
+        </span><span style="color: #0000ff;">return</span> userMatcher.matches() &amp;&amp;<span style="color: #000000;"> passMatcher.matches();
+    }
+}</span></pre>
+</div>
+<p>3、融入主代码</p>
+<div class="cnblogs_code">
+<pre>        <span style="color: #008000;">//</span><span style="color: #008000;"> 用户点击了注册</span>
+        <span style="color: #0000ff;">if</span> (e.getActionCommand().equals("Sign up"<span style="color: #000000;">)) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 从JTextField获取用户名和密码</span>
+            String username =<span style="color: #000000;"> txtUsername.getText();
+            String password </span>=<span style="color: #000000;"> txtPassword.getText();
+
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 本地验证用户名、用户密码的合法性</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (Check.idAndPass(username, password)) {
+                User user </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> User(username, password);
+                System.out.println(</span>"正在向服务发送注册请求"<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 提示用户重新输入</span>
+                JOptionPane.showMessageDialog(<span style="color: #0000ff;">this</span>, "输入不合法，请重新输入！"<span style="color: #000000;">);
+            }
+        }</span></pre>
+</div>
+<p>后续 &amp; 补充：</p>
+<p>修改了目录结构：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201704/1042431-20170427230046194-1391577751.png" alt="" width="133" height="123" /></p>

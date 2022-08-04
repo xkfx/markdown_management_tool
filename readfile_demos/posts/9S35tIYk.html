@@ -1,0 +1,85 @@
+<p><img src="http://images2015.cnblogs.com/blog/1042431/201610/1042431-20161024222023343-376825603.png" alt="" width="199" height="228" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span> java.awt.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">import</span> java.awt.event.*<span style="color: #000000;">;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> QQMain <span style="color: #0000ff;">extends</span> JFrame <span style="color: #0000ff;">implements</span><span style="color: #000000;"> KeyListener,ActionListener{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">用于传递数据的组件</span>
+    JTextField txtMess = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextField();
+    JTextArea txtContent </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JTextArea();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">构造方法</span>
+<span style="color: #000000;">    QQMain(){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">窗体基本信息</span>
+        <span style="color: #0000ff;">this</span>.setSize(800 , 900<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.setLocationRelativeTo(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.setTitle("Talking.GHOUL"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">logo设置
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">设置窗体LOGO</span>
+        <span style="color: #0000ff;">this</span>.setIconImage(<span style="color: #0000ff;">this</span>.getToolkit().getImage("D:/lab_2/psb (11).jpg"<span style="color: #000000;">));
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">new组件</span>
+        txtMess.setFont(<span style="color: #0000ff;">new</span> Font("", 0, 36<span style="color: #000000;">));
+        txtContent.setFont(</span><span style="color: #0000ff;">new</span> Font("", 0, 36<span style="color: #000000;">));
+        txtContent.setEditable(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        
+        JButton btnSend </span>= <span style="color: #0000ff;">new</span> JButton("Send"<span style="color: #000000;">);
+        btnSend.setFont(</span><span style="color: #0000ff;">new</span> Font("Courier",  Font.BOLD, 26<span style="color: #000000;">));
+    
+        JComboBox cmbUser </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> JComboBox();
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">注册事件监听</span>
+        btnSend.addActionListener(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">设置滚动条</span>
+        JScrollPane spContent = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JScrollPane(txtContent);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">布置小面板</span>
+        JPanel panSmall = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panSmall.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(1 , 2<span style="color: #000000;">));
+        
+        panSmall.add(cmbUser);
+        panSmall.add(btnSend);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">布置大面板</span>
+        JPanel panBig = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JPanel();
+        panBig.setLayout(</span><span style="color: #0000ff;">new</span> GridLayout(2 , 1<span style="color: #000000;">));
+        
+        panBig.add(txtMess);
+        panBig.add(panSmall);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">设置大面板</span>
+        panBig.setPreferredSize(<span style="color: #0000ff;">new</span> Dimension(200 , 100<span style="color: #000000;">));
+
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">布置窗体</span>
+        <span style="color: #0000ff;">this</span>.setLayout(<span style="color: #0000ff;">new</span><span style="color: #000000;"> BorderLayout());
+        
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.add(spContent , BorderLayout.CENTER);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.add(panBig , BorderLayout.SOUTH);
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        QQMain w </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> QQMain();
+        w.setVisible(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    }
+    
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> keyPressed(KeyEvent arg0){
+        
+    }
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> keyReleased(KeyEvent arg0){}
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> keyTyped(KeyEvent arg0){}
+    
+    @Override
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> actionPerformed(ActionEvent arg0){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">System.out.println(arg0);</span>
+        <span style="color: #0000ff;">if</span>(arg0.getActionCommand().equals("Send"<span style="color: #000000;">)){
+            String mess </span>=<span style="color: #000000;"> txtMess.getText();
+            txtMess.setText(</span>""<span style="color: #000000;">);
+            txtContent.append(</span>' '+mess+'\n'<span style="color: #000000;">);
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>

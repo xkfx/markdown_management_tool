@@ -1,0 +1,31 @@
+<h2>1、找放项目的文件夹</h2>
+<p>找到一个放项目的文件夹，在该文件夹路径下打开CMD</p>
+<h2>2、创建一个项目原型</h2>
+<p>执行下面的命令：</p>
+<div class="cnblogs_code">
+<pre>mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=<span style="color: #0000ff;">false</span></pre>
+</div>
+<p>在CMD窗口看到BUILD SUCCESS时，说明项目已经创建好了，这样就有了一个Maven风格的项目。</p>
+<p>关于字段的含义（来自<a href="https://how2j.cn/k/maven/maven-create-maven-project/1331.html" target="_blank">HOW2J</a>）：</p>
+<ul>
+<li>archetype:generate 表示创建个项目</li>
+<li>-DgroupId 项目包名: com.mycompany.app</li>
+<li>-DartifactId 项目名称: my-app</li>
+<li>-DarchetypeArtifactId 项目类型: maven-archetype-quickstart</li>
+<li>-DinteractiveMode:false 表示前面参数都给了，就不用一个一个地输入了</li>
+</ul>
+<h2>3、编译运行该项目</h2>
+<p>创建好Maven项目后我们需要将CMD当前路径切到项目的根目录（有pom.xml的目录下）。</p>
+<p>pom.xml文件是Maven中项目配置的核心。它是一个单独的配置文件，包含了构建项目所需的大部分信息。</p>
+<p>在项目根目录下执行下面的命令：</p>
+<div class="cnblogs_code">
+<pre>mvn <span style="color: #0000ff;">package</span></pre>
+</div>
+<p>这就类似于执行了一个自动帮我们编译，跑测试，打包的脚本。生成的东西放在target目录下：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1042431/202102/1042431-20210204120024805-875350146.png" alt="" width="225" height="203" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><span style="color: #888888;">&nbsp;target中的内容</span></p>
+<p>运行编译好的程序：</p>
+<div class="cnblogs_code">
+<pre>java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App</pre>
+</div>
+<p>&nbsp;</p>

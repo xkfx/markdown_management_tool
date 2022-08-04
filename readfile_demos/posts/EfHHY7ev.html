@@ -1,0 +1,241 @@
+<p><img src="http://images2017.cnblogs.com/blog/1042431/201710/1042431-20171011201443824-470772944.png" alt="" width="492" height="213" /></p>
+<div class="cnblogs_code">
+<pre><strong><span style="color: #000000;">#ifndef LINKEDLIST_H
+</span><span style="color: #0000ff;">#define</span> LINKEDLIST_H
+<span style="color: #0000ff;">#define</span> MAXLEN 256<span style="color: #000000;">
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> LinkedList {
+    </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> Node {
+        Node</span>* next = <span style="color: #800080;">0</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> necessary!!!</span>
+<span style="color: #000000;">        T key;
+    };
+    Node</span>* head = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    
+    T</span>* listSearch(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> k);
+    </span><span style="color: #0000ff;">void</span> listInsert(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> k);
+    </span><span style="color: #0000ff;">void</span> listDelete(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> k);
+    </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> reverse();
+};
+
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;<span style="color: #000000;">
+T</span>* LinkedList&lt;T&gt;::listSearch(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> k) {
+    Node</span>* x =<span style="color: #000000;"> head;
+    </span><span style="color: #0000ff;">while</span> (x != <span style="color: #800080;">0</span> &amp;&amp; x-&gt;key !=<span style="color: #000000;"> k) {
+        x </span>= x-&gt;<span style="color: #000000;">next;
+    }
+    
+    </span><span style="color: #0000ff;">if</span> (x == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    T</span>* temp = &amp;(x-&gt;<span style="color: #000000;">key);
+    </span><span style="color: #0000ff;">return</span> temp; <span style="color: #008000;">//</span><span style="color: #008000;"> Returns a pointer to the data</span>
+<span style="color: #000000;">}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">void</span> LinkedList&lt;T&gt;::listInsert(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> k) {
+    Node</span>* x = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Node();
+    x</span>-&gt;key =<span style="color: #000000;"> k; 
+    </span><span style="color: #0000ff;">if</span> (head != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        x</span>-&gt;next =<span style="color: #000000;"> head;
+    }
+    head </span>=<span style="color: #000000;"> x;
+}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">void</span> LinkedList&lt;T&gt;::listDelete(<span style="color: #0000ff;">const</span> T&amp;<span style="color: #000000;"> k) {
+    Node</span>* deleteOne =<span style="color: #000000;"> head;
+    Node</span>* last = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">while</span> (deleteOne != <span style="color: #800080;">0</span> &amp;&amp; deleteOne-&gt;key !=<span style="color: #000000;"> k) {
+        last </span>=<span style="color: #000000;"> deleteOne;
+        deleteOne </span>= deleteOne-&gt;<span style="color: #000000;">next;
+    }
+    </span><span style="color: #0000ff;">if</span> (deleteOne == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        ;
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (deleteOne ==<span style="color: #000000;"> head) {
+        head </span>= deleteOne-&gt;<span style="color: #000000;">next;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        last</span>-&gt;next = deleteOne-&gt;<span style="color: #000000;">next;
+    }
+}
+
+template </span>&lt;<span style="color: #0000ff;">class</span> T&gt;
+<span style="color: #0000ff;">void</span> LinkedList&lt;T&gt;<span style="color: #000000;">::reverse() {
+    Node</span>*<span style="color: #000000;"> temp[MAXLEN];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i != MAXLEN; ++<span style="color: #000000;">i) {
+        temp[i] </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">int</span> k = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    Node</span>* x =<span style="color: #000000;"> head;
+    </span><span style="color: #0000ff;">while</span> (x != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        temp[k] </span>=<span style="color: #000000;"> x;
+        x </span>= x-&gt;<span style="color: #000000;">next;
+        </span>++<span style="color: #000000;">k;
+    }
+    
+    temp[</span><span style="color: #800080;">0</span>]-&gt;next = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    head </span>= temp[k-<span style="color: #800080;">1</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">1</span>; i != k; ++<span style="color: #000000;">i) {
+        temp[i]</span>-&gt;next = temp[i-<span style="color: #800080;">1</span><span style="color: #000000;">];
+    }
+}
+</span><span style="color: #0000ff;">#endif</span></strong><span style="color: #000000;">
+
+#ifndef USER_H
+</span><span style="color: #0000ff;">#define</span> USER_H<span style="color: #000000;">
+#include </span>&lt;<span style="color: #0000ff;">string</span>&gt;
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> User {
+    std::</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> username;
+    std::</span><span style="color: #0000ff;">string</span><span style="color: #000000;"> password;
+    User(std::</span><span style="color: #0000ff;">string</span> x, std::<span style="color: #0000ff;">string</span><span style="color: #000000;"> y): username(x), password(y) {}
+    User() </span>= <span style="color: #0000ff;">default</span><span style="color: #000000;">;
+    
+    </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>==(<span style="color: #0000ff;">const</span> User &amp;<span style="color: #000000;">left) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>-&gt;username == left.username) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    
+    </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>!=(<span style="color: #0000ff;">const</span> User &amp;<span style="color: #000000;">left) {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>-&gt;username != left.username) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+};
+
+</span><span style="color: #0000ff;">#endif</span><span style="color: #000000;">
+
+#ifndef MYSYSTEM_H
+</span><span style="color: #0000ff;">#define</span> MYSYSTEM_H
+<span style="color: #0000ff;">struct</span><span style="color: #000000;"> MySystem {
+    LinkedList</span>&lt;User&gt;<span style="color: #000000;"> onlineList;
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> login(User user);
+    </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> logout(User user);
+};
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> MySystem::login(User user) {
+    onlineList.listInsert(user);
+    </span><span style="color: #0000ff;">if</span> (onlineList.listSearch(user) != <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> MySystem::logout(User user) {
+    onlineList.listDelete(user);
+    </span><span style="color: #0000ff;">if</span> (onlineList.listSearch(user) == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">#endif</span><span style="color: #000000;">
+
+#include </span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    LinkedList</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> listInt;
+    
+    listInt.listInsert(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+    listInt.listInsert(</span><span style="color: #800080;">4</span><span style="color: #000000;">);
+    listInt.listInsert(</span><span style="color: #800080;">5</span><span style="color: #000000;">);
+    listInt.listInsert(</span><span style="color: #800080;">7</span><span style="color: #000000;">);
+    listInt.listInsert(</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+    listInt.listDelete(</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+    listInt.reverse();
+    
+    cout </span>&lt;&lt; listInt.listSearch(<span style="color: #800080;">3</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; listInt.listSearch(<span style="color: #800080;">4</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    cout </span>&lt;&lt; listInt.listSearch(<span style="color: #800080;">2</span>) &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>二叉树相关，留着备用：</p>
+<div class="cnblogs_code">
+<pre>#include &lt;stdio.h&gt;<span style="color: #000000;">  
+#include </span>&lt;iostream&gt;<span style="color: #000000;">
+#include </span>&lt;queue&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+typedef </span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> bnode {  
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> data;  
+    </span><span style="color: #0000ff;">struct</span> bnode *lc, *<span style="color: #000000;">rc;  
+} bnode_type;  
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 前序遍历  </span>
+<span style="color: #0000ff;">int</span> prosearch(bnode_type *<span style="color: #000000;">root) {  
+    </span><span style="color: #0000ff;">if</span> (root !=<span style="color: #000000;"> NULL) {  
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c\n</span><span style="color: #800000;">"</span>, root-&gt;<span style="color: #000000;">data);  
+        prosearch(root</span>-&gt;<span style="color: #000000;">lc);  
+        prosearch(root</span>-&gt;<span style="color: #000000;">rc);  
+    }  
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;  
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 后序遍历  </span>
+<span style="color: #0000ff;">int</span> postsearch(bnode_type *<span style="color: #000000;">root) {  
+    </span><span style="color: #0000ff;">if</span> (root !=<span style="color: #000000;"> NULL) {  
+        prosearch(root</span>-&gt;<span style="color: #000000;">lc);  
+        prosearch(root</span>-&gt;<span style="color: #000000;">rc);  
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c\n</span><span style="color: #800000;">"</span>, root-&gt;<span style="color: #000000;">data);  
+    }  
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;  
+}  
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 前序建立二叉树</span>
+bnode_type* creat(bnode_type*<span style="color: #000000;"> root) {  
+    </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> c;  
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Enter:</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    cin </span>&gt;&gt;<span style="color: #000000;"> c;
+    </span><span style="color: #0000ff;">if</span> (c != <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span><span style="color: #000000;">) {
+        root </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> bnode_type();
+        root</span>-&gt;data =<span style="color: #000000;"> c;  
+        root</span>-&gt;lc = creat(root-&gt;<span style="color: #000000;">lc);  
+        root</span>-&gt;rc = creat(root-&gt;<span style="color: #000000;">rc);  
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {  
+        root </span>=<span style="color: #000000;"> NULL;  
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> root;
+}  
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算树的高度</span>
+<span style="color: #0000ff;">int</span> deepth(bnode_type*<span style="color: #000000;"> root) {
+    </span><span style="color: #0000ff;">if</span> (root !=<span style="color: #000000;"> NULL) {
+        </span><span style="color: #0000ff;">int</span> a = deepth(root-&gt;<span style="color: #000000;">lc);
+        </span><span style="color: #0000ff;">int</span> b = deepth(root-&gt;<span style="color: #000000;">rc);
+        </span><span style="color: #0000ff;">return</span> ((a &gt; b) ? a+<span style="color: #800080;">1</span> : b+<span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 计算节点数量</span>
+<span style="color: #0000ff;">int</span> nodes(bnode_type*<span style="color: #000000;"> root) {
+    </span><span style="color: #0000ff;">if</span> (root !=<span style="color: #000000;"> NULL) {  
+        </span><span style="color: #0000ff;">return</span> nodes(root-&gt;lc) + nodes(root-&gt;rc) + <span style="color: #800080;">1</span><span style="color: #000000;">;  
+    }  
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">; 
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 层序遍历</span>
+queue&lt;bnode_type*&gt;<span style="color: #000000;"> mark;
+</span><span style="color: #0000ff;">void</span> levelOrderTraverse(bnode_type*<span style="color: #000000;"> root) {
+    </span><span style="color: #0000ff;">if</span> (root == NULL) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    mark.push(root);
+    </span><span style="color: #0000ff;">while</span> (mark.size() != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        bnode_type</span>* temp =<span style="color: #000000;"> mark.front();
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%c\n</span><span style="color: #800000;">"</span>, temp-&gt;<span style="color: #000000;">data);
+        </span><span style="color: #0000ff;">if</span> (temp-&gt;lc != NULL) mark.push(temp-&gt;<span style="color: #000000;">lc);
+        </span><span style="color: #0000ff;">if</span> (temp-&gt;rc != NULL) mark.push(temp-&gt;<span style="color: #000000;">rc);
+        mark.pop();
+    }
+}
+  
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{  
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 前序地建立二叉树，输入#表示节点为空 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    bnode_type</span>* p =<span style="color: #000000;"> NULL;  
+    p </span>=<span style="color: #000000;"> creat(p);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">deepth=</span><span style="color: #800000;">"</span> &lt;&lt; deepth(p) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 5</span>
+    cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">nodes=</span><span style="color: #800000;">"</span> &lt;&lt; nodes(p) &lt;&lt; endl; <span style="color: #008000;">//</span><span style="color: #008000;"> 6</span>
+<span style="color: #000000;">    levelOrderTraverse(p);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;  
+}</span></pre>
+</div>
+<p>&nbsp;</p>

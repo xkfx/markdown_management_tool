@@ -1,0 +1,384 @@
+<p>参考：http://www.imooc.com/video/7142</p>
+<p>未完。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="utf-8"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>css3 slide<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">适应设备大小</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"</span> <span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">适应低级浏览器</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="IE-edge,chrome=1"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">导入css</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/normalize.css"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/style.css"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-container"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">nav begin 导航开始</span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="radio-set"</span><span style="color: #ff0000;"> checked</span><span style="color: #0000ff;">="checked"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-control-1"</span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#st-panel-1"</span><span style="color: #0000ff;">&gt;</span>11111<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="radio-set"</span><span style="color: #ff0000;"> checked</span><span style="color: #0000ff;">="checked"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-control-2"</span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#st-panel-2"</span><span style="color: #0000ff;">&gt;</span>2222222<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="radio-set"</span><span style="color: #ff0000;"> checked</span><span style="color: #0000ff;">="checked"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-control-3"</span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#st-panel-3"</span><span style="color: #0000ff;">&gt;</span>3333333<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="radio-set"</span><span style="color: #ff0000;"> checked</span><span style="color: #0000ff;">="checked"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-control-4"</span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#st-panel-4"</span><span style="color: #0000ff;">&gt;</span>44444<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="radio-set"</span><span style="color: #ff0000;"> checked</span><span style="color: #0000ff;">="checked"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-control-5"</span><span style="color: #0000ff;">/&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#st-panel-5"</span><span style="color: #0000ff;">&gt;</span>555<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">nav end content begin </span><span style="color: #008000;">--&gt;</span>
+                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-scroll"</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-panel"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-panel-1"</span><span style="color: #0000ff;">&gt;</span>
+                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>222222222<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-panel"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-panel-2"</span><span style="color: #0000ff;">&gt;</span>
+                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>333333<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-panel"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-panel-3"</span><span style="color: #0000ff;">&gt;</span>
+                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>444444<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-panel"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-panel-4"</span><span style="color: #0000ff;">&gt;</span>
+                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>8888888<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="st-panel"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="st-panel-5"</span><span style="color: #0000ff;">&gt;</span>
+                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>777777<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+                 <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">body </span>{<span style="color: #ff0000;">
+    font-family</span>:<span style="color: #0000ff;"> georgia,serif</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #ddd</span>;<span style="color: #ff0000;">
+    font-weight</span>:<span style="color: #0000ff;"> 400</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 15px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #333</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">溢出隐藏</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">字体更圆滑，一般用在英文字体上</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    -webkit-font-smoothing</span>:<span style="color: #0000ff;"> antialiased</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">链接样式</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+a </span>{<span style="color: #ff0000;">
+    text-decoration</span>:<span style="color: #0000ff;"> none</span>; <span style="color: #008000;">/*</span><span style="color: #008000;">取消下划线</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #555</span>;
+    
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">定义一个清除浮动的类??</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.clr </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+    clear</span>:<span style="color: #0000ff;"> both</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+
+.st-container </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 0</span>;
+    
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">共同样式</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.st-container &gt; input,
+.st-container &gt; a </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 20%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 34px</span>;<span style="color: #ff0000;">
+    
+    line-height</span>:<span style="color: #0000ff;"> 34px</span>;
+    
+    <span style="color: #008000;">/*</span><span style="color: #008000;">永远固定在最底部</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> fixed</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+
+.st-container &gt; input </span>{
+    <span style="color: #008000;">/*</span><span style="color: #008000;">把一个元素隐藏掉，消失掉</span><span style="color: #008000;">*/</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">display: none;</span><span style="color: #008000;">*/</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">占位隐藏</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    opacity</span>:<span style="color: #0000ff;"> 0.1</span>;<span style="color: #ff0000;"> 
+    z-index</span>:<span style="color: #0000ff;"> 1000</span>;
+}<span style="color: #800000;">
+
+.st-container &gt; a </span>{<span style="color: #ff0000;">
+    z-index</span>:<span style="color: #0000ff;"> 10</span>;<span style="color: #ff0000;">
+    font-weight</span>:<span style="color: #0000ff;"> 700</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 16px</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #e23a6e</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> white</span>;<span style="color: #ff0000;">
+    box-shadow</span>:<span style="color: #0000ff;"> 1px 1px 1px rgba(151, 24, 64, 0.2)</span>;
+}<span style="color: #800000;">
+
+#st-control-1, #st-control-1 + a </span>{<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0%</span>;
+}<span style="color: #800000;">
+
+#st-control-2, #st-control-2 + a </span>{<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 20%</span>;
+}<span style="color: #800000;">
+
+#st-control-3, #st-control-3 + a </span>{<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 40%</span>;
+}<span style="color: #800000;">
+
+#st-control-4, #st-control-4 + a </span>{<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 60%</span>;
+}<span style="color: #800000;">
+
+#st-control-5, #st-control-5 + a </span>{<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 80%</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">选中被选中的input的后面的那个a</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.st-container input:checked + a </span>{<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #821134</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">动态生成三角形</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.st-container input:checked + a:after </span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ""</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> 20px solid transparent</span>;<span style="color: #ff0000;">
+    border-bottom-color</span>:<span style="color: #0000ff;"> #821134</span>;<span style="color: #ff0000;">
+    
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 50%</span>;<span style="color: #ff0000;">
+    margin-left</span>:<span style="color: #0000ff;"> -20px</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">鼠标划过</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.st-container input:hover + a </span>{<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #AD244F</span>;
+}<span style="color: #800000;">
+
+.st-container input:checked:hover + a </span>{<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #821134</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">内容</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.st-scroll,
+.st-panel </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 100%</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">relative?????????取消上面的overflow hidden就会显示出 顺序下来的5个</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;
+}<span style="color: #800000;">
+
+.st-scroll </span>{<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 0</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">3d可以加速</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    -webkit-transform</span>:<span style="color: #0000ff;"> translate3d(0, 0, 0)</span>;
+}</pre>
+</div>
+<p>&nbsp;2、参考：http://iwenku.net/?article_167.html</p>
+<div class="cnblogs_code">
+<pre><span style="color: #800000;">body </span>{<span style="color: #ff0000;">
+                scroll-behavior</span>:<span style="color: #0000ff;"> smooth</span>;
+            }<span style="color: #800000;">
+            .catalog </span>{<span style="color: #ff0000;">
+                position</span>:<span style="color: #0000ff;"> fixed</span>;<span style="color: #ff0000;">
+                top</span>:<span style="color: #0000ff;"> 27%</span>;<span style="color: #ff0000;">
+                left</span>:<span style="color: #0000ff;"> 82%</span>;<span style="color: #ff0000;">
+                z-index</span>:<span style="color: #0000ff;"> 11</span>;<span style="color: #ff0000;">
+
+                box-shadow</span>:<span style="color: #0000ff;">0 0px 0px rgba(0,0,0,0.5)</span>;<span style="color: #ff0000;">
+                border-radius</span>:<span style="color: #0000ff;"> 10%</span>;<span style="color: #ff0000;">
+
+                padding</span>:<span style="color: #0000ff;"> 10px</span>;<span style="color: #ff0000;">
+                
+                transform</span>:<span style="color: #0000ff;"> rotate(0deg)</span>;<span style="color: #ff0000;">
+                transition</span>:<span style="color: #0000ff;"> 0.5s ease-in-out</span>;
+            }<span style="color: #800000;">
+            
+            .catalog:hover </span>{<span style="color: #ff0000;">
+                box-shadow</span>:<span style="color: #0000ff;">0 10px 20px rgba(0,0,0,0.5)</span>;<span style="color: #ff0000;">
+                
+                transform</span>:<span style="color: #0000ff;"> rotate(0deg)</span>;<span style="color: #ff0000;">
+                transition</span>:<span style="color: #0000ff;"> 0.6s ease-in-out</span>;
+            }</pre>
+</div>
+<p>scroll-behavior只有少数浏览器支持，</p>
+<p>顺便记一下自己写的一个索引样式。。。</p>
+<p>js权限没申请成功，css弄了半天也没实现，心累，就这样吧。。。</p>
+<p>update：</p>
+<p>申请成功了...</p>
+<p>j继续弄，参考：https://blog.brain1981.com/410.html</p>
+<p>update：</p>
+<p>博客園代碼：截取其中的script和css即可。分别是箭头（copy自上面的url）和代码浮动（diy）：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+            .cnblogs_code </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                z-index</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 11</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                box-shadow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0 0px 0px rgba(0, 0, 0, 0.5)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                border-radius</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 2%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> rotate(0deg)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0.5s ease-in-out</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                overflow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> hidden</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+            
+            .cnblogs_code:hover </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                box-shadow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0 10px 20px rgba(0, 0, 0, 0.5)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> rotate(0deg)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0.6s ease-in-out</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+            
+            #returnTop </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #333</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 40px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 40px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> block</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> fixed</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                line-height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 50px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #fff</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                right</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 30px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                bottom</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 30px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+            
+            #returnTop_a </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> -2px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 8px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                border-width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px 12px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                border-style</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> dashed dashed solid</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                border-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #FFF</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+            
+            #returnTop_b </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 18px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 14px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 12px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 12px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #FFF</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="returnTop"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="###"</span><span style="color: #ff0000;"> onclick</span><span style="color: #0000ff;">="scrollPosition()"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">scrollPosition就是跳转调用的函数</span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="returnTop_a"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="returnTop_b"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> getScrollOffsets(_w) { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">获取页面的滚动位置</span>
+<span style="background-color: #f5f5f5; color: #000000;">                _w </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _w </span><span style="background-color: #f5f5f5; color: #000000;">||</span><span style="background-color: #f5f5f5; color: #000000;"> window;
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for all and IE9+</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(_w.pageXOffset </span><span style="background-color: #f5f5f5; color: #000000;">!=</span> <span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">) </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    x: _w.pageXOffset,
+                    y: _w.pageYOffset
+                };
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for IE678</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> _d </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _w.document;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(document.compatMode </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">CSS1Compat</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">) </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for IE678</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    x: _d.documentElement.scrollLeft,
+                    y: _d.documentElement.scrollTop
+                };
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for other mode</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    x: _d.body.scrollLeft,
+                    y: _d.body.scrpllTop
+                };
+            }
+
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> getViewPortSize(_w) { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">获取页面的窗口大小</span>
+<span style="background-color: #f5f5f5; color: #000000;">                _w </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _w </span><span style="background-color: #f5f5f5; color: #000000;">||</span><span style="background-color: #f5f5f5; color: #000000;"> window;
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for all and IE9+</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(_w.innerWidth </span><span style="background-color: #f5f5f5; color: #000000;">!=</span> <span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">) </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    x: _w.innerWidth,
+                    y: _w.innerHeight
+                };
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for IE678</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> _d </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _w.document;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(document.compatMode </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">CSS1Compat</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">) </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for IE678</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    x: _d.documentElement.clientWidth,
+                    y: _d.documentElement.clientHeight
+                };
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">for other mode</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    x: _d.body.clientWidth,
+                    y: _d.body.clientHeight
+                };
+            }
+
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> scrollPosition(_obj) { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">参数_obj可以是任何页面上存在的元素的id，或者是指定元素本身</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> targetX, targetY;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(</span><span style="background-color: #f5f5f5; color: #000000;">!</span><span style="background-color: #f5f5f5; color: #000000;">_obj) { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">如果不指定锚点元素，就跳到页面顶端0，0位置</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    targetX </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    targetY </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">;
+                } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(</span><span style="background-color: #f5f5f5; color: #0000ff;">typeof</span><span style="background-color: #f5f5f5; color: #000000;">(_obj) </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">string</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">) {
+                        _obj </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.getElementById(_obj);
+                    } </span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                        _obj </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _obj
+                    }
+                    targetX </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _obj.getBoundingClientRect().left </span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> getScrollOffsets().x;
+                    targetY </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> _obj.getBoundingClientRect().top </span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> getScrollOffsets().y;
+                }
+
+                </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">如果目标元素的位置在最后一屏，那就指定目标位置为页面底部</span>
+                <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">如果目标元素的位置为负数，就指定目标位置为页面顶部</span>
+                <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> maxTargetX </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.body.scrollWidth </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> getViewPortSize().x;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(targetX </span><span style="background-color: #f5f5f5; color: #000000;">&gt;=</span><span style="background-color: #f5f5f5; color: #000000;"> maxTargetX) targetX </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> maxTargetX;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(targetX </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">) targetX </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> maxTargetY </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.body.scrollHeight </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> getViewPortSize().y;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(targetY </span><span style="background-color: #f5f5f5; color: #000000;">&gt;=</span><span style="background-color: #f5f5f5; color: #000000;"> maxTargetY) targetY </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> maxTargetY;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(targetY </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">) targetY </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">;
+
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> tempTimer </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> setInterval(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">() {
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> currentY </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> getScrollOffsets().y;
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> currentX </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> getScrollOffsets().x;
+                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">跳转位置的缓冲公式</span>
+                    <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> tempTargetY </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> currentY </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> (currentY </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> targetY) </span><span style="background-color: #f5f5f5; color: #000000;">/</span> <span style="background-color: #f5f5f5; color: #000000;">10</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> tempTargetX </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> currentX </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> (currentX </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> targetX) </span><span style="background-color: #f5f5f5; color: #000000;">/</span> <span style="background-color: #f5f5f5; color: #000000;">10</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">由于缓冲公式会生成小数，而scrollTo函数会省略小数点后面的数字，所以要对跳转的坐标做一些微调</span>
+                    <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(Math.abs(tempTargetY </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> currentY) </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">) {
+                        tempTargetY </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> currentY </span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span> <span style="background-color: #f5f5f5; color: #000000;">0</span> <span style="background-color: #f5f5f5; color: #000000;">?</span><span style="background-color: #f5f5f5; color: #000000;"> tempTargetY</span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;"> : tempTargetY</span><span style="background-color: #f5f5f5; color: #000000;">--</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    }
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(Math.abs(tempTargetX </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> currentX) </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">) {
+                        tempTargetX </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> currentX </span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span> <span style="background-color: #f5f5f5; color: #000000;">0</span> <span style="background-color: #f5f5f5; color: #000000;">?</span><span style="background-color: #f5f5f5; color: #000000;"> tempTargetX</span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;"> : tempTargetX</span><span style="background-color: #f5f5f5; color: #000000;">--</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    }
+                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">页面跳转</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    window.scrollTo(tempTargetX, tempTargetY);
+                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">到达指定位置后清除一下Interval</span>
+                    <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(Math.abs(getScrollOffsets().y </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> targetY) </span><span style="background-color: #f5f5f5; color: #000000;">&lt;=</span> <span style="background-color: #f5f5f5; color: #000000;">2</span> <span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span><span style="background-color: #f5f5f5; color: #000000;"> Math.abs(getScrollOffsets().x </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;"> targetX) </span><span style="background-color: #f5f5f5; color: #000000;">&lt;=</span> <span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">) {
+                        clearInterval(tempTimer);
+                        window.scrollTo(targetX, targetY);
+                        </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">console.log("done");</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    }
+                }, </span><span style="background-color: #f5f5f5; color: #000000;">10</span><span style="background-color: #f5f5f5; color: #000000;">);
+            }
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
